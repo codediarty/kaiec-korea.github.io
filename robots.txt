@@ -13,4 +13,4 @@ Allow: /
 User-agent: daum
 Allow: /
 
-Sitemap: https://kaiec-korea.github.io/sitemap.xml
+Sitemap: https://kaiec.skkc.co.kr/sitemap.xml
