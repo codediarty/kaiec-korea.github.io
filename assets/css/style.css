@@ -294,6 +294,18 @@ table.tbl tr:hover td{background:#FCFDFF}
   display:flex;align-items:center;justify-content:center;
   font-weight:800;font-size:20px;color:var(--blue);letter-spacing:-.03em;
 }
+.pair-row{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-bottom:44px}
+.pair-row .member-grid{grid-template-columns:repeat(2,1fr)}
+@media (max-width:860px){
+  .pair-row{grid-template-columns:1fr;gap:34px}
+}
+.member-avatar--photo{overflow:hidden;background:var(--gray-100);border:2px solid #fff;
+  box-shadow:0 0 0 1px var(--gray-200), 0 3px 8px rgba(10,22,40,.10)}
+.member-avatar--photo img{width:100%;height:100%;object-fit:cover;display:block}
+.member--vacant{opacity:.72}
+.member--vacant .member-avatar{background:var(--gray-100);color:var(--gray-400)}
+.member--vacant .member-name{color:var(--gray-400)}
+.member--vacant .member-field{color:var(--gray-400)}
 .member-role{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.03em;margin-bottom:5px}
 .member-name{font-size:17px;font-weight:700;letter-spacing:-.03em;margin-bottom:6px}
 .member-field{font-size:13.5px;color:var(--gray-500);line-height:1.6}
@@ -436,7 +448,26 @@ table.tbl tr:hover td{background:#FCFDFF}
   content:"“";position:absolute;top:6px;left:34px;font-size:130px;line-height:1;
   color:var(--blue-050);font-family:Georgia,serif;pointer-events:none;
 }
+.greeting-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 228px;gap:40px;align-items:start}
 .greeting-body{position:relative;z-index:1}
+.greeting-side{position:relative}
+.greeting-photo{
+  position:relative;border-radius:16px;overflow:hidden;
+  background:linear-gradient(165deg,#EEF3FE,#E6F8F6);
+  box-shadow:0 10px 28px rgba(15,42,95,.14), 0 0 0 1px var(--gray-200);
+}
+.greeting-photo::before{
+  content:"";position:absolute;inset:auto -30% -34% -30%;height:65%;
+  background:radial-gradient(closest-side,rgba(31,95,224,.16),transparent 75%);pointer-events:none;
+}
+.greeting-photo img{width:100%;display:block}
+.greeting-cap{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:14px;text-align:center}
+.greeting-cap .gc-role{font-size:12px;font-weight:600;color:var(--gray-500);letter-spacing:.02em}
+.greeting-cap .gc-name{font-size:19px;font-weight:900;letter-spacing:.12em;color:var(--ink)}
+@media (max-width:860px){
+  .greeting-inner{grid-template-columns:1fr}
+  .greeting-side{order:-1;max-width:210px;margin:0 auto 8px}
+}
 .greeting-body p{font-size:16.5px;line-height:2.0;color:var(--gray-700);margin-bottom:22px}
 .greeting-body p strong{color:var(--navy)}
 .greeting-sign{

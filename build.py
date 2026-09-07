@@ -26,7 +26,7 @@ def inline_icons(html):
                 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
                 'stroke-linejoin="round" aria-hidden="true"%s>%s</svg>' % (attrs, inner))
     return _ICON_RE.sub(rep, html)
-SITE_URL = "https://kaiec-korea.github.io"    # 실제 배포 주소 (확정)
+SITE_URL = "https://kaiec.skkc.co.kr"         # 실제 배포 주소 (커스텀 도메인)
 SITE_NAME = "한국AI윤리위원회"
 SITE_EN = "Korea AI Ethics Committee"
 EMAIL = "kaiec.korea@gmail.com"                # ← 대표 문의 메일
@@ -567,6 +567,7 @@ def build_about():
           <h2 class="h-sec serif">위원장 인사말</h2>
         </div>
         <div class="greeting serif">
+          <div class="greeting-inner">
           <div class="greeting-body">
             <p><strong>안녕하십니까.</strong><br>
             한국AI윤리위원회 홈페이지를 찾아주신 여러분께 깊은 감사의 말씀을 드립니다.</p>
@@ -583,6 +584,16 @@ def build_about():
             대학과 기업, 연구 현장의 목소리에 귀 기울이고, 전문위원과 지역·캠퍼스 조직, 그리고 전국의
             AI 윤리 파트너와 함께 걸어가겠습니다.</p>
             <p>여러분의 관심과 참여가 건강한 AI 문화를 만드는 가장 큰 힘입니다.<br>감사합니다.</p>
+          </div>
+          <div class="greeting-side">
+            <div class="greeting-photo">
+              <img src="assets/img/chairman.jpg" alt="한국AI윤리위원회 위원장">
+            </div>
+            <div class="greeting-cap">
+              <span class="gc-role">한국AI윤리위원회 위원장</span>
+              <span class="gc-name" id="chairPhotoName">&nbsp;</span>
+            </div>
+          </div>
           </div>
           <div class="greeting-sign">
             <span class="gs-org">한국AI윤리위원회 위원장</span>
@@ -725,10 +736,14 @@ def build_about():
       }).join('');
     }
     /* 위원장 성함은 members-data.js의 위원장 항목에서 자동으로 가져옵니다 */
-    var sign=document.getElementById('chairName');
-    if(sign&&window.KAIEC_MEMBERS){
+    if(window.KAIEC_MEMBERS){
       var chair=window.KAIEC_MEMBERS.filter(function(m){return m.group==='위원장'})[0];
-      if(chair)sign.textContent=chair.name;
+      if(chair){
+        var sign=document.getElementById('chairName');
+        if(sign)sign.textContent=chair.name;
+        var cap=document.getElementById('chairPhotoName');
+        if(cap)cap.textContent=chair.name;
+      }
     }
   })();
   </script>
@@ -820,7 +835,7 @@ def build_business():
 # -------------------------------------------------------------- members.html
 def build_members():
     body = hero_sub("조직 · 위원",
-                    "위원장, 운영진, 전문위원, AI 윤리 파트너가 각자의 전문성을 바탕으로 위원회 활동을 함께 만들어갑니다.",
+                    "위원장, 운영진, 전문위원, AI 윤리 캠페인위원이 각자의 전문성을 바탕으로 위원회 활동을 함께 만들어갑니다.",
                     "조직 · 위원") + f"""
 
     <section class="section">
@@ -828,7 +843,7 @@ def build_members():
         <div class="center" style="margin-bottom:46px">
           <span class="eyebrow">Organization Chart</span>
           <h2 class="h-sec">조직도</h2>
-          <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, 30명 규모의 AI 윤리 파트너를 두고,
+          <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, 30명 규모의 AI 윤리 캠페인위원을 두고,
              전국 단위의 지역 운영위원회·캠퍼스 위원회로 확장되는 구조입니다.</p>
         </div>
 
@@ -859,8 +874,8 @@ def build_members():
 
           <!-- 부위원장 · 운영위원장 -->
           <div class="oc-node oc-lv2">
-            <div class="oc-tag">VICE CHAIR · STEERING</div>
-            <div class="oc-title">부위원장 · 운영위원장</div>
+            <div class="oc-tag">VICE CHAIR · OPERATIONS</div>
+            <div class="oc-title">부위원장 · 운영책임자</div>
             <div class="oc-desc">위원장 보좌 · 운영 총괄</div>
           </div>
 
@@ -901,8 +916,8 @@ def build_members():
             <div class="oc-branch">
               <div class="oc-stub"></div>
               <div class="oc-node oc-pillar oc-pillar--teal" style="border-top-color:var(--teal)">
-                <div class="oc-tag" style="color:#00857A">AI ETHICS PARTNERS</div>
-                <div class="oc-title">AI 윤리 파트너</div>
+                <div class="oc-tag" style="color:#00857A">CAMPAIGN COMMITTEE</div>
+                <div class="oc-title">AI 윤리 캠페인위원</div>
                 <div class="oc-desc">30명 · 온라인 전국 활동</div>
               </div>
               <div class="oc-childs">
@@ -966,7 +981,7 @@ def build_members():
               <tr><th>회의</th><td>정기회의 분기 1회 · 임시회의 수시 (온라인 병행)</td></tr>
               <tr><th>의결</th><td>재적위원 과반수 출석과 출석위원 과반수 찬성</td></tr>
               <tr><th>분과</th><td>6개 전문분과 (AI·기술, 법·정책, 교육·리터러시, 연구·출판윤리, 데이터·개인정보, 미디어·콘텐츠)</td></tr>
-              <tr><th>전국 조직</th><td>지역 운영위원회 · 캠퍼스 위원회 · AI 윤리 파트너</td></tr>
+              <tr><th>전국 조직</th><td>지역 운영위원회 · 캠퍼스 위원회 · AI 윤리 캠페인위원</td></tr>
             </tbody>
           </table>
         </div>
@@ -989,6 +1004,17 @@ def build_members():
       </div>
     </section>
 
+    <section class="section">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:36px">
+          <span class="eyebrow">Official Partners</span>
+          <h2 class="h-sec">공식 파트너</h2>
+          <p class="h-sub">한국AI윤리위원회와 함께하는 공식 파트너입니다.</p>
+        </div>
+        <div class="logo-grid" id="officialPartners" style="max-width:760px;margin:0 auto"></div>
+      </div>
+    </section>
+
     <section class="section section--tight">
       <div class="wrap">
         <div class="cta-band">
@@ -1004,46 +1030,77 @@ def build_members():
   (function(){
     var box=document.getElementById('memberSections');
     if(!box||!window.KAIEC_MEMBERS)return;
-    var groups=['위원장','부위원장','감사','고문·자문위원','운영위원','전문위원','지역 운영위원','캠퍼스 위원장'];
-    var html='';
-    groups.forEach(function(g){
+    function avatar(m){
+      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+'" loading="lazy"></div>';
+      var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
+      return '<div class="member-avatar">'+initial+'</div>';
+    }
+    function card(m,g){
+      return '<div class="member">'
+        +avatar(m)
+        +'<div class="member-role">'+(m.role||g)+'</div>'
+        +'<div class="member-name">'+m.name+'</div>'
+        +'<div class="member-field">'+(m.field||'')+'</div>'
+        +'</div>';
+    }
+    function secHTML(g,inPair){
       var list=window.KAIEC_MEMBERS.filter(function(m){return m.group===g});
-      if(!list.length)return;
-      html+='<div style="margin-bottom:44px">'
+      if(!list.length)return '';
+      return '<div style="margin-bottom:'+(inPair?'0':'44px')+'">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
         +'<span style="width:4px;height:19px;background:var(--blue);border-radius:2px"></span>'+g
         +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">('+list.length+'명)</span></h3>'
-        +'<div class="member-grid">'
-        +list.map(function(m){
-          var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
-          return '<div class="member">'
-            +'<div class="member-avatar">'+initial+'</div>'
-            +'<div class="member-role">'+(m.role||g)+'</div>'
-            +'<div class="member-name">'+m.name+'</div>'
-            +'<div class="member-field">'+(m.field||'')+'</div>'
-            +'</div>';
-        }).join('')
-        +'</div></div>';
+        +'<div class="member-grid">'+list.map(function(m){return card(m,g)}).join('')+'</div></div>';
+    }
+    var html='';
+    /* 상단 2열 배치: 위원장|부위원장, 고문·자문위원|감사 */
+    [['위원장','부위원장'],['고문·자문위원','감사']].forEach(function(pair){
+      var l=secHTML(pair[0],true), r=secHTML(pair[1],true);
+      if(l||r) html+='<div class="pair-row">'+l+r+'</div>';
     });
-    /* AI 윤리 파트너 — 인원수만 표시 (KAIEC_PARTNER_COUNT) */
-    var pc=window.KAIEC_PARTNER_COUNT||0;
-    if(pc){
+    ['운영위원','전문위원','지역 운영위원','캠퍼스 위원장'].forEach(function(g){
+      html+=secHTML(g,false);
+    });
+    /* AI 윤리 캠페인위원 — 총원만큼 카드 표시, 이름 없으면 공석 */
+    var total=window.KAIEC_CAMPAIGN_COUNT||0;
+    var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
+    if(total){
+      var cards='';
+      for(var i=0;i<total;i++){
+        var m=named[i];
+        if(m){
+          cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
+        }else{
+          cards+='<div class="member member--vacant">'
+            +'<div class="member-avatar">–</div>'
+            +'<div class="member-role">캠페인위원</div>'
+            +'<div class="member-name">공석</div>'
+            +'<div class="member-field">위촉 예정</div></div>';
+        }
+      }
       html+='<div style="margin-bottom:10px">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
-        +'<span style="width:4px;height:19px;background:var(--teal);border-radius:2px"></span>AI 윤리 파트너'
-        +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">('+pc+'명)</span></h3>'
-        +'<div class="oc-band oc-band--accent" style="justify-content:flex-start;text-align:left">'
-        +'<span class="badge badge--teal">온라인 · 전국</span>'
-        +'<div><div class="oc-title">AI 윤리 파트너 '+pc+'명 활동 중</div>'
-        +'<div class="oc-desc">캠페인 · 콘텐츠 · 확산 활동에 참여합니다. 개별 명단은 기수별 위촉 완료 후 공개됩니다.</div></div>'
-        +'</div></div>';
+        +'<span style="width:4px;height:19px;background:var(--teal);border-radius:2px"></span>AI 윤리 캠페인위원'
+        +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">(총 '+total+'명 · 위촉 '+Math.min(named.length,total)+'명)</span></h3>'
+        +'<div class="member-grid">'+cards+'</div></div>';
     }
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
+    /* 공식 파트너 */
+    var op=document.getElementById('officialPartners');
+    if(op&&window.KAIEC_OFFICIAL_PARTNERS&&window.KAIEC_OFFICIAL_PARTNERS.length){
+      op.innerHTML=window.KAIEC_OFFICIAL_PARTNERS.map(function(p){
+        var inner=p.logo?'<img src="assets/img/'+p.logo+'" alt="'+p.name+' 로고" loading="lazy">'
+                        :'<span class="logo-fallback">'+p.name+'</span>';
+        var body='<div class="logo-item">'+inner+'</div>';
+        var ext=p.url&&p.url.indexOf('http')===0?' target="_blank" rel="noopener"':'';
+        return p.url?'<a href="'+p.url+'"'+ext+'>'+body+'</a>':body;
+      }).join('');
+    }else if(op){op.parentElement.parentElement.style.display='none'}
   })();
   </script>
 """
     page("members.html", "조직 · 위원",
-         "한국AI윤리위원회의 조직 구성과 위원장·운영위원·전문위원 명단, AI 윤리 파트너 현황을 안내합니다.",
+         "한국AI윤리위원회의 조직 구성과 위원장·운영위원·전문위원 명단, AI 윤리 캠페인위원 현황, 공식 파트너를 안내합니다.",
          body, extra_script=script)
 
 
@@ -2090,9 +2147,12 @@ def build_lecture():
     if(!box||!window.KAIEC_MEMBERS)return;
     var list=window.KAIEC_MEMBERS.filter(function(m){return m.group==='전문위원'});
     if(!list.length){box.outerHTML='';return}
+    box.style.maxWidth='560px';box.style.margin='0 auto';
     box.innerHTML=list.map(function(m){
-      var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
-      return '<div class="member"><div class="member-avatar">'+initial+'</div>'
+      var av;
+      if(m.photo){av='<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+'" loading="lazy"></div>'}
+      else{var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';av='<div class="member-avatar">'+initial+'</div>'}
+      return '<div class="member">'+av
         +'<div class="member-role">'+(m.role||'전문위원')+'</div>'
         +'<div class="member-name">'+m.name+'</div>'
         +'<div class="member-field">'+(m.field||'')+'</div></div>';
