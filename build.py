@@ -997,10 +997,6 @@ def build_members():
         </div>
         <div id="memberSections"></div>
 
-        <div class="notice notice--gray" style="margin-top:34px">
-          <strong>명단 추가 방법 —</strong> <code>assets/js/members-data.js</code> 파일을 열어 배열에 항목을 추가하면
-          이 페이지에 자동으로 반영됩니다. HTML을 수정할 필요가 없습니다.
-        </div>
       </div>
     </section>
 
@@ -1036,6 +1032,13 @@ def build_members():
       return '<div class="member-avatar">'+initial+'</div>';
     }
     function card(m,g){
+      if(m.name==='공석'){
+        return '<div class="member member--vacant">'
+          +'<div class="member-avatar">–</div>'
+          +'<div class="member-role">'+(m.role||g)+'</div>'
+          +'<div class="member-name">공석</div>'
+          +'<div class="member-field">'+(m.field||'위촉 예정')+'</div></div>';
+      }
       return '<div class="member">'
         +avatar(m)
         +'<div class="member-role">'+(m.role||g)+'</div>'
@@ -1058,7 +1061,7 @@ def build_members():
       var l=secHTML(pair[0],true), r=secHTML(pair[1],true);
       if(l||r) html+='<div class="pair-row">'+l+r+'</div>';
     });
-    ['운영위원','전문위원','지역 운영위원','캠퍼스 위원장'].forEach(function(g){
+    ['운영위원','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 앰버서더'].forEach(function(g){
       html+=secHTML(g,false);
     });
     /* AI 윤리 캠페인위원 — 총원만큼 카드 표시, 이름 없으면 공석 */
