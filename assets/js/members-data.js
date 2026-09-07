@@ -32,24 +32,23 @@ window.KAIEC_MEMBERS = [
 
   // ── 운영위원 ──────────────────────────────────────────────
   { group: '운영위원', role: '운영책임자', name: '오준호', field: '사업 기획 · 운영 총괄', photo: 'oh-junho.jpg' },
-  { group: '운영위원', role: '기획운영팀', name: '윤지혜', field: '총무 · 회의 운영' },
-  { group: '운영위원', role: '대외협력팀', name: '임도현', field: 'MOU · 기관 제휴' },
-  { group: '운영위원', role: '콘텐츠·홍보팀', name: '서예린', field: '캠페인 · 채널 운영' },
+  { group: '운영위원', role: '기획운영팀', name: '공석', field: '위촉 예정' },
+  { group: '운영위원', role: '대외협력팀', name: '공석', field: '위촉 예정' },
+  { group: '운영위원', role: '콘텐츠·홍보팀', name: '공석', field: '위촉 예정' },
 
   // ── 전문위원 (AI 윤리 전문 교육 강사) ─────────────────────
   { group: '전문위원', role: 'AI 윤리 전문 교육 강사', name: '김동섭', field: '성균관대 공학 박사', photo: 'kim-dongseop.jpg' },
   { group: '전문위원', role: 'AI 윤리 전문 교육 강사', name: '이재이', field: '이화여대 이학 석사', photo: 'lee-jaei.jpg' },
 
   // ── 지역 운영위원 (이름 '공석' → 회색 공석 카드로 표시, 위촉 시 실명으로 교체) ──
-  { group: '지역 운영위원', role: '서울', name: '공석', field: '위촉 예정' },
-  { group: '지역 운영위원', role: '경기도', name: '공석', field: '위촉 예정' },
+  { group: '지역 운영위원', role: '수도권', name: '공석', field: '위촉 예정' },
   { group: '지역 운영위원', role: '충청권', name: '공석', field: '위촉 예정' },
   { group: '지역 운영위원', role: '영남권', name: '공석', field: '위촉 예정' },
   { group: '지역 운영위원', role: '호남권', name: '공석', field: '위촉 예정' },
 
   // ── 캠퍼스 위원장 ─────────────────────────────────────────
-  { group: '캠퍼스 위원장', role: '캠퍼스 1기', name: '정민재', field: '교내 확산 활동' },
-  { group: '캠퍼스 위원장', role: '캠퍼스 1기', name: '김서연', field: '교내 캠페인 운영' },
+  { group: '캠퍼스 위원장', role: '캠퍼스 1기', name: '공석', field: '위촉 예정' },
+  { group: '캠퍼스 위원장', role: '캠퍼스 1기', name: '공석', field: '위촉 예정' },
 
   // ── AI 윤리 앰버서더 (캠페인위원 위에 표시 · 위촉 시 실명으로 교체) ──
   { group: 'AI 윤리 앰버서더', role: '앰버서더', name: '공석', field: '위촉 예정' },
