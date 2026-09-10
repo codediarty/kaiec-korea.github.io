@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://YOUR-DOMAIN/</loc><lastmod>2026-08-23</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/cover-ai-screening.html</loc><lastmod>2026-08-05</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/report-ai-detection.html</loc><lastmod>2026-08-08</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/thesis-ai-reject.html</loc><lastmod>2026-08-12</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/ai-watermark-filtering.html</loc><lastmod>2026-08-15</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/lower-ai-similarity.html</loc><lastmod>2026-08-17</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/gptkiller-score.html</loc><lastmod>2026-08-19</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/ai-detection-bypass-truth.html</loc><lastmod>2026-08-20</lastmod></url>
-  <url><loc>https://YOUR-DOMAIN/board/ai-humanizing.html</loc><lastmod>2026-08-21</lastmod></url>
+  <url><loc>https://kaiec.kr/</loc><lastmod>2026-08-23</lastmod></url>
+  <url><loc>https://kaiec.kr/board/cover-ai-screening.html</loc><lastmod>2026-08-05</lastmod></url>
+  <url><loc>https://kaiec.kr/board/report-ai-detection.html</loc><lastmod>2026-08-08</lastmod></url>
+  <url><loc>https://kaiec.kr/board/thesis-ai-reject.html</loc><lastmod>2026-08-12</lastmod></url>
+  <url><loc>https://kaiec.kr/board/ai-watermark-filtering.html</loc><lastmod>2026-08-15</lastmod></url>
+  <url><loc>https://kaiec.kr/board/lower-ai-similarity.html</loc><lastmod>2026-08-17</lastmod></url>
+  <url><loc>https://kaiec.kr/board/gptkiller-score.html</loc><lastmod>2026-08-19</lastmod></url>
+  <url><loc>https://kaiec.kr/board/ai-detection-bypass-truth.html</loc><lastmod>2026-08-20</lastmod></url>
+  <url><loc>https://kaiec.kr/board/ai-humanizing.html</loc><lastmod>2026-08-21</lastmod></url>
 </urlset>
