@@ -26,14 +26,14 @@ def inline_icons(html):
                 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
                 'stroke-linejoin="round" aria-hidden="true"%s>%s</svg>' % (attrs, inner))
     return _ICON_RE.sub(rep, html)
-SITE_URL = "https://kaiec.skkc.co.kr"         # 실제 배포 주소 (커스텀 도메인)
+SITE_URL = "https://kaiec.kr"                 # 실제 배포 주소 (커스텀 도메인)
 SITE_NAME = "한국AI윤리위원회"
 SITE_EN = "Korea AI Ethics Committee"
 EMAIL = "kaiec.korea@gmail.com"                # ← 대표 문의 메일
 # 위원 지원서 구글폼 — 바꾸려면 이 주소만 교체 후 python3 build.py 재실행
 GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform"
 # 카피클린 문서검사 바로가기 (모든 카피클린 CTA가 이 주소로 연결됨)
-COPYCLEAN_URL = "https://skkc.co.kr/shop_view?idx=6"
+COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
 
 # =============================================================================
 #  소식 게시판 (블로그) 엔진
