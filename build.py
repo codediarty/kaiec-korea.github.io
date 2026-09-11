@@ -402,64 +402,34 @@ def build_index(posts):
         <p>한국AI윤리협회(KAIEC)는 책임 있는 인공지능 활용문화 확산을 위해 AI 윤리 교육, 연구, 캠페인,
            전문가 양성 및 국내외 협력 활동을 추진하는 전문기관입니다.</p>
 
-        <div class="ai-visual" aria-hidden="true">
-            <svg class="ai-net" viewBox="0 0 430 332" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g stroke="#7FA8E8" stroke-opacity=".32" stroke-width="1">
-                <path d="M215 166 80 62M215 166 352 56M215 166 62 252M215 166 368 242M80 62 352 56M62 252 368 242M80 62 62 252M352 56 368 242M215 30 215 166"/>
-              </g>
-              <g fill="#9FC4FF">
-                <circle cx="80" cy="62" r="3"/><circle cx="352" cy="56" r="3"/>
-                <circle cx="62" cy="252" r="3"/><circle cx="368" cy="242" r="3"/>
-                <circle cx="215" cy="30" r="2.5" fill="#6FE3D8"/>
-                <circle cx="150" cy="302" r="2.5" fill="#6FE3D8"/><circle cx="298" cy="300" r="2.5" fill="#6FE3D8"/>
-              </g>
-            </svg>
-            <span class="ai-ring ai-ring-1"></span>
-            <span class="ai-ring ai-ring-2"></span>
-            <span class="ai-orb">AI</span>
-            <span class="ai-chip ai-chip-1"><b>Responsibility</b><i>책임성</i></span>
-            <span class="ai-chip ai-chip-2"><b>Transparency</b><i>투명성</i></span>
-            <span class="ai-chip ai-chip-3"><b>Fairness</b><i>공정성</i></span>
-            <span class="ai-chip ai-chip-4"><b>Human-Centric</b><i>사람 중심</i></span>
-            <span class="ai-script">Responsible AI, Better Tomorrow</span>
+        <div class="ai-visual">
+            <img src="assets/img/hero-ai.jpg" alt="Responsible AI, Better Tomorrow — 한국AI윤리협회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
           </div>
 
           <div class="hero-bottom">
           <div class="hero-ctas">
-            <div class="hcta">
-              <a class="btn btn-primary" href="expert.html"><i data-lucide="graduation-cap"></i>AI윤리전문가 시험 <i data-lucide="arrow-right"></i></a>
-              <span class="hcta-cap">2급 · 1급 자격검정 바로가기</span>
-            </div>
-            <div class="hcta">
-              <a class="btn btn-light" href="apply.html"><i data-lucide="users"></i>위원·회원사 신청 <i data-lucide="arrow-right"></i></a>
-              <span class="hcta-cap">캠페인위원 및 기업·기관 회원 모집</span>
-            </div>
-            <div class="hcta">
-              <a class="btn btn-light" href="lecture.html"><i data-lucide="monitor-play"></i>전문강사 출강 신청 <i data-lucide="arrow-right"></i></a>
-              <span class="hcta-cap">학교·기업·공공기관 맞춤 교육</span>
-            </div>
-            <div class="hcta">
-              <a class="btn btn-teal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener"><i data-lucide="file-search"></i>카피클린 문서검사 <i data-lucide="external-link"></i></a>
-              <span class="hcta-cap">AI 사용 여부 확인하기</span>
-            </div>
+            <a class="btn btn-primary" href="expert.html">AI윤리전문가 시험 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-light" href="apply.html">위원·회원사 신청 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-light" href="lecture.html">전문강사 출강 신청 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-teal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">카피클린 문서검사 <i data-lucide="external-link"></i></a>
           </div>
 
-          <div class="hero-promo">
+          <a class="hero-promo" href="expert.html">
             <div>
               <strong>AI윤리전문가 1기 모집 중 <span class="promo-new">NEW</span></strong>
               <p>AI 윤리 전문지식과 실무역량을 갖춘 전문가로 성장하세요.</p>
             </div>
-            <a class="btn btn-white btn-sm" href="expert.html">자세히 보기 <i data-lucide="arrow-right"></i></a>
-          </div>
+            <span class="promo-go"><i data-lucide="arrow-right"></i></span>
+          </a>
         </div>
       </div>
     </section>
 
-    <section class="section section--tight">
+    <section class="section section--tight" style="padding-top:34px">
       <div class="wrap">
         <div class="feature-cards" style="margin-bottom:38px">
           <a class="fcard reveal" href="expert.html">
-            <div class="fc-visual fc-v1"><i data-lucide="award"></i></div>
+            <div class="fc-visual fc-v1"><img src="assets/img/cards/card-cert.jpg" alt="AI윤리전문가 자격증" loading="lazy"></div>
             <div class="fc-body">
               <h3>AI윤리전문가 자격과정</h3>
               <p>2급(2시간) · 1급(4시간)<br>온라인 교육 + 자격검정</p>
@@ -467,7 +437,7 @@ def build_index(posts):
             </div>
           </a>
           <a class="fcard reveal" href="lecture.html">
-            <div class="fc-visual fc-v2"><i data-lucide="school"></i></div>
+            <div class="fc-visual fc-v2"><img src="assets/img/cards/card-lecture.jpg" alt="전문강사 출강 교육 현장" loading="lazy" style="object-position:74% 28%"></div>
             <div class="fc-body">
               <h3>전문강사 출강 안내</h3>
               <p>학교·기업·공공기관 맞춤형<br>AI 윤리 교육</p>
@@ -475,7 +445,7 @@ def build_index(posts):
             </div>
           </a>
           <a class="fcard reveal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">
-            <div class="fc-visual fc-v3"><i data-lucide="file-search"></i></div>
+            <div class="fc-visual fc-v3"><img src="assets/img/cards/card-copyclean.jpg" alt="카피클린 AI 문서 분석 결과 화면" loading="lazy" style="object-position:38% 40%"></div>
             <div class="fc-body">
               <h3>카피클린 문서검사</h3>
               <p>AI 사용 여부 확인<br>제출 전 사전점검</p>
@@ -483,10 +453,10 @@ def build_index(posts):
             </div>
           </a>
           <a class="fcard reveal" href="mou.html">
-            <div class="fc-visual fc-v4"><i data-lucide="handshake"></i></div>
+            <div class="fc-visual fc-v4"><img src="assets/img/cards/card-partner.jpg" alt="기업·기관 협력" loading="lazy"></div>
             <div class="fc-body">
-              <h3>기업·기관 제휴</h3>
-              <p>AI 교육, 캠페인, AX 컨설팅<br>공동사업 제휴</p>
+              <h3>기업·기관 협력</h3>
+              <p>AI 교육, 캠페인, AX 컨설팅<br>공동사업 협력 제안</p>
               <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
             </div>
           </a>
@@ -617,10 +587,22 @@ def build_index(posts):
       </div>
     </section>"""
 
+    org_ld = f"""<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "한국AI윤리협회",
+  "alternateName": ["KAIEC", "한국AI윤리위원회", "Korea AI Ethics & Compliance", "Korea Association for AI Ethics & Compliance"],
+  "url": "{SITE_URL}",
+  "logo": "{SITE_URL}/assets/img/og-image.png",
+  "email": "{EMAIL}"
+}}
+</script>
+"""
     page("index.html",
          "한국AI윤리협회 KAIEC | AI Ethics & Compliance",
          "한국AI윤리협회(KAIEC)는 책임 있는 AI 활용을 위한 AI 윤리 교육, 연구, 캠페인, 전문가 양성 및 기업·기관 협력 활동을 추진합니다.",
-         body)
+         body, extra_head=org_ld)
 
 
 # ---------------------------------------------------------------- about.html
@@ -774,7 +756,7 @@ def build_about():
             <div class="table-wrap">
               <table class="tbl" style="min-width:auto">
                 <tbody>
-                  <tr><th style="width:34%">명칭</th><td>한국AI윤리협회<br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
+                  <tr><th style="width:34%">명칭</th><td>한국AI윤리협회 <span style="color:var(--gray-500);font-size:13px">(구 한국AI윤리위원회)</span><br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
                   <tr><th>성격</th><td>AI 윤리 전문기관</td></tr>
                   <tr><th>목적</th><td>책임 있는 생성형 AI 활용 및 AI 윤리 문화 확산</td></tr>
                   <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 대외협력 · AI 윤리 파트너 운영</td></tr>
