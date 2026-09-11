@@ -761,10 +761,10 @@ table.tbl tr:hover td{background:#FCFDFF}
 /* ---------- 사업 카드 4종 (홈 히어로 하단 · 가로형 한 줄) ---------- */
 .feature-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .fcard{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--gray-200);border-radius:16px;
-  padding:13px 10px 13px 12px;box-shadow:var(--shadow-sm);
+  padding:17px 10px 17px 12px;box-shadow:var(--shadow-sm);
   transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s}
 .fcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:#C9D8F5}
-.fc-visual{position:relative;width:92px;height:100px;flex-shrink:0;border-radius:12px;
+.fc-visual{position:relative;width:92px;height:114px;flex-shrink:0;border-radius:12px;
   display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}
 .fc-visual img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .3s var(--ease)}
 .fcard:hover .fc-visual img{transform:scale(1.05)}
@@ -773,10 +773,10 @@ table.tbl tr:hover td{background:#FCFDFF}
 .fc-v2{background:radial-gradient(220px 130px at 20% -10%,rgba(143,183,255,.40),transparent 70%),linear-gradient(140deg,#0A1628,#274B9F)}
 .fc-v3{background:radial-gradient(220px 130px at 80% -10%,rgba(255,255,255,.20),transparent 70%),linear-gradient(140deg,#03231F,#00857A)}
 .fc-v4{background:radial-gradient(220px 130px at 25% -10%,rgba(111,227,216,.28),transparent 70%),linear-gradient(140deg,#0F1D38,#33507E)}
-.fc-body{display:flex;flex-direction:column;gap:4px;min-width:0}
-.fc-body h3{font-size:14.5px;letter-spacing:-.025em;white-space:nowrap}
-.fc-body p{font-size:12.3px;color:var(--gray-600);line-height:1.56;letter-spacing:-.01em}
-.fc-more{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--blue);margin-top:4px}
+.fc-body{display:flex;flex-direction:column;gap:5px;min-width:0}
+.fc-body h3{font-size:15px;letter-spacing:-.025em;white-space:nowrap}
+.fc-body p{font-size:12.4px;color:var(--gray-600);line-height:1.56;letter-spacing:-.01em}
+.fc-more{display:inline-flex;align-items:center;gap:5px;font-size:13.5px;font-weight:700;color:var(--blue);margin-top:4px}
 .fc-more svg{width:15px;height:15px;transition:transform .2s}
 .fcard:hover .fc-more svg{transform:translateX(3px)}
 .stat-sub{font-size:12px;color:var(--gray-500);margin-top:5px;font-weight:500;letter-spacing:-.01em}
@@ -957,3 +957,10 @@ table.tbl tr:hover td{background:#FCFDFF}
   .gform-list{grid-template-columns:1fr}
   .gform-meta > div,.gform-privacy > div{flex-direction:column;gap:2px}
 }
+.gform-count{font-size:14px;font-weight:700;color:var(--navy);margin-top:14px}
+.gform-count strong{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;
+  border-radius:50%;background:var(--blue);color:#fff;font-size:14px;margin-right:6px}
+.gform-paynote{font-size:12.5px;color:var(--gray-500);margin-top:12px}
+
+#individual,#member{scroll-margin-top:88px}
+.apply-block + .apply-block{border-top:1px solid var(--gray-100)}

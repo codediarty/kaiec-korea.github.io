@@ -40,6 +40,9 @@ COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
 # 접수 폼 완료 화면에서 결제를 안내하는 흐름으로 운영합니다.
 PAY_URL_L2 = "https://skkc.co.kr/shop_view?idx=26"   # 2급 응시료 결제 링크
 PAY_URL_L1 = "https://skkc.co.kr/shop_view?idx=27"   # 1급 응시료 결제 링크
+# 응시 접수를 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
+# 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 접수 내용이 메일 앱으로 발송됩니다.
+SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzpmjkexBAdDqQnNRsMkFr2EsYjdY8ptWHSjL5trbZ4vqrniaa89FHBXivS_08XF4fk/exec"
 
 # =============================================================================
 #  소식 게시판 (블로그) 엔진
@@ -167,7 +170,7 @@ NAV = [
     ("business.html", "주요사업"),
     ("members.html", "조직·위원"),
     ("lecture.html", "강의 신청"),
-    ("partner.html", "AI 윤리 파트너"),
+    ("partner.html", "AI 윤리위원"),
     ("copyclean.html", "카피클린"),
     ("news.html", "커뮤니티"),
     ("mou.html", "MOU·대외협력"),
@@ -222,7 +225,7 @@ def header():
         <span class="topbar-left">KOREA AI ETHICS COMPLIANCE</span>
         <span class="topbar-right">
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
-          <a href="apply.html">파트너 지원</a><span class="tsep">|</span>
+          <a href="apply.html">위원 지원</a><span class="tsep">|</span>
           <a href="{COPYCLEAN_URL}" target="_blank" rel="noopener" style="color:#6FE3D8">카피클린</a><span class="tsep">|</span>
           <a href="mou.html#inquiry">제휴·MOU 문의</a>
         </span>
@@ -268,7 +271,7 @@ def footer():
           <h4>문의</h4>
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
-            <li><a href="apply.html">위원·파트너 지원</a></li>
+            <li><a href="apply.html">위원·회원사 신청</a></li>
             <li><a href="mou.html#inquiry">제휴·MOU 문의</a></li>
           </ul>
         </div>
@@ -289,7 +292,7 @@ def footer():
 def page(filename, title, desc, body, extra_head="", extra_script="", keywords=None, og_image=None):
     canonical = f"{SITE_URL}/{filename}" if filename != "index.html" else f"{SITE_URL}/"
     full_title = title if filename == "index.html" else f"{title} | {SITE_NAME}"
-    kw = ", ".join(keywords) if keywords else "AI윤리, 인공지능 윤리, 한국AI윤리협회, 생성형 AI, AI 윤리 파트너, AI 윤리 교육, 카피클린, AI 활용 점검"
+    kw = ", ".join(keywords) if keywords else "AI윤리, 인공지능 윤리, 한국AI윤리협회, 생성형 AI, AI 윤리위원, AI 윤리 교육, 카피클린, AI 활용 점검"
     ogimg = og_image or f"{SITE_URL}/assets/img/og-image.png"
     html = f"""<!DOCTYPE html>
 <html lang="ko">
@@ -359,8 +362,8 @@ BUSINESS = [
      "온라인 캠페인, 카드뉴스, 영상, 강의 자료 등 누구나 쉽게 접근할 수 있는 형태로 AI 윤리 콘텐츠를 제작·배포합니다. 대학생·대학원생·연구자·직장인 등 실사용자 눈높이에 맞춘 실용적 내용을 지향합니다.",
      ["온·오프라인 AI 윤리 캠페인 기획", "교육 자료 및 강의 콘텐츠 제작", "SNS 기반 인식 개선 콘텐츠 운영"]),
     ("award", "AI윤리전문가 양성 및 자격검정",
-     "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가」 자격과정(2급·1급)과 전문강사 양성을 운영하고, AI 윤리 파트너·전문위원 제도로 현장 활동까지 연결합니다.",
-     ["AI윤리전문가 자격과정(2급·1급) 운영", "전문강사 양성 및 출강 연계", "AI 윤리 파트너·전문위원 위촉 및 활동 지원"]),
+     "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가」 자격과정(2급·1급)과 전문강사 양성을 운영하고, AI 윤리위원·전문위원 제도로 현장 활동까지 연결합니다.",
+     ["AI윤리전문가 자격과정(2급·1급) 운영", "전문강사 양성 및 출강 연계", "AI 윤리위원·전문위원 위촉 및 활동 지원"]),
     ("handshake", "대학·기업·협회와의 MOU 및 제휴",
      "대학, 기업, 협회, 연구기관 등과 업무협약을 체결하고 공동 캠페인·교육·연구를 추진합니다. 각 기관의 현장 상황에 맞는 AI 윤리 실천 방안을 함께 설계합니다.",
      ["기관 간 업무협약(MOU) 체결", "공동 캠페인 및 세미나 개최", "기관 맞춤형 AI 윤리 자문"]),
@@ -507,7 +510,7 @@ def build_index(posts):
         <div class="split">
           <div class="reveal">
             <span class="eyebrow">Partner Program</span>
-            <h2 class="h-sec">AI 윤리 파트너</h2>
+            <h2 class="h-sec">AI 윤리위원</h2>
             <p class="lead" style="margin-bottom:20px">AI 윤리에 관심 있는 누구나 온라인·재택 방식으로 참여할 수 있는
                협회의 대표 참여 제도입니다.</p>
             <ul style="display:grid;gap:12px;margin-bottom:26px">
@@ -516,7 +519,7 @@ def build_index(posts):
               <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span>활동 실적에 따른 인센티브 지급</span></li>
               <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span>전 과정 온라인·재택 진행</span></li>
             </ul>
-            <a class="btn btn-primary" href="partner.html">파트너 제도 알아보기 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-primary" href="partner.html">위원 제도 알아보기 <i data-lucide="arrow-right"></i></a>
           </div>
           <div class="split-visual reveal">
             <span class="badge badge--teal" style="align-self:flex-start">ONLINE · 재택</span>
@@ -609,6 +612,7 @@ def build_index(posts):
       "alternateName": "KAIEC",
       "url": "{SITE_URL}/",
       "logo": "{SITE_URL}/assets/img/og-image.png",
+      "foundingDate": "2024-03",
       "email": "{EMAIL}"
     }}
   ]
@@ -660,7 +664,7 @@ def build_about():
             결과에 책임지는 태도. 그 작은 실천들이 모여 신뢰할 수 있는 AI 시대를 만든다고 확신합니다.</p>
             <p>협회는 교육과 연구, 캠페인과 대외협력을 통해 이 실천을 넓혀가고자 합니다.
             대학과 기업, 연구 현장의 목소리에 귀 기울이고, 전문위원과 지역·캠퍼스 조직, 그리고 전국의
-            AI 윤리 파트너와 함께 걸어가겠습니다.</p>
+            AI 윤리위원과 함께 걸어가겠습니다.</p>
             <p>여러분의 관심과 참여가 건강한 AI 문화를 만드는 가장 큰 힘입니다.<br>감사합니다.</p>
           </div>
           <div class="greeting-side">
@@ -742,7 +746,7 @@ def build_about():
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Charter</span>
           <h2 class="h-sec">AI 윤리 실천 헌장</h2>
-          <p class="h-sub">협회와 위원, 파트너가 공유하는 7개 실천 조항입니다.</p>
+          <p class="h-sub">협회와 위원이 함께 공유하는 7개 실천 조항입니다.</p>
         </div>
         <div style="background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:14px 32px">
           <ul>
@@ -751,7 +755,7 @@ def build_about():
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
           본 헌장은 <strong>자율적 실천 규범</strong>이며 법적 구속력을 가지지 않습니다.
-          협회의 모든 활동과 위원·파트너의 활동은 이 헌장을 기준으로 삼습니다.
+          협회의 모든 활동과 위원의 활동은 이 헌장을 기준으로 삼습니다.
         </div>
       </div>
     </section>
@@ -772,12 +776,12 @@ def build_about():
             <div class="table-wrap">
               <table class="tbl" style="min-width:auto">
                 <tbody>
-                  <tr><th style="width:34%">명칭</th><td>한국AI윤리협회 <span style="color:var(--gray-500);font-size:13px">(구 한국AI윤리위원회)</span><br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
-                  <tr><th>설립</th><td>2025년 10월</td></tr>
+                  <tr><th style="width:34%">명칭</th><td>한국AI윤리협회<br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
+                  <tr><th>설립</th><td>2024년 3월</td></tr>
                   <tr><th>성격</th><td>AI 윤리 전문기관</td></tr>
                   <tr><th>목적</th><td>책임 있는 생성형 AI 활용 및 AI 윤리 문화 확산</td></tr>
-                  <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 대외협력 · AI 윤리 파트너 운영</td></tr>
-                  <tr><th>운영 방식</th><td>온라인 기반 (위원·파트너 활동 재택 가능)</td></tr>
+                  <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 대외협력 · AI 윤리위원 운영</td></tr>
+                  <tr><th>운영 방식</th><td>온라인 기반 (위원 활동 재택 가능)</td></tr>
                   <tr><th>대표 문의</th><td><a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a></td></tr>
                 </tbody>
               </table>
@@ -795,7 +799,7 @@ def build_about():
         <div class="cta-band">
           <div>
             <h2>협회 활동에 참여하시겠습니까?</h2>
-            <p>전문위원 · AI 윤리 파트너를 상시 모집하고 있습니다.</p>
+            <p>전문위원 · AI 윤리위원을 상시 모집하고 있습니다.</p>
           </div>
           <div class="btns"><a class="btn btn-white" href="apply.html#individual">지원 안내 보기</a></div>
         </div>
@@ -961,7 +965,7 @@ def build_members():
           <div class="oc-vline"></div>
           <div class="oc-hline"></div>
 
-          <!-- 3대 축: 사무국 / 전문위원회 / AI 윤리 파트너 -->
+          <!-- 3대 축: 사무국 / 전문위원회 / AI 윤리위원 -->
           <div class="oc-branches">
             <div class="oc-branch">
               <div class="oc-stub"></div>
@@ -1055,7 +1059,7 @@ def build_members():
         <div class="table-wrap">
           <table class="tbl" style="min-width:auto">
             <tbody>
-              <tr><th style="width:30%">기수</th><td>제1기 (2025. 10 ~ )</td></tr>
+              <tr><th style="width:30%">기수</th><td>제1기 (2024. 03 ~ )</td></tr>
               <tr><th>임원·위원 임기</th><td>2년 (연임 가능)</td></tr>
               <tr><th>회의</th><td>정기회의 분기 1회 · 임시회의 수시 (온라인 병행)</td></tr>
               <tr><th>의결</th><td>재적위원 과반수 출석과 출석위원 과반수 찬성</td></tr>
@@ -1094,7 +1098,7 @@ def build_members():
       <div class="wrap">
         <div class="cta-band">
           <div><h2>위원으로 함께하시겠습니까?</h2>
-            <p>전문위원 · AI 윤리 파트너를 상시 모집합니다. 전공과 경력에 관계없이 지원하실 수 있습니다.</p></div>
+            <p>전문위원 · AI 윤리위원을 상시 모집합니다. 전공과 경력에 관계없이 지원하실 수 있습니다.</p></div>
           <div class="btns"><a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원하기</a><a class="btn btn-light" href="apply.html#individual">모집 안내</a></div>
         </div>
       </div>
@@ -1190,26 +1194,26 @@ def build_members():
 def build_partner():
     faqs = [
         ("AI나 윤리 전공자가 아니어도 지원할 수 있나요?",
-         "네, 가능합니다. AI 윤리 파트너는 전공이나 경력 요건이 없습니다. 생성형 AI를 사용해 본 경험이 있고 책임 있는 활용에 관심이 있다면 누구나 지원하실 수 있습니다."),
+         "네, 가능합니다. AI 윤리위원은 전공이나 경력 요건이 없습니다. 생성형 AI를 사용해 본 경험이 있고 책임 있는 활용에 관심이 있다면 누구나 지원하실 수 있습니다."),
         ("활동은 어디에서 하나요? 정해진 근무 시간이 있나요?",
          "모든 활동은 온라인·재택으로 진행되며 정해진 출근 시간이나 장소가 없습니다. 각자의 일정에 맞춰 배정된 활동을 수행하시면 됩니다."),
         ("위촉장과 활동증명서는 어떤 문서인가요?",
-         "협회가 파트너의 위촉 사실과 활동 내역을 확인해 협회 명의로 발급하는 문서입니다. 대외활동 이력서나 포트폴리오의 증빙 자료로 활용하실 수 있습니다."),
+         "협회가 위원의 위촉 사실과 활동 내역을 확인해 협회 명의로 발급하는 문서입니다. 대외활동 이력서나 포트폴리오의 증빙 자료로 활용하실 수 있습니다."),
         ("인센티브는 어떤 기준으로 지급되나요?",
          "활동 실적(캠페인 참여, 콘텐츠 제작, 제휴 캠페인 기여 등)을 기준으로 산정합니다. 구체적인 기준과 지급 방식은 위촉 시 개별 안내드립니다."),
         ("활동 기간은 어떻게 되나요?",
          "기본 위촉 기간은 6개월이며, 상호 협의에 따라 연장할 수 있습니다. 개인 사정으로 중도 종료를 원하실 경우 언제든 알려주시면 됩니다."),
         ("비용이 드나요?",
-         "가입비·교육비·연회비 등 파트너가 협회에 지불하는 비용은 일절 없습니다."),
+         "가입비·교육비·연회비 등 위원이 협회에 지불하는 비용은 일절 없습니다."),
     ]
     faq_html = "\n".join(f"""        <details class="acc">
           <summary>{q}</summary>
           <div class="acc-body">{a}</div>
         </details>""" for q, a in faqs)
 
-    body = hero_sub("AI 윤리 파트너",
+    body = hero_sub("AI 윤리위원",
                     "온라인·재택으로 AI 윤리 문화 확산에 참여하는 협회의 대표 참여 제도입니다.",
-                    "AI 윤리 파트너") + f"""
+                    "AI 윤리위원") + f"""
 
     <section class="section">
       <div class="wrap-narrow center">
@@ -1217,10 +1221,10 @@ def build_partner():
         <h2 class="h-sec">AI를 쓰는 사람이<br>AI 윤리를 알리는 사람이 됩니다</h2>
         <p class="h-sub" style="margin:0 auto">
           AI 윤리는 전문가 몇 명이 만드는 것이 아니라, AI를 실제로 사용하는 사람들이 함께 만들어가는 것입니다.
-          AI 윤리 파트너는 그 확산을 현장에서 담당하는 협회의 파트너입니다.
+          AI 윤리위원은 그 확산을 현장에서 담당하는 협회의 실천 조직입니다.
         </p>
         <div style="display:flex;gap:11px;justify-content:center;flex-wrap:wrap;margin-top:28px">
-          <a class="btn btn-primary" href="{GOOGLE_FORM}" target="_blank" rel="noopener">파트너 지원하기 <i data-lucide="external-link"></i></a>
+          <a class="btn btn-primary" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원하기 <i data-lucide="external-link"></i></a>
           <a class="btn btn-ghost" href="#apply-info">활동·혜택 먼저 보기</a>
         </div>
       </div>
@@ -1245,7 +1249,7 @@ def build_partner():
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Activities</span>
-          <h2 class="h-sec">파트너 활동 내용</h2>
+          <h2 class="h-sec">위원 활동 내용</h2>
           <p class="h-sub">본인의 관심과 여건에 맞는 활동을 선택해 참여하실 수 있습니다.</p>
         </div>
         <div class="grid grid-3">
@@ -1276,8 +1280,8 @@ def build_partner():
           </article>
           <article class="card reveal">
             <div class="card-icon"><i data-lucide="users-round"></i></div>
-            <h3>파트너 네트워크 참여</h3>
-            <p>온라인 모임과 스터디에 참여해 다른 파트너들과 정보를 나눕니다.</p>
+            <h3>위원 네트워크 참여</h3>
+            <p>온라인 모임과 스터디에 참여해 다른 위원들과 정보를 나눕니다.</p>
           </article>
         </div>
       </div>
@@ -1287,13 +1291,13 @@ def build_partner():
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Benefits</span>
-          <h2 class="h-sec" style="color:#fff">파트너 혜택</h2>
+          <h2 class="h-sec" style="color:#fff">위원 혜택</h2>
         </div>
         <div class="grid grid-3">
           <div style="background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:30px">
             <div style="width:46px;height:46px;border-radius:13px;background:rgba(111,227,216,.16);color:#6FE3D8;display:flex;align-items:center;justify-content:center;margin-bottom:16px"><i data-lucide="award"></i></div>
             <h3 style="color:#fff;font-size:18px;margin-bottom:9px">공식 위촉장 발급</h3>
-            <p style="color:#9FB3D1;font-size:14.5px;line-height:1.75">위촉 시 협회 명의의 「AI 윤리 파트너」 위촉장을 발급합니다.</p>
+            <p style="color:#9FB3D1;font-size:14.5px;line-height:1.75">위촉 시 협회 명의의 「AI 윤리위원」 위촉장을 발급합니다.</p>
           </div>
           <div style="background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:30px">
             <div style="width:46px;height:46px;border-radius:13px;background:rgba(111,227,216,.16);color:#6FE3D8;display:flex;align-items:center;justify-content:center;margin-bottom:16px"><i data-lucide="file-check"></i></div>
@@ -1352,18 +1356,18 @@ def build_partner():
     <section class="section section--tight">
       <div class="wrap">
         <div class="cta-band">
-          <div><h2>AI 윤리 파트너로 함께해 주세요</h2>
+          <div><h2>AI 윤리위원으로 함께해 주세요</h2>
             <p>온라인으로 간편하게 지원하실 수 있습니다. 궁금한 점은 언제든 문의해 주세요.</p></div>
           <div class="btns">
-            <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">파트너 지원하기</a>
+            <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원하기</a>
             <a class="btn btn-light" href="mailto:{EMAIL}">문의하기</a>
           </div>
         </div>
       </div>
     </section>"""
 
-    page("partner.html", "AI 윤리 파트너",
-         "한국AI윤리협회 AI 윤리 파트너는 온라인·재택으로 AI 윤리 문화 확산 캠페인에 참여하며, 공식 위촉장과 활동증명서 발급, 활동 실적에 따른 인센티브 혜택을 받을 수 있습니다.",
+    page("partner.html", "AI 윤리위원",
+         "한국AI윤리협회 AI 윤리위원은 온라인·재택으로 AI 윤리 문화 확산 캠페인에 참여하며, 공식 위촉장과 활동증명서 발급, 활동 실적에 따른 인센티브 혜택을 받을 수 있습니다.",
          body)
 
 
@@ -1434,8 +1438,8 @@ def build_copyclean():
           </article>
           <article class="card reveal">
             <div class="card-icon card-icon--teal"><i data-lucide="users"></i></div>
-            <h3>파트너 연계 활동</h3>
-            <p>AI 윤리 파트너가 참여하는 제휴 캠페인을 공동으로 운영합니다.</p>
+            <h3>위원 연계 활동</h3>
+            <p>AI 윤리위원이 참여하는 제휴 캠페인을 공동으로 운영합니다.</p>
           </article>
           <article class="card reveal">
             <div class="card-icon card-icon--teal"><i data-lucide="bar-chart-3"></i></div>
@@ -1539,7 +1543,7 @@ def build_copyclean():
             <p>대학·기관 단위 공동 캠페인 및 제휴 문의를 환영합니다.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="mou.html#inquiry">제휴 문의하기</a>
-            <a class="btn btn-light" href="partner.html">파트너 참여</a>
+            <a class="btn btn-light" href="partner.html">위원 참여</a>
           </div>
         </div>
       </div>
@@ -1648,7 +1652,7 @@ def build_post(p, posts):
       <div class="wrap">
         <div class="cta-band">
           <div><h2>한국AI윤리협회와 함께하세요</h2>
-            <p>위원 · AI 윤리 파트너 모집, 강의·교육 신청, 기관 제휴 문의를 환영합니다.</p></div>
+            <p>AI 윤리위원 모집, 강의·교육 신청, 기관 제휴 문의를 환영합니다.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원</a>
             <a class="btn btn-light" href="lecture.html">강의 신청</a>
@@ -2498,7 +2502,7 @@ def build_expert():
         </div>
         {pay_btns}
         <p class="field-hint" style="margin-top:18px;text-align:center">검정 일정과 응시 비용은 1기 접수자에게 개별 안내드립니다.<br>
-           응시료 결제는 협회 교육 운영 파트너 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
+           응시료 결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
       </div>
     </section>
 
@@ -2531,8 +2535,8 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>응시료 결제는 어떻게 하나요?</summary>
-          <div class="acc-body">응시료는 협회 교육 운영 파트너인 성균관컨설팅(skkc.co.kr)의 안전결제(신용카드·간편결제)로
-            납부하실 수 있습니다. 접수 완료 후 결제 안내를 받으시게 되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
+          <div class="acc-body">응시료는 성균관대학교 RISE사업 공식 지원기업인 성균관컨설팅(skkc.co.kr)의 안전결제(신용카드·간편결제)로
+            납부하실 수 있습니다. 접수를 완료하면 결제 페이지로 자동 연결되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
             카드전표 등 결제 증빙은 결제 시 발급됩니다.</div>
         </details>
         <details class="acc">
@@ -2687,11 +2691,6 @@ def build_expert_apply():
                    실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
-              <div class="field" id="fOrg">
-                <label>소속</label>
-                <input type="text" name="org" placeholder="회사·학교·기관명">
-                <p class="field-hint">회사·학교·기관 등이 있는 경우 입력해 주세요.</p>
-              </div>
               <div class="field" id="fJob">
                 <label>현재 직업 또는 활동 분야 <span class="req">*</span></label>
                 <div class="pill-choice">{JOBS}</div>
@@ -2725,7 +2724,7 @@ def build_expert_apply():
             <h2>개인정보 수집·이용 동의</h2>
             <p class="gform-desc">AI윤리전문가 자격과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
             <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 생년월일, 연락처, 이메일, 소속 및 신청정보</div>
+              <div><span>수집항목</span>성명, 생년월일, 연락처, 이메일 및 신청정보</div>
               <div><span>이용목적</span>응시자 확인, 교육 및 자격검정 운영, 합격자 관리 및 자격증 발급</div>
               <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
             </div>
@@ -2747,9 +2746,11 @@ def build_expert_apply():
           <div class="done-icon"><i data-lucide="check"></i></div>
           <h2>AI윤리전문가 1기 응시 신청이 완료되었습니다.</h2>
           <p>최종 등록을 위해 아래 결제 페이지에서 선택하신 과정의 교육·자격검정 비용을 결제해 주세요.</p>
-          <a id="payBtn" class="btn btn-primary" target="_blank" rel="noopener" hidden>AI윤리전문가 교육·자격검정 결제하기 <i data-lucide="credit-card"></i></a>
+          <a id="payBtn" class="btn btn-primary" hidden>AI윤리전문가 교육·자격검정 결제하기 <i data-lucide="credit-card"></i></a>
+          <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 결제 페이지로 자동 이동합니다.</p>
+          <p class="gform-paynote">결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅의 안전결제 페이지에서 진행됩니다.</p>
           <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
-          <div class="done-mailbox">
+          <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>제출 시 메일 앱이 자동으로 열립니다. 메일이 발송되지 않았다면
                아래 신청 내용을 복사해 <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
             <textarea id="doneCopy" readonly></textarea>
@@ -2768,6 +2769,21 @@ def build_expert_apply():
     var s2a=document.getElementById('sec2A'), s2b=document.getElementById('sec2B');
     var birth=form.querySelector('[name=birth]');
     birth.max=new Date().toISOString().slice(0,10);
+    /* 날짜 칸 아무 곳이나 눌러도 달력이 열리게 */
+    birth.addEventListener('click',function(){try{this.showPicker();}catch(e){}});
+
+    /* 휴대전화 자동 하이픈 (입력 중 3-4-4, 10자리 번호는 확정 시 3-3-4) */
+    var phone=form.querySelector('[name=phone]');
+    phone.addEventListener('input',function(){
+      var d=this.value.replace(/[^0-9]/g,'').slice(0,11);
+      if(d.length<4){this.value=d;}
+      else if(d.length<8){this.value=d.slice(0,3)+'-'+d.slice(3);}
+      else{this.value=d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);}
+    });
+    phone.addEventListener('blur',function(){
+      var d=this.value.replace(/[^0-9]/g,'');
+      if(d.length===10){this.value=d.slice(0,3)+'-'+d.slice(3,6)+'-'+d.slice(6);}
+    });
 
     function course(){var c=form.querySelector('[name=course]:checked');return c?c.value:'';}
     function syncCourse(){
@@ -2814,24 +2830,49 @@ def build_expert_apply():
         '■ 생년월일 : '+v('birth'),
         '■ 휴대전화 : '+v('phone'),
         '■ 이메일 : '+v('email'),
-        '■ 소속 : '+(v('org')||'해당 없음'),
         '■ 직업/활동 분야 : '+job.value,'',
         '■ 교육 및 자격검정 진행 절차 확인 : 동의',
         '■ 개인정보 수집·이용 : 동의','',
         '--- kaiec.kr AI윤리전문가 응시 접수 페이지에서 작성됨 ---'
       ];
-      var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
-              +'&body='+encodeURIComponent(lines.join('\\n'));
+
+      /* 접수 데이터 전송: 시트 웹훅이 연결되어 있으면 스프레드시트로, 아니면 메일 앱으로 */
+      var HOOK='__HOOK__';
+      if(HOOK){
+        var payload=JSON.stringify({course:'AI윤리전문가 '+c,name:v('name'),birth:v('birth'),
+          phone:v('phone'),email:v('email'),job:job.value});
+        var sent=false;
+        try{if(navigator.sendBeacon){sent=navigator.sendBeacon(HOOK,new Blob([payload],{type:'text/plain'}));}}catch(e1){}
+        if(!sent){try{fetch(HOOK,{method:'POST',mode:'no-cors',keepalive:true,
+          headers:{'Content-Type':'text/plain'},body:payload});}catch(e2){}}
+        document.getElementById('mailBox').hidden=true;
+      }else{
+        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
+                +'&body='+encodeURIComponent(lines.join('\\n'));
+        setTimeout(function(){location.href=mail;},400);
+      }
 
       /* 완료 화면 표시 */
       form.hidden=true;
       var done=document.getElementById('doneView'); done.hidden=false;
       document.getElementById('doneCopy').value=lines.join('\\n');
-      var link=PAY[c]||'';
-      if(link){var pb=document.getElementById('payBtn');pb.href=link;pb.hidden=false;}
-      else{document.getElementById('payWait').hidden=false;}
       window.scrollTo({top:done.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
-      setTimeout(function(){location.href=mail;},350);
+
+      /* 결제 페이지 자동 이동 (3초 카운트다운, 버튼으로 즉시 이동도 가능) */
+      var link=PAY[c]||'';
+      if(link){
+        var pb=document.getElementById('payBtn'); pb.href=link; pb.hidden=false;
+        var pc=document.getElementById('payCount'); pc.hidden=false;
+        var num=pc.querySelector('strong'); var cnt=3; num.textContent=cnt;
+        var tick=setInterval(function(){
+          cnt--;
+          if(cnt<=0){clearInterval(tick);location.href=link;}
+          else{num.textContent=cnt;}
+        },1000);
+        pb.addEventListener('click',function(){clearInterval(tick);});
+      }else{
+        document.getElementById('payWait').hidden=false;
+      }
     });
 
     document.getElementById('copyBtn').addEventListener('click',function(){
@@ -2844,7 +2885,7 @@ def build_expert_apply():
     });
   })();
   </script>
-""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1)
+""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1).replace('__HOOK__', SHEET_WEBHOOK)
 
     page("expert-apply.html", "AI윤리전문가 1기 응시 접수",
          "한국AI윤리협회 AI윤리전문가 1기 응시 접수 페이지입니다. 2급·1급 과정을 선택하고 응시자 정보를 입력하면 교육과 자격검정 안내를 받을 수 있습니다.",
@@ -2871,19 +2912,80 @@ def build_apply():
           </article>""" for ic, t, d, tag in roles)
 
     body = hero_sub("위원·회원사 신청",
-                    "책임 있는 AI를 함께 실천할 기업·기관 회원사와 개인 위원·AI 윤리 파트너를 상시 모집합니다.",
+                    "책임 있는 AI를 함께 실천할 개인 위원과 기업·기관 회원사를 상시 모집합니다.",
                     "위원·회원사 신청") + f"""
 
     <section class="section section--tight" style="padding-bottom:0">
       <div class="wrap-narrow">
         <div class="apply-tabs">
-          <button class="atab is-on" data-tab="member" type="button"><i data-lucide="building-2"></i>기업·기관 회원사</button>
-          <button class="atab" data-tab="individual" type="button"><i data-lucide="users"></i>개인 위원 · 파트너</button>
+          <a class="atab is-on" href="#individual"><i data-lucide="users"></i>개인 위원</a>
+          <a class="atab" href="#member"><i data-lucide="building-2"></i>기업·기관 회원사</a>
         </div>
       </div>
     </section>
 
-    <div id="tab-member">
+    <div id="individual" class="apply-block">
+
+    <section class="section">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:42px">
+          <span class="eyebrow">Recruitment</span>
+          <h2 class="h-sec">모집 분야</h2>
+          <p class="h-sub">본인의 상황과 관심에 맞는 분야를 선택해 지원하실 수 있습니다. 전공·경력 제한이 없으며, 모든 활동은 온라인 병행이 가능합니다.</p>
+        </div>
+        <div class="grid grid-3">
+{role_cards}
+        </div>
+        <div class="center" style="margin-top:26px">
+          <a class="btn btn-ghost btn-sm" href="partner.html">AI 윤리위원 제도 안내 보기 <i data-lucide="arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray section--tight">
+      <div class="wrap-narrow">
+        <div class="grid grid-4">
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">지원서 제출</h3><p style="font-size:14px">아래 지원서 작성</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">서류 검토</h3><p style="font-size:14px">약 3~5일</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">개별 연락</h3><p style="font-size:14px">이메일 · 유선 안내</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">위촉 · 활동</h3><p style="font-size:14px">위촉장 발급 후 시작</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="form">
+      <div class="wrap-narrow">
+        <div class="center" style="margin-bottom:30px">
+          <span class="eyebrow">Application</span>
+          <h2 class="h-sec">온라인 지원서</h2>
+          <p class="h-sub" style="margin:0 auto 24px">아래 지원서를 작성해 주시면 검토 후 개별 연락드립니다.
+             AI 윤리위원 참여를 원하시는 분도 본 지원서로 접수하실 수 있습니다.</p>
+          <a class="btn btn-primary" href="{GOOGLE_FORM}" target="_blank" rel="noopener">
+            새 창에서 지원서 작성하기 <i data-lucide="external-link"></i>
+          </a>
+        </div>
+
+        <div class="gform-wrap">
+          <iframe src="{GOOGLE_FORM}?embedded=true" title="한국AI윤리협회 위원 지원서" loading="lazy">지원서를 불러오는 중입니다…</iframe>
+        </div>
+        <p class="field-hint" style="margin-top:14px;text-align:center">
+          지원서가 표시되지 않으면 위의 <strong>‘새 창에서 지원서 작성하기’</strong> 버튼을 이용해 주세요.
+          기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="section section--gray section--tight">
+      <div class="wrap-narrow">
+        <div class="notice notice--teal">
+          <strong>안내:</strong> 위원 지원과 활동 과정에서 가입비, 교육비 등
+          어떠한 비용도 요구하지 않습니다. 지원서 검토 결과는 개별적으로 안내드립니다.
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <div id="member" class="apply-block">
     <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
@@ -2978,91 +3080,31 @@ def build_apply():
       </div>
     </section>
     </div>
-
-    <div id="tab-individual" hidden>
-
-    <section class="section">
-      <div class="wrap">
-        <div class="center" style="margin-bottom:42px">
-          <span class="eyebrow">Recruitment</span>
-          <h2 class="h-sec">모집 분야</h2>
-          <p class="h-sub">본인의 상황과 관심에 맞는 분야를 선택해 지원하실 수 있습니다. 전공·경력 제한이 없으며, 모든 활동은 온라인 병행이 가능합니다.</p>
-        </div>
-        <div class="grid grid-3">
-{role_cards}
-        </div>
-        <div class="center" style="margin-top:26px">
-          <a class="btn btn-ghost btn-sm" href="partner.html">AI 윤리 파트너 제도 안내 보기 <i data-lucide="arrow-right"></i></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--gray section--tight">
-      <div class="wrap-narrow">
-        <div class="grid grid-4">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">지원서 제출</h3><p style="font-size:14px">아래 지원서 작성</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">서류 검토</h3><p style="font-size:14px">약 3~5일</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">개별 연락</h3><p style="font-size:14px">이메일 · 유선 안내</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">위촉 · 활동</h3><p style="font-size:14px">위촉장 발급 후 시작</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="form">
-      <div class="wrap-narrow">
-        <div class="center" style="margin-bottom:30px">
-          <span class="eyebrow">Application</span>
-          <h2 class="h-sec">온라인 지원서</h2>
-          <p class="h-sub" style="margin:0 auto 24px">아래 지원서를 작성해 주시면 검토 후 개별 연락드립니다.
-             AI 윤리 파트너 참여를 원하시는 분도 본 지원서로 접수하실 수 있습니다.</p>
-          <a class="btn btn-primary" href="{GOOGLE_FORM}" target="_blank" rel="noopener">
-            새 창에서 지원서 작성하기 <i data-lucide="external-link"></i>
-          </a>
-        </div>
-
-        <div class="gform-wrap">
-          <iframe src="{GOOGLE_FORM}?embedded=true" title="한국AI윤리협회 위원 지원서" loading="lazy">지원서를 불러오는 중입니다…</iframe>
-        </div>
-        <p class="field-hint" style="margin-top:14px;text-align:center">
-          지원서가 표시되지 않으면 위의 <strong>‘새 창에서 지원서 작성하기’</strong> 버튼을 이용해 주세요.
-          기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>
-        </p>
-      </div>
-    </section>
-
-    <section class="section section--gray section--tight">
-      <div class="wrap-narrow">
-        <div class="notice notice--teal">
-          <strong>안내:</strong> 위원·파트너 지원과 활동 과정에서 가입비, 교육비 등
-          어떠한 비용도 요구하지 않습니다. 지원서 검토 결과는 개별적으로 안내드립니다.
-        </div>
-      </div>
-    </section>
-    </div>"""
+"""
 
     tab_js = """  <script>
-  /* 회원사 / 개인 탭 전환 (#member, #individual 딥링크 지원) */
+  /* 상단 버튼: 해당 섹션으로 부드럽게 이동 (#individual, #member 딥링크 지원) */
   (function(){
     var tabs=document.querySelectorAll('.atab');
-    function show(t){
-      document.getElementById('tab-member').hidden=(t!=='member');
-      document.getElementById('tab-individual').hidden=(t!=='individual');
-      tabs.forEach(function(b){b.classList.toggle('is-on',b.getAttribute('data-tab')===t)});
-    }
-    tabs.forEach(function(b){b.addEventListener('click',function(){
-      show(b.getAttribute('data-tab'));
-      history.replaceState(null,'','#'+b.getAttribute('data-tab'));
+    function mark(h){tabs.forEach(function(b){b.classList.toggle('is-on',b.getAttribute('href')==='#'+h)});}
+    tabs.forEach(function(b){b.addEventListener('click',function(e){
+      e.preventDefault();
+      var id=b.getAttribute('href').slice(1);
+      var el=document.getElementById(id);
+      if(el){el.scrollIntoView({behavior:'smooth',block:'start'});}
+      mark(id);
+      history.replaceState(null,'','#'+id);
     })});
-    if(location.hash==='#individual')show('individual');
+    if(location.hash==='#member'){mark('member');}
   })();
   </script>
 """
 
     page("apply.html", "위원·회원사 신청",
-         "한국AI윤리협회 기업·기관 회원사 모집과 개인 위원·AI 윤리 파트너 지원 안내. 회원사 혜택, 연회비, 가입 절차를 확인하고 온라인으로 신청하세요.",
+         "한국AI윤리협회 개인 위원 지원과 기업·기관 회원사 모집 안내. 모집 분야, 회원사 혜택, 연회비, 가입 절차를 확인하고 온라인으로 신청하세요.",
          body, extra_script=tab_js,
          keywords=["한국AI윤리협회 회원사", "AI 윤리 협회 가입", "협회 회원사 모집", "AI 윤리 위원",
-                   "AI 윤리 파트너", "기업 AI 윤리", "AI 협회 연회비"])
+                   "AI 윤리위원", "기업 AI 윤리", "AI 협회 연회비"])
 
 
 if __name__ == "__main__":

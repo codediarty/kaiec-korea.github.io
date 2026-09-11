@@ -25,7 +25,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202609111141">
+<link rel="stylesheet" href="assets/css/style.css?v=202609111329">
 <script>document.documentElement.className+=' js';</script>
 </head>
 <body>
@@ -35,7 +35,7 @@
         <span class="topbar-left">KOREA AI ETHICS COMPLIANCE</span>
         <span class="topbar-right">
           <a href="mailto:kaiec.korea@gmail.com">kaiec.korea@gmail.com</a><span class="tsep">|</span>
-          <a href="apply.html">파트너 지원</a><span class="tsep">|</span>
+          <a href="apply.html">위원 지원</a><span class="tsep">|</span>
           <a href="https://skkc.co.kr/ai-detector" target="_blank" rel="noopener" style="color:#6FE3D8">카피클린</a><span class="tsep">|</span>
           <a href="mou.html#inquiry">제휴·MOU 문의</a>
         </span>
@@ -54,7 +54,7 @@
           <a href="business.html">주요사업</a>
           <a href="members.html">조직·위원</a>
           <a href="lecture.html">강의 신청</a>
-          <a href="partner.html">AI 윤리 파트너</a>
+          <a href="partner.html">AI 윤리위원</a>
           <a href="copyclean.html">카피클린</a>
           <a href="news.html">커뮤니티</a>
           <a href="mou.html">MOU·대외협력</a>
@@ -172,11 +172,6 @@
                    실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
-              <div class="field" id="fOrg">
-                <label>소속</label>
-                <input type="text" name="org" placeholder="회사·학교·기관명">
-                <p class="field-hint">회사·학교·기관 등이 있는 경우 입력해 주세요.</p>
-              </div>
               <div class="field" id="fJob">
                 <label>현재 직업 또는 활동 분야 <span class="req">*</span></label>
                 <div class="pill-choice"><label><input type="radio" name="job" value="대학생"><span>대학생</span></label><label><input type="radio" name="job" value="대학원생"><span>대학원생</span></label><label><input type="radio" name="job" value="직장인"><span>직장인</span></label><label><input type="radio" name="job" value="기업·기관 종사자"><span>기업·기관 종사자</span></label><label><input type="radio" name="job" value="교사·강사"><span>교사·강사</span></label><label><input type="radio" name="job" value="교수·연구자"><span>교수·연구자</span></label><label><input type="radio" name="job" value="취업준비생"><span>취업준비생</span></label><label><input type="radio" name="job" value="프리랜서"><span>프리랜서</span></label><label><input type="radio" name="job" value="기타"><span>기타</span></label></div>
@@ -210,7 +205,7 @@
             <h2>개인정보 수집·이용 동의</h2>
             <p class="gform-desc">AI윤리전문가 자격과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
             <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 생년월일, 연락처, 이메일, 소속 및 신청정보</div>
+              <div><span>수집항목</span>성명, 생년월일, 연락처, 이메일 및 신청정보</div>
               <div><span>이용목적</span>응시자 확인, 교육 및 자격검정 운영, 합격자 관리 및 자격증 발급</div>
               <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
             </div>
@@ -232,9 +227,11 @@
           <div class="done-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></div>
           <h2>AI윤리전문가 1기 응시 신청이 완료되었습니다.</h2>
           <p>최종 등록을 위해 아래 결제 페이지에서 선택하신 과정의 교육·자격검정 비용을 결제해 주세요.</p>
-          <a id="payBtn" class="btn btn-primary" target="_blank" rel="noopener" hidden>AI윤리전문가 교육·자격검정 결제하기 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2" /> <path d="M2 10h20" /></svg></a>
+          <a id="payBtn" class="btn btn-primary" hidden>AI윤리전문가 교육·자격검정 결제하기 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="5" rx="2" /> <path d="M2 10h20" /></svg></a>
+          <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 결제 페이지로 자동 이동합니다.</p>
+          <p class="gform-paynote">결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅의 안전결제 페이지에서 진행됩니다.</p>
           <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
-          <div class="done-mailbox">
+          <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>제출 시 메일 앱이 자동으로 열립니다. 메일이 발송되지 않았다면
                아래 신청 내용을 복사해 <a href="mailto:kaiec.korea@gmail.com">kaiec.korea@gmail.com</a> 으로 보내주세요.</p>
             <textarea id="doneCopy" readonly></textarea>
@@ -270,7 +267,7 @@
         <div class="footer-col">
           <h4>활동</h4>
           <ul>
-            <li><a href="partner.html">AI 윤리 파트너</a></li>
+            <li><a href="partner.html">AI 윤리위원</a></li>
             <li><a href="copyclean.html">카피클린</a></li>
             <li><a href="news.html">커뮤니티</a></li>
             <li><a href="mou.html">MOU·대외협력</a></li>
@@ -281,7 +278,7 @@
           <h4>문의</h4>
           <ul>
             <li><a href="mailto:kaiec.korea@gmail.com">kaiec.korea@gmail.com</a></li>
-            <li><a href="apply.html">위원·파트너 지원</a></li>
+            <li><a href="apply.html">위원·회원사 신청</a></li>
             <li><a href="mou.html#inquiry">제휴·MOU 문의</a></li>
           </ul>
         </div>
@@ -297,7 +294,7 @@
       </div>
     </div>
   </footer>
-  <script src="assets/js/main.js?v=202609111141"></script>
+  <script src="assets/js/main.js?v=202609111329"></script>
 
   <script>
   (function(){
@@ -306,6 +303,21 @@
     var s2a=document.getElementById('sec2A'), s2b=document.getElementById('sec2B');
     var birth=form.querySelector('[name=birth]');
     birth.max=new Date().toISOString().slice(0,10);
+    /* 날짜 칸 아무 곳이나 눌러도 달력이 열리게 */
+    birth.addEventListener('click',function(){try{this.showPicker();}catch(e){}});
+
+    /* 휴대전화 자동 하이픈 (입력 중 3-4-4, 10자리 번호는 확정 시 3-3-4) */
+    var phone=form.querySelector('[name=phone]');
+    phone.addEventListener('input',function(){
+      var d=this.value.replace(/[^0-9]/g,'').slice(0,11);
+      if(d.length<4){this.value=d;}
+      else if(d.length<8){this.value=d.slice(0,3)+'-'+d.slice(3);}
+      else{this.value=d.slice(0,3)+'-'+d.slice(3,7)+'-'+d.slice(7);}
+    });
+    phone.addEventListener('blur',function(){
+      var d=this.value.replace(/[^0-9]/g,'');
+      if(d.length===10){this.value=d.slice(0,3)+'-'+d.slice(3,6)+'-'+d.slice(6);}
+    });
 
     function course(){var c=form.querySelector('[name=course]:checked');return c?c.value:'';}
     function syncCourse(){
@@ -352,24 +364,49 @@
         '■ 생년월일 : '+v('birth'),
         '■ 휴대전화 : '+v('phone'),
         '■ 이메일 : '+v('email'),
-        '■ 소속 : '+(v('org')||'해당 없음'),
         '■ 직업/활동 분야 : '+job.value,'',
         '■ 교육 및 자격검정 진행 절차 확인 : 동의',
         '■ 개인정보 수집·이용 : 동의','',
         '--- kaiec.kr AI윤리전문가 응시 접수 페이지에서 작성됨 ---'
       ];
-      var mail='mailto:kaiec.korea@gmail.com?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
-              +'&body='+encodeURIComponent(lines.join('\n'));
+
+      /* 접수 데이터 전송: 시트 웹훅이 연결되어 있으면 스프레드시트로, 아니면 메일 앱으로 */
+      var HOOK='https://script.google.com/macros/s/AKfycbzpmjkexBAdDqQnNRsMkFr2EsYjdY8ptWHSjL5trbZ4vqrniaa89FHBXivS_08XF4fk/exec';
+      if(HOOK){
+        var payload=JSON.stringify({course:'AI윤리전문가 '+c,name:v('name'),birth:v('birth'),
+          phone:v('phone'),email:v('email'),job:job.value});
+        var sent=false;
+        try{if(navigator.sendBeacon){sent=navigator.sendBeacon(HOOK,new Blob([payload],{type:'text/plain'}));}}catch(e1){}
+        if(!sent){try{fetch(HOOK,{method:'POST',mode:'no-cors',keepalive:true,
+          headers:{'Content-Type':'text/plain'},body:payload});}catch(e2){}}
+        document.getElementById('mailBox').hidden=true;
+      }else{
+        var mail='mailto:kaiec.korea@gmail.com?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
+                +'&body='+encodeURIComponent(lines.join('\n'));
+        setTimeout(function(){location.href=mail;},400);
+      }
 
       /* 완료 화면 표시 */
       form.hidden=true;
       var done=document.getElementById('doneView'); done.hidden=false;
       document.getElementById('doneCopy').value=lines.join('\n');
-      var link=PAY[c]||'';
-      if(link){var pb=document.getElementById('payBtn');pb.href=link;pb.hidden=false;}
-      else{document.getElementById('payWait').hidden=false;}
       window.scrollTo({top:done.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
-      setTimeout(function(){location.href=mail;},350);
+
+      /* 결제 페이지 자동 이동 (3초 카운트다운, 버튼으로 즉시 이동도 가능) */
+      var link=PAY[c]||'';
+      if(link){
+        var pb=document.getElementById('payBtn'); pb.href=link; pb.hidden=false;
+        var pc=document.getElementById('payCount'); pc.hidden=false;
+        var num=pc.querySelector('strong'); var cnt=3; num.textContent=cnt;
+        var tick=setInterval(function(){
+          cnt--;
+          if(cnt<=0){clearInterval(tick);location.href=link;}
+          else{num.textContent=cnt;}
+        },1000);
+        pb.addEventListener('click',function(){clearInterval(tick);});
+      }else{
+        document.getElementById('payWait').hidden=false;
+      }
     });
 
     document.getElementById('copyBtn').addEventListener('click',function(){

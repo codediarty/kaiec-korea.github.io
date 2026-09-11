@@ -6,12 +6,12 @@
     <description>한국AI윤리협회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
-      <title>기관 명칭 변경 안내: 한국AI윤리위원회에서 한국AI윤리협회로</title>
-      <link>https://kaiec.kr/post-2026-09-11-name-change.html</link>
-      <guid>https://kaiec.kr/post-2026-09-11-name-change.html</guid>
+      <title>AI윤리전문가란 누구인가: AI 시대가 찾는 유망 전문 자격</title>
+      <link>https://kaiec.kr/post-2026-09-11-ai-ethics-expert-intro.html</link>
+      <guid>https://kaiec.kr/post-2026-09-11-ai-ethics-expert-intro.html</guid>
       <pubDate>Fri, 11 Sep 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
-      <description>한국AI윤리위원회가 2026년 9월부터 기관 명칭을 &#x27;한국AI윤리협회(KAIEC)&#x27;로 변경합니다. 약칭 KAIEC과 홈페이지 주소(kaiec.kr), 조직과 모든 활동은 동일하게 유지됩니다.</description>
+      <description>AI 규제 시대에 수요가 커지는 AI윤리전문가를 소개합니다. 하는 일, 유망한 이유, 그리고 한국AI윤리협회 자격과정(2급·1급)으로 시작하는 방법까지 정리했습니다.</description>
     </item>
     <item>
       <title>한국AI윤리협회 AI Ethics Fellowship 1기 및 협력기관 모집 안내</title>
@@ -20,6 +20,14 @@
       <pubDate>Thu, 10 Sep 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
       <description>AI 윤리 공익 활동에 함께할 AI Ethics Fellowship 1기(모집기간 2026.9.7~9.19)와 협회의 공익적 취지에 동참할 기업·학교·기관을 모집합니다. 전공·경력 무관, 온라인 중심 자율 활동이며 공식 위촉장과 활동증명서가 발급됩니다.</description>
+    </item>
+    <item>
+      <title>신규 회원사 안내: 성균관대학교 RISE사업단, 성균관컨설팅, 카피클린</title>
+      <link>https://kaiec.kr/post-2026-08-22-new-members.html</link>
+      <guid>https://kaiec.kr/post-2026-08-22-new-members.html</guid>
+      <pubDate>Sat, 22 Aug 2026 09:00:00 +0900</pubDate>
+      <category>공지</category>
+      <description>성균관대학교 RISE사업단, 성균관컨설팅, 카피클린이 한국AI윤리협회의 회원사로 함께하게 되었습니다. 책임 있는 AI 활용 문화 확산을 위한 협력을 시작합니다.</description>
     </item>
     <item>
       <title>AI 유사도 검사란? 표절검사와 무엇이 다른지 완전 정리 (2026 가이드)</title>
@@ -59,10 +67,10 @@
       <guid>https://kaiec.kr/post-2026-08-17-website-open.html</guid>
       <pubDate>Mon, 17 Aug 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
-      <description>협회의 활동과 주요사업, AI 윤리 파트너 제도, 강의·교육 신청, 제휴 현황을 안내하는 공식 홈페이지를 개설했습니다.</description>
+      <description>협회의 활동과 주요사업, AI 윤리위원 제도, 강의·교육 신청, 제휴 현황을 안내하는 공식 홈페이지를 개설했습니다.</description>
     </item>
     <item>
-      <title>전문위원 · AI 윤리 파트너를 상시 모집합니다</title>
+      <title>전문위원 · AI 윤리위원을 상시 모집합니다</title>
       <link>https://kaiec.kr/post-2026-08-17-recruit.html</link>
       <guid>https://kaiec.kr/post-2026-08-17-recruit.html</guid>
       <pubDate>Mon, 17 Aug 2026 09:00:00 +0900</pubDate>
@@ -126,6 +134,14 @@
       <description>챗GPT가 알려준 참고문헌, 실제로 존재하는지 확인하셨나요? AI 환각이 만드는 가짜 문헌의 특징과 3분 만에 하는 DOI 검증법, 심사에서 가짜 문헌이 치명적인 이유를 정리했습니다.</description>
     </item>
     <item>
+      <title>고문·자문위원 및 전문위원 위촉 안내</title>
+      <link>https://kaiec.kr/post-2026-08-05-advisors-experts.html</link>
+      <guid>https://kaiec.kr/post-2026-08-05-advisors-experts.html</guid>
+      <pubDate>Wed, 05 Aug 2026 09:00:00 +0900</pubDate>
+      <category>공지</category>
+      <description>한국AI윤리협회가 학계 자문 임형택, 법률 자문 한수연을 고문·자문위원으로, 김동섭·이재이를 AI 윤리 전문 교육 강사(전문위원)로 위촉했습니다.</description>
+    </item>
+    <item>
       <title>과제·레포트 AI 활용 가이드, 대학생이 안전하게 챗GPT 쓰는 법</title>
       <link>https://kaiec.kr/post-2026-08-03-student-report-ai-guide.html</link>
       <guid>https://kaiec.kr/post-2026-08-03-student-report-ai-guide.html</guid>
@@ -148,14 +164,6 @@
       <pubDate>Thu, 30 Jul 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
       <description>검사기 없이도 AI 글은 티가 납니다. 심사자·교수·인사담당자가 실제로 포착하는 AI 문체의 특징 10가지를 정리했습니다. 내 글을 점검하는 체크리스트로도 활용할 수 있습니다.</description>
-    </item>
-    <item>
-      <title>2026 대학가 AI 정책의 방향, &#x27;금지&#x27;에서 &#x27;표기&#x27;로</title>
-      <link>https://kaiec.kr/post-2026-07-28-university-ai-policy-2026.html</link>
-      <guid>https://kaiec.kr/post-2026-07-28-university-ai-policy-2026.html</guid>
-      <pubDate>Tue, 28 Jul 2026 09:00:00 +0900</pubDate>
-      <category>연구·정책</category>
-      <description>생성형 AI에 대한 대학가의 대응이 전면 금지에서 &#x27;조건부 허용과 표기 의무&#x27;로 이동하고 있습니다. 정책 전환의 배경과 학생·연구자가 지금 확인해야 할 것들을 정리했습니다.</description>
     </item>
   </channel>
 </rss>
