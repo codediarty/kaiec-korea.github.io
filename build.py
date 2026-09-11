@@ -427,7 +427,7 @@ def build_index(posts):
 
     <section class="section section--tight" style="padding-top:34px">
       <div class="wrap">
-        <div class="feature-cards" style="margin-bottom:38px">
+        <div class="feature-cards">
           <a class="fcard reveal" href="expert.html">
             <div class="fc-visual fc-v1"><img src="assets/img/cards/card-cert.jpg" alt="AI윤리전문가 자격증" loading="lazy"></div>
             <div class="fc-body">
@@ -460,12 +460,6 @@ def build_index(posts):
               <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
             </div>
           </a>
-        </div>
-        <div class="stats reveal">
-          <div class="stat"><div class="stat-num"><span data-count="6">6</span></div><div class="stat-label">주요사업 영역</div><div class="stat-sub">교육 · 연구 · 캠페인 · 자격 · 협력 · 컨설팅</div></div>
-          <div class="stat"><div class="stat-num"><span data-count="4">4</span></div><div class="stat-label">윤리 핵심가치</div><div class="stat-sub">책임성 · 투명성 · 공정성 · 포용성</div></div>
-          <div class="stat"><div class="stat-num"><span data-count="7">7</span></div><div class="stat-label">윤리헌장 실천조항</div><div class="stat-sub">실천 가능한 AI 윤리 가이드라인</div></div>
-          <div class="stat"><div class="stat-num">상시</div><div class="stat-label">위원·회원사 모집</div><div class="stat-sub">함께 만드는 책임 있는 AI 사회</div></div>
         </div>
       </div>
     </section>
