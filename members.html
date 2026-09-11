@@ -9,8 +9,7 @@
 <meta name="author" content="한국AI윤리협회">
 <link rel="canonical" href="https://kaiec.kr/members.html">
 <meta name="robots" content="index, follow">
-<meta name="naver-site-verification" content="">
-<meta name="google-site-verification" content="">
+<meta name="naver-site-verification" content="ce63d05d0de8c8bd3ff3aef7851061be7e0c4f9c">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="한국AI윤리협회">
 <meta property="og:title" content="조직 · 위원 | 한국AI윤리협회">
@@ -26,7 +25,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202609110751">
+<link rel="stylesheet" href="assets/css/style.css?v=202609111141">
 <script>document.documentElement.className+=' js';</script>
 </head>
 <body>
@@ -253,7 +252,7 @@
         <div class="cta-band">
           <div><h2>위원으로 함께하시겠습니까?</h2>
             <p>전문위원 · AI 윤리 파트너를 상시 모집합니다. 전공과 경력에 관계없이 지원하실 수 있습니다.</p></div>
-          <div class="btns"><a class="btn btn-white" href="https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform" target="_blank" rel="noopener">위원 지원하기</a><a class="btn btn-light" href="apply.html">모집 안내</a></div>
+          <div class="btns"><a class="btn btn-white" href="https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform" target="_blank" rel="noopener">위원 지원하기</a><a class="btn btn-light" href="apply.html#individual">모집 안내</a></div>
         </div>
       </div>
     </section>
@@ -287,7 +286,7 @@
             <li><a href="copyclean.html">카피클린</a></li>
             <li><a href="news.html">커뮤니티</a></li>
             <li><a href="mou.html">MOU·대외협력</a></li>
-            <li><a href="apply.html">위원 지원</a></li>
+            <li><a href="apply.html">위원·회원사 신청</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -310,7 +309,7 @@
       </div>
     </div>
   </footer>
-  <script src="assets/js/main.js?v=202609110751"></script>
+  <script src="assets/js/main.js?v=202609111141"></script>
   <script src="assets/js/members-data.js"></script>
   <script>
   (function(){
@@ -324,7 +323,7 @@
     function card(m,g){
       if(m.name==='공석'){
         return '<div class="member member--vacant">'
-          +'<div class="member-avatar">–</div>'
+          +'<div class="member-avatar">-</div>'
           +'<div class="member-role">'+(m.role||g)+'</div>'
           +'<div class="member-name">공석</div>'
           +'<div class="member-field">'+(m.field||'위촉 예정')+'</div></div>';
@@ -354,7 +353,7 @@
     ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 앰버서더'].forEach(function(g){
       html+=secHTML(g,false);
     });
-    /* AI 윤리 캠페인위원 — 총원만큼 카드 표시, 이름 없으면 공석 */
+    /* AI 윤리 캠페인위원: 총원만큼 카드 표시, 이름 없으면 공석 */
     var total=window.KAIEC_CAMPAIGN_COUNT||0;
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(total){
@@ -365,7 +364,7 @@
           cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
         }else{
           cards+='<div class="member member--vacant">'
-            +'<div class="member-avatar">–</div>'
+            +'<div class="member-avatar">-</div>'
             +'<div class="member-role">캠페인위원</div>'
             +'<div class="member-name">공석</div>'
             +'<div class="member-field">위촉 예정</div></div>';

@@ -31,10 +31,15 @@ SITE_NAME = "한국AI윤리협회"
 SITE_EN = "Korea AI Ethics & Compliance"     # 홈페이지·로고용 영문 브랜드명
 SITE_EN_FORMAL = "Korea Association for AI Ethics & Compliance"  # 공식 영문 명칭 (정관·공식 문서 표기용)
 EMAIL = "kaiec.korea@gmail.com"                # ← 대표 문의 메일
-# 위원 지원서 구글폼 — 바꾸려면 이 주소만 교체 후 python3 build.py 재실행
+# 위원 지원서 구글폼: 바꾸려면 이 주소만 교체 후 python3 build.py 재실행
 GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform"
 # 카피클린 문서검사 바로가기 (모든 카피클린 CTA가 이 주소로 연결됨)
 COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
+# AI윤리전문가 응시료 결제 링크 (성균관컨설팅 skkc.co.kr 안전결제 PG)
+# 결제 링크가 발급되면 아래에 넣고 재실행하세요. 비워두면 결제 버튼이 표시되지 않고
+# 접수 폼 완료 화면에서 결제를 안내하는 흐름으로 운영합니다.
+PAY_URL_L2 = "https://skkc.co.kr/shop_view?idx=26"   # 2급 응시료 결제 링크
+PAY_URL_L1 = "https://skkc.co.kr/shop_view?idx=27"   # 1급 응시료 결제 링크
 
 # =============================================================================
 #  소식 게시판 (블로그) 엔진
@@ -44,7 +49,7 @@ COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
 # =============================================================================
 CATEGORIES = ["공지", "칼럼", "캠페인", "활동", "연구·정책"]
 
-# 빌드할 때마다 바뀌는 버전 태그 — CSS/JS 주소 뒤에 붙여 방문자 브라우저 캐시를 자동 갱신
+# 빌드할 때마다 바뀌는 버전 태그: CSS/JS 주소 뒤에 붙여 방문자 브라우저 캐시를 자동 갱신
 BUILD_V = datetime.datetime.now().strftime("%Y%m%d%H%M")
 
 
@@ -256,7 +261,7 @@ def footer():
           <h4>활동</h4>
           <ul>
             {col2}
-            <li><a href="apply.html">위원 지원</a></li>
+            <li><a href="apply.html">위원·회원사 신청</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -297,8 +302,7 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
 <meta name="author" content="{SITE_NAME}">
 <link rel="canonical" href="{canonical}">
 <meta name="robots" content="index, follow">
-<meta name="naver-site-verification" content="">
-<meta name="google-site-verification" content="">
+<meta name="naver-site-verification" content="ce63d05d0de8c8bd3ff3aef7851061be7e0c4f9c">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{SITE_NAME}">
 <meta property="og:title" content="{full_title}">
@@ -403,12 +407,11 @@ def build_index(posts):
     body = f"""    <section class="hero">
       <div class="wrap hero-inner">
         <span class="hero-badge"><span class="dot"></span>KAIEC · Korea AI Ethics & Compliance</span>
-        <h1>AI를 잘 쓰는 것보다<br><span class="accent">책임 있게 쓰는 것</span>이 먼저입니다</h1>
-        <p>한국AI윤리협회(KAIEC)는 책임 있는 인공지능 활용문화 확산을 위해 AI 윤리 교육, 연구, 캠페인,<br>
-           AI윤리전문가 양성 및 국내외 협력 활동을 추진하는 전문기관입니다.</p>
+        <h1>한국AI윤리협회(KAIEC)<br><span class="accent">책임 있는 AI 활용을 위한 전문기관</span></h1>
+        <p>AI 윤리 교육, 연구, 캠페인, AI윤리전문가 양성 및 국내외 협력 활동을 추진합니다.</p>
 
         <div class="ai-visual">
-            <img src="assets/img/hero-ai.jpg" alt="Responsible AI, Better Tomorrow — 한국AI윤리협회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
+            <img src="assets/img/hero-ai.jpg" alt="Responsible AI, Better Tomorrow. 한국AI윤리협회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
           </div>
 
           <div class="hero-bottom">
@@ -589,18 +592,32 @@ def build_index(posts):
     org_ld = f"""<script type="application/ld+json">
 {{
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "한국AI윤리협회",
-  "alternateName": ["KAIEC", "한국AI윤리위원회", "Korea AI Ethics & Compliance", "Korea Association for AI Ethics & Compliance"],
-  "url": "{SITE_URL}",
-  "logo": "{SITE_URL}/assets/img/og-image.png",
-  "email": "{EMAIL}"
+  "@graph": [
+    {{
+      "@type": "WebSite",
+      "@id": "{SITE_URL}/#website",
+      "url": "{SITE_URL}/",
+      "name": "한국AI윤리협회",
+      "alternateName": ["KAIEC", "kaiec.kr"],
+      "inLanguage": "ko-KR",
+      "publisher": {{ "@id": "{SITE_URL}/#organization" }}
+    }},
+    {{
+      "@type": "Organization",
+      "@id": "{SITE_URL}/#organization",
+      "name": "한국AI윤리협회",
+      "alternateName": "KAIEC",
+      "url": "{SITE_URL}/",
+      "logo": "{SITE_URL}/assets/img/og-image.png",
+      "email": "{EMAIL}"
+    }}
+  ]
 }}
 </script>
 """
     page("index.html",
-         "한국AI윤리협회 KAIEC | AI Ethics & Compliance",
-         "한국AI윤리협회(KAIEC)는 책임 있는 AI 활용을 위한 AI 윤리 교육, 연구, 캠페인, 전문가 양성 및 기업·기관 협력 활동을 추진합니다.",
+         "한국AI윤리협회(KAIEC) | 공식 홈페이지",
+         "한국AI윤리협회(KAIEC) 공식 홈페이지입니다. 책임 있는 AI 활용을 위한 AI 윤리 교육·연구·캠페인·전문가 양성 및 기관 협력을 추진합니다.",
          body, extra_head=org_ld)
 
 
@@ -640,7 +657,7 @@ def build_about():
             <p>한국AI윤리협회는 이 공백을 메우고자 뜻을 모은 <strong>AI 윤리 전문 기구</strong>입니다.
             우리는 규제와 처벌이 아니라, AI를 쓰는 사람이라면 누구나 스스로 지킬 수 있는
             기준과 문화의 힘을 믿습니다. 제출 전에 한 번 더 점검하고, 활용했다면 숨기지 않고 밝히며,
-            결과에 책임지는 태도 — 그 작은 실천들이 모여 신뢰할 수 있는 AI 시대를 만든다고 확신합니다.</p>
+            결과에 책임지는 태도. 그 작은 실천들이 모여 신뢰할 수 있는 AI 시대를 만든다고 확신합니다.</p>
             <p>협회는 교육과 연구, 캠페인과 대외협력을 통해 이 실천을 넓혀가고자 합니다.
             대학과 기업, 연구 현장의 목소리에 귀 기울이고, 전문위원과 지역·캠퍼스 조직, 그리고 전국의
             AI 윤리 파트너와 함께 걸어가겠습니다.</p>
@@ -780,7 +797,7 @@ def build_about():
             <h2>협회 활동에 참여하시겠습니까?</h2>
             <p>전문위원 · AI 윤리 파트너를 상시 모집하고 있습니다.</p>
           </div>
-          <div class="btns"><a class="btn btn-white" href="apply.html">지원 안내 보기</a></div>
+          <div class="btns"><a class="btn btn-white" href="apply.html#individual">지원 안내 보기</a></div>
         </div>
       </div>
     </section>"""
@@ -883,7 +900,7 @@ def build_business():
           <div class="btns">
             <a class="btn btn-white" href="lecture.html">강의·교육 신청</a>
             <a class="btn btn-light" href="mou.html#inquiry">제휴 문의하기</a>
-            <a class="btn btn-light" href="apply.html">위원 지원</a>
+            <a class="btn btn-light" href="apply.html#individual">위원 지원</a>
           </div>
         </div>
       </div>
@@ -1078,7 +1095,7 @@ def build_members():
         <div class="cta-band">
           <div><h2>위원으로 함께하시겠습니까?</h2>
             <p>전문위원 · AI 윤리 파트너를 상시 모집합니다. 전공과 경력에 관계없이 지원하실 수 있습니다.</p></div>
-          <div class="btns"><a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원하기</a><a class="btn btn-light" href="apply.html">모집 안내</a></div>
+          <div class="btns"><a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원하기</a><a class="btn btn-light" href="apply.html#individual">모집 안내</a></div>
         </div>
       </div>
     </section>"""
@@ -1096,7 +1113,7 @@ def build_members():
     function card(m,g){
       if(m.name==='공석'){
         return '<div class="member member--vacant">'
-          +'<div class="member-avatar">–</div>'
+          +'<div class="member-avatar">-</div>'
           +'<div class="member-role">'+(m.role||g)+'</div>'
           +'<div class="member-name">공석</div>'
           +'<div class="member-field">'+(m.field||'위촉 예정')+'</div></div>';
@@ -1126,7 +1143,7 @@ def build_members():
     ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 앰버서더'].forEach(function(g){
       html+=secHTML(g,false);
     });
-    /* AI 윤리 캠페인위원 — 총원만큼 카드 표시, 이름 없으면 공석 */
+    /* AI 윤리 캠페인위원: 총원만큼 카드 표시, 이름 없으면 공석 */
     var total=window.KAIEC_CAMPAIGN_COUNT||0;
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(total){
@@ -1137,7 +1154,7 @@ def build_members():
           cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
         }else{
           cards+='<div class="member member--vacant">'
-            +'<div class="member-avatar">–</div>'
+            +'<div class="member-avatar">-</div>'
             +'<div class="member-role">캠페인위원</div>'
             +'<div class="member-name">공석</div>'
             +'<div class="member-field">위촉 예정</div></div>';
@@ -1359,7 +1376,7 @@ def build_copyclean():
     <section class="section">
       <div class="wrap">
         <div class="notice" style="margin-bottom:48px">
-          <strong>파트너십 —</strong> 한국AI윤리협회와 「카피클린(CopyClean)」은
+          <strong>파트너십:</strong> 한국AI윤리협회와 「카피클린(CopyClean)」은
           AI 활용 문서의 <strong>사전점검 문화 확산</strong>을 위해 협력하는 파트너입니다.
           협회는 윤리 기준·캠페인·교육을, 카피클린은 AI 문서 분석 기술을 담당합니다.
         </div>
@@ -1528,7 +1545,7 @@ def build_copyclean():
       </div>
     </section>"""
 
-    page("copyclean.html", "카피클린 — AI 유사도 검사",
+    page("copyclean.html", "카피클린 · AI 유사도 검사",
          "카피클린(CopyClean)은 학위논문·과제·레포트·자기소개서의 AI 유사도 검사와 문장 단위 상세리포트를 제공하는 AI 문서 분석 서비스입니다. 한국AI윤리협회와 제출 전 사전점검 캠페인을 함께 진행합니다.",
          body,
          keywords=["카피클린", "AI 유사도 검사", "AI 유사도", "AI 검사기", "논문 AI 검사", "과제 AI 검사",
@@ -1558,7 +1575,7 @@ def build_news(posts):
     </section>"""
 
     script = """  <script>
-  /* 분류 필터 — 게시글 자체는 정적 HTML이라 검색엔진이 전부 읽습니다 */
+  /* 분류 필터: 게시글 자체는 정적 HTML이라 검색엔진이 전부 읽습니다 */
   (function(){
     var filter=document.getElementById('newsFilter');
     var cards=document.querySelectorAll('#boardGrid .board-card');
@@ -1576,7 +1593,7 @@ def build_news(posts):
   </script>
 """
     page("news.html", "커뮤니티",
-         "AI 유사도 검사, AI 검사기 원리, 논문컨설팅과 연구윤리, 과제·자소서 AI 활용까지 — 한국AI윤리협회 전문가 칼럼과 캠페인 소식을 전합니다.",
+         "AI 유사도 검사, AI 검사기 원리, 논문컨설팅과 연구윤리, 과제·자소서 AI 활용까지. 한국AI윤리협회 전문가 칼럼과 캠페인 소식을 전합니다.",
          body, extra_script=script,
          keywords=["AI 유사도 검사", "AI 유사도", "AI 검사기", "논문컨설팅", "논문 컨설팅", "카피클린",
                    "AI 탐지", "논문 AI 검사", "과제 AI 검사", "자소서 AI 검사"])
@@ -1673,7 +1690,7 @@ def build_sitemap(posts):
     today = datetime.date.today().strftime("%Y-%m-%d")
     core = [("", "1.0", "weekly"), ("about.html", "0.9", "monthly"), ("business.html", "0.9", "monthly"),
             ("members.html", "0.8", "monthly"), ("lecture.html", "0.9", "monthly"),
-            ("expert.html", "0.9", "monthly"),
+            ("expert.html", "0.9", "monthly"), ("expert-apply.html", "0.8", "monthly"),
             ("partner.html", "0.9", "monthly"), ("copyclean.html", "0.8", "monthly"),
             ("news.html", "0.8", "daily"), ("mou.html", "0.8", "monthly"), ("apply.html", "0.9", "monthly")]
     urls = []
@@ -1754,7 +1771,7 @@ def build_mou():
         </div>
         <div class="logo-grid" id="partnerLogos"></div>
         <div class="notice notice--gray" style="margin-top:30px">
-          <strong>제휴 기관 추가 방법 —</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
+          <strong>제휴 기관 추가 방법:</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
           로고 이미지는 <code>assets/img/</code> 폴더에 올린 뒤 파일명을 지정하면 됩니다.
           로고가 없으면 기관명이 텍스트로 표시됩니다.
         </div>
@@ -1830,7 +1847,7 @@ def build_mou():
       return p.url?'<a href="'+p.url+'" target="_blank" rel="noopener">'+body+'</a>':body;
     }).join('');
   })();
-  /* 제휴 문의 폼 — 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
+  /* 제휴 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
   (function(){
     var f=document.getElementById('mouForm');
     if(!f)return;
@@ -2015,7 +2032,7 @@ def build_lecture():
               <span class="badge badge--teal" style="margin-left:auto">MS</span>
             </div>
             <div class="notice" style="font-size:13.5px">
-              <strong>협회 직속 전문 인력 —</strong> 출강 인력은 외주·파견 강사가 아닌,
+              <strong>협회 직속 전문 인력:</strong> 출강 인력은 외주·파견 강사가 아닌,
               <strong>한국AI윤리협회에만 단독 직속 소속된 석·박사 이상 전문 인력</strong>입니다.
               협회의 윤리 기준과 커리큘럼을 일관되게 전달하며, 교육 품질을 협회가 직접 책임집니다.
             </div>
@@ -2039,12 +2056,12 @@ def build_lecture():
         </div>
         <div class="grid grid-2" style="margin-top:22px">
           <div class="notice">
-            <strong>자유 조합 —</strong> 교육시간에 따라 강의 내용이 고정되지 않습니다.
+            <strong>자유 조합:</strong> 교육시간에 따라 강의 내용이 고정되지 않습니다.
             아래 전체 교육 분야에서 필요한 주제를 자유롭게 선택 · 조합하실 수 있으며,
             교육 목적 · 대상 · 수준에 따라 세부 커리큘럼 조정이 가능합니다.
           </div>
           <div class="notice notice--gray">
-            <strong>추가 비용 안내 —</strong> 출장지역, 교육인원, 별도 교안 제작, 추가 실습 및
+            <strong>추가 비용 안내:</strong> 출장지역, 교육인원, 별도 교안 제작, 추가 실습 및
             특별 요청사항 등에 따라 추가 비용이 발생할 수 있습니다. 문의 시 정확한 견적을 안내드립니다.
           </div>
         </div>
@@ -2090,7 +2107,7 @@ def build_lecture():
 {aud_cards}
         </div>
         <div class="notice" style="margin-top:24px">
-          <strong>공공·정부 연계 프로그램 —</strong> 정부·지자체·공공기관 주관 교육과 정부지원사업 연계 프로그램은
+          <strong>공공·정부 연계 프로그램:</strong> 정부·지자체·공공기관 주관 교육과 정부지원사업 연계 프로그램은
           주관 기관과의 협의를 통해 일정 · 내용 · 증빙 서류를 맞춤으로 준비해 드립니다.
           출강확인서, 교육 결과 요약, 교육 이수확인서 발급이 가능합니다.
         </div>
@@ -2207,7 +2224,7 @@ def build_lecture():
 
     script = """  <script src="assets/js/members-data.js"></script>
   <script>
-  /* 자문 위원단 — 조직·위원 데이터의 '전문위원'을 자동으로 표시합니다 */
+  /* 자문 위원단: 조직·위원 데이터의 '전문위원'을 자동으로 표시합니다 */
   (function(){
     var box=document.getElementById('lecturerGrid');
     if(!box||!window.KAIEC_MEMBERS)return;
@@ -2224,14 +2241,14 @@ def build_lecture():
         +'<div class="member-field">'+(m.field||'')+'</div></div>';
     }).join('');
   })();
-  /* 출강 문의 폼 — 작성 내용을 담아 메일 앱을 엽니다 */
+  /* 출강 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 */
   (function(){
     var f=document.getElementById('lectureForm');
     if(!f)return;
     f.addEventListener('submit',function(e){
       e.preventDefault();
       function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():''}
-      var subject='[출강 문의] '+v('기관명')+' — '+v('희망교육분야');
+      var subject='[출강 문의] '+v('기관명')+' / '+v('희망교육분야');
       var lines=[
         '■ 기관·기업명 : '+v('기관명'),
         '■ 담당자      : '+v('담당자'),
@@ -2251,7 +2268,7 @@ def build_lecture():
 """.replace('__LEMAIL__', L_EMAIL)
 
     page("lecture.html", "AI 윤리교육 · 전문 출강",
-         "AI 윤리교육 전문 출강 — 한국AI윤리협회 직속 석·박사 전문인력 2인 공동 출강(S대 AI공학 박사 필수 참석). AI 윤리, 기업 AI 컴플라이언스, 정보보안·개인정보, 생성형 AI 저작권, 연구윤리, 청소년 AI 윤리 교육을 1~4시간 맞춤형 커리큘럼으로 제공합니다.",
+         "AI 윤리교육 전문 출강. 한국AI윤리협회 직속 석·박사 전문인력 2인 공동 출강(S대 AI공학 박사 필수 참석). AI 윤리, 기업 AI 컴플라이언스, 정보보안·개인정보, 생성형 AI 저작권, 연구윤리, 청소년 AI 윤리 교육을 1~4시간 맞춤형 커리큘럼으로 제공합니다.",
          body, extra_script=script,
          keywords=["AI 윤리교육", "AI 교육 출강", "생성형 AI 교육", "AI 컴플라이언스 교육", "AI 연구윤리 교육",
                    "딥페이크 예방 교육", "청소년 AI 교육", "기업 AI 교육", "AI 정보보안 교육", "찾아가는 AI 교육"])
@@ -2259,15 +2276,24 @@ def build_lecture():
 
 # --------------------------------------------------------------- expert.html
 def build_expert():
-    """AI윤리전문가 자격과정 — 양성 필요성과 과정 안내 (전환형 랜딩)"""
+    """AI윤리전문가 자격과정: 양성 필요성과 과정 안내 (전환형 랜딩)"""
+    # 응시료 결제 버튼 (PAY_URL_L2 / PAY_URL_L1 이 채워진 경우에만 절차 섹션 아래 표시)
+    pay_btns = ""
+    if PAY_URL_L2 or PAY_URL_L1:
+        b2 = (f'<a class="btn btn-primary" href="{PAY_URL_L2}" target="_blank" rel="noopener">'
+              f'2급 응시료 결제 <i data-lucide="credit-card"></i></a>') if PAY_URL_L2 else ""
+        b1 = (f'<a class="btn btn-ghost" href="{PAY_URL_L1}" target="_blank" rel="noopener">'
+              f'1급 응시료 결제 <i data-lucide="credit-card"></i></a>') if PAY_URL_L1 else ""
+        pay_btns = ('<div style="display:flex;gap:11px;flex-wrap:wrap;justify-content:center;margin-top:22px">'
+                    f'{b2}{b1}</div>')
     WHY = [
-        ("scale", "국내 — AI기본법 시행", "2026. 1",
+        ("scale", "국내 · AI기본법 시행", "2026. 1",
          "「인공지능 발전과 신뢰 기반 조성 등에 관한 기본법」(AI기본법)이 2026년 1월 22일 시행되었습니다. 고영향·생성형 AI에 대한 투명성 고지, AI 생성물 표시 등 새로운 의무가 도입되었고, AI를 <strong>개발하는 기업만이 아니라 활용하는 기업·기관도 의무의 주체</strong>가 됩니다."),
-        ("building-2", "글로벌 — EU AI Act 본격 집행", "2026. 8",
+        ("building-2", "글로벌 · EU AI Act 본격 집행", "2026. 8",
          "EU AI Act는 2025년 금지 규정과 조직 구성원의 <strong>AI 리터러시 확보 의무</strong>를 시작으로, 2026년 8월부터 대부분 조항의 시행과 집행이 본격화되었습니다. 글로벌 기준에 맞는 AI 윤리 역량은 이제 수출·협력 기업의 실무 요건입니다."),
-        ("shield-check", "현장 — 상시화된 AI 리스크", "지금",
-         "기밀 정보 입력, 허위 정보(환각) 인용, 저작권 분쟁, AI 표절 논란 — 생성형 AI가 업무와 학습의 일상이 되면서 사고도 일상이 되었습니다. <strong>기준을 아는 한 사람</strong>이 조직 전체의 리스크를 줄입니다."),
-        ("trending-up", "기회 — 아직 소수인 전문 인력", "선점",
+        ("shield-check", "현장 · 상시화된 AI 리스크", "지금",
+         "기밀 정보 입력, 허위 정보(환각) 인용, 저작권 분쟁, AI 표절 논란. 생성형 AI가 업무와 학습의 일상이 되면서 사고도 일상이 되었습니다. <strong>기준을 아는 한 사람</strong>이 조직 전체의 리스크를 줄입니다."),
+        ("trending-up", "기회 · 아직 소수인 전문 인력", "선점",
          "AI를 쓸 줄 아는 사람은 많지만, AI 윤리와 규제 대응을 체계적으로 배운 사람은 아직 소수입니다. 수요가 먼저 커진 시장에서 <strong>지금 시작하는 사람이 전문가 그룹의 첫 자리</strong>를 차지합니다."),
     ]
     why_cards = "\n".join(f"""          <article class="card reveal">
@@ -2301,9 +2327,10 @@ def build_expert():
         <h1>AI윤리전문가 자격과정</h1>
         <p style="font-size:17.5px;max-width:740px">AI를 쓸 줄 아는 사람은 많습니다.<br>
            기업과 기관이 찾는 것은 AI를 <strong style="color:#6FE3D8">책임 있게 다룰 줄 아는 사람</strong>이고,<br>
-           그 증명이 한국AI윤리협회의 「AI윤리전문가」 자격증입니다. <strong style="color:#fff">2급은 단 2시간이면 시작합니다.</strong></p>
+           그 증명이 한국AI윤리협회의 「AI윤리전문가」 자격증입니다.<br>
+           <strong style="color:#fff">AI 규제 시대에 수요가 커지는 미래 유망 직업이자, 커리어의 가치를 높이는 전문 자격입니다.</strong></p>
         <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:30px">
-          <a class="btn btn-primary" href="{GOOGLE_FORM}" target="_blank" rel="noopener">2급 응시 접수하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-primary" href="expert-apply.html">응시 접수하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#why">왜 지금인가</a>
           <a class="btn btn-light" href="#course">과정 안내 보기</a>
         </div>
@@ -2332,7 +2359,7 @@ def build_expert():
 {why_cards}
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
-          <strong>핵심은 하나입니다 —</strong> 규제와 사고가 늘어날수록, 조직마다 "AI를 어디까지 어떻게 써야 하는가"에
+          <strong>핵심은 하나입니다.</strong> 규제와 사고가 늘어날수록, 조직마다 "AI를 어디까지 어떻게 써야 하는가"에
           답할 수 있는 사람이 필요해집니다. AI윤리전문가 자격과정은 그 답을 체계적으로 배우는 가장 빠른 경로입니다.
         </div>
       </div>
@@ -2349,7 +2376,7 @@ def build_expert():
 {career_cards}
         </div>
         <div class="grid grid-3">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">2급 취득</h3><p style="font-size:14px">책임 있는 AI 활용 역량 증명 — 모든 시작</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">2급 취득</h3><p style="font-size:14px">책임 있는 AI 활용 역량을 증명하는 첫걸음</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 02</span><h3 style="font-size:16px">1급 · 심화</h3><p style="font-size:14px">교육·자문까지 가능한 전문가 역량</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 03</span><h3 style="font-size:16px">협회 활동 연계</h3><p style="font-size:14px">전문강사 · 캠페인 · 자문 활동으로 확장</p></div>
         </div>
@@ -2360,9 +2387,9 @@ def build_expert():
       <div class="wrap">
         <div class="center" style="margin-bottom:44px">
           <span class="eyebrow">Curriculum</span>
-          <h2 class="h-sec">시작은 2급이면 충분합니다</h2>
-          <p class="h-sub">복잡한 커리큘럼을 외우는 과정이 아닙니다. 현장에서 바로 쓰는 기준을 배우고,
-             <strong>온라인 교육 + 자격검정</strong>으로 협회 명의 자격증까지 한 번에 완성합니다.</p>
+          <h2 class="h-sec">미래 유망 직업, AI윤리전문가</h2>
+          <p class="h-sub">AI 확산과 규제 강화로 수요가 커지는 유망 분야입니다. 현장에서 바로 쓰는 기준을 배우고,
+             <strong>온라인 교육 + 자격검정</strong>으로 커리어에 힘이 되는 협회 명의 자격증까지 한 번에 완성합니다.</p>
         </div>
         <div class="grid grid-2" style="align-items:stretch">
           <article class="reveal" style="position:relative;overflow:hidden;border-radius:var(--radius-lg);padding:34px 30px;background:linear-gradient(150deg,#0F2A5F 0%,#1F5FE0 100%);color:#fff;display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 48px rgba(31,95,224,.35)">
@@ -2380,7 +2407,7 @@ def build_expert():
               <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#AI기본법 기초</span>
             </div>
             <div style="margin-top:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-              <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">2급 응시 접수하기 <i data-lucide="arrow-right"></i></a>
+              <a class="btn btn-white" href="expert-apply.html?course=2">응시 접수하기 <i data-lucide="arrow-right"></i></a>
               <span style="font-size:12.5px;color:#AFC4E4">1기 모집 중 · 일정과 비용은 접수자에게 개별 안내</span>
             </div>
           </article>
@@ -2391,15 +2418,15 @@ def build_expert():
             </div>
             <h3 style="font-size:20px">AI윤리전문가 1급</h3>
             <p style="font-size:14.5px;line-height:1.75">2급 취득 후 도전하는 전문가 과정입니다. 기업 AI 컴플라이언스와
-               AI 윤리 교육·자문 역량까지 — 조직을 <strong>가르치고 이끄는 사람</strong>을 위한 인증입니다.</p>
+               AI 윤리 교육·자문 역량까지 갖춘, 조직을 <strong>가르치고 이끄는 사람</strong>을 위한 인증입니다.</p>
             <div style="display:flex;gap:7px;flex-wrap:wrap">
               <span class="chip">#기업 AI 컴플라이언스</span><span class="chip">#교육·강의 역량</span><span class="chip">#사례 분석</span>
             </div>
-            <a class="btn btn-ghost" style="margin-top:auto;align-self:flex-start" href="{GOOGLE_FORM}" target="_blank" rel="noopener">1급 함께 접수하기 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-ghost" style="margin-top:auto;align-self:flex-start" href="expert-apply.html?course=1">응시 접수하기 <i data-lucide="arrow-right"></i></a>
           </article>
         </div>
         <div class="notice" style="margin-top:24px">
-          <strong>협회 직접 운영 —</strong> 본 과정은 한국AI윤리협회(KAIEC)가 교육 콘텐츠 구성부터 검정, 자격증 발급까지
+          <strong>협회 직접 운영:</strong> 본 과정은 한국AI윤리협회(KAIEC)가 교육 콘텐츠 구성부터 검정, 자격증 발급까지
           직접 운영합니다. 커리큘럼은 협회 6개 분과 전문위원의 자문과 검토를 거쳐 구성됩니다.
         </div>
       </div>
@@ -2410,12 +2437,13 @@ def build_expert():
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Benefits</span>
           <h2 class="h-sec" style="color:#fff">취득하면 달라지는 것</h2>
+          <p class="h-sub" style="color:#9FB3D1">미래 유망 직업 AI윤리전문가, 취업·이직·직무 전환 등 커리어에 힘이 되는 자격입니다.</p>
         </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
             <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="award"></i></div>
             <h3 style="color:#fff;font-size:17px">협회 명의 자격증</h3>
-            <p style="color:#9FB3D1">「AI윤리전문가」 자격증 발급 — 이력서·포트폴리오에 기재할 수 있는 공식 증빙</p>
+            <p style="color:#9FB3D1">「AI윤리전문가」 자격증 발급, 이력서·포트폴리오에 기재해 취업·이직 등 커리어에 활용할 수 있는 공식 증빙</p>
           </div>
           <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
             <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="users"></i></div>
@@ -2445,7 +2473,7 @@ def build_expert():
         </div>
         <div class="grid grid-4">
           <article class="card reveal"><div class="card-icon"><i data-lucide="briefcase"></i></div>
-            <h3>기업 실무자·관리자</h3><p>사내 AI 도입과 활용 기준을 만들어야 하는 분 — 규제 대응의 첫 담당자가 되세요.</p></article>
+            <h3>기업 실무자·관리자</h3><p>사내 AI 도입과 활용 기준을 만들어야 하는 분. 규제 대응의 첫 담당자가 되세요.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
             <h3>강사·교사·교수자</h3><p>AI 윤리 교육 수요가 커지는 지금, 가르칠 수 있는 자격과 콘텐츠를 갖추세요.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="school"></i></div>
@@ -2463,12 +2491,14 @@ def build_expert():
           <h2 class="h-sec">응시 절차</h2>
         </div>
         <div class="grid grid-4">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 접수</h3><p style="font-size:14px">아래 접수 버튼으로 신청</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 접수 및 결제</h3><p style="font-size:14px">접수 후 안전결제로 응시료 납부</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">온라인 교육 수강</h3><p style="font-size:14px">2급 2시간 · 1급 4시간</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자격검정 응시</h3><p style="font-size:14px">온라인 검정</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">자격증 발급</h3><p style="font-size:14px">합격 시 협회 명의 발급</p></div>
         </div>
-        <p class="field-hint" style="margin-top:18px;text-align:center">검정 일정과 응시 비용은 1기 접수자에게 개별 안내드립니다.</p>
+        {pay_btns}
+        <p class="field-hint" style="margin-top:18px;text-align:center">검정 일정과 응시 비용은 1기 접수자에게 개별 안내드립니다.<br>
+           응시료 결제는 협회 교육 운영 파트너 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
       </div>
     </section>
 
@@ -2500,6 +2530,12 @@ def build_expert():
             또한 우수 수료자는 협회의 전문강사 양성·출강, Fellowship·캠페인 등 실제 활동 기회와 연계됩니다.</div>
         </details>
         <details class="acc">
+          <summary>응시료 결제는 어떻게 하나요?</summary>
+          <div class="acc-body">응시료는 협회 교육 운영 파트너인 성균관컨설팅(skkc.co.kr)의 안전결제(신용카드·간편결제)로
+            납부하실 수 있습니다. 접수 완료 후 결제 안내를 받으시게 되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
+            카드전표 등 결제 증빙은 결제 시 발급됩니다.</div>
+        </details>
+        <details class="acc">
           <summary>검정 일정과 비용은 어디서 확인하나요?</summary>
           <div class="acc-body">1기 모집 기간 중 접수하신 분께 검정 일정, 응시 비용, 결제 방법을 개별 안내드립니다.
             기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>로 보내주세요.</div>
@@ -2512,10 +2548,10 @@ def build_expert():
         <div class="cta-band reveal">
           <div>
             <h2>유망한 분야는 먼저 시작한 사람의 것입니다</h2>
-            <p>AI윤리전문가 2급, 하루 2시간이면 시작할 수 있습니다 — 1기 모집 중.</p>
+            <p>AI윤리전문가 2급, 하루 2시간이면 시작할 수 있습니다. 1기 모집 중입니다.</p>
           </div>
           <div class="btns">
-            <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">2급 응시 접수하기</a>
+            <a class="btn btn-white" href="expert-apply.html">응시 접수하기</a>
             <a class="btn btn-light" href="mailto:{EMAIL}">문의하기</a>
           </div>
         </div>
@@ -2523,10 +2559,298 @@ def build_expert():
     </section>"""
 
     page("expert.html", "AI윤리전문가 자격과정 (2급·1급)",
-         "AI기본법 시행 시대, 한국AI윤리협회 AI윤리전문가 자격과정 — 2급(2시간)·1급(4시간) 온라인 교육과 자격검정으로 AI 윤리 전문 역량을 인증받으세요. 1기 모집 중.",
+         "AI기본법 시행 시대, 한국AI윤리협회 AI윤리전문가 자격과정. 2급(2시간)·1급(4시간) 온라인 교육과 자격검정으로 AI 윤리 전문 역량을 인증받으세요. 1기 모집 중.",
          body,
          keywords=["AI윤리전문가", "AI 윤리 자격증", "AI 윤리 자격과정", "AI 윤리 교육", "AI기본법",
                    "AI 컴플라이언스", "인공지능 윤리 전문가", "생성형 AI 교육", "AI 리터러시", "AI 거버넌스"])
+
+
+# -------------------------------------------------------- expert-apply.html
+def build_expert_apply():
+    """AI윤리전문가 응시 접수 폼 (자체 코딩 · 구글폼 스타일)
+    - 제출 시 메일 앱으로 신청 내용 발송(mailto) + 완료 화면에 복사 백업 제공
+    - 결제 버튼은 PAY_URL_L2 / PAY_URL_L1 이 채워지면 완료 화면에 자동 표시"""
+    L2_ITEMS = "".join(f"<li>{t}</li>" for t in [
+        "AI 윤리의 이해와 기본 원칙", "할루시네이션과 AI 결과물 검증", "AI 저작권 및 표절 문제",
+        "개인정보 및 데이터 보호", "기업·기관의 정보보안", "AI 편향과 공정성", "책임 있는 AI 활용"])
+    L1_ITEMS = "".join(f"<li>{t}</li>" for t in [
+        "AI 저작권 및 지식재산권", "개인정보·데이터 보호", "기업정보 및 AI 보안",
+        "할루시네이션과 결과물 검증", "알고리즘 편향·차별·공정성", "AI 책임성과 투명성",
+        "AI 윤리 리스크 분석", "기업·기관·학교의 AI 윤리 사례", "책임 있는 AI 활용 원칙"])
+    JOBS = "".join(f'<label><input type="radio" name="job" value="{j}"><span>{j}</span></label>' for j in [
+        "대학생", "대학원생", "직장인", "기업·기관 종사자", "교사·강사",
+        "교수·연구자", "취업준비생", "프리랜서", "기타"])
+
+    body = f"""    <section class="section gform-bg">
+      <div class="gform-wrap">
+
+        <div class="gform-card gform-head">
+          <h1>한국AI윤리협회 AI윤리전문가 1기 응시 접수</h1>
+          <p><strong>AI 시장이 커질수록, AI 윤리 전문가의 역할도 커집니다.</strong></p>
+          <p>무분별한 AI 사용으로 인한 할루시네이션, 저작권 침해, 개인정보 유출, 정보보안, 편향과 차별,
+             결과물의 신뢰성과 책임소재가 중요해지면서 기업·기관·학교에서는 AI 윤리 역량과
+             AI윤리전문가 자격을 갖춘 인재의 필요성이 커지고 있습니다.</p>
+          <p>AI윤리전문가는 앞으로 더욱 중요해질 AI 윤리 전문역량을 체계적으로 학습하고 검정하는 자격입니다.
+             자격 취득 후에는 희망자에 한해 협회의 교육·캠페인·전문가 프로그램 등에 참여하며
+             전문성과 커리어를 확장할 수 있습니다.</p>
+          <div class="gform-callout"><i data-lucide="trending-up"></i>
+            <div><strong>AI 윤리·거버넌스, 연평균 44% 이상 성장하는 전문분야.</strong><br>
+                 AI윤리전문가 자격이 당신의 새로운 전문 경쟁력이 됩니다.</div></div>
+          <p class="gform-req-note"><span class="req">*</span> 표시는 필수 항목입니다.</p>
+        </div>
+
+        <form id="examForm" novalidate>
+
+          <div class="gform-card" id="secCourse">
+            <div class="gform-sec">SECTION 1</div>
+            <h2>응시 과정 선택 <span class="req">*</span></h2>
+            <p class="gform-desc">응시하실 과정을 선택해 주세요.</p>
+            <div class="choice-list">
+              <label class="choice">
+                <input type="radio" name="course" value="2급">
+                <span class="choice-radio"></span>
+                <span class="choice-body">
+                  <strong>AI윤리전문가 2급</strong>
+                  <span>AI 윤리의 핵심을 이해하고 기본적인 전문역량을 갖추는 과정</span>
+                  <em>온라인 교육 약 2시간 + 온라인 자격검정</em>
+                </span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="course" value="1급">
+                <span class="choice-radio"></span>
+                <span class="choice-body">
+                  <strong>AI윤리전문가 1급</strong>
+                  <span>AI 윤리 문제를 분석하고 판단하는 심화 전문과정</span>
+                  <em>온라인 교육 약 4시간 + 온라인 자격검정</em>
+                </span>
+              </label>
+            </div>
+            <p class="field-hint">※ 선택하신 과정에 따라 해당 과정 안내로 이동합니다.</p>
+            <p class="err-msg">응시하실 과정을 선택해 주세요.</p>
+          </div>
+
+          <div class="gform-card gform-info" id="sec2A" hidden>
+            <div class="gform-sec">SECTION 2-A</div>
+            <h2>AI윤리전문가 2급</h2>
+            <p class="gform-sub">AI 윤리의 핵심을 갖추는 기본 전문과정</p>
+            <p>AI윤리전문가 2급은 AI 윤리의 기본 개념부터 실제 AI 활용 과정에서 발생할 수 있는
+               주요 문제와 책임 있는 활용 원칙을 학습하는 과정입니다.</p>
+            <h3>주요 교육내용</h3>
+            <ul class="gform-list">{L2_ITEMS}</ul>
+            <div class="gform-meta">
+              <div><span>교육시간</span>온라인 약 2시간</div>
+              <div><span>진행방식</span>온라인 강의 → 온라인 자격검정 → 합격 → 자격증 발급</div>
+              <div><span>추천 대상</span>대학생·대학원생, 취업준비생, 직장인, 교육·연구 종사자 등
+                   AI 윤리 전문역량을 갖추고 싶은 분</div>
+            </div>
+          </div>
+
+          <div class="gform-card gform-info" id="sec2B" hidden>
+            <div class="gform-sec">SECTION 2-B</div>
+            <h2>AI윤리전문가 1급</h2>
+            <p class="gform-sub">AI 윤리를 분석하고 판단하는 심화 전문과정</p>
+            <p>AI윤리전문가 1급은 AI 윤리에 대한 기본적인 이해를 넘어 기업·기관·학교 등
+               실제 현장에서 발생할 수 있는 AI 관련 문제를 분석하고 판단하는 심화 과정입니다.</p>
+            <h3>주요 교육내용</h3>
+            <ul class="gform-list">{L1_ITEMS}</ul>
+            <div class="gform-meta">
+              <div><span>교육시간</span>온라인 약 4시간</div>
+              <div><span>진행방식</span>온라인 강의 → 온라인 자격검정 → 합격 → 자격증 발급</div>
+              <div><span>추천 대상</span>기업·기관 실무자, 교사·강사, 교수·연구자, 대학원생,
+                   AI·AX 관련 종사자 및 AI 윤리 분야의 전문성을 강화하고 싶은 분</div>
+            </div>
+          </div>
+
+          <div class="gform-card" id="secInfo">
+            <div class="gform-sec">SECTION 3</div>
+            <h2>응시자 정보</h2>
+            <div class="gform-fields">
+              <div class="field" id="fName">
+                <label>성명 <span class="req">*</span></label>
+                <input type="text" name="name" autocomplete="name" placeholder="홍길동">
+                <p class="err-msg">성명을 입력해 주세요.</p>
+              </div>
+              <div class="field" id="fBirth">
+                <label>생년월일 <span class="req">*</span></label>
+                <input type="date" name="birth">
+                <p class="err-msg">생년월일을 선택해 주세요.</p>
+              </div>
+              <div class="field" id="fPhone">
+                <label>휴대전화 번호 <span class="req">*</span></label>
+                <input type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
+                <p class="err-msg">휴대전화 번호를 정확히 입력해 주세요.</p>
+              </div>
+              <div class="field" id="fEmail">
+                <label>이메일 주소 <span class="req">*</span></label>
+                <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
+                <p class="field-hint">온라인 강의 링크와 자격검정 안내가 발송되는 이메일입니다.<br>
+                   실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
+                <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
+              </div>
+              <div class="field" id="fOrg">
+                <label>소속</label>
+                <input type="text" name="org" placeholder="회사·학교·기관명">
+                <p class="field-hint">회사·학교·기관 등이 있는 경우 입력해 주세요.</p>
+              </div>
+              <div class="field" id="fJob">
+                <label>현재 직업 또는 활동 분야 <span class="req">*</span></label>
+                <div class="pill-choice">{JOBS}</div>
+                <p class="err-msg">직업 또는 활동 분야를 선택해 주세요.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="gform-card" id="secFlow">
+            <div class="gform-sec">SECTION 4</div>
+            <h2>교육 및 자격검정 안내</h2>
+            <p class="gform-desc">AI윤리전문가 과정은 아래 순서로 진행됩니다.</p>
+            <ol class="gform-flow">
+              <li>응시 신청</li>
+              <li>교육·자격검정 비용 결제</li>
+              <li>온라인 강의 수강</li>
+              <li>온라인 자격검정 응시</li>
+              <li>합격</li>
+              <li class="is-final">AI윤리전문가 자격증 발급</li>
+            </ol>
+            <p class="gform-body">결제 완료 확인 후 신청서에 작성하신 이메일로 온라인 강의 링크와 수강 안내를 보내드립니다.</p>
+            <p class="gform-body">강의 수강을 완료하신 후 안내된 절차에 따라 온라인 자격검정에 응시할 수 있으며,
+               합격기준 충족 시 한국AI윤리협회 AI윤리전문가 자격증이 발급됩니다.</p>
+            <label class="agree"><input type="checkbox" name="flowok"><span class="agree-box"></span>
+              <span>교육 및 자격검정 진행 절차를 확인했습니다. <span class="req">*</span></span></label>
+            <p class="err-msg">진행 절차 확인에 체크해 주세요.</p>
+          </div>
+
+          <div class="gform-card" id="secPriv">
+            <div class="gform-sec">SECTION 5</div>
+            <h2>개인정보 수집·이용 동의</h2>
+            <p class="gform-desc">AI윤리전문가 자격과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
+            <div class="gform-privacy">
+              <div><span>수집항목</span>성명, 생년월일, 연락처, 이메일, 소속 및 신청정보</div>
+              <div><span>이용목적</span>응시자 확인, 교육 및 자격검정 운영, 합격자 관리 및 자격증 발급</div>
+              <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
+            </div>
+            <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
+              <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
+            <p class="err-msg">개인정보 수집·이용 동의에 체크해 주세요.</p>
+          </div>
+
+          <div class="gform-card gform-submit">
+            <h2>AI윤리전문가 1기 응시 신청</h2>
+            <p>신청서를 제출하신 후 교육·자격검정 비용 결제를 완료하면 최종 등록이 확정됩니다.<br>
+               결제 확인 후 작성하신 이메일로 온라인 강의 링크와 자격검정 안내를 보내드립니다.</p>
+            <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 응시 신청하기 <i data-lucide="arrow-right"></i></button>
+            <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
+          </div>
+        </form>
+
+        <div class="gform-card gform-done" id="doneView" hidden>
+          <div class="done-icon"><i data-lucide="check"></i></div>
+          <h2>AI윤리전문가 1기 응시 신청이 완료되었습니다.</h2>
+          <p>최종 등록을 위해 아래 결제 페이지에서 선택하신 과정의 교육·자격검정 비용을 결제해 주세요.</p>
+          <a id="payBtn" class="btn btn-primary" target="_blank" rel="noopener" hidden>AI윤리전문가 교육·자격검정 결제하기 <i data-lucide="credit-card"></i></a>
+          <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
+          <div class="done-mailbox">
+            <p><strong>신청 내용 전송 안내</strong><br>제출 시 메일 앱이 자동으로 열립니다. 메일이 발송되지 않았다면
+               아래 신청 내용을 복사해 <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
+            <textarea id="doneCopy" readonly></textarea>
+            <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
+          </div>
+        </div>
+
+      </div>
+    </section>"""
+
+    script = """
+  <script>
+  (function(){
+    var form=document.getElementById('examForm');
+    var PAY={'2급':'__PAY2__','1급':'__PAY1__'};
+    var s2a=document.getElementById('sec2A'), s2b=document.getElementById('sec2B');
+    var birth=form.querySelector('[name=birth]');
+    birth.max=new Date().toISOString().slice(0,10);
+
+    function course(){var c=form.querySelector('[name=course]:checked');return c?c.value:'';}
+    function syncCourse(){
+      var c=course();
+      s2a.hidden=(c!=='2급'); s2b.hidden=(c!=='1급');
+      document.getElementById('secCourse').classList.remove('is-invalid');
+    }
+    form.querySelectorAll('[name=course]').forEach(function(r){r.addEventListener('change',syncCourse);});
+
+    /* expert.html 카드에서 ?course=2 / ?course=1 로 들어오면 미리 선택 */
+    var q=new URLSearchParams(location.search).get('course');
+    if(q==='2'||q==='1'){
+      var cv=(q==='2')?'2급':'1급';
+      var r=form.querySelector('[name=course][value="'+cv+'"]');
+      if(r){r.checked=true;syncCourse();}
+    }
+
+    function bad(id,on){document.getElementById(id).classList.toggle('is-invalid',!!on);return !!on;}
+    function v(n){var el=form.querySelector('[name='+n+']');return (el&&el.value?el.value:'').trim();}
+
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      var digits=v('phone').replace(/[^0-9]/g,'');
+      var job=form.querySelector('[name=job]:checked');
+      var errs=[
+        bad('secCourse',!course()),
+        bad('fName',!v('name')),
+        bad('fBirth',!v('birth')),
+        bad('fPhone',!(digits.length>=10&&digits.length<=11&&digits.slice(0,2)==='01')),
+        bad('fEmail',!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test(v('email'))),
+        bad('fJob',!job),
+        bad('secFlow',!form.querySelector('[name=flowok]').checked),
+        bad('secPriv',!form.querySelector('[name=privok]').checked)
+      ];
+      var first=document.querySelector('.is-invalid');
+      document.getElementById('topErr').style.display=first?'block':'none';
+      if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}
+
+      var c=course();
+      var lines=[
+        '한국AI윤리협회 AI윤리전문가 1기 응시 신청','',
+        '■ 응시 과정 : AI윤리전문가 '+c,
+        '■ 성명 : '+v('name'),
+        '■ 생년월일 : '+v('birth'),
+        '■ 휴대전화 : '+v('phone'),
+        '■ 이메일 : '+v('email'),
+        '■ 소속 : '+(v('org')||'해당 없음'),
+        '■ 직업/활동 분야 : '+job.value,'',
+        '■ 교육 및 자격검정 진행 절차 확인 : 동의',
+        '■ 개인정보 수집·이용 : 동의','',
+        '--- kaiec.kr AI윤리전문가 응시 접수 페이지에서 작성됨 ---'
+      ];
+      var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
+              +'&body='+encodeURIComponent(lines.join('\\n'));
+
+      /* 완료 화면 표시 */
+      form.hidden=true;
+      var done=document.getElementById('doneView'); done.hidden=false;
+      document.getElementById('doneCopy').value=lines.join('\\n');
+      var link=PAY[c]||'';
+      if(link){var pb=document.getElementById('payBtn');pb.href=link;pb.hidden=false;}
+      else{document.getElementById('payWait').hidden=false;}
+      window.scrollTo({top:done.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
+      setTimeout(function(){location.href=mail;},350);
+    });
+
+    document.getElementById('copyBtn').addEventListener('click',function(){
+      var t=document.getElementById('doneCopy'); t.select();
+      var ok=false;
+      try{ok=document.execCommand('copy');}catch(err){}
+      if(navigator.clipboard){navigator.clipboard.writeText(t.value).catch(function(){});ok=true;}
+      this.textContent=ok?'복사되었습니다':'복사 후 붙여넣어 주세요';
+      var b=this; setTimeout(function(){b.textContent='신청 내용 복사';},2200);
+    });
+  })();
+  </script>
+""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1)
+
+    page("expert-apply.html", "AI윤리전문가 1기 응시 접수",
+         "한국AI윤리협회 AI윤리전문가 1기 응시 접수 페이지입니다. 2급·1급 과정을 선택하고 응시자 정보를 입력하면 교육과 자격검정 안내를 받을 수 있습니다.",
+         body, extra_script=script,
+         keywords=["AI윤리전문가 응시", "AI윤리전문가 접수", "AI 윤리 자격증 신청", "AI윤리전문가 2급",
+                   "AI윤리전문가 1급", "AI 윤리 자격검정", "한국AI윤리협회"])
 
 
 # ---------------------------------------------------------------- apply.html
@@ -2546,9 +2870,116 @@ def build_apply():
             <div class="chips"><span class="chip">{tag}</span></div>
           </article>""" for ic, t, d, tag in roles)
 
-    body = hero_sub("위원 지원",
-                    "대표위원 · 운영위원 · 지역 운영위원 · 캠퍼스 위원장 · 홍보위원 · 서포터즈를 상시 모집합니다.",
-                    "위원 지원") + f"""
+    body = hero_sub("위원·회원사 신청",
+                    "책임 있는 AI를 함께 실천할 기업·기관 회원사와 개인 위원·AI 윤리 파트너를 상시 모집합니다.",
+                    "위원·회원사 신청") + f"""
+
+    <section class="section section--tight" style="padding-bottom:0">
+      <div class="wrap-narrow">
+        <div class="apply-tabs">
+          <button class="atab is-on" data-tab="member" type="button"><i data-lucide="building-2"></i>기업·기관 회원사</button>
+          <button class="atab" data-tab="individual" type="button"><i data-lucide="users"></i>개인 위원 · 파트너</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="tab-member">
+    <section class="section">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:42px">
+          <span class="eyebrow">Corporate Membership</span>
+          <h2 class="h-sec">한국AI윤리협회 회원사</h2>
+          <p class="h-sub">책임 있는 AI를 실천하는 기업·기관의 네트워크입니다. 회원사는 협회의 교육·자문·인증 자원을
+             우선적으로 활용하고, <strong>"한국AI윤리협회 회원사"</strong>로서 대외 신뢰를 확보합니다.</p>
+        </div>
+        <div class="grid grid-3">
+          <article class="card reveal"><div class="card-icon"><i data-lucide="badge-check"></i></div>
+            <h3>회원사 인증서 · 현판</h3><p>협회 명의의 회원사 인증서와 현판을 제공하며, 홈페이지·소개자료에 "한국AI윤리협회 회원사" 표기를 사용할 수 있습니다.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="monitor-play"></i></div>
+            <h3>AI 윤리 교육 할인</h3><p>임직원 대상 출강 교육(1~4시간 맞춤 과정)을 회원 등급에 따라 할인된 비용으로 이용합니다.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="award"></i></div>
+            <h3>자격과정 응시 우대</h3><p>임직원의 AI윤리전문가 자격과정(2급·1급) 응시 시 우선 접수와 우대 혜택이 적용됩니다.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="shield-check"></i></div>
+            <h3>AI 활용 기준 자문</h3><p>사내 생성형 AI 활용 지침과 AI기본법 대응 방향에 대한 기초 자문을 제공합니다.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="megaphone"></i></div>
+            <h3>공동 캠페인 · 홍보</h3><p>협회 홈페이지 로고 게재, 캠페인·세미나 공동 참여 등 대외 홍보 기회를 함께합니다.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="file-check"></i></div>
+            <h3>회비 납부 증빙 발급</h3><p>납부 회비에 대한 납부확인서 등 증빙 서류를 발급합니다. 비용 처리 세부 기준은 기관의 세무 담당자와 확인해 주세요.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray" id="fee">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:40px">
+          <span class="eyebrow">Membership</span>
+          <h2 class="h-sec">회원 등급 및 연회비</h2>
+          <p class="h-sub">기관 규모와 활용 범위에 맞는 등급을 선택하세요. 연회비와 혜택 구성은 협의에 따라 조정할 수 있습니다.</p>
+        </div>
+        <div class="price-grid fee-3">
+          <div class="price-card reveal">
+            <div class="price-hours">준회원</div>
+            <div class="price-num">30<small>만원 / 년</small></div>
+            <div class="price-note">스타트업 · 1인 기업 · 소상공인</div>
+            <ul style="text-align:left;margin-top:14px;display:grid;gap:7px;font-size:13.5px;color:var(--gray-600)">
+              <li>· 회원사 인증서 발급</li>
+              <li>· "협회 회원사" 표기 사용</li>
+              <li>· AI 윤리 교육 10% 할인</li>
+              <li>· AI 규제·윤리 동향 뉴스레터</li>
+            </ul>
+          </div>
+          <div class="price-card reveal" style="position:relative;border-color:var(--blue)">
+            <span class="badge" style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff">가장 많이 선택</span>
+            <div class="price-hours">정회원</div>
+            <div class="price-num">100<small>만원 / 년</small></div>
+            <div class="price-note">기업 · 기관 · 단체</div>
+            <ul style="text-align:left;margin-top:14px;display:grid;gap:7px;font-size:13.5px;color:var(--gray-600)">
+              <li>· 준회원 혜택 전체 포함</li>
+              <li>· 회원사 현판 제공</li>
+              <li>· AI 윤리 교육 20% 할인</li>
+              <li>· 임직원 자격과정 응시 우대</li>
+              <li>· 협회 홈페이지 로고 게재</li>
+            </ul>
+          </div>
+          <div class="price-card reveal">
+            <div class="price-hours">후원회원</div>
+            <div class="price-num">300<small>만원 / 년</small></div>
+            <div class="price-note">파트너 기관 · 후원 기업</div>
+            <ul style="text-align:left;margin-top:14px;display:grid;gap:7px;font-size:13.5px;color:var(--gray-600)">
+              <li>· 정회원 혜택 전체 포함</li>
+              <li>· 공동 캠페인·세미나 파트너</li>
+              <li>· 사내 AI 활용 기준 기초 자문</li>
+              <li>· MOU 우선 체결·공동사업 협의</li>
+            </ul>
+          </div>
+        </div>
+        <div class="notice notice--gray" style="max-width:1020px;margin:24px auto 0">
+          <strong>안내:</strong> 연회비는 기관 상황에 따라 협의 조정이 가능하며, 납부 회비에 대한 증빙 서류를 발급해 드립니다.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap-narrow">
+        <div class="center" style="margin-bottom:38px">
+          <span class="eyebrow">Process</span>
+          <h2 class="h-sec">회원사 가입 절차</h2>
+        </div>
+        <div class="grid grid-4">
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">가입 문의</h3><p style="font-size:14px">온라인 문의 또는 메일 접수</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">등급 협의</h3><p style="font-size:14px">혜택·연회비 협의</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">가입 확정</h3><p style="font-size:14px">회비 납부 · 증빙 발급</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">활동 시작</h3><p style="font-size:14px">인증서·현판 발급 후 혜택 이용</p></div>
+        </div>
+        <div class="center" style="margin-top:34px;display:flex;gap:11px;justify-content:center;flex-wrap:wrap">
+          <a class="btn btn-primary" href="mou.html#inquiry">회원사 가입 문의하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-ghost" href="mailto:{EMAIL}">메일로 문의하기</a>
+        </div>
+      </div>
+    </section>
+    </div>
+
+    <div id="tab-individual" hidden>
 
     <section class="section">
       <div class="wrap">
@@ -2602,15 +3033,36 @@ def build_apply():
     <section class="section section--gray section--tight">
       <div class="wrap-narrow">
         <div class="notice notice--teal">
-          <strong>안내 —</strong> 위원·파트너 지원과 활동 과정에서 가입비, 교육비 등
+          <strong>안내:</strong> 위원·파트너 지원과 활동 과정에서 가입비, 교육비 등
           어떠한 비용도 요구하지 않습니다. 지원서 검토 결과는 개별적으로 안내드립니다.
         </div>
       </div>
-    </section>"""
+    </section>
+    </div>"""
 
-    page("apply.html", "위원 지원",
-         "한국AI윤리협회 전문위원·AI 윤리 파트너 상시 모집. 온라인으로 간편하게 지원하실 수 있습니다.",
-         body)
+    tab_js = """  <script>
+  /* 회원사 / 개인 탭 전환 (#member, #individual 딥링크 지원) */
+  (function(){
+    var tabs=document.querySelectorAll('.atab');
+    function show(t){
+      document.getElementById('tab-member').hidden=(t!=='member');
+      document.getElementById('tab-individual').hidden=(t!=='individual');
+      tabs.forEach(function(b){b.classList.toggle('is-on',b.getAttribute('data-tab')===t)});
+    }
+    tabs.forEach(function(b){b.addEventListener('click',function(){
+      show(b.getAttribute('data-tab'));
+      history.replaceState(null,'','#'+b.getAttribute('data-tab'));
+    })});
+    if(location.hash==='#individual')show('individual');
+  })();
+  </script>
+"""
+
+    page("apply.html", "위원·회원사 신청",
+         "한국AI윤리협회 기업·기관 회원사 모집과 개인 위원·AI 윤리 파트너 지원 안내. 회원사 혜택, 연회비, 가입 절차를 확인하고 온라인으로 신청하세요.",
+         body, extra_script=tab_js,
+         keywords=["한국AI윤리협회 회원사", "AI 윤리 협회 가입", "협회 회원사 모집", "AI 윤리 위원",
+                   "AI 윤리 파트너", "기업 AI 윤리", "AI 협회 연회비"])
 
 
 if __name__ == "__main__":
@@ -2623,6 +3075,7 @@ if __name__ == "__main__":
     build_members()
     build_lecture()
     build_expert()
+    build_expert_apply()
     build_partner()
     build_copyclean()
     build_news(posts)

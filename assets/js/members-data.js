@@ -73,6 +73,7 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
    조직·위원 페이지 맨 아래 '공식 파트너'에 표시됩니다. 계속 추가 가능.
    logo: assets/img/ 폴더의 로고 파일명 (없으면 기관명 텍스트로 표시) */
 window.KAIEC_OFFICIAL_PARTNERS = [
+  { name: '성균관대학교 RISE사업단', logo: 'partner-rise.jpg', url: '' },
   { name: '성균관컨설팅', logo: '', url: 'https://www.skkc.co.kr' },
   { name: '카피클린 (CopyClean)', logo: '', url: 'copyclean.html' },
   // ↓ 여기에 계속 추가하세요.
