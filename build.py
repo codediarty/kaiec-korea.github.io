@@ -227,7 +227,7 @@ def header():
       {BRAND}
       <nav class="nav" id="nav">
           {links}
-          <span class="header-cta"><a class="btn btn-primary btn-sm" href="{GOOGLE_FORM}" target="_blank" rel="noopener">파트너 지원</a><a class="btn btn-teal btn-sm" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">문서 검사</a></span>
+          <span class="header-cta"><a class="btn btn-primary btn-sm" href="expert.html">AI윤리전문가</a><a class="btn btn-teal btn-sm" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">문서 검사</a></span>
       </nav>
       <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
         <i data-lucide="menu"></i>
@@ -308,7 +308,7 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v={BUILD_V}">
 <script>document.documentElement.className+=' js';</script>
 {extra_head}</head>
@@ -349,9 +349,9 @@ BUSINESS = [
     ("megaphone", "AI 윤리 캠페인 및 교육·콘텐츠",
      "온라인 캠페인, 카드뉴스, 영상, 강의 자료 등 누구나 쉽게 접근할 수 있는 형태로 AI 윤리 콘텐츠를 제작·배포합니다. 대학생·대학원생·연구자·직장인 등 실사용자 눈높이에 맞춘 실용적 내용을 지향합니다.",
      ["온·오프라인 AI 윤리 캠페인 기획", "교육 자료 및 강의 콘텐츠 제작", "SNS 기반 인식 개선 콘텐츠 운영"]),
-    ("users", "AI 윤리 파트너 및 전문위원 운영",
-     "AI 윤리에 관심 있는 개인이 온라인·재택 방식으로 참여할 수 있는 「AI 윤리 파트너」 제도와, 분야별 전문성을 바탕으로 자문하는 전문위원 제도를 운영합니다.",
-     ["AI 윤리 파트너 모집 및 활동 지원", "전문위원 위촉 및 분과 운영", "위촉장·활동증명서 발급"]),
+    ("award", "AI윤리전문가 양성 및 자격검정",
+     "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가」 자격과정(2급·1급)과 전문강사 양성을 운영하고, AI 윤리 파트너·전문위원 제도로 현장 활동까지 연결합니다.",
+     ["AI윤리전문가 자격과정(2급·1급) 운영", "전문강사 양성 및 출강 연계", "AI 윤리 파트너·전문위원 위촉 및 활동 지원"]),
     ("handshake", "대학·기업·협회와의 MOU 및 제휴",
      "대학, 기업, 협회, 연구기관 등과 업무협약을 체결하고 공동 캠페인·교육·연구를 추진합니다. 각 기관의 현장 상황에 맞는 AI 윤리 실천 방안을 함께 설계합니다.",
      ["기관 간 업무협약(MOU) 체결", "공동 캠페인 및 세미나 개최", "기관 맞춤형 AI 윤리 자문"]),
@@ -401,22 +401,101 @@ def build_index(posts):
         <h1>AI를 잘 쓰는 것보다<br><span class="accent">책임 있게 쓰는 것</span>이 먼저입니다</h1>
         <p>한국AI윤리협회(KAIEC)는 책임 있는 인공지능 활용문화 확산을 위해 AI 윤리 교육, 연구, 캠페인,
            전문가 양성 및 국내외 협력 활동을 추진하는 전문기관입니다.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="about.html">협회 소개 <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-light" href="lecture.html">교육·강사 파견 <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-light" href="partner.html">AI 윤리 파트너 참여 <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-teal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">카피클린 문서검사 <i data-lucide="external-link"></i></a>
+
+        <div class="ai-visual" aria-hidden="true">
+            <svg class="ai-net" viewBox="0 0 430 332" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g stroke="#7FA8E8" stroke-opacity=".32" stroke-width="1">
+                <path d="M215 166 80 62M215 166 352 56M215 166 62 252M215 166 368 242M80 62 352 56M62 252 368 242M80 62 62 252M352 56 368 242M215 30 215 166"/>
+              </g>
+              <g fill="#9FC4FF">
+                <circle cx="80" cy="62" r="3"/><circle cx="352" cy="56" r="3"/>
+                <circle cx="62" cy="252" r="3"/><circle cx="368" cy="242" r="3"/>
+                <circle cx="215" cy="30" r="2.5" fill="#6FE3D8"/>
+                <circle cx="150" cy="302" r="2.5" fill="#6FE3D8"/><circle cx="298" cy="300" r="2.5" fill="#6FE3D8"/>
+              </g>
+            </svg>
+            <span class="ai-ring ai-ring-1"></span>
+            <span class="ai-ring ai-ring-2"></span>
+            <span class="ai-orb">AI</span>
+            <span class="ai-chip ai-chip-1"><b>Responsibility</b><i>책임성</i></span>
+            <span class="ai-chip ai-chip-2"><b>Transparency</b><i>투명성</i></span>
+            <span class="ai-chip ai-chip-3"><b>Fairness</b><i>공정성</i></span>
+            <span class="ai-chip ai-chip-4"><b>Human-Centric</b><i>사람 중심</i></span>
+            <span class="ai-script">Responsible AI, Better Tomorrow</span>
+          </div>
+
+          <div class="hero-bottom">
+          <div class="hero-ctas">
+            <div class="hcta">
+              <a class="btn btn-primary" href="expert.html"><i data-lucide="graduation-cap"></i>AI윤리전문가 시험 <i data-lucide="arrow-right"></i></a>
+              <span class="hcta-cap">2급 · 1급 자격검정 바로가기</span>
+            </div>
+            <div class="hcta">
+              <a class="btn btn-light" href="apply.html"><i data-lucide="users"></i>위원·회원사 신청 <i data-lucide="arrow-right"></i></a>
+              <span class="hcta-cap">캠페인위원 및 기업·기관 회원 모집</span>
+            </div>
+            <div class="hcta">
+              <a class="btn btn-light" href="lecture.html"><i data-lucide="monitor-play"></i>전문강사 출강 신청 <i data-lucide="arrow-right"></i></a>
+              <span class="hcta-cap">학교·기업·공공기관 맞춤 교육</span>
+            </div>
+            <div class="hcta">
+              <a class="btn btn-teal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener"><i data-lucide="file-search"></i>카피클린 문서검사 <i data-lucide="external-link"></i></a>
+              <span class="hcta-cap">AI 사용 여부 확인하기</span>
+            </div>
+          </div>
+
+          <div class="hero-promo">
+            <div>
+              <strong>AI윤리전문가 1기 모집 중 <span class="promo-new">NEW</span></strong>
+              <p>AI 윤리 전문지식과 실무역량을 갖춘 전문가로 성장하세요.</p>
+            </div>
+            <a class="btn btn-white btn-sm" href="expert.html">자세히 보기 <i data-lucide="arrow-right"></i></a>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="section section--tight">
       <div class="wrap">
+        <div class="feature-cards" style="margin-bottom:38px">
+          <a class="fcard reveal" href="expert.html">
+            <div class="fc-visual fc-v1"><i data-lucide="award"></i></div>
+            <div class="fc-body">
+              <h3>AI윤리전문가 자격과정</h3>
+              <p>2급(2시간) · 1급(4시간)<br>온라인 교육 + 자격검정</p>
+              <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
+            </div>
+          </a>
+          <a class="fcard reveal" href="lecture.html">
+            <div class="fc-visual fc-v2"><i data-lucide="school"></i></div>
+            <div class="fc-body">
+              <h3>전문강사 출강 안내</h3>
+              <p>학교·기업·공공기관 맞춤형<br>AI 윤리 교육</p>
+              <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
+            </div>
+          </a>
+          <a class="fcard reveal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">
+            <div class="fc-visual fc-v3"><i data-lucide="file-search"></i></div>
+            <div class="fc-body">
+              <h3>카피클린 문서검사</h3>
+              <p>AI 사용 여부 확인<br>제출 전 사전점검</p>
+              <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
+            </div>
+          </a>
+          <a class="fcard reveal" href="mou.html">
+            <div class="fc-visual fc-v4"><i data-lucide="handshake"></i></div>
+            <div class="fc-body">
+              <h3>기업·기관 제휴</h3>
+              <p>AI 교육, 캠페인, AX 컨설팅<br>공동사업 제휴</p>
+              <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
+            </div>
+          </a>
+        </div>
         <div class="stats reveal">
-          <div class="stat"><div class="stat-num"><span data-count="6">6</span></div><div class="stat-label">주요사업 영역</div></div>
-          <div class="stat"><div class="stat-num"><span data-count="4">4</span></div><div class="stat-label">윤리 핵심가치</div></div>
-          <div class="stat"><div class="stat-num"><span data-count="7">7</span></div><div class="stat-label">윤리헌장 실천조항</div></div>
-          <div class="stat"><div class="stat-num">상시</div><div class="stat-label">위원·파트너 모집</div></div>
+          <div class="stat"><div class="stat-num"><span data-count="6">6</span></div><div class="stat-label">주요사업 영역</div><div class="stat-sub">교육 · 연구 · 캠페인 · 자격 · 협력 · 컨설팅</div></div>
+          <div class="stat"><div class="stat-num"><span data-count="4">4</span></div><div class="stat-label">윤리 핵심가치</div><div class="stat-sub">책임성 · 투명성 · 공정성 · 포용성</div></div>
+          <div class="stat"><div class="stat-num"><span data-count="7">7</span></div><div class="stat-label">윤리헌장 실천조항</div><div class="stat-sub">실천 가능한 AI 윤리 가이드라인</div></div>
+          <div class="stat"><div class="stat-num">상시</div><div class="stat-label">위원·회원사 모집</div><div class="stat-sub">함께 만드는 책임 있는 AI 사회</div></div>
         </div>
       </div>
     </section>
@@ -527,10 +606,10 @@ def build_index(posts):
         <div class="cta-band reveal">
           <div>
             <h2>AI 윤리 활동에 함께하실 분을 기다립니다</h2>
-            <p>전문위원 · AI 윤리 파트너 상시 모집 중입니다. 온라인으로 간편하게 지원하실 수 있습니다.</p>
+            <p>전문위원 · 캠페인위원과 기업·기관 회원사를 상시 모집합니다. 온라인으로 간편하게 신청하실 수 있습니다.</p>
           </div>
           <div class="btns">
-            <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">위원 지원하기</a>
+            <a class="btn btn-white" href="apply.html">위원·회원사 신청</a>
             <a class="btn btn-light" href="lecture.html">강의·교육 신청</a>
             <a class="btn btn-light" href="mou.html#inquiry">제휴 문의</a>
           </div>
@@ -829,7 +908,7 @@ def build_business():
     </section>"""
 
     page("business.html", "주요사업",
-         "책임 있는 생성형 AI 활용 확산, AI 윤리 캠페인·교육, AI 윤리 파트너 운영, 대학·기업 MOU, AI 활용 문서 사전점검, AI 윤리 연구 등 한국AI윤리협회의 6대 주요사업을 소개합니다.",
+         "책임 있는 생성형 AI 활용 확산, AI 윤리 캠페인·교육, AI윤리전문가 양성·자격검정, 대학·기업 MOU, AI 활용 문서 사전점검, AI 윤리 연구 등 한국AI윤리협회의 6대 주요사업을 소개합니다.",
          body)
 
 
@@ -1612,6 +1691,7 @@ def build_sitemap(posts):
     today = datetime.date.today().strftime("%Y-%m-%d")
     core = [("", "1.0", "weekly"), ("about.html", "0.9", "monthly"), ("business.html", "0.9", "monthly"),
             ("members.html", "0.8", "monthly"), ("lecture.html", "0.9", "monthly"),
+            ("expert.html", "0.9", "monthly"),
             ("partner.html", "0.9", "monthly"), ("copyclean.html", "0.8", "monthly"),
             ("news.html", "0.8", "daily"), ("mou.html", "0.8", "monthly"), ("apply.html", "0.9", "monthly")]
     urls = []
@@ -2195,6 +2275,278 @@ def build_lecture():
                    "딥페이크 예방 교육", "청소년 AI 교육", "기업 AI 교육", "AI 정보보안 교육", "찾아가는 AI 교육"])
 
 
+# --------------------------------------------------------------- expert.html
+def build_expert():
+    """AI윤리전문가 자격과정 — 양성 필요성과 과정 안내 (전환형 랜딩)"""
+    WHY = [
+        ("scale", "국내 — AI기본법 시행", "2026. 1",
+         "「인공지능 발전과 신뢰 기반 조성 등에 관한 기본법」(AI기본법)이 2026년 1월 22일 시행되었습니다. 고영향·생성형 AI에 대한 투명성 고지, AI 생성물 표시 등 새로운 의무가 도입되었고, AI를 <strong>개발하는 기업만이 아니라 활용하는 기업·기관도 의무의 주체</strong>가 됩니다."),
+        ("building-2", "글로벌 — EU AI Act 본격 집행", "2026. 8",
+         "EU AI Act는 2025년 금지 규정과 조직 구성원의 <strong>AI 리터러시 확보 의무</strong>를 시작으로, 2026년 8월부터 대부분 조항의 시행과 집행이 본격화되었습니다. 글로벌 기준에 맞는 AI 윤리 역량은 이제 수출·협력 기업의 실무 요건입니다."),
+        ("shield-check", "현장 — 상시화된 AI 리스크", "지금",
+         "기밀 정보 입력, 허위 정보(환각) 인용, 저작권 분쟁, AI 표절 논란 — 생성형 AI가 업무와 학습의 일상이 되면서 사고도 일상이 되었습니다. <strong>기준을 아는 한 사람</strong>이 조직 전체의 리스크를 줄입니다."),
+        ("trending-up", "기회 — 아직 소수인 전문 인력", "선점",
+         "AI를 쓸 줄 아는 사람은 많지만, AI 윤리와 규제 대응을 체계적으로 배운 사람은 아직 소수입니다. 수요가 먼저 커진 시장에서 <strong>지금 시작하는 사람이 전문가 그룹의 첫 자리</strong>를 차지합니다."),
+    ]
+    why_cards = "\n".join(f"""          <article class="card reveal">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <div class="card-icon" style="margin-bottom:0"><i data-lucide="{ic}"></i></div>
+              <span class="card-num" style="margin-bottom:0">{when}</span>
+            </div>
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </article>""" for ic, t, when, d in WHY)
+
+    CAREER = [
+        ("file-check", "이력서의 확실한 한 줄",
+         "한국AI윤리협회 명의의 자격증으로, AI를 '잘' 쓰는 것을 넘어 <strong>책임 있게 다룰 줄 아는 사람</strong>임을 공식적으로 증명합니다. AI 활용 능력이 평준화될수록 이 한 줄의 차별화 가치는 커집니다."),
+        ("building-2", "기업·기관에서 실제로 쓰입니다",
+         "AI기본법 시행으로 기업·기관마다 사내 AI 활용 기준과 임직원 교육을 맡을 사람이 필요해졌습니다. 자격 보유자는 그 역할의 <strong>가장 자연스러운 후보</strong>가 됩니다."),
+        ("trending-up", "앞으로가 더 유망한 분야",
+         "AI가 확산될수록 AI 윤리·컴플라이언스 수요는 함께 커집니다. 규제가 막 시작된 지금이 <strong>가장 빠른 선점 시점</strong>이고, 1기 취득자는 이 분야의 첫 번째 경력자가 됩니다."),
+        ("users", "자격에서 활동으로 이어지는 경로",
+         "취득 후 협회의 전문강사 양성·출강, 캠페인·자문 활동과 연계됩니다. 자격증이 종이로 끝나지 않고 <strong>실제 커리어</strong>로 이어지도록 협회가 함께합니다."),
+    ]
+    career_cards = "\n".join(f"""          <article class="card reveal">
+            <div class="card-icon"><i data-lucide="{ic}"></i></div>
+            <h3>{t}</h3><p>{d}</p>
+          </article>""" for ic, t, d in CAREER)
+
+    body = f"""    <section class="page-hero">
+      <div class="wrap page-hero-inner" style="padding:78px 0 72px">
+        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>KAIEC 자격과정 · 1기 모집 중</span>
+        <h1>AI윤리전문가 자격과정</h1>
+        <p style="font-size:17.5px;max-width:740px">AI를 쓸 줄 아는 사람은 많습니다.<br>
+           기업과 기관이 찾는 것은 AI를 <strong style="color:#6FE3D8">책임 있게 다룰 줄 아는 사람</strong>이고,<br>
+           그 증명이 한국AI윤리협회의 「AI윤리전문가」 자격증입니다. <strong style="color:#fff">2급은 단 2시간이면 시작합니다.</strong></p>
+        <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:30px">
+          <a class="btn btn-primary" href="{GOOGLE_FORM}" target="_blank" rel="noopener">2급 응시 접수하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-light" href="#why">왜 지금인가</a>
+          <a class="btn btn-light" href="#course">과정 안내 보기</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <div class="stats reveal">
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 1</div><div class="stat-label">AI기본법 시행</div><div class="stat-sub">국내 AI 의무 규제 시대 개막</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 8</div><div class="stat-label">EU AI Act 본격 집행</div><div class="stat-sub">글로벌 AI 규제 확산</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2시간</div><div class="stat-label">2급 대표 과정</div><div class="stat-sub">온라인 교육 + 자격검정 원스톱</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">1기</div><div class="stat-label">지금 모집 중</div><div class="stat-sub">첫 번째 전문가 그룹</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:44px">
+          <span class="eyebrow">Why Now</span>
+          <h2 class="h-sec">왜 지금, AI윤리전문가인가</h2>
+          <p class="h-sub">AI 윤리는 교양에서 <strong>실무 요건</strong>이 되었습니다. 법과 시장이 동시에 움직이고 있습니다.</p>
+        </div>
+        <div class="grid grid-2">
+{why_cards}
+        </div>
+        <div class="notice notice--teal" style="margin-top:26px">
+          <strong>핵심은 하나입니다 —</strong> 규제와 사고가 늘어날수록, 조직마다 "AI를 어디까지 어떻게 써야 하는가"에
+          답할 수 있는 사람이 필요해집니다. AI윤리전문가 자격과정은 그 답을 체계적으로 배우는 가장 빠른 경로입니다.
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:42px">
+          <span class="eyebrow">Career Value</span>
+          <h2 class="h-sec">이 자격증은 커리어에 이렇게 작동합니다</h2>
+          <p class="h-sub">공부를 위한 공부가 아닙니다. 취득하는 순간부터 이력서와 실무에서 쓰입니다.</p>
+        </div>
+        <div class="grid grid-2" style="margin-bottom:30px">
+{career_cards}
+        </div>
+        <div class="grid grid-3">
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">2급 취득</h3><p style="font-size:14px">책임 있는 AI 활용 역량 증명 — 모든 시작</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 02</span><h3 style="font-size:16px">1급 · 심화</h3><p style="font-size:14px">교육·자문까지 가능한 전문가 역량</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 03</span><h3 style="font-size:16px">협회 활동 연계</h3><p style="font-size:14px">전문강사 · 캠페인 · 자문 활동으로 확장</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="course">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:44px">
+          <span class="eyebrow">Curriculum</span>
+          <h2 class="h-sec">시작은 2급이면 충분합니다</h2>
+          <p class="h-sub">복잡한 커리큘럼을 외우는 과정이 아닙니다. 현장에서 바로 쓰는 기준을 배우고,
+             <strong>온라인 교육 + 자격검정</strong>으로 협회 명의 자격증까지 한 번에 완성합니다.</p>
+        </div>
+        <div class="grid grid-2" style="align-items:stretch">
+          <article class="reveal" style="position:relative;overflow:hidden;border-radius:var(--radius-lg);padding:34px 30px;background:linear-gradient(150deg,#0F2A5F 0%,#1F5FE0 100%);color:#fff;display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 48px rgba(31,95,224,.35)">
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+              <span class="badge" style="background:#6FE3D8;color:#03302B">대표 과정 · 추천</span>
+              <span class="badge" style="background:rgba(255,255,255,.16);color:#fff">온라인 2시간 + 자격검정</span>
+            </div>
+            <h3 style="font-size:24px;letter-spacing:-.03em;color:#fff">AI윤리전문가 2급</h3>
+            <p style="color:#CFE0FF;font-size:15.5px;line-height:1.8">
+              AI를 쓰는 사람이라면 누구나. <strong style="color:#fff">단 2시간 투자</strong>로 책임 있는 AI 활용 역량을
+              한국AI윤리협회 자격증으로 증명하세요. 전공·경력 제한 없이 전 과정 온라인으로 진행됩니다.</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap">
+              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#AI 윤리 핵심 원칙</span>
+              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#안전한 생성형 AI 활용</span>
+              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#AI기본법 기초</span>
+            </div>
+            <div style="margin-top:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">2급 응시 접수하기 <i data-lucide="arrow-right"></i></a>
+              <span style="font-size:12.5px;color:#AFC4E4">1기 모집 중 · 일정과 비용은 접수자에게 개별 안내</span>
+            </div>
+          </article>
+          <article class="card reveal" style="display:flex;flex-direction:column;gap:13px">
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+              <span class="badge badge--teal">1급 · 심화</span>
+              <span style="font-size:13px;font-weight:700;color:#00857A">온라인 4시간 + 자격검정</span>
+            </div>
+            <h3 style="font-size:20px">AI윤리전문가 1급</h3>
+            <p style="font-size:14.5px;line-height:1.75">2급 취득 후 도전하는 전문가 과정입니다. 기업 AI 컴플라이언스와
+               AI 윤리 교육·자문 역량까지 — 조직을 <strong>가르치고 이끄는 사람</strong>을 위한 인증입니다.</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap">
+              <span class="chip">#기업 AI 컴플라이언스</span><span class="chip">#교육·강의 역량</span><span class="chip">#사례 분석</span>
+            </div>
+            <a class="btn btn-ghost" style="margin-top:auto;align-self:flex-start" href="{GOOGLE_FORM}" target="_blank" rel="noopener">1급 함께 접수하기 <i data-lucide="arrow-right"></i></a>
+          </article>
+        </div>
+        <div class="notice" style="margin-top:24px">
+          <strong>협회 직접 운영 —</strong> 본 과정은 한국AI윤리협회(KAIEC)가 교육 콘텐츠 구성부터 검정, 자격증 발급까지
+          직접 운영합니다. 커리큘럼은 협회 6개 분과 전문위원의 자문과 검토를 거쳐 구성됩니다.
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--ink">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:40px">
+          <span class="eyebrow">Benefits</span>
+          <h2 class="h-sec" style="color:#fff">취득하면 달라지는 것</h2>
+        </div>
+        <div class="grid grid-4">
+          <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
+            <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="award"></i></div>
+            <h3 style="color:#fff;font-size:17px">협회 명의 자격증</h3>
+            <p style="color:#9FB3D1">「AI윤리전문가」 자격증 발급 — 이력서·포트폴리오에 기재할 수 있는 공식 증빙</p>
+          </div>
+          <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
+            <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="users"></i></div>
+            <h3 style="color:#fff;font-size:17px">전문가 네트워크</h3>
+            <p style="color:#9FB3D1">협회 전문가 그룹에 참여해 정보와 활동 기회를 함께 나눕니다</p>
+          </div>
+          <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
+            <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="monitor-play"></i></div>
+            <h3 style="color:#fff;font-size:17px">강사 활동 연계</h3>
+            <p style="color:#9FB3D1">우수 수료자는 전문강사 양성과 출강 기회 안내 대상이 됩니다</p>
+          </div>
+          <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
+            <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="sparkles"></i></div>
+            <h3 style="color:#fff;font-size:17px">협회 활동 연계</h3>
+            <p style="color:#9FB3D1">Fellowship·캠페인 등 협회 공식 활동과 우선 연계됩니다</p>
+          </div>
+        </div>
+        <div class="footer-disclaimer" style="margin-top:24px">1기 수료자는 한국AI윤리협회와 함께 성장하는 첫 번째 전문가 그룹이 됩니다.</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:40px">
+          <span class="eyebrow">Who Should Apply</span>
+          <h2 class="h-sec">이런 분께 추천합니다</h2>
+        </div>
+        <div class="grid grid-4">
+          <article class="card reveal"><div class="card-icon"><i data-lucide="briefcase"></i></div>
+            <h3>기업 실무자·관리자</h3><p>사내 AI 도입과 활용 기준을 만들어야 하는 분 — 규제 대응의 첫 담당자가 되세요.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
+            <h3>강사·교사·교수자</h3><p>AI 윤리 교육 수요가 커지는 지금, 가르칠 수 있는 자격과 콘텐츠를 갖추세요.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="school"></i></div>
+            <h3>대학(원)생·취업준비생</h3><p>AI 활용 능력에 '책임'이라는 차별화를 더하세요. 이력서에 기재 가능한 자격입니다.</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="building-2"></i></div>
+            <h3>공공·기관 종사자</h3><p>기관의 AI 활용 지침과 교육을 준비해야 하는 분께 실무 기준을 제공합니다.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray">
+      <div class="wrap-narrow">
+        <div class="center" style="margin-bottom:38px">
+          <span class="eyebrow">Process</span>
+          <h2 class="h-sec">응시 절차</h2>
+        </div>
+        <div class="grid grid-4">
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 접수</h3><p style="font-size:14px">아래 접수 버튼으로 신청</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">온라인 교육 수강</h3><p style="font-size:14px">2급 2시간 · 1급 4시간</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자격검정 응시</h3><p style="font-size:14px">온라인 검정</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">자격증 발급</h3><p style="font-size:14px">합격 시 협회 명의 발급</p></div>
+        </div>
+        <p class="field-hint" style="margin-top:18px;text-align:center">검정 일정과 응시 비용은 1기 접수자에게 개별 안내드립니다.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap-narrow">
+        <div class="center" style="margin-bottom:34px">
+          <span class="eyebrow">FAQ</span>
+          <h2 class="h-sec">자주 묻는 질문</h2>
+        </div>
+        <details class="acc">
+          <summary>전공이나 경력이 없어도 응시할 수 있나요?</summary>
+          <div class="acc-body">네. AI윤리전문가 과정은 전공·경력 제한이 없습니다. 생성형 AI를 사용해 본 경험이 있다면
+            누구나 2급부터 시작하실 수 있으며, 교육이 기초부터 다루므로 사전 지식이 없어도 충분히 따라올 수 있습니다.</div>
+        </details>
+        <details class="acc">
+          <summary>교육과 검정은 모두 온라인인가요?</summary>
+          <div class="acc-body">네. 교육 수강부터 자격검정, 자격증 발급 안내까지 전 과정이 온라인으로 진행됩니다.
+            직장·학업과 병행하기 쉽도록 설계되어 있습니다.</div>
+        </details>
+        <details class="acc">
+          <summary>2급과 1급 중 무엇부터 시작해야 하나요?</summary>
+          <div class="acc-body">처음이라면 2급(2시간)을 권합니다. AI 윤리의 기준과 안전 수칙을 빠르게 갖출 수 있습니다.
+            교육·자문·관리 등 전문 활동을 목표한다면 1급(4시간)까지 이어가는 것을 추천합니다.
+            상세 응시 기준은 접수 후 안내드립니다.</div>
+        </details>
+        <details class="acc">
+          <summary>자격증은 어떻게 활용할 수 있나요?</summary>
+          <div class="acc-body">한국AI윤리협회 명의로 발급되는 자격증으로, 이력서·포트폴리오에 기재하실 수 있습니다.
+            또한 우수 수료자는 협회의 전문강사 양성·출강, Fellowship·캠페인 등 실제 활동 기회와 연계됩니다.</div>
+        </details>
+        <details class="acc">
+          <summary>검정 일정과 비용은 어디서 확인하나요?</summary>
+          <div class="acc-body">1기 모집 기간 중 접수하신 분께 검정 일정, 응시 비용, 결제 방법을 개별 안내드립니다.
+            기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>로 보내주세요.</div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <div class="cta-band reveal">
+          <div>
+            <h2>유망한 분야는 먼저 시작한 사람의 것입니다</h2>
+            <p>AI윤리전문가 2급, 하루 2시간이면 시작할 수 있습니다 — 1기 모집 중.</p>
+          </div>
+          <div class="btns">
+            <a class="btn btn-white" href="{GOOGLE_FORM}" target="_blank" rel="noopener">2급 응시 접수하기</a>
+            <a class="btn btn-light" href="mailto:{EMAIL}">문의하기</a>
+          </div>
+        </div>
+      </div>
+    </section>"""
+
+    page("expert.html", "AI윤리전문가 자격과정 (2급·1급)",
+         "AI기본법 시행 시대, 한국AI윤리협회 AI윤리전문가 자격과정 — 2급(2시간)·1급(4시간) 온라인 교육과 자격검정으로 AI 윤리 전문 역량을 인증받으세요. 1기 모집 중.",
+         body,
+         keywords=["AI윤리전문가", "AI 윤리 자격증", "AI 윤리 자격과정", "AI 윤리 교육", "AI기본법",
+                   "AI 컴플라이언스", "인공지능 윤리 전문가", "생성형 AI 교육", "AI 리터러시", "AI 거버넌스"])
+
+
 # ---------------------------------------------------------------- apply.html
 def build_apply():
     roles = [
@@ -2288,6 +2640,7 @@ if __name__ == "__main__":
     build_business()
     build_members()
     build_lecture()
+    build_expert()
     build_partner()
     build_copyclean()
     build_news(posts)
