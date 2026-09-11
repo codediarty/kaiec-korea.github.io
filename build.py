@@ -202,7 +202,7 @@ BRAND = f"""<a class="brand" href="index.html" aria-label="{SITE_NAME} 홈">
         <span class="brand-badge">KAIEC</span>
         <span class="brand-text">
           <span class="brand-ko">{SITE_NAME}</span>
-          <span class="brand-en">{SITE_EN}</span>
+          <span class="brand-en">{SITE_EN.replace(' & ', ' ')}</span>
         </span>
       </a>"""
 
@@ -214,7 +214,7 @@ def header():
     return f"""<header class="site-header">
     <div class="topbar">
       <div class="topbar-inner">
-        <span class="topbar-left">KOREA AI ETHICS & COMPLIANCE</span>
+        <span class="topbar-left">KOREA AI ETHICS COMPLIANCE</span>
         <span class="topbar-right">
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="apply.html">파트너 지원</a><span class="tsep">|</span>
@@ -269,7 +269,7 @@ def footer():
         </div>
       </div>
       <div class="footer-info">
-        <span>사업자등록번호 272-32-01885</span><span class="fsep">|</span>
+        <span>고유번호 272-32-01885</span><span class="fsep">|</span>
         <span>연구실 : 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리 (16419)</span><span class="fsep">|</span>
         <span>공식 문의 <a href="mailto:{EMAIL}" style="color:inherit">{EMAIL}</a></span>
       </div>
@@ -461,7 +461,7 @@ def build_index(posts):
             <div class="fc-visual fc-v4"><img src="assets/img/cards/card-partner.jpg" alt="기업·기관 협력" loading="lazy"></div>
             <div class="fc-body">
               <h3>기업·기관 협력</h3>
-              <p>AI 교육, 캠페인, AX 컨설팅<br>공동사업 협력 제안</p>
+              <p>AI 교육·캠페인·AX 컨설팅<br>공동사업 협력 제안</p>
               <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
             </div>
           </a>
@@ -756,6 +756,7 @@ def build_about():
               <table class="tbl" style="min-width:auto">
                 <tbody>
                   <tr><th style="width:34%">명칭</th><td>한국AI윤리협회 <span style="color:var(--gray-500);font-size:13px">(구 한국AI윤리위원회)</span><br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
+                  <tr><th>설립</th><td>2025년 10월</td></tr>
                   <tr><th>성격</th><td>AI 윤리 전문기관</td></tr>
                   <tr><th>목적</th><td>책임 있는 생성형 AI 활용 및 AI 윤리 문화 확산</td></tr>
                   <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 대외협력 · AI 윤리 파트너 운영</td></tr>
@@ -1037,7 +1038,7 @@ def build_members():
         <div class="table-wrap">
           <table class="tbl" style="min-width:auto">
             <tbody>
-              <tr><th style="width:30%">기수</th><td>제1기 (2026. 8 ~ )</td></tr>
+              <tr><th style="width:30%">기수</th><td>제1기 (2025. 10 ~ )</td></tr>
               <tr><th>임원·위원 임기</th><td>2년 (연임 가능)</td></tr>
               <tr><th>회의</th><td>정기회의 분기 1회 · 임시회의 수시 (온라인 병행)</td></tr>
               <tr><th>의결</th><td>재적위원 과반수 출석과 출석위원 과반수 찬성</td></tr>
