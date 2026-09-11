@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>한국AI윤리위원회 소식</title>
+    <title>한국AI윤리협회 소식</title>
     <link>https://kaiec.kr</link>
-    <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
+    <description>한국AI윤리협회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
-      <title>한국AI윤리위원회 AI Ethics Fellowship 1기 및 협력기관 모집 안내</title>
+      <title>한국AI윤리협회 AI Ethics Fellowship 1기 및 협력기관 모집 안내</title>
       <link>https://kaiec.kr/post-2026-09-10-fellowship-1st-recruit.html</link>
       <guid>https://kaiec.kr/post-2026-09-10-fellowship-1st-recruit.html</guid>
       <pubDate>Thu, 10 Sep 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
-      <description>AI 윤리 공익 활동에 함께할 AI Ethics Fellowship 1기(모집기간 2026.9.7~9.19)와 위원회의 공익적 취지에 동참할 기업·학교·기관을 모집합니다. 전공·경력 무관, 온라인 중심 자율 활동이며 공식 위촉장과 활동증명서가 발급됩니다.</description>
+      <description>AI 윤리 공익 활동에 함께할 AI Ethics Fellowship 1기(모집기간 2026.9.7~9.19)와 협회의 공익적 취지에 동참할 기업·학교·기관을 모집합니다. 전공·경력 무관, 온라인 중심 자율 활동이며 공식 위촉장과 활동증명서가 발급됩니다.</description>
     </item>
     <item>
       <title>AI 유사도 검사란? 표절검사와 무엇이 다른지 완전 정리 (2026 가이드)</title>
@@ -27,15 +27,15 @@
       <guid>https://kaiec.kr/post-2026-08-20-lower-ai-similarity.html</guid>
       <pubDate>Thu, 20 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
-      <description>&quot;AI 유사도 낮추기&quot;를 검색하고 계신가요? 변환 도구부터 찾기 전에, 왜 유사도가 높게 나왔는지와 안전하고 올바른 대응 순서를 먼저 확인하세요. 위원회가 권하는 3단계 대응법을 정리했습니다.</description>
+      <description>&quot;AI 유사도 낮추기&quot;를 검색하고 계신가요? 변환 도구부터 찾기 전에, 왜 유사도가 높게 나왔는지와 안전하고 올바른 대응 순서를 먼저 확인하세요. 협회가 권하는 3단계 대응법을 정리했습니다.</description>
     </item>
     <item>
-      <title>AI 탐지 우회 도구의 실체 — 위원회가 사용을 권하지 않는 5가지 이유</title>
+      <title>AI 탐지 우회 도구의 실체 — 협회가 사용을 권하지 않는 5가지 이유</title>
       <link>https://kaiec.kr/post-2026-08-19-ai-detection-bypass-risk.html</link>
       <guid>https://kaiec.kr/post-2026-08-19-ai-detection-bypass-risk.html</guid>
       <pubDate>Wed, 19 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
-      <description>&quot;AI 탐지 우회&quot;를 검색하면 수많은 우회 도구 광고가 나옵니다. 한국AI윤리위원회가 이런 도구를 권하지 않는 이유를 기술적·제도적·실리적 관점에서 정리했습니다. 우회보다 빠르고 안전한 길이 있습니다.</description>
+      <description>&quot;AI 탐지 우회&quot;를 검색하면 수많은 우회 도구 광고가 나옵니다. 한국AI윤리협회가 이런 도구를 권하지 않는 이유를 기술적·제도적·실리적 관점에서 정리했습니다. 우회보다 빠르고 안전한 길이 있습니다.</description>
     </item>
     <item>
       <title>AI 검사기의 원리 — AI가 쓴 글은 어떻게 탐지되는가</title>
@@ -46,12 +46,12 @@
       <description>AI 검사기는 어떻게 사람 글과 AI 글을 구별할까요? 퍼플렉시티, 버스티니스 등 탐지의 핵심 원리를 비전공자도 이해할 수 있게 풀었습니다. 원리를 알면 왜 &#x27;우회&#x27;가 어려운지도 보입니다.</description>
     </item>
     <item>
-      <title>한국AI윤리위원회 공식 홈페이지를 열었습니다</title>
+      <title>한국AI윤리협회 공식 홈페이지를 열었습니다</title>
       <link>https://kaiec.kr/post-2026-08-17-website-open.html</link>
       <guid>https://kaiec.kr/post-2026-08-17-website-open.html</guid>
       <pubDate>Mon, 17 Aug 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
-      <description>위원회의 활동과 주요사업, AI 윤리 파트너 제도, 강의·교육 신청, 제휴 현황을 안내하는 공식 홈페이지를 개설했습니다.</description>
+      <description>협회의 활동과 주요사업, AI 윤리 파트너 제도, 강의·교육 신청, 제휴 현황을 안내하는 공식 홈페이지를 개설했습니다.</description>
     </item>
     <item>
       <title>전문위원 · AI 윤리 파트너를 상시 모집합니다</title>
@@ -107,7 +107,7 @@
       <guid>https://kaiec.kr/post-2026-08-07-copyclean-precheck-guide.html</guid>
       <pubDate>Fri, 07 Aug 2026 09:00:00 +0900</pubDate>
       <category>캠페인</category>
-      <description>위원회 제휴 서비스 카피클린으로 논문·과제·자기소개서의 AI 유사도를 제출 전에 확인하는 방법과 상세리포트 읽는 법, 검사 후 해야 할 일까지 순서대로 안내합니다.</description>
+      <description>협회 제휴 서비스 카피클린으로 논문·과제·자기소개서의 AI 유사도를 제출 전에 확인하는 방법과 상세리포트 읽는 법, 검사 후 해야 할 일까지 순서대로 안내합니다.</description>
     </item>
     <item>
       <title>AI가 만든 가짜 참고문헌 — 논문에서 DOI 검증이 필수가 된 이유</title>
