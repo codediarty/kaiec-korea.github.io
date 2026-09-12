@@ -17,7 +17,13 @@
 <meta property="og:url" content="https://kaiec.kr/expert-apply.html">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://kaiec.kr/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI윤리전문가 1기 응시 접수 | 한국AI윤리협회">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI윤리전문가 1기 응시 접수 | 한국AI윤리협회">
+<meta name="twitter:description" content="한국AI윤리협회 AI윤리전문가 1기 응시 접수 페이지입니다. 2급·1급 과정을 선택하고 응시자 정보를 입력하면 교육과 자격검정 안내를 받을 수 있습니다.">
+<meta name="twitter:image" content="https://kaiec.kr/assets/img/og-image.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,8 +31,14 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202609111329">
+<link rel="stylesheet" href="assets/css/style.css?v=202609120037">
 <script>document.documentElement.className+=' js';</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "홈", "item": "https://kaiec.kr/"},
+    {"@type": "ListItem", "position": 2, "name": "AI윤리전문가 1기 응시 접수", "item": "https://kaiec.kr/expert-apply.html"}
+  ]}
+</script>
 </head>
 <body>
   <header class="site-header">
@@ -97,7 +109,7 @@
                 <span class="choice-body">
                   <strong>AI윤리전문가 2급</strong>
                   <span>AI 윤리의 핵심을 이해하고 기본적인 전문역량을 갖추는 과정</span>
-                  <em>온라인 교육 약 2시간 + 온라인 자격검정</em>
+                  <em>온라인 교육 약 2시간 + 온라인 자격검정 · 1기 특별가 99,000원 (정가 300,000원)</em>
                 </span>
               </label>
               <label class="choice">
@@ -106,7 +118,7 @@
                 <span class="choice-body">
                   <strong>AI윤리전문가 1급</strong>
                   <span>AI 윤리 문제를 분석하고 판단하는 심화 전문과정</span>
-                  <em>온라인 교육 약 4시간 + 온라인 자격검정</em>
+                  <em>온라인 교육 약 4시간 + 온라인 자격검정 · 정가 500,000원</em>
                 </span>
               </label>
             </div>
@@ -155,11 +167,6 @@
                 <input type="text" name="name" autocomplete="name" placeholder="홍길동">
                 <p class="err-msg">성명을 입력해 주세요.</p>
               </div>
-              <div class="field" id="fBirth">
-                <label>생년월일 <span class="req">*</span></label>
-                <input type="date" name="birth">
-                <p class="err-msg">생년월일을 선택해 주세요.</p>
-              </div>
               <div class="field" id="fPhone">
                 <label>휴대전화 번호 <span class="req">*</span></label>
                 <input type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
@@ -205,7 +212,7 @@
             <h2>개인정보 수집·이용 동의</h2>
             <p class="gform-desc">AI윤리전문가 자격과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
             <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 생년월일, 연락처, 이메일 및 신청정보</div>
+              <div><span>수집항목</span>성명, 연락처, 이메일 및 신청정보</div>
               <div><span>이용목적</span>응시자 확인, 교육 및 자격검정 운영, 합격자 관리 및 자격증 발급</div>
               <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
             </div>
@@ -294,18 +301,13 @@
       </div>
     </div>
   </footer>
-  <script src="assets/js/main.js?v=202609111329"></script>
+  <script src="assets/js/main.js?v=202609120037"></script>
 
   <script>
   (function(){
     var form=document.getElementById('examForm');
     var PAY={'2급':'https://skkc.co.kr/shop_view?idx=26','1급':'https://skkc.co.kr/shop_view?idx=27'};
     var s2a=document.getElementById('sec2A'), s2b=document.getElementById('sec2B');
-    var birth=form.querySelector('[name=birth]');
-    birth.max=new Date().toISOString().slice(0,10);
-    /* 날짜 칸 아무 곳이나 눌러도 달력이 열리게 */
-    birth.addEventListener('click',function(){try{this.showPicker();}catch(e){}});
-
     /* 휴대전화 자동 하이픈 (입력 중 3-4-4, 10자리 번호는 확정 시 3-3-4) */
     var phone=form.querySelector('[name=phone]');
     phone.addEventListener('input',function(){
@@ -345,7 +347,6 @@
       var errs=[
         bad('secCourse',!course()),
         bad('fName',!v('name')),
-        bad('fBirth',!v('birth')),
         bad('fPhone',!(digits.length>=10&&digits.length<=11&&digits.slice(0,2)==='01')),
         bad('fEmail',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email'))),
         bad('fJob',!job),
@@ -361,7 +362,6 @@
         '한국AI윤리협회 AI윤리전문가 1기 응시 신청','',
         '■ 응시 과정 : AI윤리전문가 '+c,
         '■ 성명 : '+v('name'),
-        '■ 생년월일 : '+v('birth'),
         '■ 휴대전화 : '+v('phone'),
         '■ 이메일 : '+v('email'),
         '■ 직업/활동 분야 : '+job.value,'',
@@ -371,9 +371,9 @@
       ];
 
       /* 접수 데이터 전송: 시트 웹훅이 연결되어 있으면 스프레드시트로, 아니면 메일 앱으로 */
-      var HOOK='https://script.google.com/macros/s/AKfycbzpmjkexBAdDqQnNRsMkFr2EsYjdY8ptWHSjL5trbZ4vqrniaa89FHBXivS_08XF4fk/exec';
+      var HOOK='https://script.google.com/macros/s/AKfycbx25wupzLIApF3VL9_5wKDw7Vp7F9hiatqt-0kv7vuFI-2q5QV_6sL6ODPNoLM0ZFUIkg/exec';
       if(HOOK){
-        var payload=JSON.stringify({course:'AI윤리전문가 '+c,name:v('name'),birth:v('birth'),
+        var payload=JSON.stringify({course:'AI윤리전문가 '+c,name:v('name'),
           phone:v('phone'),email:v('email'),job:job.value});
         var sent=false;
         try{if(navigator.sendBeacon){sent=navigator.sendBeacon(HOOK,new Blob([payload],{type:'text/plain'}));}}catch(e1){}

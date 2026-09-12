@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>조직 · 위원 | 한국AI윤리협회</title>
 <meta name="description" content="한국AI윤리협회의 조직 구성과 회장단·사무국·전문위원 명단, AI 윤리 캠페인위원 현황, 공식 파트너를 안내합니다.">
-<meta name="keywords" content="AI윤리, 인공지능 윤리, 한국AI윤리협회, 생성형 AI, AI 윤리위원, AI 윤리 교육, 카피클린, AI 활용 점검">
+<meta name="keywords" content="한국AI윤리협회, 한국 AI 윤리협회, KAIEC, AI윤리, 인공지능 윤리, AI윤리전문가, AI 윤리 교육, AI 윤리 자격증, 생성형 AI, 카피클린">
 <meta name="author" content="한국AI윤리협회">
 <link rel="canonical" href="https://kaiec.kr/members.html">
 <meta name="robots" content="index, follow">
@@ -17,7 +17,13 @@
 <meta property="og:url" content="https://kaiec.kr/members.html">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://kaiec.kr/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="조직 · 위원 | 한국AI윤리협회">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="조직 · 위원 | 한국AI윤리협회">
+<meta name="twitter:description" content="한국AI윤리협회의 조직 구성과 회장단·사무국·전문위원 명단, AI 윤리 캠페인위원 현황, 공식 파트너를 안내합니다.">
+<meta name="twitter:image" content="https://kaiec.kr/assets/img/og-image.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,8 +31,14 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=202609111329">
+<link rel="stylesheet" href="assets/css/style.css?v=202609120037">
 <script>document.documentElement.className+=' js';</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "홈", "item": "https://kaiec.kr/"},
+    {"@type": "ListItem", "position": 2, "name": "조직 · 위원", "item": "https://kaiec.kr/members.html"}
+  ]}
+</script>
 </head>
 <body>
   <header class="site-header">
@@ -309,7 +321,7 @@
       </div>
     </div>
   </footer>
-  <script src="assets/js/main.js?v=202609111329"></script>
+  <script src="assets/js/main.js?v=202609120037"></script>
   <script src="assets/js/members-data.js"></script>
   <script>
   (function(){
@@ -335,14 +347,31 @@
         +'<div class="member-field">'+(m.field||'')+'</div>'
         +'</div>';
     }
+    /* 공석은 회색 카드 나열 대신 '위촉 진행 중' 요약 카드 1장으로 표시 */
+    function recruitCard(label,n,roles){
+      return '<a class="member member--recruit" href="apply.html#individual">'
+        +'<div class="member-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></div>'
+        +'<div class="member-role">'+label+'</div>'
+        +'<div class="member-name">위촉 진행 중 · '+n+'석</div>'
+        +'<div class="member-field">'+(roles||'지원 안내 보기')+' →</div></a>';
+    }
     function secHTML(g,inPair){
       var list=window.KAIEC_MEMBERS.filter(function(m){return m.group===g});
       if(!list.length)return '';
+      var filled=list.filter(function(m){return m.name!=='공석'});
+      var vacant=list.filter(function(m){return m.name==='공석'});
+      var cnt=filled.length?('('+filled.length+'명'+(vacant.length?' · '+vacant.length+'석 위촉 중':'')+')')
+                            :('(위촉 진행 중 · '+vacant.length+'석)');
+      var cards=filled.map(function(m){return card(m,g)}).join('');
+      if(vacant.length){
+        var roles=vacant.map(function(m){return m.role}).filter(function(r,i,a){return r&&a.indexOf(r)===i}).join(' · ');
+        cards+=recruitCard(g,vacant.length,roles);
+      }
       return '<div style="margin-bottom:'+(inPair?'0':'44px')+'">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
         +'<span style="width:4px;height:19px;background:var(--blue);border-radius:2px"></span>'+g
-        +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">('+list.length+'명)</span></h3>'
-        +'<div class="member-grid">'+list.map(function(m){return card(m,g)}).join('')+'</div></div>';
+        +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">'+cnt+'</span></h3>'
+        +'<div class="member-grid">'+cards+'</div></div>';
     }
     var html='';
     /* 상단 2열 배치: 회장|부회장, 고문·자문위원|감사 */
@@ -358,18 +387,11 @@
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(total){
       var cards='';
-      for(var i=0;i<total;i++){
-        var m=named[i];
-        if(m){
-          cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
-        }else{
-          cards+='<div class="member member--vacant">'
-            +'<div class="member-avatar">-</div>'
-            +'<div class="member-role">캠페인위원</div>'
-            +'<div class="member-name">공석</div>'
-            +'<div class="member-field">위촉 예정</div></div>';
-        }
-      }
+      named.slice(0,total).forEach(function(m){
+        cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
+      });
+      var remain=Math.max(0,total-named.length);
+      if(remain) cards+=recruitCard('제1기 AI 윤리 캠페인위원',remain,'전공·경력 무관 · 온라인 활동 · 위촉장 발급');
       html+='<div style="margin-bottom:10px">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
         +'<span style="width:4px;height:19px;background:var(--teal);border-radius:2px"></span>AI 윤리 캠페인위원'
