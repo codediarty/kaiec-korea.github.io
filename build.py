@@ -2874,8 +2874,8 @@ def build_expert_apply():
                 <input type="radio" name="course" value="2급">
                 <span class="choice-radio"></span>
                 <span class="choice-body">
-                  <span class="choice-badge">실무 입문</span>
-                  <strong>AI윤리전문가 2급</strong>
+                  <span class="choice-badge">대표 과정</span>
+                  <strong>AI윤리전문가 2급 자격증</strong>
                   <span>이력과 커리어에 AI 윤리 전문 자격증을 더해 취업·이직·직무 경쟁력을 높이는 실무형 자격과정</span>
                   <span class="apply-price">
                     <span class="ap-badge">1기 특별가</span>
@@ -2889,8 +2889,8 @@ def build_expert_apply():
                 <input type="radio" name="course" value="1급">
                 <span class="choice-radio"></span>
                 <span class="choice-body">
-                  <span class="choice-badge">전문 활동</span>
-                  <strong>AI윤리전문가 1급</strong>
+                  <span class="choice-badge">전문가 과정</span>
+                  <strong>AI윤리전문가 1급 자격증</strong>
                   <span>전문강사·교육 활동이 가능하며, 협회 홈페이지에 등록되어 전문 이력으로 활용할 수 있는 심화 자격과정</span>
                   <span class="apply-price">
                     <span class="ap-badge">1기 특별가</span>
@@ -2995,9 +2995,9 @@ def build_expert_apply():
             <p>이력과 커리어에 AI 윤리 전문 자격증을 더해보세요. 교육부터 자격검정까지 온라인으로 진행됩니다.</p>
             <div class="sel-info" id="selInfo"><i data-lucide="check-circle-2"></i><span id="selText"></span></div>
             <div class="pay-summary">
-              <div class="pay-mini"><div class="lv">AI윤리전문가 2급</div>
+              <div class="pay-mini"><div class="lv">AI윤리전문가 2급 자격증</div>
                 <div class="list">정가 {won(LIST_L2)}</div><div class="sale">1기 특별가 {won(PRICE_L2)}</div></div>
-              <div class="pay-mini"><div class="lv">AI윤리전문가 1급</div>
+              <div class="pay-mini"><div class="lv">AI윤리전문가 1급 자격증</div>
                 <div class="list">정가 {won(LIST_L1)}</div><div class="sale">1기 특별가 {won(PRICE_L1)}</div></div>
             </div>
             <p>신청서를 제출한 후 교육·자격검정 비용 결제를 완료하면 1기 등록이 최종 확정됩니다.</p>
@@ -3137,7 +3137,7 @@ def build_expert_apply():
     });
   })();
   </script>
-""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1).replace('__HOOK__', SHEET_WEBHOOK).replace('__SEL2__', f'선택: AI윤리전문가 2급 · 1기 특별가 {won(PRICE_L2)}').replace('__SEL1__', f'선택: AI윤리전문가 1급 · 1기 특별가 {won(PRICE_L1)}')
+""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1).replace('__HOOK__', SHEET_WEBHOOK).replace('__SEL2__', f'선택: AI윤리전문가 2급 자격증 · 1기 특별가 {won(PRICE_L2)}').replace('__SEL1__', f'선택: AI윤리전문가 1급 자격증 · 1기 특별가 {won(PRICE_L1)}')
 
     page("expert-apply.html", "AI윤리전문가 1기 응시 접수",
          "한국AI윤리협회 AI윤리전문가 1기 응시 접수 페이지입니다. 2급·1급 과정을 선택하고 응시자 정보를 입력하면 온라인 교육과 자격검정 안내를 받을 수 있습니다.",
