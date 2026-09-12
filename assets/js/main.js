@@ -19,11 +19,12 @@
   }
 
   /* 2. 현재 페이지 메뉴 활성화 -------------------------------------------- */
-  var here = location.pathname.split('/').pop() || 'index.html';
+  var here = location.pathname.replace(/index\.html$/, '');
+  if (here === '') here = '/';
   document.querySelectorAll('.nav > a').forEach(function (a) {
-    var href = a.getAttribute('href');
+    var href = a.getAttribute('href') || '';
     if (href === here) a.classList.add('is-active');
-    if (here.indexOf('post-') === 0 && href === 'news.html') a.classList.add('is-active');
+    if (here.indexOf('/news/') === 0 && href === '/news/') a.classList.add('is-active');
   });
 
   /* 3. 스크롤 등장 애니메이션 --------------------------------------------- */
