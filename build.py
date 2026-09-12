@@ -2860,7 +2860,7 @@ def build_expert_apply():
             <div><strong>AI 윤리·거버넌스, 연평균 44% 이상 성장하는 전문분야.</strong><br>
                  AI윤리전문가 자격이 당신의 새로운 전문 경쟁력이 됩니다.</div></div>
           <div class="gform-urgency"><i data-lucide="clock"></i> 1기 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</div>
-          <p class="gform-req-note"><span class="req">*</span> 표시는 필수 항목입니다.</p>
+          <p class="gform-org-note">한국AI윤리협회 주관 · 성균관컨설팅 자격시험 운영</p>
         </div>
 
         <form id="examForm" novalidate>
@@ -2889,7 +2889,7 @@ def build_expert_apply():
                 <input type="radio" name="course" value="1급">
                 <span class="choice-radio"></span>
                 <span class="choice-body">
-                  <span class="choice-badge">전문가 과정</span>
+                  <span class="choice-badge">심화 과정</span>
                   <strong>AI윤리전문가 1급 자격증</strong>
                   <span>전문강사·교육 활동이 가능하며, 협회 홈페이지에 등록되어 전문 이력으로 활용할 수 있는 심화 자격과정</span>
                   <span class="apply-price">
@@ -2907,7 +2907,7 @@ def build_expert_apply():
                 <div class="pick-card"><span class="pick-tag pick-tag--l2">2급 추천</span>
                   <p>AI 윤리 분야를 처음 시작하거나, 이력·커리어에 AI 윤리 전문 자격증을 더해 취업·이직·현재 직무에 활용하고 싶은 분께 추천합니다.</p></div>
                 <div class="pick-card"><span class="pick-tag pick-tag--l1">1급 추천</span>
-                  <p>AI 윤리 분야의 전문성을 심화하고, 전문강사·교육 활동과 협회 홈페이지 등록 등 전문 활동 영역까지 확장하고 싶은 분께 추천합니다.</p></div>
+                  <p>협회 홈페이지 전문가 등록과 교육 활동을 원하는 분께 추천합니다.</p></div>
               </div>
             </div>
             <p class="err-msg">응시하실 과정을 선택해 주세요.</p>
