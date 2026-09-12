@@ -47,7 +47,7 @@ SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9ts
 LIST_L2, PRICE_L2 = 499000, 199000     # 2급 정가 / 1기 특별가
 LIST_L1, PRICE_L1 = 1200000, 499000    # 1급 정가 / 1기 특별가 (0이면 "결제 페이지에서 확인"으로 표시)
 DEADLINE = "10월 30일"                  # 1기 접수 마감
-QUOTA = 100                             # 선착순 정원
+QUOTA = 100                             # 연간 한정 양성 정원
 def won(n): return f"{n:,}원"
 
 
@@ -527,7 +527,7 @@ def build_index(posts):
           <a class="hero-promo" href="expert.html">
             <div>
               <strong>AI윤리전문가 1기 모집 중 <span class="promo-new">NEW</span></strong>
-              <p>접수 마감 {DEADLINE} · 선착순 {QUOTA}명 · 2급 1기 특별가 {won(PRICE_L2)}</p>
+              <p>접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성 · 2급 1기 특별가 {won(PRICE_L2)}</p>
             </div>
             <span class="promo-go"><i data-lucide="arrow-right"></i></span>
           </a>
@@ -592,14 +592,14 @@ def build_index(posts):
           <div class="offer-card reveal">
             <div class="offer-top">
               <span class="badge">1기 모집 중 · 마감 {DEADLINE}</span>
-              <span class="offer-quota">선착순 {QUOTA}명</span>
+              <span class="offer-quota">연 {QUOTA}명 한정</span>
             </div>
             <h3>AI윤리전문가 2급 자격과정</h3>
             <p>온라인 교육 2시간 + 온라인 자격검정으로 협회 명의 자격증을 취득하는 대표 과정입니다.</p>
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_L2)}</span>
               <span class="price-now">{won(PRICE_L2)}</span>
-              <span class="price-tag">1기 특별가 {round((1-PRICE_L2/LIST_L2)*100)}% 할인</span>
+              <span class="price-tag">1기 특별가</span>
             </div>
             <ul class="offer-list">
               <li>전공·경력 제한 없이 누구나 응시</li>
@@ -1842,7 +1842,7 @@ def build_post(p, posts):
       <div class="wrap">
         <div class="cta-band">
           <div><h2>AI윤리전문가 1기 모집 중 <span class="promo-new" style="vertical-align:middle">NEW</span></h2>
-            <p>접수 마감 {DEADLINE} · 선착순 {QUOTA}명 · 2급 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}).
+            <p>접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성 · 2급 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}).
                온라인 교육 2시간과 자격검정으로 협회 명의 자격증을 취득하세요.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="expert-apply.html">응시 접수하기</a>
@@ -2521,7 +2521,7 @@ def build_expert():
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
-        <span class="hl-pill"><i data-lucide="badge-check"></i>1기 접수 마감 {DEADLINE} · 선착순 {QUOTA}명</span>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>1기 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</span>
         <h1>AI윤리전문가 자격과정</h1>
         <p style="font-size:17.5px;max-width:740px">AI를 쓸 줄 아는 사람은 많습니다.<br>
            기업과 기관이 찾는 것은 AI를 <strong style="color:#6FE3D8">책임 있게 다룰 줄 아는 사람</strong>이고,<br>
@@ -2607,11 +2607,11 @@ def build_expert():
             <div class="price-line">
               <span class="price-list">정가 {won(LIST_L2)}</span>
               <span class="price-now">{won(PRICE_L2)}</span>
-              <span class="price-tag">1기 특별가 {round((1-PRICE_L2/LIST_L2)*100)}% 할인</span>
+              <span class="price-tag">1기 특별가</span>
             </div>
             <div style="margin-top:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
               <a class="btn btn-white" href="expert-apply.html?course=2">응시 접수하기 <i data-lucide="arrow-right"></i></a>
-              <span style="font-size:12.5px;color:#AFC4E4">접수 마감 {DEADLINE} · 선착순 {QUOTA}명</span>
+              <span style="font-size:12.5px;color:#AFC4E4">접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</span>
             </div>
           </article>
           <article class="card reveal" style="display:flex;flex-direction:column;gap:13px">
@@ -2704,7 +2704,7 @@ def build_expert():
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">자격증 발급</h3><p style="font-size:14px">합격 시 협회 명의 발급</p></div>
         </div>
         {pay_btns}
-        <p class="field-hint" style="margin-top:18px;text-align:center">1기 접수 마감 {DEADLINE}(선착순 {QUOTA}명) · 2급 {won(PRICE_L2)}(정가 {won(LIST_L2)}) · 1급 정가 {won(LIST_L1)}<br>
+        <p class="field-hint" style="margin-top:18px;text-align:center">1기 접수 마감 {DEADLINE}(연 {QUOTA}명 한정 양성) · 2급 {won(PRICE_L2)}(정가 {won(LIST_L2)}) · 1급 {won(PRICE_L1)}(정가 {won(LIST_L1)})<br>
            응시료 결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
       </div>
     </section>
@@ -2744,8 +2744,8 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>응시 비용과 접수 마감은 언제인가요?</summary>
-          <div class="acc-body">1기 접수는 {DEADLINE}까지, 선착순 {QUOTA}명입니다. 2급은 정가 {won(LIST_L2)}에서 1기 특별가
-            {won(PRICE_L2)}, 1급은 정가 {won(LIST_L1)}이며 1기 특별가는 결제 페이지에서 확인하실 수 있습니다.
+          <div class="acc-body">1기 접수는 {DEADLINE}까지이며, 전문성 있는 인력 양성을 위해 연 {QUOTA}명 한정으로 선발합니다.
+            2급은 정가 {won(LIST_L2)}에서 1기 특별가 {won(PRICE_L2)}, 1급은 정가 {won(LIST_L1)}에서 1기 특별가 {won(PRICE_L1)}입니다.
             비용에는 온라인 교육, 자격검정 1회, 자격증 발급이 모두 포함됩니다.</div>
         </details>
         <details class="acc">
@@ -2815,9 +2815,6 @@ def build_expert_apply():
     """AI윤리전문가 응시 접수 폼 (자체 코딩 · 전환·자기설득 중심 개편 2026.09)
     - 과정 선택 → 활용 목적(자기설득) → 응시자 정보 → 절차·검정 안내 → 개인정보 동의 → 결제
     - 제출 시 시트 웹훅으로 접수 기록 + 협회 알림 메일, 완료 화면에서 결제 페이지로 자동 이동"""
-    disc2 = round((LIST_L2 - PRICE_L2) / LIST_L2 * 100) if LIST_L2 else 0
-    disc1 = round((LIST_L1 - PRICE_L1) / LIST_L1 * 100) if (LIST_L1 and PRICE_L1) else 0
-
     PURPOSES = [
         "이력·커리어에 AI 윤리 전문 자격증을 추가하고 싶습니다.",
         "현재 직무에서 AI 윤리 역량을 활용하고 싶습니다.",
@@ -2862,7 +2859,7 @@ def build_expert_apply():
           <div class="gform-callout"><i data-lucide="trending-up"></i>
             <div><strong>AI 윤리·거버넌스, 연평균 44% 이상 성장하는 전문분야.</strong><br>
                  AI윤리전문가 자격이 당신의 새로운 전문 경쟁력이 됩니다.</div></div>
-          <div class="gform-urgency"><i data-lucide="clock"></i> 1기 접수 마감 {DEADLINE} · 선착순 {QUOTA}명</div>
+          <div class="gform-urgency"><i data-lucide="clock"></i> 1기 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</div>
           <p class="gform-req-note"><span class="req">*</span> 표시는 필수 항목입니다.</p>
         </div>
 
@@ -2880,10 +2877,10 @@ def build_expert_apply():
                   <span class="choice-badge">실무 입문</span>
                   <strong>AI윤리전문가 2급</strong>
                   <span>이력과 커리어에 AI 윤리 전문 자격증을 더해 취업·이직·직무 경쟁력을 높이는 실무형 자격과정</span>
-                  <span class="price-tag">
-                    <span class="price-list">정가 {won(LIST_L2)}</span>
-                    <span class="price-sale">1기 특별가 <b>{won(PRICE_L2)}</b></span>
-                    <span class="price-off">{disc2}%↓</span>
+                  <span class="apply-price">
+                    <span class="ap-badge">1기 특별가</span>
+                    <span class="ap-now">{won(PRICE_L2)}</span>
+                    <span class="ap-was">정가 {won(LIST_L2)}</span>
                   </span>
                   <span class="choice-note">온라인 교육 약 2시간 + 온라인 자격검정</span>
                 </span>
@@ -2895,10 +2892,10 @@ def build_expert_apply():
                   <span class="choice-badge">전문 활동</span>
                   <strong>AI윤리전문가 1급</strong>
                   <span>전문강사·교육 활동이 가능하며, 협회 홈페이지에 등록되어 전문 이력으로 활용할 수 있는 심화 자격과정</span>
-                  <span class="price-tag">
-                    <span class="price-list">정가 {won(LIST_L1)}</span>
-                    <span class="price-sale">1기 특별가 <b>{won(PRICE_L1)}</b></span>
-                    <span class="price-off">{disc1}%↓</span>
+                  <span class="apply-price">
+                    <span class="ap-badge">1기 특별가</span>
+                    <span class="ap-now">{won(PRICE_L1)}</span>
+                    <span class="ap-was">정가 {won(LIST_L1)}</span>
                   </span>
                   <span class="choice-note">온라인 교육 약 4시간 + 온라인 자격검정</span>
                 </span>

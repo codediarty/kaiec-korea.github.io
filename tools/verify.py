@@ -245,7 +245,7 @@ if not os.path.isfile(".gitignore") or "__pycache__" not in read(".gitignore"):
 for f in ("assets/css/style.css", "assets/js/main.js", "assets/img/og-image.png", "assets/img/favicon.svg"):
     if not os.path.isfile(f):
         probs.append(f"필수 자산 없음: {f}")
-vs = set(re.findall(r'style\.css\?v=(\d+)', index_html) + re.findall(r'main\.js\?v=(\d+)', index_html))
+vs = set(re.findall(r'style\.css\?v=([0-9a-zA-Z]+)', index_html) + re.findall(r'main\.js\?v=([0-9a-zA-Z]+)', index_html))
 if len(vs) != 1:
     probs.append(f"index.html 캐시 버전 태그 이상: {vs}")
 check("배포 파일(CNAME·robots·.nojekyll·.gitignore·필수 자산·캐시 버전)", probs)

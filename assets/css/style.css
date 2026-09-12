@@ -986,12 +986,12 @@ table.tbl tr:hover td{background:#FCFDFF}
   color:var(--blue);background:#fff;border:1px solid #CADAF5;border-radius:999px;padding:3px 10px}
 .choice:has(input:checked) .choice-badge{background:var(--blue);color:#fff;border-color:var(--blue)}
 .choice-body strong{font-size:16px}
-.price-tag{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-top:8px}
-.price-list{font-size:12.5px;color:var(--gray-400);text-decoration:line-through}
-.price-sale{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
-.price-sale b{color:var(--blue-600)}
-.price-off{font-size:11.5px;font-weight:800;color:#fff;background:#E8683A;border-radius:6px;padding:2px 7px}
-.choice-note{display:block;margin-top:7px;font-size:12.5px;color:var(--gray-500)}
+.apply-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px;margin-top:9px}
+.ap-badge{font-size:11px;font-weight:800;color:var(--blue-600);background:var(--blue-050);
+  border:1px solid #DCE6F8;border-radius:6px;padding:2px 8px;letter-spacing:-.01em}
+.ap-now{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+.ap-was{font-size:12.5px;color:var(--gray-400);text-decoration:line-through}
+.choice-note{display:block;margin-top:8px;font-size:12.5px;color:var(--gray-500)}
 /* 과정 선택 도움말 */
 .pick-help{margin-top:16px;border-top:1px solid var(--gray-100);padding-top:16px}
 .pick-help-title{font-size:13.5px;font-weight:800;color:var(--ink);margin-bottom:11px}
