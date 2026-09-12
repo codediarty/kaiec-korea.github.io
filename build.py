@@ -296,6 +296,29 @@ def footer():
   </footer>"""
 
 
+def url_for(filename):
+    """생성 파일명 → 사이트 내 깔끔한 주소 (.html 없는 SEO 친화 URL)
+       index.html → /   |  about.html → /about/   |  post-<slug>.html → /news/<slug>/"""
+    if filename == "index.html": return "/"
+    if filename == "404.html":   return "/404.html"
+    if filename.startswith("post-"): return "/news/" + filename[5:-5] + "/"
+    return "/" + filename[:-5] + "/"
+
+
+def out_path(filename):
+    """실제로 저장할 경로 (디렉터리 + index.html 구조 → GitHub Pages가 /about/ 로 서빙)"""
+    u = url_for(filename)
+    return filename if u.endswith(".html") or u == "/" and filename == "index.html" else u.lstrip("/") + "index.html"
+
+
+_LINK_RE = re.compile(r'(href|src)="([A-Za-z0-9_\-]+\.html)((?:[?#][^"]*)?)"')
+def clean_links(html):
+    """생성된 HTML 안의 상대 링크(x.html)와 자산 경로(assets/…)를 루트 기준 깔끔한 주소로 변환"""
+    html = _LINK_RE.sub(lambda m: f'{m.group(1)}="{url_for(m.group(2))}{m.group(3)}"', html)
+    html = re.sub(r'(["\'])assets/', r'\1/assets/', html)
+    return html
+
+
 def _strip_tags(h):
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", h)).strip()
 
@@ -316,8 +339,8 @@ def _crumb_ld(filename, title, parent=None):
     """BreadcrumbList 구조화 데이터 (홈 › [상위] › 현재)"""
     items = [("홈", f"{SITE_URL}/")]
     if parent:
-        items.append((parent[0], f"{SITE_URL}/{parent[1]}"))
-    items.append((title, f"{SITE_URL}/{filename}"))
+        items.append((parent[0], f"{SITE_URL}{url_for(parent[1])}"))
+    items.append((title, f"{SITE_URL}{url_for(filename)}"))
     lis = ",\n    ".join('{"@type": "ListItem", "position": %d, "name": %s, "item": "%s"}' % (i + 1, _json_str(n), u)
                          for i, (n, u) in enumerate(items))
     return ('<script type="application/ld+json">\n{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [\n    '
@@ -326,7 +349,7 @@ def _crumb_ld(filename, title, parent=None):
 
 def page(filename, title, desc, body, extra_head="", extra_script="", keywords=None, og_image=None,
          og_type="website", published=None, crumb_parent=None):
-    canonical = f"{SITE_URL}/{filename}" if filename != "index.html" else f"{SITE_URL}/"
+    canonical = f"{SITE_URL}{url_for(filename)}"
     full_title = title if filename == "index.html" else f"{title} | {SITE_NAME}"
     kw = ", ".join(keywords) if keywords else "한국AI윤리협회, 한국 AI 윤리협회, KAIEC, AI윤리, 인공지능 윤리, AI윤리전문가, AI 윤리 교육, AI 윤리 자격증, 생성형 AI, 카피클린"
     ogimg = og_image or f"{SITE_URL}/assets/img/og-image.png"
@@ -382,10 +405,25 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
 {extra_script}</body>
 </html>
 """
-    html = inline_icons(html)
-    with io.open(os.path.join(BASE, filename), "w", encoding="utf-8") as f:
+    html = clean_links(inline_icons(html))
+    target = os.path.join(BASE, out_path(filename))
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    with io.open(target, "w", encoding="utf-8") as f:
         f.write(html)
-    print("  ✓", filename)
+    # 기존 .html 주소로 들어온 방문자·검색엔진을 새 주소로 안내 (noindex + canonical + 즉시 이동)
+    if filename not in ("index.html", "404.html"):
+        stub = f"""<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<title>{full_title}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="{canonical}">
+<meta http-equiv="refresh" content="0; url={url_for(filename)}">
+<script>location.replace("{url_for(filename)}"+location.search+location.hash);</script>
+</head><body><p>이 페이지는 <a href="{canonical}">{canonical}</a> 로 이동했습니다.</p></body></html>
+"""
+        with io.open(os.path.join(BASE, filename), "w", encoding="utf-8") as f:
+            f.write(stub)
+    print("  ✓", url_for(filename))
 
 
 def hero_sub(title, desc, crumb):
@@ -1816,7 +1854,7 @@ def build_post(p, posts):
   {'"image": ["' + ogimg + '"],' if ogimg else ''}
   "author": {{"@type": "Organization", "name": "{SITE_NAME}", "url": "{SITE_URL}"}},
   "publisher": {{"@type": "Organization", "name": "{SITE_NAME}", "logo": {{"@type": "ImageObject", "url": "{SITE_URL}/assets/img/og-image.png"}}}},
-  "mainEntityOfPage": "{SITE_URL}/{p["file"]}"
+  "mainEntityOfPage": "{SITE_URL}{url_for(p["file"])}"
 }}
 </script>
 """
@@ -1842,11 +1880,11 @@ def build_sitemap(posts):
             ("news.html", "0.8", "daily"), ("mou.html", "0.8", "monthly"), ("apply.html", "0.9", "monthly")]
     urls = []
     for path, pri, freq in core:
-        loc = f"{SITE_URL}/{path}" if path else f"{SITE_URL}/"
+        loc = f"{SITE_URL}{url_for(path)}" if path else f"{SITE_URL}/"
         urls.append(f"  <url>\n    <loc>{loc}</loc>\n    <lastmod>{today}</lastmod>\n"
                     f"    <changefreq>{freq}</changefreq>\n    <priority>{pri}</priority>\n  </url>")
     for p in posts:
-        urls.append(f"  <url>\n    <loc>{SITE_URL}/{p['file']}</loc>\n    <lastmod>{p['dt'].strftime('%Y-%m-%d')}</lastmod>\n"
+        urls.append(f"  <url>\n    <loc>{SITE_URL}{url_for(p['file'])}</loc>\n    <lastmod>{p['dt'].strftime('%Y-%m-%d')}</lastmod>\n"
                     f"    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>")
     xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -1862,8 +1900,8 @@ def build_rss(posts):
         desc = _html.escape(p["summary"])
         items.append(f"""    <item>
       <title>{_html.escape(p["title"])}</title>
-      <link>{SITE_URL}/{p["file"]}</link>
-      <guid>{SITE_URL}/{p["file"]}</guid>
+      <link>{SITE_URL}{url_for(p["file"])}</link>
+      <guid>{SITE_URL}{url_for(p["file"])}</guid>
       <pubDate>{pub}</pubDate>
       <category>{_html.escape(p["category"])}</category>
       <description>{desc}</description>
@@ -2742,7 +2780,7 @@ def build_expert():
     "priceCurrency": "KRW",
     "availability": "https://schema.org/InStock",
     "validThrough": "2026-10-30",
-    "url": "{SITE_URL}/expert-apply.html"
+    "url": "{SITE_URL}{url_for("expert-apply.html")}"
   }},
   "hasCourseInstance": {{
     "@type": "CourseInstance",
