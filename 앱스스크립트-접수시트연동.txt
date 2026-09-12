@@ -1,7 +1,11 @@
 ═══════════════════════════════════════════════════════════════
  KAIEC AI윤리전문가 응시 접수 → 구글 스프레드시트 자동 수집
- (4차 버전: GET·POST 모두 수신 + 상태 확인 페이지 + 중복 방지 + 오류 기록
-  + 시트 열 구성 자동 감지, 2026.09.12)
+ (4차 개정: GET·POST 모두 수신 + 상태 확인 페이지 + 중복 방지 + 오류 기록
+  + 시트 열 구성 자동 감지 + '자격 취득 목적' 열 자동 추가, 2026.09.12)
+
+ ※ 접수 폼에 '자격 취득 및 활용 목적' 항목이 추가되었습니다. 이 목적 답변을 시트에도
+   저장하려면 아래 코드를 한 번 다시 붙여넣고 [배포 관리 → 새 버전]으로 올리면 됩니다.
+   (다시 올리지 않아도 성명·이메일·직업·과정 접수와 알림 메일은 그대로 작동합니다. 목적만 시트에 안 쌓입니다.)
 ═══════════════════════════════════════════════════════════════
 
 [1] Apps Script 편집기(프로젝트 "AI윤리전문가 1기 접수명단")에서 Code.gs 내용을
@@ -22,18 +26,21 @@ function getSheet_() {
   var ss = getSs_();
   var sh = ss.getSheetByName('접수') || ss.insertSheet('접수');
   if (sh.getLastRow() === 0) {
-    sh.appendRow(['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야']);
+    sh.appendRow(['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야', '자격 취득 목적']);
     sh.setFrozenRows(1);
   }
   return sh;
 }
 
-// 1행 제목을 읽어 열 위치를 찾습니다 (예전 8열 시트든 새 6열 시트든 그대로 동작)
+// 1행 제목을 읽어 열 위치를 찾습니다 (예전 8열 시트든 6열 시트든 그대로 동작).
+// '자격 취득 목적' 열이 없으면 맨 뒤에 자동으로 추가합니다 (기존 시트도 그대로 사용 가능).
 function cols_(sh) {
   var head = sh.getRange(1, 1, 1, Math.max(6, sh.getLastColumn())).getValues()[0];
+  var pi = head.indexOf('자격 취득 목적');
+  if (pi < 0) { pi = sh.getLastColumn(); sh.getRange(1, pi + 1).setValue('자격 취득 목적'); head.push('자격 취득 목적'); }
   function idx(name, fallback) { var i = head.indexOf(name); return i >= 0 ? i : fallback; }
   return { n: head.length, date: idx('접수일시', 0), course: idx('응시 과정', 1), name: idx('성명', 2),
-           phone: idx('휴대전화', 3), email: idx('이메일', 4), job: idx('직업/활동 분야', 5) };
+           phone: idx('휴대전화', 3), email: idx('이메일', 4), job: idx('직업/활동 분야', 5), purpose: pi };
 }
 
 // 같은 사람이 2분 안에 두 번 들어오면(새로고침 등) 한 번만 기록
@@ -58,6 +65,7 @@ function saveAndNotify_(d) {
   for (var i = 0; i < c.n; i++) row.push('');
   row[c.date] = new Date(); row[c.course] = d.course || ''; row[c.name] = d.name || '';
   row[c.phone] = d.phone || ''; row[c.email] = d.email || ''; row[c.job] = d.job || '';
+  row[c.purpose] = d.purpose || '';
   sh.appendRow(row);
   MailApp.sendEmail(NOTIFY,
     '[AI윤리전문가 1기 응시] ' + (d.name || '') + ' · ' + (d.course || ''),
@@ -65,6 +73,7 @@ function saveAndNotify_(d) {
     '응시 과정 : ' + (d.course || '') + '\n성명 : ' + (d.name || '') +
     '\n휴대전화 : ' + (d.phone || '') + '\n이메일 : ' + (d.email || '') +
     '\n직업/활동 분야 : ' + (d.job || '') +
+    '\n자격 취득 목적 : ' + (d.purpose || '') +
     '\n\n스프레드시트: https://docs.google.com/spreadsheets/d/' + getSs_().getId());
   return 'ok';
 }
@@ -101,7 +110,7 @@ function doPost(e) {
 // 편집기에서 이 함수를 실행하면 테스트 줄 1개 + 알림 메일 (권한 승인용)
 function testWrite() {
   saveAndNotify_({course: 'AI윤리전문가 2급', name: '연동 테스트', phone: '010-0000-0000',
-                  email: 'test@kaiec.kr', job: '테스트'});
+                  email: 'test@kaiec.kr', job: '테스트', purpose: '이력·커리어에 추가, 직무 활용'});
 }
 
 ──────────────── 여기까지 복사 ────────────────

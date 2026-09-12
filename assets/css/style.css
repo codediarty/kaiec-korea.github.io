@@ -971,6 +971,85 @@ table.tbl tr:hover td{background:#FCFDFF}
   border-radius:50%;background:var(--blue);color:#fff;font-size:14px;margin-right:6px}
 .gform-paynote{font-size:12.5px;color:var(--gray-500);margin-top:12px}
 
+/* ── 접수 폼 2026.09 개편: 전환·자기설득 강화 ── */
+.gform-kicker{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.12em;
+  color:var(--blue);background:var(--blue-050);border:1px solid #D6E4FB;border-radius:999px;
+  padding:5px 13px;margin-bottom:14px}
+.gform-lead{font-size:16px!important;font-weight:700;color:var(--ink)!important;line-height:1.7!important;margin-bottom:14px!important}
+.gform-urgency{display:inline-flex;align-items:center;gap:7px;margin-top:16px;
+  background:#FFF6E9;border:1px solid #F3D9A8;color:#8A5A00;border-radius:9px;
+  padding:9px 15px;font-size:13.5px;font-weight:800;letter-spacing:-.01em}
+.gform-urgency i{width:16px;height:16px}
+/* 과정 선택 카드 */
+.choice{padding:18px 20px}
+.choice-badge{position:absolute;top:14px;right:16px;font-size:11px;font-weight:800;letter-spacing:.02em;
+  color:var(--blue);background:#fff;border:1px solid #CADAF5;border-radius:999px;padding:3px 10px}
+.choice:has(input:checked) .choice-badge{background:var(--blue);color:#fff;border-color:var(--blue)}
+.choice-body strong{font-size:16px}
+.price-tag{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-top:8px}
+.price-list{font-size:12.5px;color:var(--gray-400);text-decoration:line-through}
+.price-sale{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.02em}
+.price-sale b{color:var(--blue-600)}
+.price-off{font-size:11.5px;font-weight:800;color:#fff;background:#E8683A;border-radius:6px;padding:2px 7px}
+.choice-note{display:block;margin-top:7px;font-size:12.5px;color:var(--gray-500)}
+/* 과정 선택 도움말 */
+.pick-help{margin-top:16px;border-top:1px solid var(--gray-100);padding-top:16px}
+.pick-help-title{font-size:13.5px;font-weight:800;color:var(--ink);margin-bottom:11px}
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.pick-card{background:var(--gray-050);border:1px solid var(--gray-100);border-radius:11px;padding:14px 15px}
+.pick-tag{display:inline-block;font-size:11.5px;font-weight:800;border-radius:999px;padding:3px 11px;margin-bottom:8px}
+.pick-tag--l2{color:#00857A;background:var(--teal-050);border:1px solid #BFE9E3}
+.pick-tag--l1{color:var(--blue-600);background:var(--blue-050);border:1px solid #D6E4FB}
+.pick-card p{font-size:13px;color:var(--gray-600);line-height:1.68;margin:0}
+/* 활용 목적 체크 (자기설득) */
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
+.check-item{position:relative;display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--gray-200);
+  border-radius:10px;padding:13px 14px;cursor:pointer;font-size:13.5px;color:var(--gray-700);
+  line-height:1.55;transition:border-color .15s,background .15s}
+.check-item input{position:absolute;opacity:0;pointer-events:none}
+.check-box{flex:none;width:18px;height:18px;border-radius:5px;border:2px solid var(--gray-300);
+  margin-top:1px;position:relative;transition:all .15s}
+.check-item:hover{border-color:var(--gray-300)}
+.check-item:has(input:checked){border-color:var(--blue);background:var(--blue-050);color:var(--ink);font-weight:600}
+.check-item:has(input:checked) .check-box{background:var(--blue);border-color:var(--blue)}
+.check-item:has(input:checked) .check-box::after{content:"";position:absolute;left:4px;top:1px;
+  width:4px;height:8px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)}
+.is-invalid .check-item{border-color:#F0C4C4}
+/* 검정 안내 */
+.exam-info{display:grid;gap:9px;background:var(--gray-050);border:1px solid var(--gray-100);
+  border-radius:11px;padding:16px 18px;margin-top:4px}
+.exam-info > div{display:flex;gap:14px;font-size:13.5px;color:var(--gray-700);line-height:1.6}
+.exam-info span{flex:none;width:74px;font-weight:800;color:var(--gray-500);font-size:12.5px}
+.exam-info b{color:var(--navy);font-weight:700}
+/* 1급 활용 */
+.use-block{margin-top:20px;border-top:1px solid var(--gray-100);padding-top:18px}
+.use-block-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--ink);margin-bottom:13px}
+.use-block-title i{width:18px;height:18px;color:var(--blue)}
+.use-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.use-card{background:#fff;border:1px solid var(--gray-200);border-radius:11px;padding:14px 15px}
+.use-card i{width:20px;height:20px;color:var(--blue);margin-bottom:8px}
+.use-card strong{display:block;font-size:13.5px;color:var(--ink);margin-bottom:4px}
+.use-card span{font-size:12.5px;color:var(--gray-600);line-height:1.6}
+/* 제출부 요약·신뢰 */
+.sel-info{display:none;align-items:center;justify-content:center;gap:8px;margin:0 auto 16px;
+  background:var(--blue-050);border:1px solid #D6E4FB;border-radius:10px;padding:11px 16px;
+  font-size:14px;font-weight:800;color:var(--navy);max-width:440px}
+.sel-info.on{display:flex}
+.sel-info i{width:17px;height:17px;color:var(--blue)}
+.pay-summary{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:0 0 20px}
+.pay-mini{border:1px solid var(--gray-200);border-radius:11px;padding:14px 12px;text-align:center}
+.pay-mini .lv{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px}
+.pay-mini .list{font-size:11.5px;color:var(--gray-400);text-decoration:line-through}
+.pay-mini .sale{font-size:15px;font-weight:800;color:var(--blue-600);margin-top:1px}
+.trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:9px 16px;margin-top:18px}
+.trust-row div{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray-600)}
+.trust-row i{width:15px;height:15px;color:#00857A}
+@media (max-width:640px){
+  .pick-grid,.check-grid,.use-grid{grid-template-columns:1fr}
+  .pay-summary{grid-template-columns:1fr}
+  .choice-badge{position:static;display:inline-block;margin-bottom:6px}
+}
+
 #individual,#member{scroll-margin-top:88px}
 .apply-block + .apply-block{border-top:1px solid var(--gray-100)}
 .member--recruit{text-decoration:none;border:1.5px dashed #B9CBEA;background:linear-gradient(180deg,#F7FAFF,#EEF3FE);color:inherit;
