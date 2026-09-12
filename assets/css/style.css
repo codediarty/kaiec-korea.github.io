@@ -1,5 +1,5 @@
 /* ==========================================================================
-   한국AI윤리협회 (KAIEC) — Design System
+   한국AI윤리협회 (KAIEC) : Design System
    ========================================================================== */
 
 :root{
@@ -686,12 +686,12 @@ table.tbl tr:hover td{background:#FCFDFF}
   .js .reveal{opacity:1;transform:none;transition:none}
 }
 
-/* ---------- Hero v2 — 메인 홈 (좌 카피·CTA / 우 AI 비주얼·모집 배너) ---------- */
+/* ---------- Hero v2: 메인 홈 (좌 카피·CTA / 우 AI 비주얼·모집 배너) ---------- */
 .hero-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:4px}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:11px}
 .hero-ctas .btn{white-space:nowrap;padding:13px 18px;font-size:14.5px}
 
-/* 히어로 배경에 녹아드는 풀블리드 이미지 — 좌우 가장자리 페이드 */
+/* 히어로 배경에 녹아드는 풀블리드 이미지, 좌우 가장자리 페이드 */
 .ai-visual{position:absolute;top:0;bottom:0;right:calc(50% - 50vw);width:min(60vw,780px);z-index:0;pointer-events:none;
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 30%,#000 96%,transparent 100%);
   mask-image:linear-gradient(90deg,transparent 0,#000 30%,#000 96%,transparent 100%);

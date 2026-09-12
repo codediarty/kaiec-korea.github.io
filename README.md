@@ -1,28 +1,21 @@
-# 카피체크 웹사이트 배포 가이드 (GitHub Pages)
+# 한국AI윤리협회(KAIEC) 공식 홈페이지
 
-## 구성
-- `index.html` — 메인 랜딩페이지 (전체 기능 포함)
-- `board/` — SEO용 커뮤니티 게시글 8편 (개별 URL)
-- `sitemap.xml`, `robots.txt` — 검색엔진 수집용
+- 주소: https://kaiec.kr (GitHub Pages, main 브랜치 루트에서 서빙, 커스텀 도메인은 CNAME 파일)
+- 저장소: codediarty/kaiec-korea.github.io
 
-## 1. GitHub Pages 배포 (5분)
-1. github.com 로그인 → New repository → 이름 예: `copycheck-site` → Public → Create
-2. "uploading an existing file" 클릭 → 이 폴더의 파일 전부 드래그(board 폴더 포함) → Commit
-3. 리포지토리 Settings → Pages → Branch: `main`, 폴더 `/ (root)` → Save
-4. 1~2분 뒤 `https://아이디.github.io/copycheck-site/` 로 접속 확인
+## 구조
+- `build.py`: 정적 페이지 생성기. 메뉴, 푸터, 상수(결제 링크, 웹훅, 가격)를 모두 여기서 관리합니다.
+- `icons.py`: 아이콘 SVG 모음 (build.py가 HTML에 직접 삽입)
+- `posts-src/*.md`: 커뮤니티 게시글 원본. 파일 1개가 게시글 1개 (`posts-src/_작성방법.txt` 참고)
+- `assets/`: CSS, JS, 이미지. `assets/js/*-data.js`는 위원 명단, 연혁, 제휴 기관 데이터
+- `about/`, `expert/`, `news/<slug>/` 등: build.py가 생성하는 결과물 (직접 수정하지 말 것)
+- `tools/verify.py`: 빌드 결과 전체 검증 (마지막 줄에 "전체 통과"가 나와야 배포)
 
-## 2. 도메인 치환 (중요)
-`sitemap.xml`, `robots.txt`, `board/*.html`(canonical) 안의 `https://YOUR-DOMAIN` 을
-실제 주소로 전부 바꾸세요.
-- GitHub 기본 주소면: `https://아이디.github.io/copycheck-site`
-- 커스텀 도메인(예: copycheck.co.kr) 연결 시: Settings → Pages → Custom domain 입력 후 그 주소로 치환
+## 작업 순서
+1. 수정 (build.py, posts-src, assets)
+2. `python3 build.py`
+3. `python3 tools/verify.py` 에서 "전체 통과" 확인
+4. 커밋, 푸시 (GitHub Pages가 1~2분 안에 자동 배포)
+5. https://kaiec.kr 에서 반영 확인
 
-## 3. 검색 등록 (배포 직후 필수)
-- 구글 서치콘솔 search.google.com/search-console → 속성 추가 → 소유 확인 → Sitemaps에 `sitemap.xml` 제출
-- 네이버 서치어드바이저 searchadvisor.naver.com → 사이트 등록 → 소유 확인 → 요청 > 사이트맵 제출
-- 네이버는 개별 URL 수집 요청도 함께 넣으면 빠릅니다 (요청 > 웹 페이지 수집)
-
-## 4. 이후 운영 팁
-- 게시글은 `board/`에 같은 형식의 html을 추가하고 sitemap.xml에 한 줄 추가하면 됩니다
-- 같은 글을 카피클린 네이버 블로그에 요약 + 링크로 올리면 네이버 유입이 훨씬 빠릅니다
-- 사업자등록번호·통신판매업신고번호 확정 시 index.html 푸터의 TODO 주석 부분을 교체하세요
+자세한 규칙과 이력은 `작업-메모.md`, 처음 배포하는 절차는 `배포-가이드.md`를 참고하세요.

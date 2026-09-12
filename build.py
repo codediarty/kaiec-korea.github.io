@@ -42,7 +42,7 @@ PAY_URL_L2 = "https://skkc.co.kr/shop_view?idx=26"   # 2급 응시료 결제 링
 PAY_URL_L1 = "https://skkc.co.kr/shop_view?idx=27"   # 1급 응시료 결제 링크
 # 응시 접수를 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
 # 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 접수 내용이 메일 앱으로 발송됩니다.
-SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbx25wupzLIApF3VL9_5wKDw7Vp7F9hiatqt-0kv7vuFI-2q5QV_6sL6ODPNoLM0ZFUIkg/exec"
+SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzpmjkexBAdDqQnNRsMkFr2EsYjdY8ptWHSjL5trbZ4vqrniaa89FHBXivS_08XF4fk/exec"
 # 자격과정 가격·모집 정보 (변경 시 여기만 수정 후 재실행: expert·접수 폼·메인 배너·게시글 배너에 일괄 반영)
 LIST_L2, PRICE_L2 = 300000, 99000      # 2급 정가 / 1기 특별가
 LIST_L1, PRICE_L1 = 500000, 0          # 1급 정가 / 1기 특별가 (0이면 "결제 페이지에서 확인"으로 표시)
@@ -351,6 +351,9 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
          og_type="website", published=None, crumb_parent=None):
     canonical = f"{SITE_URL}{url_for(filename)}"
     full_title = title if filename == "index.html" else f"{title} | {SITE_NAME}"
+    # 설명·제목에 큰따옴표가 있으면 meta content="..." 속성이 끊겨 설명이 비어 보이므로 &quot; 로 바꿉니다
+    desc = desc.replace('"', '&quot;')
+    full_title = full_title.replace('"', '&quot;')
     kw = ", ".join(keywords) if keywords else "한국AI윤리협회, 한국 AI 윤리협회, KAIEC, AI윤리, 인공지능 윤리, AI윤리전문가, AI 윤리 교육, AI 윤리 자격증, 생성형 AI, 카피클린"
     ogimg = og_image or f"{SITE_URL}/assets/img/og-image.png"
     article_meta = (f'<meta property="article:published_time" content="{published}">\n'

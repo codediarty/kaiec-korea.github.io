@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Lucide 아이콘 (ISC License) — build.py가 HTML에 직접 삽입합니다.
+# Lucide 아이콘 (ISC License): build.py가 HTML에 직접 삽입합니다.
 ICONS = {
  "arrow-left": "<path d=\"m12 19-7-7 7-7\" /> <path d=\"M19 12H5\" />",
  "arrow-right": "<path d=\"M5 12h14\" /> <path d=\"m12 5 7 7-7 7\" />",
