@@ -59,8 +59,18 @@ def won(n): return f"{n:,}원"
 # =============================================================================
 CATEGORIES = ["공지", "칼럼", "캠페인", "활동", "연구·정책"]
 
-# 빌드할 때마다 바뀌는 버전 태그: CSS/JS 주소 뒤에 붙여 방문자 브라우저 캐시를 자동 갱신
-BUILD_V = datetime.datetime.now().strftime("%Y%m%d%H%M")
+# CSS/JS 주소 뒤에 붙는 버전 태그(캐시 갱신용). 자산 파일 내용의 해시라서 CSS/JS가 실제로 바뀔 때만 값이 바뀌고,
+# 글 하나만 고친 빌드에서는 다른 페이지가 그대로 유지됩니다 (커밋·배포 파일 수 최소화)
+def _asset_version():
+    import hashlib
+    h = hashlib.sha1()
+    for pattern in ("assets/css/*.css", "assets/js/*.js"):
+        for p in sorted(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), pattern))):
+            with open(p, "rb") as f:
+                h.update(os.path.basename(p).encode() + b"\0" + f.read() + b"\0")
+    return h.hexdigest()[:10]
+
+BUILD_V = _asset_version()
 
 
 def _inline(s):
