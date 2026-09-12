@@ -1,68 +1,97 @@
 ═══════════════════════════════════════════════════════════════
  KAIEC AI윤리전문가 응시 접수 → 구글 스프레드시트 자동 수집
- 설치 안내 (약 3분 소요)
+ (3차 버전: GET·POST 모두 수신 + 상태 확인 페이지 + 중복 방지 + 오류 기록)
 ═══════════════════════════════════════════════════════════════
 
-[1] 구글 드라이브에서 새 스프레드시트를 만듭니다.
-    (예: 이름 "AI윤리전문가 1기 접수명단")
-
-[2] 상단 메뉴 [확장 프로그램] → [Apps Script] 를 엽니다.
-
-[3] 편집기에 있는 기존 코드를 전부 지우고, 아래 코드를 통째로
-    붙여넣은 뒤 저장(디스크 아이콘)합니다.
+[1] Apps Script 편집기에서 기존 코드를 전부 지우고 아래 코드를 통째로
+    붙여넣은 뒤 저장(Ctrl+S)합니다.
 
 ──────────────── 여기부터 복사 ────────────────
 
-function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+var SHEET_ID = '1oahWRauDAMnUkySjrl1MBhJQDR1ThOYpAXBFOldrUSA';   // 접수 스프레드시트 ID
+var NOTIFY   = 'kaiec.korea@gmail.com, skkc.office@gmail.com';   // 접수 알림 메일 (쉼표로 추가 가능)
+
+function getSheet_() {
+  var ss = SpreadsheetApp.openById(SHEET_ID);
   var sh = ss.getSheetByName('접수') || ss.insertSheet('접수');
   if (sh.getLastRow() === 0) {
-    sh.appendRow(['접수일시', '응시 과정', '성명', '생년월일',
-                  '휴대전화', '이메일', '소속', '직업/활동 분야']);
+    sh.appendRow(['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야']);
     sh.setFrozenRows(1);
   }
-  var d = {};
-  try { d = JSON.parse(e.postData.contents); } catch (err) { d = e.parameter || {}; }
-  sh.appendRow([new Date(), d.course || '', d.name || '', d.birth || '',
-                d.phone || '', d.email || '', d.org || '', d.job || '']);
+  return sh;
+}
 
-  // 접수될 때마다 협회 메일로 알림을 보냅니다. 원치 않으면 아래 3줄을 지우세요.
-  MailApp.sendEmail('kaiec.korea@gmail.com',
+// 같은 사람이 2분 안에 두 번 들어오면(새로고침 등) 한 번만 기록
+function isDuplicate_(sh, d) {
+  var last = sh.getLastRow();
+  if (last < 2) return false;
+  var n = Math.min(20, last - 1);
+  var rows = sh.getRange(last - n + 1, 1, n, 6).getValues();
+  var now = new Date().getTime();
+  for (var i = 0; i < rows.length; i++) {
+    var t = rows[i][0] instanceof Date ? rows[i][0].getTime() : 0;
+    if (rows[i][2] === (d.name || '') && rows[i][4] === (d.email || '') && now - t < 120000) return true;
+  }
+  return false;
+}
+
+function saveAndNotify_(d) {
+  var sh = getSheet_();
+  if (isDuplicate_(sh, d)) return 'duplicate';
+  sh.appendRow([new Date(), d.course || '', d.name || '', d.phone || '', d.email || '', d.job || '']);
+  MailApp.sendEmail(NOTIFY,
     '[AI윤리전문가 1기 응시] ' + (d.name || '') + ' · ' + (d.course || ''),
     '새 응시 접수가 등록되었습니다.\n\n' +
     '응시 과정 : ' + (d.course || '') + '\n성명 : ' + (d.name || '') +
-    '\n생년월일 : ' + (d.birth || '') + '\n휴대전화 : ' + (d.phone || '') +
-    '\n이메일 : ' + (d.email || '') + '\n소속 : ' + (d.org || '') +
+    '\n휴대전화 : ' + (d.phone || '') + '\n이메일 : ' + (d.email || '') +
     '\n직업/활동 분야 : ' + (d.job || '') +
-    '\n\n스프레드시트에서 전체 명단을 확인하세요.');
+    '\n\n스프레드시트: https://docs.google.com/spreadsheets/d/' + SHEET_ID);
+  return 'ok';
+}
 
-  return ContentService.createTextOutput('ok');
+function logError_(err, raw) {
+  try {
+    var ss = SpreadsheetApp.openById(SHEET_ID);
+    var log = ss.getSheetByName('오류로그') || ss.insertSheet('오류로그');
+    log.appendRow([new Date(), String(err), raw || '']);
+  } catch (e2) {}
+}
+
+// 사이트는 GET(주소에 데이터)으로 보냅니다. 파라미터가 없으면 상태 확인 문구만 보여줍니다.
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (p.name || p.email) {
+    try { return ContentService.createTextOutput(saveAndNotify_(p)); }
+    catch (err) { logError_(err, JSON.stringify(p)); return ContentService.createTextOutput('error: ' + err); }
+  }
+  return ContentService.createTextOutput('KAIEC 접수 수신 대기 중 (ok)');
+}
+
+// 예전 방식(POST)으로 들어오는 경우도 그대로 받습니다.
+function doPost(e) {
+  try {
+    var d = {};
+    try { d = JSON.parse(e.postData.contents); } catch (err) { d = (e && e.parameter) || {}; }
+    return ContentService.createTextOutput(saveAndNotify_(d));
+  } catch (err) {
+    logError_(err, e && e.postData ? e.postData.contents : '');
+    return ContentService.createTextOutput('error: ' + err);
+  }
+}
+
+// 편집기에서 실행하면 테스트 줄 1개 + 알림 메일 (권한 승인용)
+function testWrite() {
+  saveAndNotify_({course: 'AI윤리전문가 2급', name: '연동 테스트', phone: '010-0000-0000',
+                  email: 'test@kaiec.kr', job: '테스트'});
 }
 
 ──────────────── 여기까지 복사 ────────────────
 
-[4] 우측 상단 [배포] → [새 배포] 를 누르고:
-    · 유형 선택(톱니바퀴) → "웹 앱"
-    · 설명: 접수 수집 (아무거나)
-    · 실행 계정: "나"
-    · 액세스 권한: "모든 사용자"  ← 반드시 이걸로 선택
-    → [배포] → 권한 승인(계정 선택 → 고급 → 이동 → 허용)
+[2] 배포 → 배포 관리 → 연필(수정) → 버전 "새 버전" → 배포   ← 이게 꼭 필요합니다
+    (주소는 그대로 유지됩니다)
 
-[5] 발급된 "웹 앱 URL"(https://script.google.com/macros/s/...../exec)을
-    복사해서 저에게 보내주세요.
-    → 제가 build.py 의 SHEET_WEBHOOK 에 넣고 재빌드해 드립니다.
-    (직접 하시려면: build.py 상단 SHEET_WEBHOOK = "" 에 URL을 넣고
-     python3 build.py 실행 후 재업로드)
+[3] 확인 방법: 브라우저 주소창에 /exec 주소를 열었을 때
+    "KAIEC 접수 수신 대기 중 (ok)" 라고 나오면 새 코드가 배포된 것입니다.
+    (예전처럼 "doGet 함수를 찾을 수 없음"이 나오면 아직 옛 버전입니다 → 2번 다시)
 
-═══════════════════════════════════════════════════════════════
- 연동 후 동작
-═══════════════════════════════════════════════════════════════
-· 응시자가 접수 폼을 제출하면 시트 '접수' 탭에 한 줄씩 자동 추가되고,
-  kaiec.korea@gmail.com 으로 접수 알림 메일이 옵니다.
-· 접수자는 완료 화면에서 3초 뒤 결제 페이지로 자동 이동합니다.
-· 연동 전까지는 지금처럼 접수 내용이 메일 앱을 통해 발송됩니다.
-
-※ 참고
-· 코드를 수정한 뒤에는 [배포] → [배포 관리] → 연필 아이콘 →
-  버전 "새 버전" 으로 다시 배포해야 반영됩니다.
-· 시트 이름/탭 이름은 자유롭게 바꿔도 됩니다('접수' 탭은 자동 생성).
+[4] 사이트(kaiec.kr/expert-apply/)에서 테스트 접수 → 시트 '접수' 탭 + 알림 메일 확인.

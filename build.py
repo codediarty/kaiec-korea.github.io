@@ -3055,12 +3055,14 @@ def build_expert_apply():
       /* 접수 데이터 전송: 시트 웹훅이 연결되어 있으면 스프레드시트로, 아니면 메일 앱으로 */
       var HOOK='__HOOK__';
       if(HOOK){
-        var payload=JSON.stringify({course:'AI윤리전문가 '+c,name:v('name'),
-          phone:v('phone'),email:v('email'),job:job.value});
-        var sent=false;
-        try{if(navigator.sendBeacon){sent=navigator.sendBeacon(HOOK,new Blob([payload],{type:'text/plain'}));}}catch(e1){}
-        if(!sent){try{fetch(HOOK,{method:'POST',mode:'no-cors',keepalive:true,
-          headers:{'Content-Type':'text/plain'},body:payload});}catch(e2){}}
+        /* GET 방식 전송: 주소에 데이터를 실어 보내면 브라우저·프록시·앱스 스크립트 어디서도 막히지 않습니다 */
+        var q='course='+encodeURIComponent('AI윤리전문가 '+c)+'&name='+encodeURIComponent(v('name'))
+             +'&phone='+encodeURIComponent(v('phone'))+'&email='+encodeURIComponent(v('email'))
+             +'&job='+encodeURIComponent(job.value)+'&t='+Date.now();
+        var url=HOOK+'?'+q;
+        var ok=false;
+        try{fetch(url,{mode:'no-cors',keepalive:true,cache:'no-store'});ok=true;}catch(e1){}
+        if(!ok){try{var im=new Image();im.src=url;}catch(e2){}}
         document.getElementById('mailBox').hidden=true;
       }else{
         var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
