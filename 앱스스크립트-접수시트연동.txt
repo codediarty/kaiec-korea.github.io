@@ -9,7 +9,7 @@
 
 ──────────────── 여기부터 복사 ────────────────
 
-var SHEET_ID = '1oahWRauDAMnUkySjrl1MBhJQDR1ThOYpAXBFOldrUSA';   // 접수 스프레드시트 ID (시트에 연결된 프로젝트면 자동 인식)
+var SHEET_ID = '1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs';   // 접수 스프레드시트 ID (스크립트가 연결된 시트가 있으면 그 시트를 우선 사용)
 var NOTIFY   = 'kaiec.korea@gmail.com, skkc.office@gmail.com';   // 접수 알림 메일 (쉼표로 추가 가능)
 
 function getSs_() {
@@ -121,3 +121,146 @@ function testWrite() {
     ("Script function not found: doGet" 이 나오면 아직 옛 버전입니다 → 3번 다시)
 
 [5] 사이트(kaiec.kr/expert-apply/)에서 테스트 접수 → 시트 '접수' 탭 + 알림 메일 확인.
+
+※ 실제 접수가 쌓이는 파일: "AI윤리전문가 1기 접수명단 (실제 접수, 스크립트 연결)"
+   https://docs.google.com/spreadsheets/d/1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs/
+   (스크립트 프로젝트가 이 파일에 연결되어 있음. 첫 탭이 아니라 '접수' 탭을 볼 것.
+    같은 이름이던 1oahWRau… 파일은 테스트 기록만 있어 '(구)'로 이름을 바꿔 둠)
+
+═══════════════════════════════════════════════════════════════
+ (선택) 기록 파일을 1oahWRau… 시트로 바꾸고 싶을 때: 5차 코드
+   지정한 시트(SHEET_ID)에만 기록하고, migrateOld 로 예전 시트 기록을 옮깁니다.
+   적용 순서: Code.gs 전체 교체 → 저장 → migrateOld 1회 실행 → 배포 관리 → 새 버전
+═══════════════════════════════════════════════════════════════
+
+──────────────── 여기부터 복사 (5차) ────────────────
+
+var SHEET_ID = '1oahWRauDAMnUkySjrl1MBhJQDR1ThOYpAXBFOldrUSA';   // 접수가 기록되는 스프레드시트 (이 파일에만 기록)
+var OLD_ID   = '1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs';   // 예전에 기록되던 시트 (migrateOld 로 옮길 때만 사용)
+var NOTIFY   = 'kaiec.korea@gmail.com, skkc.office@gmail.com';   // 접수 알림 메일 (쉼표로 추가 가능)
+var COLS     = ['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야'];
+
+function getSs_() {
+  return SpreadsheetApp.openById(SHEET_ID);
+}
+
+function getSheet_() {
+  var ss = getSs_();
+  var sh = ss.getSheetByName('접수') || ss.insertSheet('접수');
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(COLS);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+// 1행 제목을 읽어 열 위치를 찾습니다 (열 순서가 달라도 그대로 동작)
+function cols_(sh) {
+  var head = sh.getRange(1, 1, 1, Math.max(6, sh.getLastColumn())).getValues()[0];
+  function idx(name, fallback) { var i = head.indexOf(name); return i >= 0 ? i : fallback; }
+  return { n: head.length, date: idx('접수일시', 0), course: idx('응시 과정', 1), name: idx('성명', 2),
+           phone: idx('휴대전화', 3), email: idx('이메일', 4), job: idx('직업/활동 분야', 5) };
+}
+
+// 같은 사람이 2분 안에 두 번 들어오면(새로고침 등) 한 번만 기록
+function isDuplicate_(sh, c, d) {
+  var last = sh.getLastRow();
+  if (last < 2) return false;
+  var n = Math.min(20, last - 1);
+  var rows = sh.getRange(last - n + 1, 1, n, c.n).getValues();
+  var now = new Date().getTime();
+  for (var i = 0; i < rows.length; i++) {
+    var t = rows[i][c.date] instanceof Date ? rows[i][c.date].getTime() : 0;
+    if (rows[i][c.name] === (d.name || '') && rows[i][c.email] === (d.email || '') && now - t < 120000) return true;
+  }
+  return false;
+}
+
+function appendRow_(sh, c, when, d) {
+  var row = [];
+  for (var i = 0; i < c.n; i++) row.push('');
+  row[c.date] = when; row[c.course] = d.course || ''; row[c.name] = d.name || '';
+  row[c.phone] = d.phone || ''; row[c.email] = d.email || ''; row[c.job] = d.job || '';
+  sh.appendRow(row);
+}
+
+function saveAndNotify_(d) {
+  var sh = getSheet_();
+  var c = cols_(sh);
+  if (isDuplicate_(sh, c, d)) return 'duplicate';
+  appendRow_(sh, c, new Date(), d);
+  MailApp.sendEmail(NOTIFY,
+    '[AI윤리전문가 1기 응시] ' + (d.name || '') + ' · ' + (d.course || ''),
+    '새 응시 접수가 등록되었습니다.\n\n' +
+    '응시 과정 : ' + (d.course || '') + '\n성명 : ' + (d.name || '') +
+    '\n휴대전화 : ' + (d.phone || '') + '\n이메일 : ' + (d.email || '') +
+    '\n직업/활동 분야 : ' + (d.job || '') +
+    '\n\n접수 명단 시트:\nhttps://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit\n');
+  return 'ok';
+}
+
+function logError_(err, raw) {
+  try {
+    var ss = getSs_();
+    var log = ss.getSheetByName('오류로그') || ss.insertSheet('오류로그');
+    log.appendRow([new Date(), String(err), raw || '']);
+  } catch (e2) {}
+}
+
+// 사이트는 GET(주소에 데이터)으로 보냅니다. 파라미터가 없으면 상태 확인 문구만 보여줍니다.
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (p.name || p.email) {
+    try { return ContentService.createTextOutput(saveAndNotify_(p)); }
+    catch (err) { logError_(err, JSON.stringify(p)); return ContentService.createTextOutput('error: ' + err); }
+  }
+  return ContentService.createTextOutput('KAIEC 접수 수신 대기 중 (ok) / 기록 시트: ' + SHEET_ID);
+}
+
+// 예전 방식(POST)으로 들어오는 경우도 그대로 받습니다.
+function doPost(e) {
+  try {
+    var d = {};
+    try { d = JSON.parse(e.postData.contents); } catch (err) { d = (e && e.parameter) || {}; }
+    return ContentService.createTextOutput(saveAndNotify_(d));
+  } catch (err) {
+    logError_(err, e && e.postData ? e.postData.contents : '');
+    return ContentService.createTextOutput('error: ' + err);
+  }
+}
+
+// 편집기에서 이 함수를 실행하면 테스트 줄 1개 + 알림 메일 (권한 승인용)
+function testWrite() {
+  saveAndNotify_({course: 'AI윤리전문가 2급', name: '연동 테스트', phone: '010-0000-0000',
+                  email: 'test@kaiec.kr', job: '테스트'});
+}
+
+// 편집기에서 한 번만 실행: 예전 시트(OLD_ID)의 '접수' 탭 기록을 이 시트로 복사합니다 (이미 있는 줄은 건너뜀)
+function migrateOld() {
+  var src = SpreadsheetApp.openById(OLD_ID).getSheetByName('접수');
+  if (!src || src.getLastRow() < 2) { Logger.log('옮길 기록 없음'); return; }
+  var sv = src.getDataRange().getValues();
+  var sh = getSheet_();
+  var c = cols_(sh);
+  var existing = {};
+  var tv = sh.getDataRange().getValues();
+  for (var i = 1; i < tv.length; i++) {
+    var t = tv[i][c.date] instanceof Date ? tv[i][c.date].getTime() : String(tv[i][c.date]);
+    existing[tv[i][c.name] + '|' + tv[i][c.email] + '|' + t] = true;
+  }
+  var head = sv[0];
+  function col(name) { return head.indexOf(name); }
+  var moved = 0;
+  for (var r = 1; r < sv.length; r++) {
+    var row = sv[r];
+    var when = row[col('접수일시')];
+    var key = row[col('성명')] + '|' + row[col('이메일')] + '|' + (when instanceof Date ? when.getTime() : String(when));
+    if (existing[key] || !row[col('성명')]) continue;
+    appendRow_(sh, c, when, { course: row[col('응시 과정')], name: row[col('성명')], phone: row[col('휴대전화')],
+                              email: row[col('이메일')], job: row[col('직업/활동 분야')] });
+    existing[key] = true; moved++;
+  }
+  Logger.log('옮긴 줄: ' + moved);
+}
+
+──────────────── 여기까지 복사 (5차) ────────────────
