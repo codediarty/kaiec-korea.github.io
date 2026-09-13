@@ -1051,6 +1051,43 @@ table.tbl tr:hover td{background:#FCFDFF}
   .choice-badge{position:static;display:inline-block;margin-bottom:6px}
 }
 
+/* ── KAIEC 공식 AI윤리전문가(experts) · KAIEC 참여하기(join) 페이지 (2026.09) ── */
+.btns{display:flex;gap:11px;flex-wrap:wrap}
+#apply,#programs,#list{scroll-margin-top:88px}
+#expertGrid[hidden],#expertEmpty[hidden]{display:none!important}
+.expert-empty{max-width:640px;margin:0 auto;text-align:center;border:1.5px dashed #B9CBEA;border-radius:var(--radius-lg);
+  background:linear-gradient(180deg,#F7FAFF,#EEF3FE);padding:40px 28px}
+.expert-empty-icon{width:58px;height:58px;border-radius:50%;background:#E3ECFB;color:var(--blue);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.expert-empty-icon i{width:26px;height:26px}
+.expert-empty h3{font-size:19px;margin-bottom:10px;letter-spacing:-.02em}
+.expert-empty p{font-size:14.5px;color:var(--gray-600);line-height:1.8}
+.expert-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.expert-tags .chip{font-size:11.5px;padding:3px 9px}
+.expert-since{margin-top:10px;font-size:12px;font-weight:700;color:var(--gray-400)}
+.steps-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.join-eyebrow{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.16em;color:#8FE8DD;margin-bottom:12px}
+.join-group+.join-group{margin-top:34px}
+.join-group-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.join-group-head h3{font-size:17px;letter-spacing:-.02em}
+.join-group-head p{font-size:13.5px;color:var(--gray-500);margin:0}
+.join-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.join-item{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--gray-200);border-radius:14px;
+  padding:16px 18px;text-decoration:none;color:inherit;transition:border-color .2s,transform .2s,box-shadow .2s}
+.join-item:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.join-icon{flex:none;width:44px;height:44px;border-radius:12px;background:var(--blue-050);color:var(--blue);
+  display:flex;align-items:center;justify-content:center}
+.join-icon i{width:21px;height:21px}
+.join-body{flex:1;display:grid;gap:3px;min-width:0}
+.join-body strong{font-size:15.5px;color:var(--ink);letter-spacing:-.02em}
+.join-body span{font-size:13.5px;color:var(--gray-600)}
+.join-go{flex:none;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:var(--blue)}
+.join-go i{width:15px;height:15px}
+.field-opt{font-weight:500;color:var(--gray-400);font-size:12.5px;margin-left:4px}
+.gform-head .gform-title{font-size:22px;letter-spacing:-.03em;line-height:1.4;margin-bottom:14px;color:var(--ink)}
+@media (max-width:860px){.steps-5{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:600px){.join-grid{grid-template-columns:1fr}.steps-5{grid-template-columns:1fr}.join-go span{display:none}}
+
 #individual,#member{scroll-margin-top:88px}
 .apply-block + .apply-block{border-top:1px solid var(--gray-100)}
 .member--recruit{text-decoration:none;border:1.5px dashed #B9CBEA;background:linear-gradient(180deg,#F7FAFF,#EEF3FE);color:inherit;

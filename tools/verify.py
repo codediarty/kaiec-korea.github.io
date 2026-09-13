@@ -29,7 +29,7 @@ DOC_FILES = {"작업-메모.md", "README.md", "배포-가이드.md", "앱스스�
              os.path.join("posts-src", "_작성방법.txt")}
 RETIRED_STUBS = {"post-2026-09-11-name-change.html"}   # 삭제된 게시글의 은퇴 스텁 (build.py가 만들지 않음)
 CORE = ["about.html", "business.html", "members.html", "lecture.html", "expert.html",
-        "expert-apply.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
+        "expert-apply.html", "experts.html", "join.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
 
 results = []   # (이름, 통과 여부, 상세 목록)
 
@@ -228,8 +228,10 @@ if build.DEADLINE not in expert_html:
     probs.append(f"마감 {build.DEADLINE} 미반영")
 if build.COPYCLEAN_URL not in read(pages["copyclean.html"]):
     probs.append("COPYCLEAN_URL 미반영")
-if build.GOOGLE_FORM not in read(pages["apply.html"]):
-    probs.append("GOOGLE_FORM 미반영")
+if "/join/#apply" not in read(pages["apply.html"]):
+    probs.append("apply 페이지가 통합 신청 폼(/join/#apply)으로 연결되지 않음")
+if 'id="joinForm"' not in read(pages["join.html"]) or build.SHEET_WEBHOOK not in read(pages["join.html"]):
+    probs.append("join 페이지 신청 폼 또는 시트 웹훅 미반영")
 check("build.py 상수(웹훅·결제 링크·가격·마감·구글폼) 페이지 반영", probs)
 
 # ---------------------------------------------------------------- 8. 배포 파일
