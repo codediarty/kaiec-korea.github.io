@@ -1094,7 +1094,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 /* join: 역할 선택(구글폼식 목록) · 이런 분을 기다립니다 */
 .choice--role{padding:16px 18px}
 .choice--role .choice-body{gap:5px}
-.choice--role strong{display:flex;align-items:center;gap:8px;padding-right:96px}
+.choice--role strong{display:flex;align-items:center;gap:8px;padding-right:160px}
 .choice--role strong svg{width:18px;height:18px;flex:none;color:var(--blue)}
 .choice--role .choice-body em{display:inline-block;min-width:58px;margin-right:4px}
 .choice--role .choice-badge{background:var(--gray-050);color:var(--gray-600);border-color:var(--gray-200)}
@@ -1122,6 +1122,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .path-card p{font-size:14px;color:var(--gray-600);line-height:1.75;margin-bottom:14px}
 .path-card .chip{font-size:12px;padding:5px 11px;background:var(--blue-050);color:var(--blue-600)}
 .start-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
+.start-one{max-width:680px;margin:0 auto}
 .start-card{background:#fff;border:1px solid var(--gray-200);border-radius:18px;padding:30px 30px 28px;position:relative;overflow:hidden;
   display:flex;flex-direction:column}
 .start-card::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#00C2B2,#00857A)}

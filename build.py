@@ -3151,7 +3151,8 @@ def build_expert_apply():
 def build_experts():
     """KAIEC 공식 AI윤리전문가: AI윤리전문가의 필요성·가치를 스토리텔링으로 설득하고, 자격 취득(2급 접수) 또는 KAIEC 참여로 이어지는 페이지
     - 명단은 assets/js/experts-data.js 의 KAIEC_EXPERTS 배열로 관리 (비어 있으면 '위촉 예정' 안내가 표시됨)
-    - 특정 급수(1급)를 내세우지 않고 '자격 취득'으로 통일 (접수 링크는 2급이 미리 선택된 상태), 등재·등록만 강조하지 않음"""
+    - 특정 급수(1급)를 내세우지 않고 '자격 취득'으로 통일 (접수 링크는 2급이 미리 선택된 상태), 등재·등록만 강조하지 않음
+    - 무료 대안(KAIEC 참여) 카드는 자격증 신청 이탈을 유발해 넣지 않음 (2026.09.13 결정)"""
     APPLY = "expert-apply.html?course=2"
     WHY = [
         ("2026.1", "AI기본법 시행", "AI를 만드는 기업뿐 아니라 활용하는 기업·기관도 책임의 주체가 됩니다."),
@@ -3197,9 +3198,8 @@ def build_experts():
         ("경력이나 소속이 없어도 등재할 수 있나요?",
          "네. 취업이나 이직을 준비 중이어도 등재할 수 있습니다. 소속은 희망하는 경우에만 표기하며, "
          "등재된 프로필 주소는 이력서와 포트폴리오에 바로 활용할 수 있습니다."),
-        ("자격을 취득하기 전에도 협회 활동을 할 수 있나요?",
-         "네. KAIEC 참여하기에서 AI 윤리 캠페인위원 등으로 신청하면 자격 취득 전이라도 협회 활동에 참여할 수 있고, 위촉장과 활동증명서를 받을 수 있습니다. "
-         "활동하면서 자격과정으로 이어가는 분이 많습니다."),
+        ("자격검정에 합격하지 못하면 어떻게 되나요?",
+         "불합격 시 1회 무료로 재응시할 수 있습니다. 온라인 교육을 이수한 뒤 검정을 치르는 구조라 교육 내용을 충실히 따라오면 합격 기준(70점)에 충분히 도달할 수 있습니다."),
     ]
     why_html = "".join(
         f'<div><strong>{n}</strong><b>{t}</b><span>{d}</span></div>' for n, t, d in WHY)
@@ -3304,10 +3304,10 @@ def build_experts():
       <div class="wrap">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Get Started</span>
-          <h2 class="h-sec">지금 시작하는 두 가지 방법</h2>
-          <p class="h-sub" style="margin:0 auto">자격증으로 바로 시작하거나, 먼저 협회 활동으로 발을 들이거나. 어느 쪽이든 KAIEC와 함께 이어집니다.</p>
+          <h2 class="h-sec">지금 시작하세요</h2>
+          <p class="h-sub" style="margin:0 auto">AI윤리전문가 자격증 취득이 KAIEC 공식 AI윤리전문가로 가는 첫걸음입니다. 1기 특별가는 접수 마감 전까지만 적용됩니다.</p>
         </div>
-        <div class="start-grid">
+        <div class="start-one">
           <div class="offer-card reveal">
             <div class="offer-top">
               <span class="badge">1기 모집 중 · 마감 {DEADLINE}</span>
@@ -3328,22 +3328,6 @@ def build_experts():
             <div class="offer-btns">
               <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
               <a class="btn btn-ghost" href="expert.html">과정 자세히 보기</a>
-            </div>
-          </div>
-          <div class="start-card reveal">
-            <div class="offer-top">
-              <span class="badge badge--teal">참여 비용 없음</span>
-            </div>
-            <h3>먼저 KAIEC 활동으로 시작하기</h3>
-            <p>자격 취득 전이라도 협회 위원·캠페인 활동으로 참여할 수 있습니다.
-               공식 위촉장과 활동증명서를 받고, 활동하면서 자격과정으로 이어가세요.</p>
-            <ul class="offer-list">
-              <li>AI 윤리 캠페인위원 등 전공·경력 무관 참여</li>
-              <li>온라인·재택 활동, 학업·직장과 병행</li>
-              <li>협회 명의 위촉장·활동증명서 발급</li>
-            </ul>
-            <div class="offer-btns">
-              <a class="btn btn-teal" href="join.html">KAIEC 참여하기 <i data-lucide="arrow-right"></i></a>
             </div>
           </div>
         </div>
@@ -3367,7 +3351,7 @@ def build_experts():
             <p>자격 취득부터 협회 위촉과 활동까지, 한국AI윤리협회가 함께합니다.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="{APPLY}">AI윤리전문가 자격증 취득하기</a>
-            <a class="btn btn-light" href="join.html">KAIEC 참여하기</a>
+            <a class="btn btn-light" href="expert.html">자격과정 안내</a>
           </div>
         </div>
       </div>
@@ -3411,20 +3395,20 @@ def build_join():
     - 접수 데이터는 응시 접수와 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
     ROLES = [
         # (아이콘, 구분명, 배지, 이런 분께, 주요 역할)
-        ("megaphone", "AI 윤리 캠페인위원", "처음이라면 추천",
+        ("megaphone", "AI 윤리 캠페인위원", "열린 참여",
          "전공·경력에 관계없이 AI 윤리 확산 활동에 처음 참여하는 분",
          "온라인 캠페인·콘텐츠 제작·홍보 활동 (재택 가능)"),
-        ("briefcase", "운영위원", "개인",
+        ("briefcase", "운영위원", "협회 운영",
          "협회 사업과 행사를 함께 기획하고 운영하고 싶은 분",
          "사업 기획, 프로그램 운영, 활동 관리"),
-        ("monitor-play", "전문위원", "개인",
-         "AI·윤리·법·교육 분야의 전문성을 가진 분 (석·박사, 현직 전문가, 강사)",
+        ("monitor-play", "전문위원", "AI윤리전문가 1급 이상",
+         "AI윤리전문가 1급 자격을 갖춘 AI·윤리·법·교육 분야 전문가 (석·박사, 현직 전문가, 강사)",
          "AI 윤리 교육·전문강사 활동, 자문"),
-        ("map-pin", "지역 운영위원", "개인",
-         "거주 지역에서 협회 활동과 네트워크를 이끌고 싶은 분",
+        ("map-pin", "지역 운영위원", "AI윤리전문가 2급 이상",
+         "AI윤리전문가 자격(2급 이상)을 갖추고 거주 지역에서 협회 활동과 네트워크를 이끌고 싶은 분",
          "권역별 지역 조직 운영, 지역 캠페인·행사"),
-        ("graduation-cap", "캠퍼스 위원장", "개인",
-         "소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
+        ("graduation-cap", "캠퍼스 위원장", "AI윤리전문가 2급 이상",
+         "AI윤리전문가 자격(2급 이상)을 갖추고 소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
          "캠퍼스 위원회 운영, 교내 확산 활동"),
         ("handshake", "제휴 파트너", "기업·기관",
          "협회와 공동 사업·교육·캠페인을 제안하는 개인·기업·기관",
@@ -3544,6 +3528,8 @@ def build_join():
             <h2>참여 구분 <span class="req">*</span></h2>
             <p class="gform-desc">참여를 희망하는 역할을 하나 선택해 주세요. 잘 모르겠다면 맨 아래 '협회 추천'을 선택하세요.</p>
             <div class="choice-list">{ROLE_ITEMS}</div>
+            <p class="field-hint">전문위원·지역 운영위원·캠퍼스 위원장은 AI윤리전문가 자격 취득자를 대상으로 합니다.
+               자격이 아직 없다면 <a href="expert-apply.html?course=2" style="color:var(--blue);font-weight:700">AI윤리전문가 자격증 취득하기</a>에서 먼저 준비하거나, AI 윤리 캠페인위원으로 시작할 수 있습니다.</p>
             <p class="err-msg">참여 구분을 선택해 주세요.</p>
           </div>
 
