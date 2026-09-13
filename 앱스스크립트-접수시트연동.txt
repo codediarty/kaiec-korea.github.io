@@ -7,7 +7,7 @@
    1) 응시 접수 폼의 '자격 취득 및 활용 목적' 답변이 '접수' 탭 마지막 열에 저장됩니다.
    2) KAIEC 참여 신청(kaiec.kr/join/)이 시트 하단의 '위원 신청' 탭에 따로 쌓이고(탭은 첫 신청 때 자동 생성)
       "[KAIEC 참여 신청]" 제목의 알림 메일이 옵니다. 열: 접수일시 · 참여 구분 · 성명 · 이메일 · 휴대전화 ·
-      직업/활동 분야 · 소속 · 기대하는 것 · 지원 사유·자기소개 · 참여 가능 시간
+      직업/활동 분야 · 소속 · 기대하는 것 · 지원 사유·자기소개
    다시 올리기 전에도 참여 신청은 '접수' 탭에 "[KAIEC 참여] 운영위원"처럼 구분 표시가 붙어 기록되고
    알림 메일도 오므로 접수 자체는 누락되지 않습니다.
 ═══════════════════════════════════════════════════════════════
@@ -84,7 +84,7 @@ function saveAndNotify_(d) {
 
 // KAIEC 참여 신청(kaiec.kr/join/)은 '위원 신청' 탭에 따로 기록하고 알림 메일을 보냅니다. (type=join 으로 들어옴)
 var JOIN_SHEET = '위원 신청';
-var JOIN_COLS  = ['접수일시', '참여 구분', '성명', '이메일', '휴대전화', '직업/활동 분야', '소속', '기대하는 것', '지원 사유·자기소개', '참여 가능 시간'];
+var JOIN_COLS  = ['접수일시', '참여 구분', '성명', '이메일', '휴대전화', '직업/활동 분야', '소속', '기대하는 것', '지원 사유·자기소개'];
 
 function saveJoin_(d) {
   var ss = getSs_();
@@ -96,7 +96,7 @@ function saveJoin_(d) {
   }
   var kind = String(d.course || '').replace('[KAIEC 참여] ', '');
   sh.appendRow([new Date(), kind, d.name || '', d.email || '', d.phone || '', d.job || '', d.org || '',
-                d.motive || '', d.purpose || '', d.avail || '']);
+                d.motive || '', d.purpose || '']);
   MailApp.sendEmail(NOTIFY,
     '[KAIEC 참여 신청] ' + (d.name || '') + ' · ' + kind,
     '새 참여 신청이 접수되었습니다.\n\n' +
@@ -104,7 +104,6 @@ function saveJoin_(d) {
     '\n휴대전화 : ' + (d.phone || '') + '\n직업/활동 분야 : ' + (d.job || '') + '\n소속 : ' + (d.org || '') +
     '\n기대하는 것 : ' + (d.motive || '') +
     '\n지원 사유·자기소개 :\n' + (d.purpose || '') +
-    '\n참여 가능 시간 : ' + (d.avail || '') +
     '\n\n스프레드시트(위원 신청 탭): https://docs.google.com/spreadsheets/d/' + ss.getId());
   return 'ok';
 }
@@ -151,7 +150,7 @@ function testWrite() {
 // 편집기에서 실행하면 '위원 신청' 탭에 테스트 줄 1개 (탭이 없으면 만들어짐)
 function testJoin() {
   saveJoin_({type: 'join', course: '[KAIEC 참여] AI 윤리 캠페인위원', name: '연동 테스트', email: 'test@kaiec.kr',
-             phone: '010-0000-0000', job: '테스트', org: '', motive: '취업·이직 경쟁력', purpose: '테스트 자기소개', avail: '주 1~2시간'});
+             phone: '010-0000-0000', job: '테스트', org: '', motive: '취업·이직 경쟁력', purpose: '테스트 자기소개'});
 }
 
 ──────────────── 여기까지 복사 ────────────────
