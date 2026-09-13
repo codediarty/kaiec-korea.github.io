@@ -486,7 +486,7 @@ def sticky_cta(mode="all"):
     return f"""  <div class="sticky-cta{cls}" id="stickyCta" data-deadline="{DEADLINE_ISO}" aria-hidden="true">
     <div class="sticky-cta-inner">
       <div class="sticky-cta-text">
-        <strong><em class="sticky-more">AI윤리전문가 </em>2급 1기 특별가 {won(PRICE_L2)}</strong>
+        <strong>AI윤리전문가<em class="sticky-more"> 2급</em> 1기 특별가 {won(PRICE_L2)}</strong>
         <span>접수 마감 {DEADLINE} <b class="dday" data-dday></b><em class="sticky-more"> · 연 {QUOTA}명 한정 양성</em></span>
       </div>
       <a class="btn btn-primary btn-sm" href="{CERT_HREF}">자격증 취득하기 <i data-lucide="arrow-right"></i></a>
