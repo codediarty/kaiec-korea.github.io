@@ -29,7 +29,7 @@ DOC_FILES = {"작업-메모.md", "README.md", "배포-가이드.md", "앱스스�
              os.path.join("posts-src", "_작성방법.txt")}
 RETIRED_STUBS = {"post-2026-09-11-name-change.html"}   # 삭제된 게시글의 은퇴 스텁 (build.py가 만들지 않음)
 CORE = ["about.html", "business.html", "members.html", "lecture.html", "expert.html",
-        "expert-apply.html", "experts.html", "join.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
+        "expert-apply.html", "experts.html", "join.html", "quiz.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
 
 results = []   # (이름, 통과 여부, 상세 목록)
 
@@ -220,7 +220,8 @@ if hook:
 else:
     probs.append("SHEET_WEBHOOK 비어 있음 (메일 폴백으로 동작)")
 for name, url in (("PAY_URL_L2", build.PAY_URL_L2), ("PAY_URL_L1", build.PAY_URL_L1)):
-    if url and (url not in expert_html or url not in apply_html):
+    # 결제 링크는 접수 완료 화면(자동 이동)에만 있으면 됨. expert 페이지의 직접 결제 버튼은 2026.09.13 제거
+    if url and url not in apply_html:
         probs.append(f"{name} 미반영 ({url})")
 if build.won(build.PRICE_L2) not in expert_html or build.won(build.PRICE_L2) not in index_html:
     probs.append(f"2급 특별가 {build.won(build.PRICE_L2)} 미반영")

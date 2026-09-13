@@ -76,5 +76,39 @@
     nums.forEach(function (n) { nio.observe(n); });
   }
 
+  /* 6. 접수 마감 D-day (data-deadline="YYYY-MM-DD" 요소 안의 [data-dday]에 표시, 마감 후엔 비움) ---- */
+  document.querySelectorAll('[data-deadline]').forEach(function (box) {
+    var out = box.querySelector('[data-dday]');
+    if (!out) return;
+    var end = new Date(box.getAttribute('data-deadline') + 'T23:59:59+09:00');
+    var days = Math.ceil((end - new Date()) / 86400000);
+    out.textContent = days > 0 ? 'D-' + days : (days === 0 ? 'D-DAY' : '');
+  });
+
+  /* 7. 하단 고정 접수 바: 첫 화면을 지나면 나타나고, 배너·푸터가 보이면 숨김 ----------------- */
+  var sticky = document.getElementById('stickyCta');
+  if (sticky) {
+    var blockers = document.querySelectorAll('.site-footer, .cta-band, .gform-done');
+    var visible = [];
+    function sync() {
+      var on = window.pageYOffset > 520 && visible.length === 0;
+      sticky.classList.toggle('is-on', on);
+      sticky.setAttribute('aria-hidden', on ? 'false' : 'true');
+    }
+    if ('IntersectionObserver' in window && blockers.length) {
+      var sio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          var at = visible.indexOf(en.target);
+          if (en.isIntersecting && at < 0) visible.push(en.target);
+          if (!en.isIntersecting && at >= 0) visible.splice(at, 1);
+        });
+        sync();
+      }, { threshold: 0.05 });
+      blockers.forEach(function (b) { sio.observe(b); });
+    }
+    window.addEventListener('scroll', sync, { passive: true });
+    sync();
+  }
+
   /* 아이콘은 빌드 시 SVG로 HTML에 직접 삽입되므로 외부 스크립트가 필요 없습니다. */
 })();
