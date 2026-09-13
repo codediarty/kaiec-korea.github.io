@@ -875,7 +875,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .gform-callout{display:flex;gap:12px;align-items:flex-start;background:var(--blue-050);
   border:1px solid #D6E4FB;border-radius:10px;padding:15px 17px;margin:18px 0 8px;
   font-size:14.5px;color:var(--navy);line-height:1.75}
-.gform-callout i{width:20px;height:20px;flex:none;margin-top:3px;color:var(--blue)}
+.gform-callout i,.gform-callout svg{width:20px;height:20px;flex:none;margin-top:3px;color:var(--blue)}
 .gform-req-note{font-size:12.5px;color:#DC2626;margin-top:14px}
 .gform-org-note{font-size:12.5px;color:var(--navy);font-weight:700;margin-top:14px;letter-spacing:-.01em}
 .gform-sec{font-size:11.5px;font-weight:800;letter-spacing:.14em;color:var(--blue);margin-bottom:7px}
@@ -948,7 +948,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .gform-done{text-align:center;padding:46px 34px}
 .done-icon{width:64px;height:64px;border-radius:50%;background:var(--teal-050);color:#00857A;
   display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
-.done-icon i{width:32px;height:32px}
+.done-icon i,.done-icon svg{width:32px;height:32px}
 .gform-done h2{font-size:21px;margin-bottom:10px}
 .gform-done > p{font-size:14.5px;color:var(--gray-600);line-height:1.8;margin-bottom:20px}
 .gform-paywait{display:inline-block;background:var(--blue-050);border:1px solid #D6E4FB;border-radius:9px;
@@ -980,7 +980,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .gform-urgency{display:inline-flex;align-items:center;gap:7px;margin-top:16px;
   background:#FFF6E9;border:1px solid #F3D9A8;color:#8A5A00;border-radius:9px;
   padding:9px 15px;font-size:13.5px;font-weight:800;letter-spacing:-.01em}
-.gform-urgency i{width:16px;height:16px}
+.gform-urgency i,.gform-urgency svg{width:16px;height:16px}
 /* 과정 선택 카드 */
 .choice{padding:18px 20px}
 .choice-badge{position:absolute;top:14px;right:16px;font-size:11px;font-weight:800;letter-spacing:.02em;
@@ -1025,10 +1025,10 @@ table.tbl tr:hover td{background:#FCFDFF}
 /* 1급 활용 */
 .use-block{margin-top:20px;border-top:1px solid var(--gray-100);padding-top:18px}
 .use-block-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--ink);margin-bottom:13px}
-.use-block-title i{width:18px;height:18px;color:var(--blue)}
+.use-block-title i,.use-block-title svg{width:18px;height:18px;color:var(--blue)}
 .use-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .use-card{background:#fff;border:1px solid var(--gray-200);border-radius:11px;padding:14px 15px}
-.use-card i{width:20px;height:20px;color:var(--blue);margin-bottom:8px}
+.use-card i,.use-card svg{width:20px;height:20px;color:var(--blue);margin-bottom:8px}
 .use-card strong{display:block;font-size:13.5px;color:var(--ink);margin-bottom:4px}
 .use-card span{font-size:12.5px;color:var(--gray-600);line-height:1.6}
 /* 제출부 요약·신뢰 */
@@ -1036,7 +1036,7 @@ table.tbl tr:hover td{background:#FCFDFF}
   background:var(--blue-050);border:1px solid #D6E4FB;border-radius:10px;padding:11px 16px;
   font-size:14px;font-weight:800;color:var(--navy);max-width:440px}
 .sel-info.on{display:flex}
-.sel-info i{width:17px;height:17px;color:var(--blue)}
+.sel-info i,.sel-info svg{width:17px;height:17px;color:var(--blue)}
 .pay-summary{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:0 0 20px}
 .pay-mini{border:1px solid var(--gray-200);border-radius:11px;padding:14px 12px;text-align:center}
 .pay-mini .lv{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:5px}
@@ -1044,11 +1044,11 @@ table.tbl tr:hover td{background:#FCFDFF}
 .pay-mini .sale{font-size:15px;font-weight:800;color:var(--blue-600);margin-top:1px}
 .trust-row{display:flex;flex-wrap:wrap;justify-content:center;gap:9px 16px;margin-top:18px}
 .trust-row div{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--gray-600)}
-.trust-row i{width:15px;height:15px;color:#00857A}
+.trust-row i,.trust-row svg{width:15px;height:15px;color:#00857A}
 @media (max-width:640px){
   .pick-grid,.check-grid,.use-grid{grid-template-columns:1fr}
   .pay-summary{grid-template-columns:1fr}
-  .choice-badge{position:static;display:inline-block;margin-bottom:6px}
+  .choice-badge{position:static;display:inline-block;justify-self:start;margin-bottom:6px}
 }
 
 /* ── KAIEC 공식 AI윤리전문가(experts) · KAIEC 참여하기(join) 페이지 (2026.09) ── */
@@ -1059,7 +1059,7 @@ table.tbl tr:hover td{background:#FCFDFF}
   background:linear-gradient(180deg,#F7FAFF,#EEF3FE);padding:40px 28px}
 .expert-empty-icon{width:58px;height:58px;border-radius:50%;background:#E3ECFB;color:var(--blue);
   display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-.expert-empty-icon i{width:26px;height:26px}
+.expert-empty-icon i,.expert-empty-icon svg{width:26px;height:26px}
 .expert-empty h3{font-size:19px;margin-bottom:10px;letter-spacing:-.02em}
 .expert-empty p{font-size:14.5px;color:var(--gray-600);line-height:1.8}
 .expert-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
@@ -1077,16 +1077,36 @@ table.tbl tr:hover td{background:#FCFDFF}
 .join-item:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .join-icon{flex:none;width:44px;height:44px;border-radius:12px;background:var(--blue-050);color:var(--blue);
   display:flex;align-items:center;justify-content:center}
-.join-icon i{width:21px;height:21px}
+.join-icon i,.join-icon svg{width:21px;height:21px}
 .join-body{flex:1;display:grid;gap:3px;min-width:0}
 .join-body strong{font-size:15.5px;color:var(--ink);letter-spacing:-.02em}
 .join-body span{font-size:13.5px;color:var(--gray-600)}
 .join-go{flex:none;display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:800;color:var(--blue)}
-.join-go i{width:15px;height:15px}
+.join-go i,.join-go svg{width:15px;height:15px}
 .field-opt{font-weight:500;color:var(--gray-400);font-size:12.5px;margin-left:4px}
 .gform-head .gform-title{font-size:22px;letter-spacing:-.03em;line-height:1.4;margin-bottom:14px;color:var(--ink)}
+/* experts: 왜 지금 AI윤리전문가인가 (3칸 수치 띠) */
+.why-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
+.why-row div{display:flex;flex-direction:column;gap:2px;background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:16px 18px}
+.why-row strong{font-size:24px;font-weight:900;letter-spacing:-.03em;color:var(--blue);line-height:1.15}
+.why-row b{font-size:14px;font-weight:800;color:var(--ink)}
+.why-row span{font-size:12.5px;color:var(--gray-600);line-height:1.6;margin-top:3px}
+/* join: 역할 선택(구글폼식 목록) · 이런 분을 기다립니다 */
+.choice--role{padding:16px 18px}
+.choice--role .choice-body{gap:5px}
+.choice--role strong{display:flex;align-items:center;gap:8px;padding-right:96px}
+.choice--role strong svg{width:18px;height:18px;flex:none;color:var(--blue)}
+.choice--role .choice-body em{display:inline-block;min-width:58px;margin-right:4px}
+.choice--role .choice-badge{background:var(--gray-050);color:var(--gray-600);border-color:var(--gray-200)}
+.choice--role:has(input:checked) .choice-badge{background:var(--blue);color:#fff;border-color:var(--blue)}
+.want-box{margin-top:26px;background:var(--blue-050);border:1px solid #D6E4FB;border-radius:16px;padding:20px 22px;
+  display:flex;flex-direction:column;gap:12px}
+.want-box strong{font-size:15px;color:var(--navy);letter-spacing:-.02em}
+.want-box .chip{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--gray-700);border:1px solid #D6E4FB;font-weight:600}
+.want-box .chip svg{width:14px;height:14px;color:#00857A;flex:none}
 @media (max-width:860px){.steps-5{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:600px){.join-grid{grid-template-columns:1fr}.steps-5{grid-template-columns:1fr}.join-go span{display:none}}
+@media (max-width:600px){.join-grid{grid-template-columns:1fr}.steps-5,.why-row{grid-template-columns:1fr}.join-go span{display:none}
+  .choice--role strong{padding-right:0}}
 
 #individual,#member{scroll-margin-top:88px}
 .apply-block + .apply-block{border-top:1px solid var(--gray-100)}

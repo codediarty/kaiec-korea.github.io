@@ -1,11 +1,13 @@
 ═══════════════════════════════════════════════════════════════
  KAIEC AI윤리전문가 응시 접수 → 구글 스프레드시트 자동 수집
  (4차 개정: GET·POST 모두 수신 + 상태 확인 페이지 + 중복 방지 + 오류 기록
-  + 시트 열 구성 자동 감지 + '자격 취득 목적' 열 자동 추가, 2026.09.12)
+  + 시트 열 구성 자동 감지 + '자격 취득 목적' 열 자동 추가 + KAIEC 참여 신청 '위원 신청' 탭 분리, 2026.09.13)
 
  ※ 이 코드로 한 번 다시 올리면(붙여넣기 → 저장 → 배포 관리 → 새 버전) 두 가지가 추가됩니다.
    1) 응시 접수 폼의 '자격 취득 및 활용 목적' 답변이 '접수' 탭 마지막 열에 저장됩니다.
-   2) KAIEC 참여 신청(kaiec.kr/join/)이 '참여신청' 탭에 따로 쌓이고 "[KAIEC 참여 신청]" 제목의 알림 메일이 옵니다.
+   2) KAIEC 참여 신청(kaiec.kr/join/)이 시트 하단의 '위원 신청' 탭에 따로 쌓이고(탭은 첫 신청 때 자동 생성)
+      "[KAIEC 참여 신청]" 제목의 알림 메일이 옵니다. 열: 접수일시 · 참여 구분 · 성명 · 이메일 · 휴대전화 ·
+      직업/활동 분야 · 소속 · 기대하는 것 · 지원 사유·자기소개 · 참여 가능 시간
    다시 올리기 전에도 참여 신청은 '접수' 탭에 "[KAIEC 참여] 운영위원"처럼 구분 표시가 붙어 기록되고
    알림 메일도 오므로 접수 자체는 누락되지 않습니다.
 ═══════════════════════════════════════════════════════════════
@@ -80,23 +82,30 @@ function saveAndNotify_(d) {
   return 'ok';
 }
 
-// KAIEC 참여 신청(kaiec.kr/join/)은 '참여신청' 탭에 따로 기록하고 알림 메일을 보냅니다. (type=join 으로 들어옴)
+// KAIEC 참여 신청(kaiec.kr/join/)은 '위원 신청' 탭에 따로 기록하고 알림 메일을 보냅니다. (type=join 으로 들어옴)
+var JOIN_SHEET = '위원 신청';
+var JOIN_COLS  = ['접수일시', '참여 구분', '성명', '이메일', '휴대전화', '직업/활동 분야', '소속', '기대하는 것', '지원 사유·자기소개', '참여 가능 시간'];
+
 function saveJoin_(d) {
   var ss = getSs_();
-  var sh = ss.getSheetByName('참여신청') || ss.insertSheet('참여신청');
+  var sh = ss.getSheetByName(JOIN_SHEET) || ss.insertSheet(JOIN_SHEET);
   if (sh.getLastRow() === 0) {
-    sh.appendRow(['접수일시', '참여 구분', '성명', '이메일', '휴대전화', '소속/직업', '참여 동기·희망 활동']);
+    sh.appendRow(JOIN_COLS);
     sh.setFrozenRows(1);
+    sh.setColumnWidth(9, 420);
   }
   var kind = String(d.course || '').replace('[KAIEC 참여] ', '');
-  sh.appendRow([new Date(), kind, d.name || '', d.email || '', d.phone || '', d.job || '', d.purpose || '']);
+  sh.appendRow([new Date(), kind, d.name || '', d.email || '', d.phone || '', d.job || '', d.org || '',
+                d.motive || '', d.purpose || '', d.avail || '']);
   MailApp.sendEmail(NOTIFY,
     '[KAIEC 참여 신청] ' + (d.name || '') + ' · ' + kind,
     '새 참여 신청이 접수되었습니다.\n\n' +
     '참여 구분 : ' + kind + '\n성명 : ' + (d.name || '') + '\n이메일 : ' + (d.email || '') +
-    '\n휴대전화 : ' + (d.phone || '') + '\n소속/직업 : ' + (d.job || '') +
-    '\n참여 동기·희망 활동 : ' + (d.purpose || '') +
-    '\n\n스프레드시트(참여신청 탭): https://docs.google.com/spreadsheets/d/' + ss.getId());
+    '\n휴대전화 : ' + (d.phone || '') + '\n직업/활동 분야 : ' + (d.job || '') + '\n소속 : ' + (d.org || '') +
+    '\n기대하는 것 : ' + (d.motive || '') +
+    '\n지원 사유·자기소개 :\n' + (d.purpose || '') +
+    '\n참여 가능 시간 : ' + (d.avail || '') +
+    '\n\n스프레드시트(위원 신청 탭): https://docs.google.com/spreadsheets/d/' + ss.getId());
   return 'ok';
 }
 
@@ -139,6 +148,12 @@ function testWrite() {
                   email: 'test@kaiec.kr', job: '테스트', purpose: '이력·커리어에 추가, 직무 활용'});
 }
 
+// 편집기에서 실행하면 '위원 신청' 탭에 테스트 줄 1개 (탭이 없으면 만들어짐)
+function testJoin() {
+  saveJoin_({type: 'join', course: '[KAIEC 참여] AI 윤리 캠페인위원', name: '연동 테스트', email: 'test@kaiec.kr',
+             phone: '010-0000-0000', job: '테스트', org: '', motive: '취업·이직 경쟁력', purpose: '테스트 자기소개', avail: '주 1~2시간'});
+}
+
 ──────────────── 여기까지 복사 ────────────────
 
 [2] 편집기 상단의 함수 선택 칸(doPost라고 보이는 곳)에서 testWrite 를 고르고 [실행]을 누릅니다.
@@ -156,6 +171,7 @@ function testWrite() {
     ("Script function not found: doGet" 이 나오면 아직 옛 버전입니다 → 3번 다시)
 
 [5] 사이트(kaiec.kr/expert-apply/)에서 테스트 접수 → 시트 '접수' 탭 + 알림 메일 확인.
+    kaiec.kr/join/ 에서 참여 신청 테스트 → 시트 하단 '위원 신청' 탭(자동 생성) + 알림 메일 확인.
 
 ※ 실제 접수가 쌓이는 파일: "AI윤리전문가 1기 접수명단 (실제 접수, 스크립트 연결)"
    https://docs.google.com/spreadsheets/d/1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs/

@@ -3149,8 +3149,15 @@ def build_expert_apply():
 
 # ---------------------------------------------------------------- experts.html
 def build_experts():
-    """KAIEC 공식 AI윤리전문가: 1급 자격 취득자를 협회가 위촉·등재하고 프로필을 공개하는 페이지
-    - 명단은 assets/js/experts-data.js 의 KAIEC_EXPERTS 배열로 관리 (비어 있으면 '위촉 예정' 안내가 표시됨)"""
+    """KAIEC 공식 AI윤리전문가: AI윤리전문가 자격 취득자를 협회가 검토·위촉해 홈페이지에 등재하고 프로필을 공개하는 페이지
+    - 명단은 assets/js/experts-data.js 의 KAIEC_EXPERTS 배열로 관리 (비어 있으면 '위촉 예정' 안내가 표시됨)
+    - 대표 과정은 2급이므로 페이지 안에서 특정 급수를 내세우지 않고 '자격 취득'으로 통일 (접수 링크는 2급이 미리 선택된 상태)"""
+    APPLY = "expert-apply.html?course=2"
+    WHY = [
+        ("2026.1", "AI기본법 시행", "AI를 개발하는 기업뿐 아니라 활용하는 기업·기관도 책임의 주체가 됩니다."),
+        ("2026.8", "EU AI Act 본격 적용", "해외 거래·수출 기업에 AI 윤리·컴플라이언스 기준이 요구됩니다."),
+        ("44%", "연평균 성장 전문분야", "AI 윤리·거버넌스는 가장 빠르게 커지는 전문 영역입니다."),
+    ]
     USES = [
         ("briefcase", "이력서·포트폴리오", "협회가 공식 위촉한 AI윤리전문가로 이력에 기재하고, 홈페이지 프로필 주소를 함께 제시할 수 있습니다."),
         ("shield-check", "기업·기관 AI 컴플라이언스", "AI 활용 가이드라인 수립, 위험 점검, 내부 교육 등 조직의 책임 있는 AI 활용 업무에서 전문성을 입증합니다."),
@@ -3160,26 +3167,37 @@ def build_experts():
         ("trending-up", "커리어 확장", "AI 윤리·거버넌스 분야로 직무를 넓히거나 전환하는 발판이 됩니다."),
     ]
     GIVES = [
-        ("award", "공식 위촉장", "한국AI윤리협회 명의의 「AI윤리전문가」 위촉장을 발급합니다."),
-        ("badge-check", "홈페이지 프로필 등재", "성명·전문분야·활동 영역이 담긴 전문가 프로필을 협회 홈페이지에 공개합니다."),
-        ("monitor-play", "전문강사·교육 활동 연계", "협회 교육·출강 프로그램의 전문강사 명단에 등록되어 활동 기회를 안내받습니다."),
-        ("file-check", "활동증명서 발급", "협회 활동 실적에 대해 활동증명서를 발급합니다."),
+        ("award", "공식 위촉장 · 자격증 카드 발급", "한국AI윤리협회 명의의 「AI윤리전문가」 위촉장과 AI윤리전문가 자격증 카드를 발급합니다."),
+        ("badge-check", "협회 홈페이지 공식 AI윤리전문가 등재", "성명·전문분야·활동 영역이 담긴 프로필을 KAIEC 공식 AI윤리전문가 명단에 공개합니다. 소속은 희망하는 경우에만 표기하며, 프로필 주소는 이력서·명함·포트폴리오에 기재할 수 있습니다."),
+        ("monitor-play", "전문강사·교육·자문 활동 연계", "협회의 교육·출강·자문 프로그램을 우선 안내하고 참여 기회를 연계합니다."),
+        ("file-check", "활동증명서 발급", "협회 활동 실적에 대해 활동증명서를 발급해 경력 증빙으로 활용할 수 있습니다."),
     ]
     STEPS = [
-        ("1급 자격 취득", "온라인 교육 이수 후 자격검정 합격"),
-        ("등재 신청", "성명·전문분야·소속·활동 희망 영역 제출"),
-        ("협회 검토·위촉", "검토 후 위촉장 발급"),
-        ("프로필 공개", "협회 홈페이지 전문가 명단 등재"),
-        ("활동 연계", "전문강사·교육·자문·캠페인 안내"),
+        ("AI윤리전문가 자격 취득", "온라인 교육 이수 후 자격검정 합격"),
+        ("등재 신청", "성명·사진·전문분야 제출, 소속은 희망 시에만 기재"),
+        ("협회 검토", "자격 확인과 프로필 검토 (보통 3~5일)"),
+        ("위촉장·자격증 카드 발급", "검토 후 공식 위촉장 발급 및 자격증 카드 발급"),
+        ("프로필 공개·활동 연계", "협회 홈페이지 등재, 교육·자문·캠페인 안내"),
     ]
     FAQ = [
-        ("2급 자격을 취득하면 등재되나요?",
-         "홈페이지 등재는 AI윤리전문가 1급 자격 취득자를 대상으로 합니다. 2급은 자격증 취득과 이력 활용이 가능하며, 1급 과정으로 이어서 등재까지 진행하실 수 있습니다."),
+        ("AI윤리전문가 자격은 왜 중요한가요?",
+         "2026년 AI기본법 시행과 EU AI Act 적용으로 기업·기관·학교 모두 AI를 책임 있게 활용할 기준과 사람을 요구받고 있습니다. "
+         "저작권, 개인정보, 편향, 결과물의 신뢰성 같은 문제를 판단하고 설명할 수 있는 역량이 필요해졌고, "
+         "AI윤리전문가 자격은 그 역량을 협회 명의로 증명하는 전문 자격입니다. 취업·이직과 현재 직무는 물론 교육·연구·전문 활동까지 활용 범위가 넓습니다."),
+        ("어떤 자격이 있어야 등재할 수 있나요?",
+         "AI윤리전문가 자격을 취득한 분은 누구나 등재를 신청할 수 있습니다. 협회는 자격과 프로필을 검토해 공식 AI윤리전문가로 위촉하며, "
+         "전문강사·교육·자문 등 활동 영역은 이수 과정과 본인 희망에 따라 안내합니다."),
+        ("경력이나 소속이 없어도 등재할 수 있나요?",
+         "네. 취업이나 이직을 준비 중이어도 등재할 수 있습니다. 소속은 희망하는 경우에만 표기하며, "
+         "등재된 프로필 주소는 이력서와 포트폴리오에 바로 활용할 수 있습니다."),
         ("프로필에는 어떤 정보가 공개되나요?",
-         "성명, 전문분야, 소속·직함(선택), 활동 영역이 공개됩니다. 공개 범위는 본인이 등재 신청 시 선택하실 수 있습니다."),
+         "성명, 전문분야, 활동 영역이 공개되고 소속·직함은 선택 사항입니다. 공개 범위는 등재 신청 시 본인이 선택합니다."),
         ("등재 후 어떤 활동을 하게 되나요?",
-         "협회의 교육·출강 프로그램 전문강사, 기업·기관 자문, 캠페인과 콘텐츠 제작 등에 참여하실 수 있습니다. 활동은 본인 희망에 따라 선택하며, 활동 실적에 대해 활동증명서를 발급합니다."),
+         "협회의 교육·출강 프로그램 전문강사, 기업·기관 자문, 캠페인과 콘텐츠 제작 등에 참여할 수 있습니다. "
+         "활동은 본인 희망에 따라 선택하며, 활동 실적에 대해 활동증명서를 발급합니다."),
     ]
+    why_html = "".join(
+        f'<div><strong>{n}</strong><b>{t}</b><span>{d}</span></div>' for n, t, d in WHY)
     uses_html = "".join(
         f'<article class="card reveal"><div class="card-icon"><i data-lucide="{ic}"></i></div><h3>{t}</h3><p>{d}</p></article>'
         for ic, t, d in USES)
@@ -3187,8 +3205,8 @@ def build_experts():
         f'<div class="use-card"><i data-lucide="{ic}"></i><strong>{t}</strong><span>{d}</span></div>'
         for ic, t, d in GIVES)
     steps_html = "".join(
-        f'<div class="card center reveal" style="padding:24px 16px"><span class="card-num">STEP {i:02d}</span>'
-        f'<h3 style="font-size:16px">{t}</h3><p style="font-size:13.5px">{d}</p></div>'
+        f'<div class="card center reveal" style="padding:24px 14px"><span class="card-num">STEP {i:02d}</span>'
+        f'<h3 style="font-size:15.5px">{t}</h3><p style="font-size:13.5px">{d}</p></div>'
         for i, (t, d) in enumerate(STEPS, 1))
     faq_html = "".join(
         f'<details class="acc"><summary>{q}</summary><div class="acc-body">{a}</div></details>' for q, a in FAQ)
@@ -3196,10 +3214,53 @@ def build_experts():
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
-        <span class="hl-pill"><i data-lucide="badge-check"></i>AI윤리전문가 1급 취득자 · 협회 공식 위촉 · 홈페이지 등재</span>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>AI윤리전문가 자격 취득자 · 협회 공식 위촉 · 홈페이지 등재</span>
         <h1>KAIEC 공식 AI윤리전문가</h1>
-        <p>AI윤리전문가 1급 자격을 취득한 분을 한국AI윤리협회가 공식 위촉하고 홈페이지에 등재합니다.
+        <p>AI윤리전문가 자격을 취득하고 등재를 신청한 분을 한국AI윤리협회가 공식 AI윤리전문가로 위촉하고 홈페이지에 등재합니다.
            검증된 AI 윤리 전문성을 이력과 커리어에 남기고, 협회의 교육·자문·캠페인 활동으로 이어가세요.</p>
+        <div class="btns" style="margin-top:22px">
+          <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-light" href="#list">등재 전문가 보기</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray" id="value">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:30px">
+          <span class="eyebrow">Career Value</span>
+          <h2 class="h-sec">이력과 커리어에 남는 전문성</h2>
+          <p class="h-sub" style="margin:0 auto">AI 윤리는 기업·기관·학교 어디서나 필요해진 전문 영역입니다.
+             검증된 AI 윤리 역량을 가진 사람이 필요해졌고, KAIEC 공식 AI윤리전문가는 이렇게 활용됩니다.</p>
+        </div>
+        <div class="why-row">{why_html}</div>
+        <div class="grid grid-3">{uses_html}</div>
+      </div>
+    </section>
+
+    <section class="section" id="benefit">
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <span class="eyebrow">Registration</span>
+            <h2 class="h-sec">등재되면 제공되는 것</h2>
+            <p class="h-sub">AI윤리전문가 자격 취득자가 등재를 신청하면 협회가 검토해 위촉하고, 아래 네 가지를 제공합니다.
+               위촉과 등재에 별도의 비용은 없습니다.</p>
+            <a class="btn btn-primary" style="margin-top:8px" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+          </div>
+          <div class="use-grid">{gives_html}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray" id="process">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:30px">
+          <span class="eyebrow">Process</span>
+          <h2 class="h-sec">등재 절차</h2>
+        </div>
+        <div class="steps-5">{steps_html}</div>
+        <p class="field-hint" style="text-align:center;margin-top:16px">자격검정 합격 후 안내 메일의 등재 신청서를 제출하시면 검토 후 위촉·등재됩니다.</p>
       </div>
     </section>
 
@@ -3208,16 +3269,16 @@ def build_experts():
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Registered Experts</span>
           <h2 class="h-sec">등재 AI윤리전문가</h2>
-          <p class="h-sub" style="margin:0 auto">협회가 위촉한 AI윤리전문가 명단입니다. <span id="expertCount"></span></p>
+          <p class="h-sub" style="margin:0 auto">협회가 위촉한 공식 AI윤리전문가 명단입니다. <span id="expertCount"></span></p>
         </div>
         <div class="member-grid" id="expertGrid" hidden></div>
         <div class="expert-empty" id="expertEmpty" hidden>
           <div class="expert-empty-icon"><i data-lucide="award"></i></div>
           <h3>제1기 AI윤리전문가 위촉 예정</h3>
-          <p>현재 AI윤리전문가 1기 과정이 진행 중입니다. 1급 자격검정 합격자를 대상으로 검토 후 위촉하며,
+          <p>현재 AI윤리전문가 1기 과정이 진행 중입니다. 자격검정 합격자의 등재 신청을 검토해 위촉하며,
              위촉된 전문가의 프로필이 이 자리에 공개됩니다.</p>
           <div class="btns" style="justify-content:center;margin-top:18px">
-            <a class="btn btn-primary" href="expert-apply.html?course=1">1급 응시 접수하기 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
             <a class="btn btn-ghost" href="expert.html">자격과정 안내</a>
           </div>
         </div>
@@ -3225,44 +3286,6 @@ def build_experts():
     </section>
 
     <section class="section section--gray">
-      <div class="wrap">
-        <div class="center" style="margin-bottom:34px">
-          <span class="eyebrow">Career Value</span>
-          <h2 class="h-sec">이력과 커리어에 남는 전문성</h2>
-          <p class="h-sub" style="margin:0 auto">AI 윤리는 기업·기관·학교 어디서나 필요해진 전문 영역입니다.
-             KAIEC 공식 AI윤리전문가는 이렇게 활용됩니다.</p>
-        </div>
-        <div class="grid grid-3">{uses_html}</div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap">
-        <div class="split">
-          <div>
-            <span class="eyebrow">Registration</span>
-            <h2 class="h-sec">등재되면 제공되는 것</h2>
-            <p class="h-sub">1급 자격 취득자를 협회가 검토해 위촉하고, 아래 네 가지를 제공합니다.
-               위촉과 등재에 별도의 비용은 없습니다.</p>
-            <a class="btn btn-primary" style="margin-top:8px" href="expert-apply.html?course=1">1급 응시 접수하기 <i data-lucide="arrow-right"></i></a>
-          </div>
-          <div class="use-grid">{gives_html}</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--gray">
-      <div class="wrap">
-        <div class="center" style="margin-bottom:30px">
-          <span class="eyebrow">Process</span>
-          <h2 class="h-sec">등재 절차</h2>
-        </div>
-        <div class="steps-5">{steps_html}</div>
-        <p class="field-hint" style="text-align:center;margin-top:16px">1급 자격검정 합격 후 안내 메일의 등재 신청서를 제출하시면 검토 후 위촉·등재됩니다.</p>
-      </div>
-    </section>
-
-    <section class="section">
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:24px">
           <span class="eyebrow">FAQ</span>
@@ -3276,9 +3299,9 @@ def build_experts():
       <div class="wrap">
         <div class="cta-band">
           <div><h2>KAIEC 공식 AI윤리전문가로 등재되세요</h2>
-            <p>AI윤리전문가 1급 취득 후 협회 위촉과 홈페이지 등재까지, 전문가로서의 활동이 이어집니다.</p></div>
+            <p>AI윤리전문가 자격 취득 후 협회 위촉과 홈페이지 등재까지, 전문가로서의 활동이 이어집니다.</p></div>
           <div class="btns">
-            <a class="btn btn-white" href="expert-apply.html?course=1">1급 응시 접수</a>
+            <a class="btn btn-white" href="{APPLY}">AI윤리전문가 자격증 취득하기</a>
             <a class="btn btn-light" href="expert.html">자격과정 안내</a>
           </div>
         </div>
@@ -3302,7 +3325,7 @@ def build_experts():
         +'<div class="member-name">'+esc(m.name)+'</div>'
         +'<div class="member-field">'+esc(m.field||'')+(m.org?'<br>'+esc(m.org):'')+'</div>'
         +(tags?'<div class="expert-tags">'+tags+'</div>':'')
-        +(m.since?'<div class="expert-since">1급 · '+esc(m.since)+' 위촉</div>':'')
+        +(m.since?'<div class="expert-since">'+esc(m.since)+' 위촉</div>':'')
         +'</div>';
     }).join('');
     grid.hidden=false;
@@ -3310,79 +3333,134 @@ def build_experts():
   </script>
 """
     page("experts.html", "KAIEC 공식 AI윤리전문가",
-         "한국AI윤리협회가 공식 위촉한 AI윤리전문가 명단입니다. AI윤리전문가 1급 자격 취득자를 위촉해 홈페이지에 등재하고, 전문강사·교육·자문 활동으로 연계합니다.",
+         "한국AI윤리협회가 공식 위촉한 AI윤리전문가 명단입니다. AI윤리전문가 자격 취득자의 등재 신청을 검토해 위촉하고 홈페이지에 등재하며, 전문강사·교육·자문 활동으로 연계합니다.",
          body, extra_script=script,
-         keywords=["AI윤리전문가", "AI 윤리 전문가 명단", "AI윤리전문가 1급", "AI 윤리 전문가 등재", "AI 윤리 강사", "한국AI윤리협회"])
+         keywords=["AI윤리전문가", "AI 윤리 전문가 명단", "AI윤리전문가 자격증", "AI 윤리 전문가 등재", "AI 윤리 강사", "한국AI윤리협회"])
 
 
 # ---------------------------------------------------------------- join.html
 def build_join():
-    """KAIEC 참여하기: 개인·전문가·기업·기관 참여 프로그램을 한 페이지에서 안내하고 자체 폼으로 신청 접수
-    - 접수 데이터는 응시 접수와 같은 시트 웹훅(SHEET_WEBHOOK)으로 전송 (구분 항목에 [KAIEC 참여] 표시)"""
-    PROGRAMS = [
-        ("개인·전문가", "전공과 경력에 관계없이 참여할 수 있습니다. 온라인·재택 활동이 가능하며 위촉장과 활동증명서를 발급합니다.", [
-            ("briefcase", "운영위원", "협회 사업·기획 및 운영 참여"),
-            ("monitor-play", "전문위원", "AI 윤리 교육·전문강사 활동"),
-            ("map-pin", "지역 운영위원", "지역별 협회 활동 및 네트워크"),
-            ("graduation-cap", "캠퍼스 위원장", "대학별 AI 윤리 활동 주도"),
-            ("megaphone", "AI 윤리 캠페인위원", "캠페인·교육 홍보 및 확산"),
-        ]),
-        ("기업·기관", "공동 캠페인, 교육 프로그램, 협약 등 조직 단위의 협력과 공식 회원 참여입니다.", [
-            ("handshake", "제휴 파트너", "개인·기업·기관 협력 활동"),
-            ("building-2", "회원사", "기업·기관 단위 공식 회원 참여"),
-        ]),
+    """KAIEC 참여하기: 개인·전문가·기업·기관 참여 프로그램을 한 페이지에서 안내하고 자체 신청서로 접수
+    - 참여 구분은 구글폼처럼 한 목록에서 고르며(대상·역할 설명 포함), 잘 모르면 '협회 추천' 선택 가능
+    - 접수 데이터는 응시 접수와 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
+    ROLES = [
+        # (아이콘, 구분명, 배지, 이런 분께, 주요 역할)
+        ("megaphone", "AI 윤리 캠페인위원", "처음이라면 추천",
+         "전공·경력에 관계없이 AI 윤리 확산 활동에 처음 참여하는 분",
+         "온라인 캠페인·콘텐츠 제작·홍보 활동 (재택 가능)"),
+        ("briefcase", "운영위원", "개인",
+         "협회 사업과 행사를 함께 기획하고 운영하고 싶은 분",
+         "사업 기획, 프로그램 운영, 활동 관리"),
+        ("monitor-play", "전문위원", "개인",
+         "AI·윤리·법·교육 분야의 전문성을 가진 분 (석·박사, 현직 전문가, 강사)",
+         "AI 윤리 교육·전문강사 활동, 자문"),
+        ("map-pin", "지역 운영위원", "개인",
+         "거주 지역에서 협회 활동과 네트워크를 이끌고 싶은 분",
+         "권역별 지역 조직 운영, 지역 캠페인·행사"),
+        ("graduation-cap", "캠퍼스 위원장", "개인",
+         "소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
+         "캠퍼스 위원회 운영, 교내 확산 활동"),
+        ("handshake", "제휴 파트너", "기업·기관",
+         "협회와 공동 사업·교육·캠페인을 제안하는 개인·기업·기관",
+         "협력 협약(MOU), 공동 프로그램 운영"),
+        ("building-2", "회원사", "기업·기관",
+         "기업·기관 단위로 협회의 공식 회원 참여를 원하는 조직",
+         "회원 인증서·현판, 교육 할인, AI 활용 기준 자문"),
+        ("compass", "아직 잘 모르겠어요 (협회 추천)", "추천 받기",
+         "어떤 역할이 나에게 맞는지 고민되는 분",
+         "신청 내용을 보고 협회가 적합한 역할을 제안해 드립니다"),
     ]
-    ALL = [name for _, _, items in PROGRAMS for _, name, _ in items]
-    groups_html = ""
-    for gname, gdesc, items in PROGRAMS:
-        cards = "".join(
-            f'<a class="join-item" href="#apply" data-type="{name}">'
-            f'<span class="join-icon"><i data-lucide="{ic}"></i></span>'
-            f'<span class="join-body"><strong>{name}</strong><span>{role}</span></span>'
-            f'<span class="join-go">신청 <i data-lucide="arrow-right"></i></span></a>'
-            for ic, name, role in items)
-        groups_html += f'''
-        <div class="join-group">
-          <div class="join-group-head"><h3>{gname}</h3><p>{gdesc}</p></div>
-          <div class="join-grid">{cards}</div>
-        </div>'''
-    TYPE_PILLS = "".join(f'<label><input type="radio" name="jtype" value="{n}"><span>{n}</span></label>' for n in ALL)
+    ROLE_ITEMS = "".join(
+        f'<label class="choice choice--role"><input type="radio" name="jtype" value="{name}"><span class="choice-radio"></span>'
+        f'<span class="choice-body"><span class="choice-badge">{badge}</span><strong><i data-lucide="{ic}"></i>{name}</strong>'
+        f'<span><em>이런 분께</em> {who}</span><span><em>주요 역할</em> {role}</span></span></label>'
+        for ic, name, badge, who, role in ROLES)
+    JOBS = "".join(
+        f'<label><input type="radio" name="job" value="{j}"><span>{j}</span></label>' for j in [
+        "대학생·대학원생", "기업·기관 재직자", "교사·강사", "교수·연구자",
+        "취업준비생", "프리랜서·전문직", "사업자·기업 대표", "기타"])
+    AVAIL = "".join(
+        f'<label><input type="radio" name="avail" value="{a}"><span>{a}</span></label>' for a in [
+        "주 1~2시간", "주 3~5시간", "주 5시간 이상", "프로젝트 단위로 참여"])
+    MOTIVES = [
+        "이력·커리어에 AI 윤리 활동 경력을 더하고 싶습니다.",
+        "취업·이직 경쟁력을 높이고 싶습니다.",
+        "무분별한 AI 활용의 문제를 알리고 올바른 활용 문화를 확산하고 싶습니다.",
+        "AI 윤리 전문가·기관과의 네트워크를 넓히고 싶습니다.",
+        "교육·강의·자문 등 전문 활동 기회를 얻고 싶습니다.",
+        "우리 학교·지역·조직에서 AI 윤리 활동을 이끌고 싶습니다.",
+        "협회 공식 위촉장·활동증명서를 활동 증빙으로 활용하고 싶습니다.",
+        "기업·기관 차원에서 AI 윤리 협력·공동 사업을 추진하고 싶습니다.",
+        "기타",
+    ]
+    MOTIVE_ITEMS = "".join(
+        f'<label class="check-item"><input type="checkbox" name="motive" value="{m}">'
+        f'<span class="check-box"></span><span>{m}</span></label>' for m in MOTIVES)
+    BENEFITS = [
+        ("award", "공식 위촉장 · 활동증명서", "위촉 시 협회 명의의 위촉장을 발급하고, 활동 실적에 따라 활동증명서를 발급합니다. 이력서와 포트폴리오에 바로 활용할 수 있습니다."),
+        ("id-card", "협회 직함과 명단 등재", "한국AI윤리협회 위원 직함을 명함과 프로필에 표기하고, 협회 조직·위원 명단에 이름을 올립니다."),
+        ("monitor-play", "온라인·재택 활동", "대부분의 활동이 온라인으로 진행되어 학업·직장과 병행할 수 있습니다."),
+        ("trending-up", "커리어가 되는 활동", "AI기본법 시행 이후 기업·기관·학교가 요구하는 AI 윤리 이력을 실제 활동으로 만듭니다."),
+        ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원사와 교류하며 활동 영역을 넓힙니다."),
+        ("gift", "활동 인센티브", "캠페인 활동 실적에 따른 인센티브와 협회 자격과정·교육 프로그램 우대를 제공합니다."),
+    ]
+    benefits_html = "".join(
+        f'<article class="card reveal"><div class="card-icon"><i data-lucide="{ic}"></i></div><h3>{t}</h3><p>{d}</p></article>'
+        for ic, t, d in BENEFITS)
+    WANT = ["취업·이직을 준비하며 AI 윤리 이력이 필요한 분", "AI 관련 업무를 맡은 기업·기관 담당자", "교수·강사·연구자",
+            "대학생·대학원생", "AI 윤리와 책임 있는 AI 활용에 관심 있는 누구나"]
+    want_html = "".join(f'<span class="chip"><i data-lucide="check"></i>{w}</span>' for w in WANT)
+    AFTER = [
+        ("접수 완료", "제출 즉시 접수되고 협회에 알림이 전달됩니다."),
+        ("협회 검토", "신청 내용을 검토합니다 (보통 3~5일)."),
+        ("위촉 안내 · 위촉장 발급", "이메일로 위촉 결과와 활동 안내를 보내드립니다."),
+        ("활동 시작", "온라인 안내 후 역할에 맞는 활동을 시작합니다."),
+    ]
+    after_html = "".join(
+        f'<div class="card center reveal" style="padding:24px 16px"><span class="card-num">STEP {i:02d}</span>'
+        f'<h3 style="font-size:16px">{t}</h3><p style="font-size:13.5px">{d}</p></div>'
+        for i, (t, d) in enumerate(AFTER, 1))
+    FAQ = [
+        ("경력이나 전공이 없어도 참여할 수 있나요?",
+         "네. AI 윤리 캠페인위원을 비롯한 대부분의 프로그램은 전공·경력에 관계없이 참여할 수 있습니다. "
+         "어떤 역할이 맞는지 모르겠다면 신청서에서 '협회 추천'을 선택하세요. 신청 내용을 보고 적합한 역할을 제안해 드립니다."),
+        ("참여에 비용이 드나요?",
+         "개인 위원 참여에는 가입비·교육비 등 어떠한 비용도 없습니다. 기업·기관 회원사는 별도의 연회비 안내를 받습니다."),
+        ("활동 시간은 얼마나 필요한가요? 직장·학업과 병행할 수 있나요?",
+         "대부분의 활동이 온라인으로 진행되며 주 1~2시간부터 참여할 수 있습니다. 신청서에 참여 가능 시간을 적어주시면 그에 맞는 활동을 안내합니다."),
+        ("신청 후 언제, 어떻게 연락을 받나요?",
+         "제출 후 보통 3~5일 안에 작성하신 이메일로 검토 결과와 활동 안내를 보내드립니다. 위촉이 확정되면 위촉장을 발급합니다."),
+    ]
+    faq_html = "".join(
+        f'<details class="acc"><summary>{q}</summary><div class="acc-body">{a}</div></details>' for q, a in FAQ)
 
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; KAIEC 참여하기</p>
         <span class="join-eyebrow">JOIN KAIEC</span>
         <h1>KAIEC와 함께하세요</h1>
-        <p>전문 활동과 교육, 캠페인, 지역·대학 활동부터 기업·기관 제휴와 회원사까지.
-           나에게 맞는 참여 방법을 한곳에서 확인하고 바로 신청하세요.</p>
+        <p>책임 있는 AI 활용 문화를 함께 만들어갈 개인·전문가·기업·기관을 찾습니다.
+           캠페인, 교육, 지역·대학 활동부터 제휴와 회원사까지, 역할을 고르고 3분이면 지원이 끝납니다.</p>
         <div class="btns" style="margin-top:22px">
-          <a class="btn btn-primary" href="#apply">참여 신청하기 <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-light" href="#programs">참여 프로그램 보기</a>
+          <a class="btn btn-primary" href="#apply">지금 지원하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-light" href="#why">활동 혜택 보기</a>
         </div>
       </div>
     </section>
 
-    <section class="section" id="programs">
+    <section class="section" id="why">
       <div class="wrap">
         <div class="center" style="margin-bottom:30px">
-          <span class="eyebrow">Programs</span>
-          <h2 class="h-sec">참여 프로그램</h2>
-          <p class="h-sub" style="margin:0 auto">역할을 고르면 아래 신청서에 자동으로 표시됩니다.</p>
+          <span class="eyebrow">Why KAIEC</span>
+          <h2 class="h-sec">KAIEC에서 활동하면</h2>
+          <p class="h-sub" style="margin:0 auto">AI기본법 시행과 함께 기업·기관·학교 모두가 AI 윤리를 요구받는 지금,
+             협회 활동은 관심을 이력과 전문성으로 바꾸는 가장 빠른 방법입니다.</p>
         </div>
-        {groups_html}
-      </div>
-    </section>
-
-    <section class="section section--tight">
-      <div class="wrap">
-        <div class="grid grid-3">
-          <article class="card reveal"><div class="card-icon"><i data-lucide="award"></i></div><h3>공식 위촉장·활동증명서</h3><p>위촉 시 협회 명의의 위촉장을 발급하고, 활동 실적에 따라 활동증명서를 발급합니다.</p></article>
-          <article class="card reveal"><div class="card-icon card-icon--teal"><i data-lucide="monitor-play"></i></div><h3>온라인·재택 활동</h3><p>대부분의 활동이 온라인으로 진행되어 학업·직장과 병행할 수 있습니다.</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="users"></i></div><h3>전문가 네트워크</h3><p>AI 윤리에 관심 있는 전문가·기관과 교류하며 활동 영역을 넓힐 수 있습니다.</p></article>
+        <div class="grid grid-3">{benefits_html}</div>
+        <div class="want-box">
+          <strong>이런 분을 기다립니다</strong>
+          <div class="chips">{want_html}</div>
         </div>
-        <p class="field-hint" style="text-align:center;margin-top:18px">
-          개인 위원 제도의 자세한 안내는 <a href="partner.html" style="color:var(--blue);font-weight:700">AI 윤리위원 안내</a>,
-          회원사 혜택과 연회비는 <a href="apply.html#member" style="color:var(--blue);font-weight:700">회원사 안내</a>를 참고하세요.</p>
       </div>
     </section>
 
@@ -3392,20 +3470,23 @@ def build_join():
           <div class="gform-card gform-head">
             <span class="gform-kicker">JOIN KAIEC · 참여 신청</span>
             <h2 class="gform-title">KAIEC 참여 신청서</h2>
-            <p>신청서를 제출하시면 협회에서 검토 후 작성하신 이메일로 안내드립니다. 신청과 활동 과정에서 가입비·교육비 등 어떠한 비용도 요구하지 않습니다.</p>
+            <p class="gform-lead">한국AI윤리협회와 함께 책임 있는 AI 활용 문화를 만들어갈 분을 모십니다.</p>
+            <p>운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 제휴 파트너·회원사까지, 나에게 맞는 역할을 골라 신청하세요.
+               제출하시면 협회가 검토 후 이메일로 안내드리며, 신청과 활동 과정에서 가입비·교육비 등 어떠한 비용도 요구하지 않습니다.</p>
+            <p class="gform-org-note">한국AI윤리협회 사무국 접수 · 검토 후 개별 안내</p>
           </div>
 
           <div class="gform-card" id="secType">
             <div class="gform-sec">SECTION 1</div>
             <h2>참여 구분 <span class="req">*</span></h2>
-            <p class="gform-desc">참여를 희망하는 프로그램을 선택해 주세요.</p>
-            <div class="pill-choice">{TYPE_PILLS}</div>
+            <p class="gform-desc">참여를 희망하는 역할을 하나 선택해 주세요. 잘 모르겠다면 맨 아래 '협회 추천'을 선택하세요.</p>
+            <div class="choice-list">{ROLE_ITEMS}</div>
             <p class="err-msg">참여 구분을 선택해 주세요.</p>
           </div>
 
           <div class="gform-card" id="secInfo">
             <div class="gform-sec">SECTION 2</div>
-            <h2>신청자 정보</h2>
+            <h2>지원자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
                 <label>성명 (기업·기관은 담당자 성명) <span class="req">*</span></label>
@@ -3415,7 +3496,7 @@ def build_join():
               <div class="field" id="fEmail">
                 <label>이메일 주소 <span class="req">*</span></label>
                 <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
-                <p class="field-hint">검토 결과와 활동 안내가 발송되는 이메일입니다.</p>
+                <p class="field-hint">검토 결과와 활동 안내가 발송되는 이메일입니다. 실제 사용하시는 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fPhone">
@@ -3423,22 +3504,44 @@ def build_join():
                 <input type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
                 <p class="err-msg">휴대전화 번호를 정확히 입력해 주세요.</p>
               </div>
-              <div class="field" id="fOrg">
-                <label>소속·직업 <span class="field-opt">(선택)</span></label>
-                <input type="text" name="org" placeholder="예: ○○대학교 3학년 / ○○기업 인사팀 / 프리랜서 강사">
+              <div class="field" id="fJob">
+                <label>현재 직업 또는 활동 분야 <span class="req">*</span></label>
+                <div class="pill-choice">{JOBS}</div>
+                <p class="err-msg">직업 또는 활동 분야를 선택해 주세요.</p>
               </div>
+              <div class="field" id="fOrg">
+                <label>소속 <span class="field-opt">(선택 · 기업·기관은 기관명)</span></label>
+                <input type="text" name="org" placeholder="예: ○○대학교 / ○○기업 인사팀 / 없으면 비워두세요">
+              </div>
+            </div>
+          </div>
+
+          <div class="gform-card" id="secMotive">
+            <div class="gform-sec">SECTION 3</div>
+            <h2>지원 동기 <span class="req">*</span></h2>
+            <p class="gform-desc">KAIEC 활동을 통해 기대하는 것을 선택해 주세요. 복수 선택할 수 있습니다.</p>
+            <div class="check-grid" id="motiveGrid">{MOTIVE_ITEMS}</div>
+            <p class="err-msg">기대하는 것을 하나 이상 선택해 주세요.</p>
+            <div class="gform-fields" style="margin-top:18px">
               <div class="field" id="fMsg">
-                <label>참여 동기 또는 하고 싶은 활동 <span class="field-opt">(선택)</span></label>
-                <textarea name="msg" maxlength="400" placeholder="간단히 적어주시면 검토에 도움이 됩니다."></textarea>
+                <label>지원 사유 및 자기소개 <span class="req">*</span></label>
+                <textarea name="msg" maxlength="600" rows="6" placeholder="예) 저는 ○○에서 ○○을 하고 있으며, AI 윤리에 관심을 갖게 된 계기는 … 입니다.
+KAIEC에서 … 활동을 해보고 싶고, 제 강점은 … 입니다."></textarea>
+                <p class="field-hint">형식은 자유입니다. 관심을 갖게 된 계기, 하고 싶은 활동, 본인의 강점을 3~5문장으로 적어주세요. <span id="msgCount">0</span>/600</p>
+                <p class="err-msg">지원 사유를 20자 이상 적어주세요.</p>
+              </div>
+              <div class="field" id="fAvail">
+                <label>참여 가능 시간 <span class="field-opt">(선택)</span></label>
+                <div class="pill-choice">{AVAIL}</div>
               </div>
             </div>
           </div>
 
           <div class="gform-card" id="secPriv">
-            <div class="gform-sec">SECTION 3</div>
+            <div class="gform-sec">SECTION 4</div>
             <h2>개인정보 수집·이용 동의</h2>
             <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 이메일, 휴대전화(선택), 소속·직업(선택), 참여 구분 및 신청 내용</div>
+              <div><span>수집항목</span>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 지원 동기·자기소개, 참여 가능 시간(선택)</div>
               <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내</div>
               <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
             </div>
@@ -3453,15 +3556,20 @@ def build_join():
             <div class="sel-info" id="selInfo"><i data-lucide="check-circle-2"></i><span id="selText"></span></div>
             <button type="submit" class="btn btn-primary gform-submit-btn">KAIEC 참여 신청하기 <i data-lucide="arrow-right"></i></button>
             <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
+            <div class="trust-row">
+              <div><i data-lucide="award"></i> 공식 위촉장 발급</div>
+              <div><i data-lucide="monitor-play"></i> 온라인·재택 활동</div>
+              <div><i data-lucide="check-circle-2"></i> 참여 비용 없음</div>
+            </div>
           </div>
         </form>
 
         <div class="gform-card gform-done" id="doneView" hidden>
           <div class="done-icon"><i data-lucide="check"></i></div>
           <h2>참여 신청이 접수되었습니다.</h2>
-          <p>협회에서 검토 후 작성하신 이메일로 안내드립니다. 함께해 주셔서 감사합니다.</p>
+          <p>협회에서 검토 후 작성하신 이메일로 보통 3~5일 안에 안내드립니다. 함께해 주셔서 감사합니다.</p>
           <div class="btns" style="justify-content:center">
-            <a class="btn btn-primary" href="index.html">홈으로</a>
+            <a class="btn btn-primary" href="expert.html">AI윤리전문가 자격과정 보기</a>
             <a class="btn btn-ghost" href="about.html">협회 소개 보기</a>
           </div>
           <div class="done-mailbox" id="mailBox">
@@ -3469,6 +3577,42 @@ def build_join():
                <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
             <textarea id="doneCopy" readonly></textarea>
             <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="after">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:30px">
+          <span class="eyebrow">After Apply</span>
+          <h2 class="h-sec">신청 후 진행 절차</h2>
+        </div>
+        <div class="grid grid-4">{after_html}</div>
+        <p class="field-hint" style="text-align:center;margin-top:18px">
+          개인 위원 제도의 자세한 안내는 <a href="partner.html" style="color:var(--blue);font-weight:700">AI 윤리위원 안내</a>,
+          회원사 혜택과 연회비는 <a href="apply.html#member" style="color:var(--blue);font-weight:700">회원사 안내</a>를 참고하세요.</p>
+      </div>
+    </section>
+
+    <section class="section section--gray">
+      <div class="wrap-narrow">
+        <div class="center" style="margin-bottom:24px">
+          <span class="eyebrow">FAQ</span>
+          <h2 class="h-sec">자주 묻는 질문</h2>
+        </div>
+        {faq_html}
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <div class="cta-band">
+          <div><h2>KAIEC와 함께하세요</h2>
+            <p>관심을 활동으로, 활동을 이력으로. 지금 역할을 고르고 신청하세요.</p></div>
+          <div class="btns">
+            <a class="btn btn-white" href="#apply">지금 지원하기</a>
+            <a class="btn btn-light" href="experts.html">AI윤리전문가 보기</a>
           </div>
         </div>
       </div>
@@ -3481,6 +3625,7 @@ def build_join():
     function v(n){var el=form.querySelector('[name='+n+']');return (el&&el.value?el.value:'').trim();}
     function jtype(){var c=form.querySelector('[name=jtype]:checked');return c?c.value:'';}
     function bad(id,on){document.getElementById(id).classList.toggle('is-invalid',!!on);return !!on;}
+    function checked(n){return Array.prototype.slice.call(form.querySelectorAll('[name='+n+']:checked')).map(function(x){return x.value;});}
     function syncType(){
       var t=jtype(); var si=document.getElementById('selInfo');
       document.getElementById('secType').classList.remove('is-invalid');
@@ -3488,11 +3633,11 @@ def build_join():
     }
     form.querySelectorAll('[name=jtype]').forEach(function(r){r.addEventListener('change',syncType);});
     function pick(t){var r=form.querySelector('[name=jtype][value="'+t+'"]');if(r){r.checked=true;syncType();}}
-    /* 프로그램 카드의 '신청' 클릭 → 해당 구분 자동 선택 후 신청서로 이동 */
-    document.querySelectorAll('.join-item').forEach(function(a){
-      a.addEventListener('click',function(){pick(this.getAttribute('data-type'));});
-    });
     var q=new URLSearchParams(location.search).get('type'); if(q){pick(q);}
+
+    /* 자기소개 글자 수 */
+    var msg=form.querySelector('[name=msg]'), mc=document.getElementById('msgCount');
+    msg.addEventListener('input',function(){mc.textContent=this.value.length;});
 
     /* 휴대전화 자동 하이픈 */
     var phone=form.querySelector('[name=phone]');
@@ -3505,33 +3650,39 @@ def build_join():
     form.addEventListener('submit',function(e){
       e.preventDefault();
       var digits=v('phone').replace(/[^0-9]/g,'');
+      var job=form.querySelector('[name=job]:checked');
+      var mot=checked('motive');
       bad('secType',!jtype());
       bad('fName',!v('name'));
       bad('fEmail',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')));
       bad('fPhone',digits.length>0&&!(digits.length>=10&&digits.length<=11&&digits.slice(0,2)==='01'));
+      bad('fJob',!job);
+      bad('secMotive',mot.length===0);
+      bad('fMsg',v('msg').length<20);
       bad('secPriv',!form.querySelector('[name=privok]').checked);
       var first=document.querySelector('.is-invalid');
       document.getElementById('topErr').style.display=first?'block':'none';
       if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}
 
-      var t=jtype();
+      var t=jtype(), av=form.querySelector('[name=avail]:checked');
+      var data={type:'join',course:'[KAIEC 참여] '+t,name:v('name'),email:v('email'),phone:v('phone'),
+                job:job.value,org:v('org'),motive:mot.join(', '),purpose:v('msg'),avail:av?av.value:'',t:String(Date.now())};
       var lines=['한국AI윤리협회 KAIEC 참여 신청','',
-        '■ 참여 구분 : '+t,'■ 성명 : '+v('name'),'■ 이메일 : '+v('email'),
-        '■ 휴대전화 : '+(v('phone')||'(미기재)'),'■ 소속/직업 : '+(v('org')||'(미기재)'),
-        '■ 참여 동기/희망 활동 : '+(v('msg')||'(미기재)'),'',
+        '■ 참여 구분 : '+t,'■ 성명 : '+data.name,'■ 이메일 : '+data.email,
+        '■ 휴대전화 : '+(data.phone||'(미기재)'),'■ 직업/활동 분야 : '+data.job,'■ 소속 : '+(data.org||'(미기재)'),
+        '■ 기대하는 것 : '+data.motive,'■ 지원 사유·자기소개 : '+data.purpose,'■ 참여 가능 시간 : '+(data.avail||'(미기재)'),'',
         '■ 개인정보 수집·이용 : 동의','','--- kaiec.kr KAIEC 참여 신청 페이지에서 작성됨 ---'];
 
+      /* 접수 데이터 전송: 시트 웹훅으로 POST(폼 형식) 전송, 실패 시 GET, 웹훅이 없으면 메일 앱 폴백 */
       var HOOK='__HOOK__';
       if(HOOK){
-        var qs='type=join&course='+encodeURIComponent('[KAIEC 참여] '+t)+'&name='+encodeURIComponent(v('name'))
-             +'&email='+encodeURIComponent(v('email'))+'&phone='+encodeURIComponent(v('phone'))
-             +'&job='+encodeURIComponent(v('org'))+'&purpose='+encodeURIComponent(v('msg'))+'&t='+Date.now();
-        var url=HOOK+'?'+qs; var ok=false;
-        try{fetch(url,{mode:'no-cors',keepalive:true,cache:'no-store'});ok=true;}catch(e1){}
-        if(!ok){try{var im=new Image();im.src=url;}catch(e2){}}
+        var body=new URLSearchParams(); Object.keys(data).forEach(function(k){body.append(k,data[k]);});
+        var sent=false;
+        try{fetch(HOOK,{method:'POST',mode:'no-cors',keepalive:true,cache:'no-store',body:body});sent=true;}catch(e1){}
+        if(!sent){try{var im=new Image();im.src=HOOK+'?'+body.toString();}catch(e2){}}
         document.getElementById('mailBox').hidden=true;
       }else{
-        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[KAIEC 참여 신청] '+v('name')+' · '+t)
+        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[KAIEC 참여 신청] '+data.name+' · '+t)
                 +'&body='+encodeURIComponent(lines.join('\n'));
         setTimeout(function(){location.href=mail;},400);
       }
@@ -3553,7 +3704,7 @@ def build_join():
 """.replace('__FEMAIL__', EMAIL).replace('__HOOK__', SHEET_WEBHOOK)
 
     page("join.html", "KAIEC 참여하기",
-         "한국AI윤리협회(KAIEC) 참여 안내. 운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 제휴 파트너·회원사까지, 나에게 맞는 참여 방법을 확인하고 온라인으로 신청하세요.",
+         "한국AI윤리협회(KAIEC) 참여 신청. 운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 제휴 파트너·회원사까지, 나에게 맞는 역할을 골라 온라인으로 바로 지원하세요.",
          body, extra_script=script,
          keywords=["KAIEC 참여", "한국AI윤리협회 참여", "AI 윤리위원 지원", "AI 윤리 전문위원 모집", "캠퍼스 위원장",
                    "AI 윤리 캠페인위원", "협회 회원사 가입", "AI 윤리 제휴"])
