@@ -266,6 +266,7 @@ LOGO_SVG = """<svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="htt
 # 웹폰트 로딩·OS 힌팅과 무관하게 어떤 화면에서도 선명하게 렌더링됩니다. 헤더가 원본(id 포함), 푸터는 <use>로 재사용.
 # 색은 CSS 변수 --wm-ko / --wm-en (헤더 남색·회색, 푸터 흰색·연회색)로 지정합니다.
 WORDMARK_SVG = io.open(os.path.join(BASE, "tools", "wordmark.svg"), encoding="utf-8").read().strip()
+BADGE_SVG = io.open(os.path.join(BASE, "tools", "badge.svg"), encoding="utf-8").read().strip()   # 배지 글자 KAIEC (벡터)
 _wm_vb = re.search(r'viewBox="([^"]+)"', WORDMARK_SVG).group(1)
 WORDMARK_USE = (f'<svg class="brand-wm" viewBox="{_wm_vb}" aria-hidden="true" focusable="false">'
                 f'<use href="#wm-ko"/><use href="#wm-en"/></svg>')
@@ -275,8 +276,8 @@ def brand(reuse=False):
     """헤더·푸터 공통 브랜드 블록. reuse=True(푸터)는 헤더 SVG의 패스를 <use>로 참조해 페이지 용량을 아낍니다."""
     wm = WORDMARK_USE if reuse else WORDMARK_SVG
     return f"""<a class="brand" href="index.html" aria-label="{SITE_NAME} 홈">
-        <span class="brand-badge">KAIEC</span>
-        <span class="brand-text">{wm}<span class="sr-only">{SITE_NAME} {SITE_EN}</span></span>
+        <span class="brand-badge">{BADGE_SVG}</span>
+        <span class="brand-text">{wm}<span class="sr-only">KAIEC {SITE_NAME} {SITE_EN}</span></span>
       </a>"""
 
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""헤더/푸터 워드마크(한국AI윤리위원회 + KOREA AI ETHICS COMMITTEE)를 글꼴 외곽선(벡터 패스) SVG로 생성 → tools/wordmark.svg (build.py가 읽어 헤더에 인라인).
+"""헤더/푸터 워드마크(한국AI윤리위원회 + KOREA AI ETHICS COMMITTEE)와 배지 글자(KAIEC)를 글꼴 외곽선(벡터 패스) SVG로 생성
+→ tools/wordmark.svg, tools/badge.svg (build.py가 읽어 헤더·푸터에 인라인).
 사용법: python3 tools/make_wordmark.py  (Noto Serif CJK Black이 설치된 환경에서)
 - 국문: Noto Serif CJK KR Black (사이트의 Noto Serif KR 900과 같은 디자인), 영문 캡션: Archivo Bold
 - 웹폰트 로딩·힌팅과 무관하게 어떤 화면에서도 선명하게 그려지도록 텍스트 대신 패스를 사용"""
@@ -67,3 +68,15 @@ svg = (f'<svg class="brand-wm" viewBox="0 0 {W:.2f} {H:.2f}" aria-hidden="true" 
        f'<path id="wm-en" style="fill:var(--wm-en,#76839A)" d="{en_path}"/></svg>')
 open(os.path.join(HERE, 'wordmark.svg'), 'w', encoding='utf-8').write(svg + "\n")
 print(f"tools/wordmark.svg  W={W:.2f} H={H:.2f} ko_w={ko_w:.2f} en_w={en_w:.2f} en_track={en_track_px:.3f}px bytes={len(svg.encode())}")
+
+# ---- 배지 "KAIEC" (Archivo ExtraBold 800, 15px, 자간 .16em) → tools/badge.svg : .brand-badge 안에 인라인 ----
+badge_font = TTFont(os.path.join(HERE, 'fonts', 'archivo-latin-800-normal.woff'))
+B_TEXT, B_SIZE, B_TRACK = "KAIEC", 15.0, 0.16
+b_d0, b_w, (b_ymin, b_ymax) = line_paths(badge_font, B_TEXT, B_SIZE, B_TRACK, 0.0)
+b_shift = -b_ymin
+b_path, _, _ = line_paths(badge_font, B_TEXT, B_SIZE, B_TRACK, b_shift)
+BW, BH = b_w, b_ymax - b_ymin
+badge = (f'<svg class="badge-wm" viewBox="0 0 {BW:.2f} {BH:.2f}" aria-hidden="true" focusable="false">'
+         f'<path d="{b_path}"/></svg>')
+open(os.path.join(HERE, 'badge.svg'), 'w', encoding='utf-8').write(badge + "\n")
+print(f"tools/badge.svg  W={BW:.2f} H={BH:.2f} bytes={len(badge.encode())}")
