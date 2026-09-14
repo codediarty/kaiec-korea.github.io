@@ -6,7 +6,7 @@
 검사 항목
   1. 생성 페이지·게시글 페이지·이동 스텁이 모두 존재하고, 원본 없는 잔존 결과물이 없는지
   2. 줄표(U+2014) 미사용 (저장소의 모든 텍스트 파일)
-  3. 폐기 명칭(한국AI윤리협회, 2026.09.11~13 사용 후 SEO 문제로 원복)·협회 직함(회장)·옛 영문명 미사용,
+  3. 폐기 명칭(한국AI윤리협회, 2026.09.11~13 사용 후 SEO 문제로 원복)·협회 직함(회장)·옛 영문명·인증/검정/급수 표기 미사용,
      법적 지위를 넘어서는 표현·'민간'·자리표시 도메인 미사용
   4. 각 페이지의 canonical·네이버 인증 메타·설명·OG 이미지·브레드크럼 존재, JSON-LD 전부 파싱
   5. 내부 링크·이미지·CSS·JS 경로가 실제 파일을 가리키는지
@@ -25,7 +25,9 @@ import build  # 상수·url_for·out_path·load_posts 를 그대로 사용 (빌�
 DASH = "\u2014"   # 줄표(긴 대시)
 # 2026.09.14 원복: 기관명은 한국AI윤리위원회(Korea AI Ethics Committee). 아래 표기는 어디에도 남기지 않는다
 OLD_NAMES = ["한국AI윤리협회", "한국 AI 윤리협회", "AI윤리협회", "AI 윤리 협회", "Association", "Ethics & Compliance",
-             "Ethics Compliance", "ETHICS COMPLIANCE", "회장", "PRESIDENT"]
+             "Ethics Compliance", "ETHICS COMPLIANCE", "회장", "PRESIDENT",
+             # 2026.09.14 양성과정 전환: 등록된 자격 제도가 아니므로 인증·검정·급수 표기를 쓰지 않는다 (양성과정·수료 시험·수료증으로 표기)
+             "자격증", "자격검정", "자격과정", "자격 취득", "2급", "1급", "응시료", "합격증"]
 BANNED = ["민간", "국가공인", "지정기부금", "세액공제", "기부금 영수증", "YOUR-DOMAIN",
           "kaiec-korea.github.io/", "kaiec.skkc.co.kr"]
 DOC_FILES = {"작업-메모.md", "README.md", "배포-가이드.md", "앱스스크립트-접수시트연동.txt",
@@ -106,8 +108,8 @@ check("줄표(긴 대시) 미사용", probs)
 probs = []
 for path in text_files():
     r = rel(path)
-    if r in ("tools/verify.py", "작업-메모.md"):
-        continue
+    if r in ("tools/verify.py", "작업-메모.md", "앱스스크립트-접수시트연동.txt"):
+        continue   # 규칙 설명·이력, 그리고 배포된 앱스 스크립트와 맞춰야 하는 시트 열 이름(내부용)은 검사 제외
     txt = read(path)
     for w in OLD_NAMES:
         if w in txt:
@@ -227,7 +229,7 @@ for name, url in (("PAY_URL_L2", build.PAY_URL_L2), ("PAY_URL_L1", build.PAY_URL
     if url and url not in apply_html:
         probs.append(f"{name} 미반영 ({url})")
 if build.won(build.PRICE_L2) not in expert_html or build.won(build.PRICE_L2) not in index_html:
-    probs.append(f"2급 특별가 {build.won(build.PRICE_L2)} 미반영")
+    probs.append(f"기본과정 특별가 {build.won(build.PRICE_L2)} 미반영")
 if build.DEADLINE not in expert_html:
     probs.append(f"마감 {build.DEADLINE} 미반영")
 if build.COPYCLEAN_URL not in read(pages["copyclean.html"]):

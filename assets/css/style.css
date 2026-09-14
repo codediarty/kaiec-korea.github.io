@@ -1024,7 +1024,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .exam-info > div{display:flex;gap:14px;font-size:13.5px;color:var(--gray-700);line-height:1.6}
 .exam-info span{flex:none;width:74px;font-weight:800;color:var(--gray-500);font-size:12.5px}
 .exam-info b{color:var(--navy);font-weight:700}
-/* 1급 활용 */
+/* 심화 활용 */
 .use-block{margin-top:20px;border-top:1px solid var(--gray-100);padding-top:18px}
 .use-block-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--ink);margin-bottom:13px}
 .use-block-title i,.use-block-title svg{width:18px;height:18px;color:var(--blue)}
@@ -1162,7 +1162,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .price-line--light .price-list{color:var(--gray-400)}
 .price-line--light .price-now{color:var(--ink)}
 .price-line--light .price-tag{background:var(--teal-050);color:#00857A}
-/* ── 메인 전환 섹션 (Why Now + 자격과정 오퍼) ── */
+/* ── 메인 전환 섹션 (Why Now + 양성과정 오퍼) ── */
 .offer-sec{background:linear-gradient(180deg,#F6F9FE,#FFFFFF)}
 .offer-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
 .why-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
@@ -1341,3 +1341,32 @@ table.tbl tr:hover td{background:#FCFDFF}
 /* 2026.09.14 기관명 원복: '한국AI윤리위원회(KAIEC)'가 작은 폰에서 한 줄에 들어가도록 히어로 제목 크기 미세 조정 */
 @media (max-width:420px){.hero h1{font-size:27.5px}}
 @media (max-width:370px){.hero h1{font-size:25px}}
+
+/* ---------- 2026.09.14 양성과정 전환: 8강 커리큘럼 · 수료 기준 · 이력서 표기 ---------- */
+.curri-block{margin-top:6px}
+.lec-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.lec{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:20px 22px 18px;box-shadow:0 4px 18px rgba(15,42,95,.04)}
+.lec-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.lec-num{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:52px;height:30px;padding:0 10px;border-radius:9px;
+  background:var(--navy);color:#fff;font-weight:800;font-size:13.5px;letter-spacing:.02em}
+.lec-head strong{font-size:17px;letter-spacing:-.02em;color:var(--ink);flex:1 1 auto}
+.lec-time{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--gray-600);background:var(--gray-100);padding:5px 10px;border-radius:999px}
+.lec-time svg{width:13px;height:13px}
+.lec p{font-size:14.5px;color:var(--gray-700);line-height:1.75;margin:0 0 10px}
+.lec .chips{display:flex;gap:6px;flex-wrap:wrap}
+.lec .chip{font-size:12px;padding:4px 10px;background:var(--blue-050);color:var(--blue-600)}
+.exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.exam-card{position:relative;border-radius:16px;padding:18px 20px;background:linear-gradient(150deg,#0F2A5F,#1F5FE0);color:#fff;display:flex;flex-direction:column;gap:5px}
+.exam-card--adv{background:linear-gradient(150deg,#03302B,#00857A)}
+.exam-tag{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:800;letter-spacing:.08em;padding:4px 9px;border-radius:999px;background:rgba(255,255,255,.16)}
+.exam-card strong{font-size:17px;letter-spacing:-.02em}
+.exam-card span{font-size:13px;color:rgba(255,255,255,.82);line-height:1.6}
+.exam-card b{color:#fff}
+.resume-line{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:18px 22px}
+.resume-label{display:block;font-size:12.5px;font-weight:800;letter-spacing:.08em;color:var(--gray-500);margin-bottom:10px}
+.resume-rows{display:grid;gap:8px}
+.resume-rows > div{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.resume-tag{flex:none;font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:999px;background:var(--blue-050);color:var(--blue-600)}
+.resume-tag--adv{background:var(--teal-050);color:#00857A}
+.resume-rows code{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--gray-100);padding:7px 12px;border-radius:9px;line-height:1.5}
+@media (max-width:700px){.exam-grid{grid-template-columns:1fr}.lec{padding:16px 16px 14px}.lec-head strong{font-size:15.5px}.resume-rows code{font-size:13px}}

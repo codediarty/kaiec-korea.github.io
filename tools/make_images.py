@@ -38,7 +38,7 @@ LABELS={
  "2026-08-21-ai-similarity-check-guide":("AI 유사도 검사 가이드","제출 전 확인 절차"),
  "2026-08-22-new-members":("신규 회원사 안내","성균관대학교 RISE사업단 · 성균관컨설팅 · 카피클린"),
  "2026-09-10-fellowship-1st-recruit":("AI Ethics Fellowship 1기 모집","협력기관 모집 안내"),
- "2026-09-11-ai-ethics-expert-intro":("AI윤리전문가란 누구인가","AI 시대가 찾는 유망 전문 자격"),
+ "2026-09-11-ai-ethics-expert-intro":("AI윤리전문가란 누구인가","AI 시대가 찾는 전문 역량"),
 }
 
 BASE_CSS = """
@@ -106,7 +106,7 @@ h1{{font-size:58px;margin-top:26px;max-width:900px}}
     <h1>한국AI윤리위원회(KAIEC)<br><span class="accent">책임 있는 AI 활용을 위한 전문기관</span></h1>
     <div class="sub">AI 윤리 교육 · 연구 · 캠페인 · AI윤리전문가 양성 및 국내외 협력</div>
   </div>
-  <div class="chips"><span>AI윤리전문가 자격과정</span><span>AI 윤리 교육 · 출강</span><span>사전점검 캠페인</span><span>기업 · 기관 협력</span></div>
+  <div class="chips"><span>AI윤리전문가 양성과정</span><span>AI 윤리 교육 · 출강</span><span>사전점검 캠페인</span><span>기업 · 기관 협력</span></div>
 </div></body></html>"""
 
 def main():

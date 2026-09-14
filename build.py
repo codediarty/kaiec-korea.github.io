@@ -35,21 +35,58 @@ EMAIL = "kaiec.korea@gmail.com"                # ← 대표 문의 메일
 GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform"
 # 카피클린 문서검사 바로가기 (모든 카피클린 CTA가 이 주소로 연결됨)
 COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
-# AI윤리전문가 응시료 결제 링크 (성균관컨설팅 skkc.co.kr 안전결제 PG)
+# AI윤리전문가 양성과정 교육비 결제 링크 (성균관컨설팅 skkc.co.kr 안전결제 PG)
 # 결제 링크가 발급되면 아래에 넣고 재실행하세요. 비워두면 결제 버튼이 표시되지 않고
-# 접수 폼 완료 화면에서 결제를 안내하는 흐름으로 운영합니다.
-PAY_URL_L2 = "https://skkc.co.kr/shop_view?idx=26"   # 2급 응시료 결제 링크
-PAY_URL_L1 = "https://skkc.co.kr/shop_view?idx=27"   # 1급 응시료 결제 링크
-# 응시 접수를 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
-# 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 접수 내용이 메일 앱으로 발송됩니다.
+# 신청 폼 완료 화면에서 결제를 안내하는 흐름으로 운영합니다.
+PAY_URL_L2 = "https://skkc.co.kr/shop_view?idx=26"   # 기본과정 교육비 결제 링크 (내부 코드 2)
+PAY_URL_L1 = "https://skkc.co.kr/shop_view?idx=27"   # 심화과정 교육비 결제 링크 (내부 코드 1)
+# 수강 신청을 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
+# 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 신청 내용이 메일 앱으로 발송됩니다.
 SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec"
-# 자격과정 가격·모집 정보 (변경 시 여기만 수정 후 재실행: expert·접수 폼·메인 배너·게시글 배너에 일괄 반영)
-LIST_L2, PRICE_L2 = 499000, 199000     # 2급 정가 / 1기 특별가
-LIST_L1, PRICE_L1 = 1200000, 499000    # 1급 정가 / 1기 특별가 (0이면 "결제 페이지에서 확인"으로 표시)
+# 양성과정 가격·모집 정보 (변경 시 여기만 수정 후 재실행: expert·신청 폼·메인 배너·게시글 배너에 일괄 반영)
+LIST_L2, PRICE_L2 = 499000, 199000     # 기본과정 정가 / 1기 특별가 (내부 코드 2 = 기본과정)
+LIST_L1, PRICE_L1 = 1200000, 399000    # 심화과정 정가 / 1기 특별가 (내부 코드 1 = 심화과정, 0이면 "결제 페이지에서 확인"으로 표시)
 DEADLINE = "10월 30일"                  # 1기 접수 마감
 DEADLINE_ISO = "2026-10-30"             # 카운트다운(D-day)·구조화 데이터용
 QUOTA = 100                             # 연간 한정 양성 정원
 POSTS_LASTMOD = "2026-09-14"            # 게시글 전체 틀이 바뀐 마지막 날짜 (사이트맵 lastmod 하한: 기관명 원복)
+# 양성과정 표기 (2026.09.14): 등록된 자격 제도가 아니므로 인증(자격)·검정·급수 표현은 쓰지 않고
+# '양성과정·수료 시험·수료증'으로 표기합니다 (금지 표기는 tools/verify.py OLD_NAMES 참고). 문서 명칭을 '이수증'으로 바꾸려면 DOC 하나만 고치면 됩니다.
+PROG = "AI윤리전문가 양성과정"
+DOC = "수료증"
+DOC_FULL = f"{PROG} {DOC}"                # 「AI윤리전문가 양성과정 수료증」
+EXAM_BASIC = (40, 70)                     # 기본과정 수료 시험: 문항 수, 수료 기준 점수
+EXAM_ADV = (50, 80)                       # 심화과정 수료 시험: 문항 수, 수료 기준 점수
+LECTURES = 8                              # 온라인 강의 수
+TOTAL_TIME = "약 2시간 12분"               # 8강 합계 132분 35초 (강의별 표시 시간의 합과 맞춰 12분으로 표기)
+TOTAL_ISO = "PT2H12M"                     # 구조화 데이터용
+# 8강 커리큘럼: (제목, 시간, 설명, 키워드 칩)
+CURRICULUM = [
+    ("AI 윤리, 무엇을 지켜야 하는가", "약 10분",
+     "인공지능의 개념에서 출발해 인권, 개방성, 접근성, 이해관계자 참여, 젠더까지 AI 윤리를 이루는 핵심 가치를 짧은 사례 영상 7편으로 익힙니다. 과정 전체의 기준이 되는 입문 강의입니다.",
+     ["AI의 개념", "인권", "개방성 · 접근성", "참여 · 젠더"]),
+    ("AI 시대의 4대 윤리 쟁점", "약 31분",
+     "왜 지금 윤리가 중요한지에서 시작해 차별과 혐오(공정성), 딥페이크와 민주주의, 자동화된 결정과 인간의 자율성까지, 현장에서 가장 자주 부딪히는 쟁점 4가지를 정리합니다.",
+     ["공정성", "딥페이크", "자동화된 결정", "자율성"]),
+    ("전문가가 말하는 AI 윤리", "약 12분",
+     "국제사회의 AI 윤리 논의 흐름, 'AI가 사람보다 더 나은 결정을 내리는가'라는 질문, 인간과 AI의 발전적 상호작용을 전문가 인터뷰로 살펴봅니다.",
+     ["국제 논의", "AI의 결정", "인간 · AI 상호작용"]),
+    ("신기술 윤리의 확장: 생명윤리 사례", "약 11분",
+     "유전자 편집이 의료와 미래세대, 동식물과 자연환경에 던지는 질문을 통해 새로운 기술을 판단하는 공통의 윤리 프레임을 배웁니다. AI 윤리를 더 넓은 기술 윤리의 맥락에서 이해하는 강의입니다.",
+     ["생명윤리", "미래세대", "판단 프레임"]),
+    ("AI 윤리의 쟁점과 과제", "약 32분",
+     "AI 윤리를 둘러싼 핵심 쟁점과 과제를 철학적 관점에서 체계적으로 짚는 본 과정의 중심 강의입니다. 수료 시험의 핵심 출제 범위입니다.",
+     ["핵심 쟁점", "책임", "과제"]),
+    ("세계가 합의한 AI 윤리 원칙", "약 7분",
+     "국제사회가 함께 만든 AI 윤리 원칙이 무엇이고, 그것이 기업·기관·개인의 AI 활용에 어떤 기준이 되는지 이해합니다.",
+     ["국제 원칙", "활용 기준"]),
+    ("AI 윤리의 법제화 방안", "약 23분",
+     "윤리 원칙이 어떻게 법과 제도로 옮겨지는지, AI 관련 법제화의 쟁점과 방향을 법학 관점에서 배웁니다. AI기본법 시대의 규제를 이해하는 토대가 됩니다.",
+     ["법제화", "규제", "AI기본법"]),
+    ("AI와 문화다양성", "약 6분",
+     "AI가 문화의 다양성에 미치는 영향을 다큐멘터리로 살펴보며, 기술이 지켜야 할 사회적 가치를 정리하고 과정을 마무리합니다.",
+     ["문화다양성", "사회적 가치"]),
+]
 def won(n): return f"{n:,}원"
 
 
@@ -366,7 +403,7 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
     # 설명·제목에 큰따옴표가 있으면 meta content="..." 속성이 끊겨 설명이 비어 보이므로 &quot; 로 바꿉니다
     desc = desc.replace('"', '&quot;')
     full_title = full_title.replace('"', '&quot;')
-    kw = ", ".join(keywords) if keywords else "한국AI윤리위원회, 한국 AI 윤리위원회, AI윤리위원회, AI 윤리 위원회, KAIEC, AI윤리, 인공지능 윤리, AI윤리전문가, AI 윤리 교육, AI 윤리 자격증, 생성형 AI, 카피클린"
+    kw = ", ".join(keywords) if keywords else "한국AI윤리위원회, 한국 AI 윤리위원회, AI윤리위원회, AI 윤리 위원회, KAIEC, AI윤리, 인공지능 윤리, AI윤리전문가, AI윤리전문가 양성과정, AI 윤리 교육, AI 윤리 수료증, 생성형 AI, 카피클린"
     ogimg = og_image or f"{SITE_URL}/assets/img/og-image.png"
     article_meta = (f'<meta property="article:published_time" content="{published}">\n'
                     f'<meta property="article:modified_time" content="{published}">\n') if (og_type == "article" and published) else ""
@@ -451,15 +488,15 @@ def hero_sub(title, desc, crumb):
     </section>"""
 
 
-CERT_CTA = "AI윤리전문가 자격증 취득하기"          # 사이트 공통 1순위 버튼 문구
-CERT_HREF = "expert-apply.html?course=2"          # 항상 2급(대표 과정)이 선택된 접수 페이지로
+CERT_CTA = "AI윤리전문가 양성과정 신청하기"        # 사이트 공통 1순위 버튼 문구
+CERT_HREF = "expert-apply.html?course=2"          # 항상 기본과정(대표 과정)이 선택된 신청 페이지로
 
 
 def cert_band_inner(sec_label="KAIEC 참여하기", sec_href="join.html", title=None, text=None):
-    """전 페이지 공통 하단 전환 배너의 안쪽(.cta-band): 1순위는 항상 자격증, 2순위만 페이지 성격에 맞게"""
+    """전 페이지 공통 하단 전환 배너의 안쪽(.cta-band): 1순위는 항상 양성과정 신청, 2순위만 페이지 성격에 맞게"""
     title = title or "AI 시대에 가장 먼저 필요한 전문가, 지금 준비하세요"
-    text = text or (f"AI윤리전문가 1기 모집 중 · 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성 · "
-                    f"2급 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}). 온라인 교육과 자격검정으로 위원회 명의 자격증을 취득하세요.")
+    text = text or (f"AI윤리전문가 양성과정 1기 모집 중 · 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성 · "
+                    f"기본과정 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}). 온라인 강의 {LECTURES}강과 수료 시험으로 한국AI윤리위원회 명의 수료증을 받으세요.")
     return f"""<div class="cta-band reveal">
           <div><h2>{title} <span class="promo-new" style="vertical-align:middle">NEW</span></h2>
             <p>{text}</p></div>
@@ -487,10 +524,10 @@ def sticky_cta(mode="all"):
     return f"""  <div class="sticky-cta{cls}" id="stickyCta" data-deadline="{DEADLINE_ISO}" aria-hidden="true">
     <div class="sticky-cta-inner">
       <div class="sticky-cta-text">
-        <strong>AI윤리전문가<em class="sticky-more"> 2급</em> 1기 특별가 {won(PRICE_L2)}</strong>
+        <strong>AI윤리전문가<em class="sticky-more"> 양성과정</em> 1기 특별가 {won(PRICE_L2)}</strong>
         <span>접수 마감 {DEADLINE} <b class="dday" data-dday></b><em class="sticky-more"> · 연 {QUOTA}명 한정 양성</em></span>
       </div>
-      <a class="btn btn-primary btn-sm" href="{CERT_HREF}">자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+      <a class="btn btn-primary btn-sm" href="{CERT_HREF}">양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
     </div>
   </div>
 """
@@ -507,9 +544,9 @@ BUSINESS = [
     ("megaphone", "AI 윤리 캠페인 및 교육·콘텐츠",
      "온라인 캠페인, 카드뉴스, 영상, 강의 자료 등 누구나 쉽게 접근할 수 있는 형태로 AI 윤리 콘텐츠를 제작·배포합니다. 대학생·대학원생·연구자·직장인 등 실사용자 눈높이에 맞춘 실용적 내용을 지향합니다.",
      ["온·오프라인 AI 윤리 캠페인 기획", "교육 자료 및 강의 콘텐츠 제작", "SNS 기반 인식 개선 콘텐츠 운영"]),
-    ("award", "AI윤리전문가 양성 및 자격검정",
-     "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가」 자격과정(2급·1급)과 전문강사 양성을 운영하고, AI 윤리위원·전문위원 제도로 현장 활동까지 연결합니다.",
-     ["AI윤리전문가 자격과정(2급·1급) 운영", "전문강사 양성 및 출강 연계", "AI 윤리위원·전문위원 위촉 및 활동 지원"]),
+    ("award", "AI윤리전문가 양성과정 운영",
+     "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가 양성과정」(기본·심화)과 전문강사 양성을 운영하고, 심화과정 수료자를 공식 AI윤리전문가로 위촉해 AI 윤리위원·전문위원 제도로 현장 활동까지 연결합니다.",
+     ["AI윤리전문가 양성과정(기본·심화) 운영", "전문강사 양성 및 출강 연계", "AI 윤리위원·전문위원 위촉 및 활동 지원"]),
     ("handshake", "대학·기업·협회와의 MOU 및 제휴",
      "대학, 기업, 협회, 연구기관 등과 업무협약을 체결하고 공동 캠페인·교육·연구를 추진합니다. 각 기관의 현장 상황에 맞는 AI 윤리 실천 방안을 함께 설계합니다.",
      ["기관 간 업무협약(MOU) 체결", "공동 캠페인 및 세미나 개최", "기관 맞춤형 AI 윤리 자문"]),
@@ -565,7 +602,7 @@ def build_index(posts):
 
           <div class="hero-bottom">
           <div class="hero-ctas">
-            <a class="btn btn-primary" href="expert.html">AI윤리전문가 자격증 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-primary" href="expert.html">AI윤리전문가 양성과정 <i data-lucide="arrow-right"></i></a>
             <a class="btn btn-light" href="join.html">KAIEC 참여하기 <i data-lucide="arrow-right"></i></a>
             <a class="btn btn-light" href="lecture.html">전문강사 출강 신청 <i data-lucide="arrow-right"></i></a>
             <a class="btn btn-light" href="copyclean.html">카피클린 문서검사 <i data-lucide="arrow-right"></i></a>
@@ -573,8 +610,8 @@ def build_index(posts):
 
           <a class="hero-promo" href="expert.html">
             <div>
-              <strong>AI윤리전문가 1기 모집 중 <span class="promo-new">NEW</span></strong>
-              <p>접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성 · 2급 1기 특별가 {won(PRICE_L2)}</p>
+              <strong>AI윤리전문가 양성과정 1기 모집 중 <span class="promo-new">NEW</span></strong>
+              <p>접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성 · 기본과정 1기 특별가 {won(PRICE_L2)}</p>
             </div>
             <span class="promo-go"><i data-lucide="arrow-right"></i></span>
           </a>
@@ -586,10 +623,10 @@ def build_index(posts):
       <div class="wrap">
         <div class="feature-cards">
           <a class="fcard reveal" href="expert.html">
-            <div class="fc-visual fc-v1"><img src="assets/img/cards/card-cert.jpg" alt="AI윤리전문가 자격증" loading="lazy"></div>
+            <div class="fc-visual fc-v1"><img src="assets/img/cards/card-cert.jpg" alt="AI윤리전문가 양성과정 수료증" loading="lazy"></div>
             <div class="fc-body">
-              <h3>AI윤리전문가 자격과정</h3>
-              <p>2급(2시간) · 1급(4시간)<br>온라인 교육 + 자격검정</p>
+              <h3>AI윤리전문가 양성과정</h3>
+              <p>기본과정 · 심화과정<br>온라인 강의 {LECTURES}강 + 수료 시험</p>
               <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
             </div>
           </a>
@@ -641,21 +678,21 @@ def build_index(posts):
               <span class="badge">1기 모집 중 · 마감 {DEADLINE}</span>
               <span class="offer-quota">연 {QUOTA}명 한정 양성</span>
             </div>
-            <h3>AI윤리전문가 2급 자격과정</h3>
-            <p>온라인 교육 2시간 + 온라인 자격검정으로 위원회 명의 자격증을 취득하는 대표 과정입니다.</p>
+            <h3>AI윤리전문가 양성과정 · 기본과정</h3>
+            <p>온라인 강의 {LECTURES}강({TOTAL_TIME})과 온라인 수료 시험으로 한국AI윤리위원회 명의 수료증을 받는 대표 과정입니다.</p>
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_L2)}</span>
               <span class="price-now">{won(PRICE_L2)}</span>
               <span class="price-tag">1기 특별가</span>
             </div>
             <ul class="offer-list">
-              <li>전공·경력 제한 없이 누구나 응시</li>
+              <li>전공·경력 제한 없이 누구나 수강</li>
               <li>전 과정 온라인, 직장·학업과 병행 가능</li>
-              <li>이력서·포트폴리오에 기재하는 위원회 명의 자격증</li>
-              <li>합격 기준 70점, 불합격 시 1회 무료 재응시</li>
+              <li>이력서·포트폴리오에 기재하는 위원회 명의 수료증</li>
+              <li>수료 기준 {EXAM_BASIC[1]}점, 불합격 시 1회 무료 재응시</li>
             </ul>
             <div class="offer-btns">
-              <a class="btn btn-primary" href="{CERT_HREF}">자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+              <a class="btn btn-primary" href="{CERT_HREF}">양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
               <a class="btn btn-ghost" href="expert.html">과정 자세히 보기</a>
             </div>
           </div>
@@ -1113,7 +1150,7 @@ def build_business():
     </section>"""
 
     page("business.html", "주요사업",
-         "AI 윤리 교육·캠페인, AI윤리전문가 양성과 자격검정, 대학·기업 협력, AI 활용 문서 사전점검, AI 윤리 연구까지 한국AI윤리위원회의 6대 주요사업을 소개합니다.",
+         "AI 윤리 교육·캠페인, AI윤리전문가 양성과정, 대학·기업 협력, AI 활용 문서 사전점검, AI 윤리 연구까지 한국AI윤리위원회의 6대 주요사업을 소개합니다.",
          body)
 
 
@@ -1791,8 +1828,8 @@ def build_news(posts):
   </script>
 """
     page("news.html", "커뮤니티 · AI 윤리 칼럼과 위원회 소식",
-         "AI 윤리, AI기본법, AI 유사도 검사와 연구윤리, AI윤리전문가 자격까지. 한국AI윤리위원회의 전문가 칼럼, 공지, 캠페인 소식을 한곳에서 확인하세요.",
-         body + cert_band("자격과정 안내", "expert.html"), extra_script=script,
+         "AI 윤리, AI기본법, AI 유사도 검사와 연구윤리, AI윤리전문가 양성과정까지. 한국AI윤리위원회의 전문가 칼럼, 공지, 캠페인 소식을 한곳에서 확인하세요.",
+         body + cert_band("양성과정 안내", "expert.html"), extra_script=script,
          keywords=["AI 유사도 검사", "AI 유사도", "AI 검사기", "논문컨설팅", "논문 컨설팅", "카피클린",
                    "AI 탐지", "논문 AI 검사", "과제 AI 검사", "자소서 AI 검사"])
 
@@ -1820,14 +1857,14 @@ def build_post(p, posts):
                  if next_p else '<span></span>')
     nav_html += '</div>'
 
-    # 관련 글: 같은 분류 2건 + 다른 분류 1건(자격과정 소개 글 우선) → 분류를 섞어야 다음 클릭이 나옴
+    # 관련 글: 같은 분류 2건 + 다른 분류 1건(양성과정 소개 글 우선) → 분류를 섞어야 다음 클릭이 나옴
     same = [q for q in posts if q is not p and q["category"] == p["category"]]
     others = [q for q in posts if q is not p and q not in same]
     intro = [q for q in others if "ai-ethics-expert-intro" in q["file"]]
     rel = same[:2] + (intro[:1] or others[:1])
     rel = (rel + [q for q in same[2:] + others if q not in rel])[:3]
 
-    # 본문 가공: 읽는 시간, h2 목차(3개 이상일 때), 마지막 h2 앞 자격과정 안내 박스
+    # 본문 가공: 읽는 시간, h2 목차(3개 이상일 때), 마지막 h2 앞 양성과정 안내 박스
     body_html = md_to_html(p["body"])
     plain_len = len(_strip_tags(body_html))
     read_min = max(1, round(plain_len / 550))
@@ -1840,9 +1877,9 @@ def build_post(p, posts):
                     + "".join(f'<li><a href="#sec-{i}">{_strip_tags(h)}</a></li>' for i, h in enumerate(heads, 1))
                     + '</ol></nav>')
     mid_cta = f"""<aside class="post-cta">
-  <span class="post-cta-kicker">AI윤리전문가 자격과정 · 1기 모집 중</span>
+  <span class="post-cta-kicker">AI윤리전문가 양성과정 · 1기 모집 중</span>
   <strong>AI를 어디까지 어떻게 써야 하는지, 기준을 아는 사람이 조직의 리스크를 줄입니다.</strong>
-  <p>온라인 교육과 자격검정으로 한국AI윤리위원회 명의 자격증을 취득하세요. 2급 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}), 접수 마감 {DEADLINE}.</p>
+  <p>온라인 강의 {LECTURES}강과 수료 시험으로 한국AI윤리위원회 명의 수료증을 받으세요. 기본과정 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}), 접수 마감 {DEADLINE}.</p>
   <span class="post-cta-links"><a class="btn btn-primary btn-sm" href="{CERT_HREF}">{CERT_CTA}</a><a class="btn btn-ghost btn-sm" href="quiz.html">3분 자가진단</a></span>
 </aside>
 """
@@ -1892,7 +1929,7 @@ def build_post(p, posts):
 {rel_html}
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("자격과정 안내", "expert.html", title="AI윤리전문가 1기 모집 중")}
+        {cert_band_inner("양성과정 안내", "expert.html", title="AI윤리전문가 양성과정 1기 모집 중")}
       </div>
     </section>"""
 
@@ -2522,16 +2559,17 @@ def build_lecture():
 
 # --------------------------------------------------------------- expert.html
 def build_expert():
-    """AI윤리전문가 자격과정: 양성 필요성과 과정 안내 (전환형 랜딩)"""
-    # 결제는 접수 완료 화면에서 자동 연결되므로(폼 → 결제) 절차 아래에는 접수 버튼 하나만 둡니다.
-    # 결제 페이지로 바로 가는 버튼은 신청자 정보가 남지 않고 경로가 둘로 갈려 제거했습니다 (2026.09.13)
+    """AI윤리전문가 양성과정: 양성 필요성과 과정 안내 (전환형 랜딩)
+    - 등록된 자격 제도가 아니므로 인증(자격)·검정·급수 표현을 쓰지 않고 '양성과정·수료 시험·수료증'으로 표기 (2026.09.14)
+    - 기본과정(40문항·70점) / 심화과정(50문항·80점, 공식 위촉·홈페이지 등재), 온라인 강의 8강 약 2시간 13분"""
+    # 결제는 접수 완료 화면에서 자동 연결되므로(폼 → 결제) 절차 아래에는 신청 버튼 하나만 둡니다.
     pay_btns = (f'<div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px">'
                 f'<a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>'
-                f'<span style="font-size:13px;color:var(--gray-500)">접수를 완료하면 결제 페이지로 자동 연결됩니다</span></div>')
+                f'<span style="font-size:13px;color:var(--gray-500)">신청을 완료하면 결제 페이지로 자동 연결됩니다</span></div>')
 
     INSTRUCTORS = [
-        ("kim-dongseop.jpg", "김동섭", "성균관대학교 공학 박사", "전문위원 · AI 윤리 전문 교육 강사", "AI 기술 원리와 규제 동향, 기업 AI 활용 기준을 실무 사례로 강의합니다."),
-        ("lee-jaei.jpg", "이재이", "이화여자대학교 이학 석사", "전문위원 · AI 윤리 전문 교육 강사", "생성형 AI 활용 수칙과 검정 대비 핵심 정리를 담당합니다."),
+        ("kim-dongseop.jpg", "김동섭", "성균관대학교 공학 박사", "전문위원 · 과정 책임", "커리큘럼 구성과 수료 시험 출제·채점 기준을 담당합니다. AI 기술 원리와 규제 동향, 기업 AI 활용 기준이 전문 분야입니다."),
+        ("lee-jaei.jpg", "이재이", "이화여자대학교 이학 석사", "전문위원 · 과정 운영", "수강 안내와 질의응답, 수료 심사를 담당합니다. 생성형 AI 활용 수칙과 시험 대비 핵심 정리를 맡습니다."),
     ]
     inst_html = "".join(f"""
             <div class="tutor reveal">
@@ -2544,20 +2582,12 @@ def build_expert():
               </div>
             </div>""" for ph, nm, deg, role, desc in INSTRUCTORS)
 
-    CURRI_L2 = [
-        ("AI 윤리 핵심 원칙", "책임성·투명성·공정성·포용성, AI 윤리 실천 헌장, AI 활용 표기의 기본 원칙"),
-        ("AI기본법과 규제 기초", "2026년 1월 시행 AI기본법의 핵심 의무, 생성형 AI 표시·고지, EU AI Act 개요"),
-        ("안전한 생성형 AI 활용", "기밀·개인정보 보호, 저작권과 표절, 할루시네이션 검증, 입력 단계 수칙"),
-        ("현장 사례와 판단 기준", "기업·학교·공공 사례로 배우는 '어디까지 써도 되는가', 검정 대비 핵심 정리"),
-    ]
-    CURRI_L1 = [
-        ("조직 AI 컴플라이언스 설계", "AI 활용 가이드라인 수립, 위험 평가와 점검 체계, 내부 교육 설계"),
-        ("AI 윤리 교육·강의 역량", "대상별 커리큘럼 구성, 강의 자료와 사례 활용, 교육 운영 실무"),
-        ("사례 분석과 자문", "실제 사고 사례 분석, 조직 자문 프레임, 정책·가이드라인 검토"),
-        ("전문가 활동과 등재", "위원회 전문강사·자문 활동 안내, 공식 AI윤리전문가 등재 절차"),
-    ]
-    def curri(items):
-        return "".join(f'<li><strong>{t}</strong><span>{d}</span></li>' for t, d in items)
+    curri_html = "".join(f"""
+            <li class="lec reveal">
+              <div class="lec-head"><span class="lec-num">{i}강</span><strong>{t}</strong><span class="lec-time"><i data-lucide="clock"></i>{m}</span></div>
+              <p>{d}</p>
+              <div class="chips">{"".join(f'<span class="chip">{c}</span>' for c in chips)}</div>
+            </li>""" for i, (t, m, d, chips) in enumerate(CURRICULUM, 1))
 
     SAMPLE_Q = [
         ("생성형 AI로 초안을 쓴 보고서를 고객사에 제출하려 합니다. 가장 적절한 조치는?",
@@ -2566,10 +2596,12 @@ def build_expert():
           "AI 활용 사실은 밝히지 않는 것이 안전하다",
           "고객사가 묻기 전까지는 어떤 조치도 필요 없다"], 1,
          "결과물의 책임은 사람에게 있습니다. 사실관계 검증과 투명한 표기가 책임 있는 AI 활용의 기본 원칙입니다."),
-        ("업무 자료를 외부 생성형 AI 서비스에 입력하기 전에 가장 먼저 확인해야 할 것은?",
-         ["답변이 빨리 나오는지", "입력 내용에 기밀 정보나 개인정보가 포함되어 있는지",
-          "글자 수 제한", "프롬프트를 얼마나 길게 쓸 수 있는지"], 1,
-         "가장 흔한 사고는 입력 단계에서 일어납니다. 기밀·개인정보는 지우거나 조직이 승인한 도구만 사용해야 합니다."),
+        ("채용 서류를 자동으로 걸러 주는 AI를 도입하려 합니다. 도입 전에 반드시 점검해야 할 것은?",
+         ["처리 속도가 충분히 빠른지",
+          "특정 성별·연령·출신에 불리하게 작동하는 편향이 없는지와 결정에 대한 설명 가능성",
+          "경쟁사도 같은 도구를 쓰는지",
+          "지원자에게 알리지 않아도 되는지"], 1,
+         "자동화된 결정은 차별과 혐오를 그대로 학습할 수 있습니다. 공정성 점검과 사람의 최종 판단은 2강에서 다루는 핵심 기준입니다."),
         ("2026년 1월 시행된 AI기본법에 대한 설명으로 옳은 것은?",
          ["AI를 개발하는 기업에만 적용된다", "생성형 AI 산출물의 표시·고지 등 활용 단계의 의무도 포함한다",
           "윤리 권고일 뿐 법적 의무는 없다", "해외 기업과는 무관한 국내 지침이다"], 1,
@@ -2602,13 +2634,13 @@ def build_expert():
 
     CAREER = [
         ("file-check", "이력서의 확실한 한 줄",
-         "한국AI윤리위원회 명의의 자격증으로, AI를 '잘' 쓰는 것을 넘어 <strong>책임 있게 다룰 줄 아는 사람</strong>임을 공식적으로 증명합니다. AI 활용 능력이 평준화될수록 이 한 줄의 차별화 가치는 커집니다."),
-        ("building-2", "기업·기관에서 실제로 쓰입니다",
-         "AI기본법 시행으로 기업·기관마다 사내 AI 활용 기준과 임직원 교육을 맡을 사람이 필요해졌습니다. 자격 보유자는 그 역할의 <strong>가장 자연스러운 후보</strong>가 됩니다."),
+         f"한국AI윤리위원회 명의 「{DOC_FULL}」으로, AI를 '잘' 쓰는 것을 넘어 <strong>책임 있게 다룰 줄 아는 사람</strong>임을 교육 이력으로 증명합니다. AI 활용 능력이 평준화될수록 이 한 줄의 차별화 가치는 커집니다."),
+        ("building-2", "기업·기관이 실제로 찾는 스펙",
+         "AI기본법 시행으로 기업·기관마다 사내 AI 활용 기준과 임직원 교육을 맡을 사람이 필요해졌습니다. 체계적인 AI 윤리 교육을 수료한 사람은 그 역할의 <strong>가장 자연스러운 후보</strong>가 됩니다."),
         ("trending-up", "앞으로가 더 유망한 분야",
-         "AI가 확산될수록 AI 윤리·컴플라이언스 수요는 함께 커집니다. 규제가 막 시작된 지금이 <strong>가장 빠른 선점 시점</strong>이고, 1기 취득자는 이 분야의 첫 번째 경력자가 됩니다."),
-        ("users", "자격에서 활동으로 이어지는 경로",
-         "취득 후 위원회의 전문강사 양성·출강, 캠페인·자문 활동과 연계됩니다. 자격증이 종이로 끝나지 않고 <strong>실제 커리어</strong>로 이어지도록 위원회가 함께합니다."),
+         "AI가 확산될수록 AI 윤리·컴플라이언스 수요는 함께 커집니다. 규제가 막 시작된 지금이 <strong>가장 빠른 선점 시점</strong>이고, 1기 수료자는 이 분야의 첫 번째 경력자가 됩니다."),
+        ("users", "수료에서 활동으로 이어지는 경로",
+         "심화과정 수료자는 위원회 공식 AI윤리전문가로 위촉되어 홈페이지에 등재되고, 전문강사 양성·출강, 캠페인·자문 활동과 연계됩니다. 수료증이 종이로 끝나지 않고 <strong>실제 커리어</strong>로 이어지도록 위원회가 함께합니다."),
     ]
     career_cards = "\n".join(f"""          <article class="card reveal">
             <div class="card-icon"><i data-lucide="{ic}"></i></div>
@@ -2617,16 +2649,16 @@ def build_expert():
 
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
-        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
-        <span class="hl-pill" data-deadline="{DEADLINE_ISO}"><i data-lucide="badge-check"></i>1기 접수 마감 {DEADLINE} <b class="dday" data-dday></b> · 연 {QUOTA}명 한정 양성</span>
-        <h1>AI윤리전문가 자격과정</h1>
-        <p style="font-size:17.5px;max-width:740px">AI를 쓸 줄 아는 사람은 많습니다.<br>
+        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가 양성과정</p>
+        <span class="hl-pill" data-deadline="{DEADLINE_ISO}"><i data-lucide="badge-check"></i>한국AI윤리위원회 주관 · 1기 접수 마감 {DEADLINE} <b class="dday" data-dday></b> · 연 {QUOTA}명 한정 양성</span>
+        <h1>AI윤리전문가 양성과정</h1>
+        <p style="font-size:17.5px;max-width:760px">AI를 쓸 줄 아는 사람은 많습니다.<br>
            기업과 기관이 찾는 것은 AI를 <strong style="color:#6FE3D8">책임 있게 다룰 줄 아는 사람</strong>이고,<br>
-           그 증명이 한국AI윤리위원회의 「AI윤리전문가」 자격증입니다.<br>
-           <strong style="color:#fff">AI 규제 시대에 수요가 커지는 미래 유망 직업이자, 커리어의 가치를 높이는 전문 자격입니다.</strong></p>
+           그 역량을 한국AI윤리위원회 명의 「{DOC_FULL}」으로 증명합니다.<br>
+           <strong style="color:#fff">온라인 강의 {LECTURES}강과 수료 시험만으로, 이력서에 남는 전문 교육 이력을 완성하세요.</strong></p>
         <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:30px">
           <a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-light" href="#course">과정 안내 보기</a>
+          <a class="btn btn-light" href="#course">커리큘럼 보기</a>
           <a class="btn btn-light" href="quiz.html">3분 자가진단</a>
         </div>
       </div>
@@ -2637,7 +2669,7 @@ def build_expert():
         <div class="stats reveal">
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 1</div><div class="stat-label">AI기본법 시행</div><div class="stat-sub">국내 AI 의무 규제 시대 개막</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 8</div><div class="stat-label">EU AI Act 본격 집행</div><div class="stat-sub">글로벌 AI 규제 확산</div></div>
-          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2시간</div><div class="stat-label">2급 대표 과정</div><div class="stat-sub">온라인 교육 + 자격검정 원스톱</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">{LECTURES}강</div><div class="stat-label">온라인 강의 {TOTAL_TIME}</div><div class="stat-sub">강의 + 온라인 수료 시험 원스톱</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">1기</div><div class="stat-label">지금 모집 중</div><div class="stat-sub">첫 번째 전문가 그룹</div></div>
         </div>
       </div>
@@ -2655,7 +2687,7 @@ def build_expert():
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
           <strong>핵심은 하나입니다.</strong> 규제와 사고가 늘어날수록, 조직마다 "AI를 어디까지 어떻게 써야 하는가"에
-          답할 수 있는 사람이 필요해집니다. AI윤리전문가 자격과정은 그 답을 체계적으로 배우는 가장 빠른 경로입니다.
+          답할 수 있는 사람이 필요해집니다. AI윤리전문가 양성과정은 그 답을 체계적으로 배우고 증명하는 가장 빠른 경로입니다.
         </div>
       </div>
     </section>
@@ -2664,15 +2696,22 @@ def build_expert():
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Career Value</span>
-          <h2 class="h-sec">이 자격증은 커리어에 이렇게 작동합니다</h2>
-          <p class="h-sub">공부를 위한 공부가 아닙니다. 취득하는 순간부터 이력서와 실무에서 쓰입니다.</p>
+          <h2 class="h-sec">이 수료증은 커리어에 이렇게 작동합니다</h2>
+          <p class="h-sub">공부를 위한 공부가 아닙니다. 수료하는 순간부터 이력서와 실무에서 쓰입니다.</p>
         </div>
-        <div class="grid grid-2" style="margin-bottom:30px">
+        <div class="grid grid-2" style="margin-bottom:26px">
 {career_cards}
         </div>
-        <div class="grid grid-3">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">2급 취득</h3><p style="font-size:14px">책임 있는 AI 활용 역량을 증명하는 첫걸음</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 02</span><h3 style="font-size:16px">1급 · 심화</h3><p style="font-size:14px">교육·자문까지 가능한 전문가 역량</p></div>
+        <div class="resume-line reveal">
+          <span class="resume-label">이력서에는 이렇게 남습니다</span>
+          <div class="resume-rows">
+            <div><span class="resume-tag">기본과정</span><code>한국AI윤리위원회 주관 AI윤리전문가 양성과정(기본과정) 수료</code></div>
+            <div><span class="resume-tag resume-tag--adv">심화과정</span><code>한국AI윤리위원회 주관 AI윤리전문가 양성과정(심화과정) 수료 · 위원회 공식 AI윤리전문가 위촉(홈페이지 등재)</code></div>
+          </div>
+        </div>
+        <div class="grid grid-3" style="margin-top:26px">
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">기본과정 수료</h3><p style="font-size:14px">책임 있는 AI 활용 역량을 증명하는 첫걸음</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 02</span><h3 style="font-size:16px">심화과정 수료 · 공식 위촉</h3><p style="font-size:14px">위원회 공식 AI윤리전문가로 홈페이지 등재</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 03</span><h3 style="font-size:16px">위원회 활동 연계</h3><p style="font-size:14px">전문강사 · 캠페인 · 자문 활동으로 확장</p></div>
         </div>
       </div>
@@ -2681,25 +2720,25 @@ def build_expert():
     <section class="section" id="course">
       <div class="wrap">
         <div class="center" style="margin-bottom:44px">
-          <span class="eyebrow">Curriculum</span>
+          <span class="eyebrow">Programs</span>
           <h2 class="h-sec">미래 유망 직업, AI윤리전문가</h2>
           <p class="h-sub">AI 확산과 규제 강화로 수요가 커지는 유망 분야입니다. 현장에서 바로 쓰는 기준을 배우고,
-             <strong>온라인 교육 + 자격검정</strong>으로 커리어에 힘이 되는 위원회 명의 자격증까지 한 번에 완성합니다.</p>
+             <strong>온라인 강의 {LECTURES}강 + 온라인 수료 시험</strong>으로 커리어에 힘이 되는 위원회 명의 수료증까지 한 번에 완성합니다.</p>
         </div>
         <div class="grid grid-2" style="align-items:stretch">
           <article class="reveal" style="position:relative;overflow:hidden;border-radius:var(--radius-lg);padding:34px 30px;background:linear-gradient(150deg,#0F2A5F 0%,#1F5FE0 100%);color:#fff;display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 48px rgba(31,95,224,.35)">
             <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
               <span class="badge" style="background:#6FE3D8;color:#03302B">대표 과정 · 추천</span>
-              <span class="badge" style="background:rgba(255,255,255,.16);color:#fff">온라인 2시간 + 자격검정</span>
+              <span class="badge" style="background:rgba(255,255,255,.16);color:#fff">온라인 {LECTURES}강 + 수료 시험 {EXAM_BASIC[0]}문항</span>
             </div>
-            <h3 style="font-size:24px;letter-spacing:-.03em;color:#fff">AI윤리전문가 2급</h3>
+            <h3 style="font-size:24px;letter-spacing:-.03em;color:#fff">기본과정</h3>
             <p style="color:#CFE0FF;font-size:15.5px;line-height:1.8">
-              AI를 쓰는 사람이라면 누구나. 온라인 교육과 자격검정으로 <strong style="color:#fff">책임 있게 AI를 다룰 줄 아는 사람</strong>임을
-              한국AI윤리위원회 자격증으로 증명하세요. 전공·경력 제한 없이 전 과정 온라인으로 진행됩니다.</p>
+              AI를 쓰는 사람이라면 누구나. 온라인 강의 {LECTURES}강({TOTAL_TIME})을 이수하고 수료 시험({EXAM_BASIC[0]}문항, {EXAM_BASIC[1]}점 이상)을 통과하면
+              <strong style="color:#fff">책임 있게 AI를 다룰 줄 아는 사람</strong>임을 한국AI윤리위원회 명의 수료증으로 증명합니다. 전공·경력 제한 없이 전 과정 온라인으로 진행됩니다.</p>
             <div style="display:flex;gap:7px;flex-wrap:wrap">
-              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#AI 윤리 핵심 원칙</span>
-              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#안전한 생성형 AI 활용</span>
-              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#AI기본법 기초</span>
+              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#위원회 명의 수료증</span>
+              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#이력서 · 포트폴리오</span>
+              <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#취업 · 이직 · 직무</span>
             </div>
             <div class="price-line">
               <span class="price-list">정가 {won(LIST_L2)}</span>
@@ -2707,41 +2746,55 @@ def build_expert():
               <span class="price-tag">1기 특별가</span>
             </div>
             <div style="margin-top:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-              <a class="btn btn-white" href="expert-apply.html?course=2">응시 접수하기 <i data-lucide="arrow-right"></i></a>
+              <a class="btn btn-white" href="expert-apply.html?course=2">기본과정 신청하기 <i data-lucide="arrow-right"></i></a>
               <span style="font-size:12.5px;color:#AFC4E4">접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</span>
             </div>
           </article>
           <article class="card reveal" style="display:flex;flex-direction:column;gap:13px">
             <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
-              <span class="badge badge--teal">1급 · 심화</span>
-              <span style="font-size:13px;font-weight:700;color:#00857A">온라인 4시간 + 자격검정</span>
+              <span class="badge badge--teal">전문가 등재 과정</span>
+              <span style="font-size:13px;font-weight:700;color:#00857A">온라인 {LECTURES}강 + 심화 수료 시험 {EXAM_ADV[0]}문항</span>
             </div>
-            <h3 style="font-size:20px">AI윤리전문가 1급</h3>
-            <p style="font-size:14.5px;line-height:1.75">2급 취득 후 도전하는 전문가 과정입니다. 기업 AI 컴플라이언스와
-               AI 윤리 교육·자문 역량까지 갖춘, 조직을 <strong>가르치고 이끄는 사람</strong>을 위한 인증입니다.</p>
+            <h3 style="font-size:20px">심화과정</h3>
+            <p style="font-size:14.5px;line-height:1.75">같은 {LECTURES}강을 이수하고 심화 수료 시험({EXAM_ADV[0]}문항, {EXAM_ADV[1]}점 이상)으로 더 높은 기준을 적용하는 과정입니다.
+               수료하면 수료증과 함께 <strong>위원회 공식 AI윤리전문가로 위촉되어 홈페이지 전문가 명단에 오르고</strong>,
+               전문강사·자문 등 위원회 전문 활동으로 이어집니다. 조직을 가르치고 이끄는 사람을 위한 과정입니다.</p>
             <div style="display:flex;gap:7px;flex-wrap:wrap">
-              <span class="chip">#기업 AI 컴플라이언스</span><span class="chip">#교육·강의 역량</span><span class="chip">#사례 분석</span>
+              <span class="chip">#공식 위촉 · 홈페이지 등재</span><span class="chip">#전문강사 · 자문 활동</span><span class="chip">#위촉장</span>
             </div>
             <div class="price-line price-line--light" style="margin-top:auto">
               <span class="price-list">정가 {won(LIST_L1)}</span>
               {f'<span class="price-now">{won(PRICE_L1)}</span><span class="price-tag">1기 특별가</span>' if PRICE_L1 else '<span class="price-tag">1기 특별가 · 결제 페이지에서 확인</span>'}
             </div>
-            <a class="btn btn-ghost" style="align-self:flex-start" href="expert-apply.html?course=1">응시 접수하기 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-ghost" style="align-self:flex-start" href="expert-apply.html?course=1">심화과정 신청하기 <i data-lucide="arrow-right"></i></a>
           </article>
         </div>
-        <div class="curri-wrap">
-          <details class="acc curri">
-            <summary>2급 커리큘럼 미리보기 <span class="curri-meta">온라인 교육 약 2시간 · 4개 모듈</span></summary>
-            <div class="acc-body"><ol class="curri-list">{curri(CURRI_L2)}</ol></div>
-          </details>
-          <details class="acc curri">
-            <summary>1급 커리큘럼 미리보기 <span class="curri-meta">온라인 교육 약 4시간 · 4개 모듈</span></summary>
-            <div class="acc-body"><ol class="curri-list">{curri(CURRI_L1)}</ol></div>
-          </details>
-          <p class="field-hint" style="margin-top:10px">교육 구성은 운영 상황에 따라 일부 조정될 수 있으며, 확정 커리큘럼은 접수 후 이메일로 안내됩니다.</p>
+
+        <div class="curri-block" id="curriculum">
+          <div class="center" style="margin:54px 0 26px">
+            <span class="eyebrow">Curriculum</span>
+            <h2 class="h-sec">온라인 강의 {LECTURES}강, {TOTAL_TIME}</h2>
+            <p class="h-sub" style="margin:0 auto">AI 윤리의 개념과 핵심 가치에서 시작해 현장 쟁점, 국제 원칙, 법제화까지.
+               두 과정은 커리큘럼이 같고, 수료 시험의 문항 수와 기준만 다릅니다.</p>
+          </div>
+          <ol class="lec-list">{curri_html}
+          </ol>
+          <div class="exam-grid reveal">
+            <div class="exam-card">
+              <span class="exam-tag">기본과정</span>
+              <strong>온라인 수료 시험 {EXAM_BASIC[0]}문항</strong>
+              <span>100점 만점에 <b>{EXAM_BASIC[1]}점 이상</b>이면 수료 · 불합격 시 1회 무료 재응시</span>
+            </div>
+            <div class="exam-card exam-card--adv">
+              <span class="exam-tag">심화과정</span>
+              <strong>온라인 심화 수료 시험 {EXAM_ADV[0]}문항</strong>
+              <span>100점 만점에 <b>{EXAM_ADV[1]}점 이상</b>이면 수료 · 불합격 시 1회 무료 재응시 · 수료 후 공식 위촉·등재</span>
+            </div>
+          </div>
+          <p class="field-hint" style="margin-top:12px">강의 구성은 운영 상황에 따라 일부 조정될 수 있으며, 수강 링크와 시험 안내는 결제 완료 후 이메일로 발송됩니다.</p>
         </div>
         <div class="notice" style="margin-top:24px">
-          <strong>위원회 직접 운영:</strong> 본 과정은 한국AI윤리위원회(KAIEC)가 교육 콘텐츠 구성부터 검정, 자격증 발급까지
+          <strong>위원회 직접 운영:</strong> 본 과정은 한국AI윤리위원회(KAIEC)가 커리큘럼 구성부터 수료 시험, 수료증 발급까지
           직접 운영합니다. 커리큘럼은 위원회 6개 분과 전문위원의 자문과 검토를 거쳐 구성됩니다.
         </div>
       </div>
@@ -2751,21 +2804,21 @@ def build_expert():
       <div class="wrap">
         <div class="split" style="align-items:start">
           <div>
-            <span class="eyebrow">Instructors & Trust</span>
-            <h2 class="h-sec">위원회 전문위원이 직접 가르치고, 위원회가 검정합니다</h2>
-            <p class="h-sub">외주 강사가 아닌 한국AI윤리위원회 소속 석·박사 전문위원이 교육을 맡고,
-               검정과 자격증 발급까지 위원회가 직접 운영합니다.</p>
+            <span class="eyebrow">Operation & Trust</span>
+            <h2 class="h-sec">위원회 전문위원이 과정을 운영하고, 위원회가 수료 여부를 심사합니다</h2>
+            <p class="h-sub">한국AI윤리위원회 소속 석·박사 전문위원이 커리큘럼 구성과 수료 시험 출제, 질의응답을 맡고,
+               수료 심사와 수료증 발급까지 위원회가 직접 운영합니다.</p>
             <div class="tutor-list">{inst_html}</div>
           </div>
           <div class="trust-col">
             <div class="cert-visual reveal">
-              <img src="assets/img/cards/card-cert.jpg" alt="한국AI윤리위원회 명의 AI윤리전문가 자격증(예시)" loading="lazy">
-              <span>합격 시 발급되는 한국AI윤리위원회 명의 자격증 (예시)</span>
+              <img src="assets/img/cards/card-cert.jpg" alt="한국AI윤리위원회 명의 {DOC_FULL}(예시)" loading="lazy">
+              <span>수료 시 발급되는 한국AI윤리위원회 명의 수료증 (예시)</span>
             </div>
             <ul class="trust-list">
-              <li><i data-lucide="award"></i><div><strong>한국AI윤리위원회 주관 · 발급</strong><span>커리큘럼 구성, 자격검정, 자격증 발급까지 위원회가 직접 운영</span></div></li>
+              <li><i data-lucide="award"></i><div><strong>한국AI윤리위원회 주관 · 발급</strong><span>커리큘럼 구성, 수료 시험, 수료증 발급까지 위원회가 직접 운영</span></div></li>
               <li><i data-lucide="building-2"></i><div><strong>성균관대학교 RISE사업 공식 지원기업 운영</strong><span>접수·결제는 공식 지원기업 성균관컨설팅의 안전결제로 처리</span></div></li>
-              <li><i data-lucide="shield-check"></i><div><strong>합격 기준 70점 · 불합격 시 1회 무료 재응시</strong><span>교육 내용 안에서 출제되어 충실히 들으면 준비할 수 있습니다</span></div></li>
+              <li><i data-lucide="shield-check"></i><div><strong>수료 기준 기본 {EXAM_BASIC[1]}점 · 심화 {EXAM_ADV[1]}점 · 1회 무료 재응시</strong><span>강의 내용 안에서 출제되어 충실히 들으면 준비할 수 있습니다</span></div></li>
             </ul>
           </div>
         </div>
@@ -2776,11 +2829,11 @@ def build_expert():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Sample Questions</span>
-          <h2 class="h-sec">검정은 이런 문항이 나옵니다</h2>
+          <h2 class="h-sec">수료 시험은 이런 문항이 나옵니다</h2>
           <p class="h-sub" style="margin:0 auto">예시 문항 3개를 직접 풀어보세요. 보기를 누르면 정답과 해설이 바로 나옵니다.</p>
         </div>
         <div class="sq-list">{sq_html}</div>
-        <p class="field-hint" style="text-align:center;margin-top:16px">예시 문항은 교육 내용의 방향을 보여주기 위한 것으로, 실제 검정 문항과 다를 수 있습니다.</p>
+        <p class="field-hint" style="text-align:center;margin-top:16px">예시 문항은 강의 내용의 방향을 보여주기 위한 것으로, 실제 시험 문항과 다를 수 있습니다.</p>
       </div>
     </section>
 
@@ -2788,24 +2841,24 @@ def build_expert():
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Benefits</span>
-          <h2 class="h-sec" style="color:#fff">취득하면 달라지는 것</h2>
-          <p class="h-sub" style="color:#9FB3D1">미래 유망 직업 AI윤리전문가, 취업·이직·직무 전환 등 커리어에 힘이 되는 자격입니다.</p>
+          <h2 class="h-sec" style="color:#fff">수료하면 달라지는 것</h2>
+          <p class="h-sub" style="color:#9FB3D1">미래 유망 직업 AI윤리전문가, 취업·이직·직무 전환 등 커리어에 힘이 되는 전문 교육 이력입니다.</p>
         </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
             <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="award"></i></div>
-            <h3 style="color:#fff;font-size:17px">위원회 명의 자격증</h3>
-            <p style="color:#9FB3D1">「AI윤리전문가」 자격증 발급, 이력서·포트폴리오에 기재해 취업·이직 등 커리어에 활용할 수 있는 공식 증빙</p>
+            <h3 style="color:#fff;font-size:17px">위원회 명의 수료증</h3>
+            <p style="color:#9FB3D1">「{DOC_FULL}」 발급, 이력서·포트폴리오의 교육 이력으로 기재해 취업·이직 등 커리어에 활용하는 공식 증빙</p>
           </div>
           <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
-            <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="users"></i></div>
-            <h3 style="color:#fff;font-size:17px">전문가 네트워크</h3>
-            <p style="color:#9FB3D1">위원회 전문가 그룹에 참여해 정보와 활동 기회를 함께 나눕니다</p>
+            <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="badge-check"></i></div>
+            <h3 style="color:#fff;font-size:17px">공식 위촉 · 홈페이지 등재</h3>
+            <p style="color:#9FB3D1">심화과정 수료자는 위원회 공식 AI윤리전문가로 위촉되어 위촉장을 받고 홈페이지 전문가 명단에 프로필이 공개됩니다</p>
           </div>
           <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
             <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="monitor-play"></i></div>
             <h3 style="color:#fff;font-size:17px">강사 활동 연계</h3>
-            <p style="color:#9FB3D1">우수 수료자는 전문강사 양성과 출강 기회 안내 대상이 됩니다</p>
+            <p style="color:#9FB3D1">심화과정 우수 수료자는 전문강사 양성과 출강 기회 안내 대상이 됩니다</p>
           </div>
           <div class="card center reveal" style="background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.10)">
             <div class="card-icon" style="margin:0 auto 16px;background:rgba(111,227,216,.16);color:#6FE3D8"><i data-lucide="sparkles"></i></div>
@@ -2827,9 +2880,9 @@ def build_expert():
           <article class="card reveal"><div class="card-icon"><i data-lucide="briefcase"></i></div>
             <h3>기업 실무자·관리자</h3><p>사내 AI 도입과 활용 기준을 만들어야 하는 분. 규제 대응의 첫 담당자가 되세요.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
-            <h3>강사·교사·교수자</h3><p>AI 윤리 교육 수요가 커지는 지금, 가르칠 수 있는 자격과 콘텐츠를 갖추세요.</p></article>
+            <h3>강사·교사·교수자</h3><p>AI 윤리 교육 수요가 커지는 지금, 가르칠 수 있는 근거와 콘텐츠를 갖추세요.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="school"></i></div>
-            <h3>대학(원)생·취업준비생</h3><p>AI 활용 능력에 '책임'이라는 차별화를 더하세요. 이력서에 기재 가능한 자격입니다.</p></article>
+            <h3>대학(원)생·취업준비생</h3><p>AI 활용 능력에 '책임'이라는 차별화를 더하세요. 이력서에 기재하는 전문 교육 이력입니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="building-2"></i></div>
             <h3>공공·기관 종사자</h3><p>기관의 AI 활용 지침과 교육을 준비해야 하는 분께 실무 기준을 제공합니다.</p></article>
         </div>
@@ -2840,17 +2893,17 @@ def build_expert():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">응시 절차</h2>
+          <h2 class="h-sec">수강 절차</h2>
         </div>
         <div class="grid grid-4">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 접수 및 결제</h3><p style="font-size:14px">접수 후 안전결제로 응시료 납부</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">온라인 교육 수강</h3><p style="font-size:14px">2급 2시간 · 1급 4시간</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자격검정 응시</h3><p style="font-size:14px">온라인 검정</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">자격증 발급</h3><p style="font-size:14px">합격 시 위원회 명의 발급</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 신청 및 결제</h3><p style="font-size:14px">신청 후 안전결제로 교육비 납부</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">온라인 강의 수강</h3><p style="font-size:14px">{LECTURES}강 · {TOTAL_TIME}</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">온라인 수료 시험</h3><p style="font-size:14px">기본 {EXAM_BASIC[0]}문항 · 심화 {EXAM_ADV[0]}문항</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">수료증 발급</h3><p style="font-size:14px">위원회 명의 발급 · 심화는 공식 위촉·등재</p></div>
         </div>
         {pay_btns}
-        <p class="field-hint" style="margin-top:18px;text-align:center">1기 접수 마감 {DEADLINE}(연 {QUOTA}명 한정 양성) · 2급 {won(PRICE_L2)}(정가 {won(LIST_L2)}) · 1급 {won(PRICE_L1)}(정가 {won(LIST_L1)})<br>
-           응시료 결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
+        <p class="field-hint" style="margin-top:18px;text-align:center">1기 접수 마감 {DEADLINE}(연 {QUOTA}명 한정 양성) · 기본과정 {won(PRICE_L2)}(정가 {won(LIST_L2)}) · 심화과정 {won(PRICE_L1)}(정가 {won(LIST_L1)})<br>
+           교육비 결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
       </div>
     </section>
 
@@ -2861,48 +2914,50 @@ def build_expert():
           <h2 class="h-sec">자주 묻는 질문</h2>
         </div>
         <details class="acc">
-          <summary>전공이나 경력이 없어도 응시할 수 있나요?</summary>
-          <div class="acc-body">네. AI윤리전문가 과정은 전공·경력 제한이 없습니다. 생성형 AI를 사용해 본 경험이 있다면
-            누구나 2급부터 시작하실 수 있으며, 교육이 기초부터 다루므로 사전 지식이 없어도 충분히 따라올 수 있습니다.</div>
+          <summary>전공이나 경력이 없어도 수강할 수 있나요?</summary>
+          <div class="acc-body">네. AI윤리전문가 양성과정은 전공·경력 제한이 없습니다. 생성형 AI를 사용해 본 경험이 있다면
+            누구나 기본과정부터 시작하실 수 있으며, 강의가 개념과 기초부터 다루므로 사전 지식이 없어도 충분히 따라올 수 있습니다.</div>
         </details>
         <details class="acc">
-          <summary>교육과 검정은 모두 온라인인가요?</summary>
-          <div class="acc-body">네. 교육 수강부터 자격검정, 자격증 발급 안내까지 전 과정이 온라인으로 진행됩니다.
+          <summary>강의와 시험은 모두 온라인인가요?</summary>
+          <div class="acc-body">네. 강의 수강부터 수료 시험, 수료증 발급 안내까지 전 과정이 온라인으로 진행됩니다.
             직장·학업과 병행하기 쉽도록 설계되어 있습니다.</div>
         </details>
         <details class="acc">
-          <summary>2급과 1급 중 무엇부터 시작해야 하나요?</summary>
-          <div class="acc-body">처음이라면 2급(2시간)을 권합니다. AI 윤리의 기준과 안전 수칙을 빠르게 갖출 수 있습니다.
-            교육·자문·관리 등 전문 활동을 목표한다면 1급(4시간)까지 이어가는 것을 추천합니다.
-            상세 응시 기준은 접수 후 안내드립니다.</div>
+          <summary>기본과정과 심화과정은 무엇이 다른가요?</summary>
+          <div class="acc-body">두 과정 모두 같은 온라인 강의 {LECTURES}강({TOTAL_TIME})을 이수합니다. 기본과정은 수료 시험({EXAM_BASIC[0]}문항)에서 {EXAM_BASIC[1]}점 이상이면 수료하고 위원회 명의 수료증을 받습니다.
+            심화과정은 {EXAM_ADV[0]}문항에서 {EXAM_ADV[1]}점 이상이라는 더 높은 기준을 적용합니다. 수료하면 수료증과 함께 위원회 공식 AI윤리전문가로 위촉되어 홈페이지 전문가 명단에 오르고, 전문강사·자문 활동으로 이어집니다.
+            처음이라면 기본과정을, 전문가 등재와 교육·자문 활동을 목표한다면 심화과정을 권합니다.</div>
         </details>
         <details class="acc">
-          <summary>자격증은 어떻게 활용할 수 있나요?</summary>
-          <div class="acc-body">한국AI윤리위원회 명의로 발급되는 자격증으로, 이력서·포트폴리오에 기재하실 수 있습니다.
-            또한 우수 수료자는 위원회의 전문강사 양성·출강, Fellowship·캠페인 등 실제 활동 기회와 연계됩니다.</div>
+          <summary>수료증은 어떤 문서이고 어떻게 활용할 수 있나요?</summary>
+          <div class="acc-body">한국AI윤리위원회가 주관하는 전문 교육과정을 이수하고 수료 시험을 통과했음을 증명하는 위원회 명의의 공식 문서입니다.
+            국가가 인정하는 자격 제도와는 별개의 교육 이력으로, 이력서·포트폴리오의 교육·연수 항목에
+            "한국AI윤리위원회 주관 AI윤리전문가 양성과정 수료"로 기재하실 수 있습니다.
+            심화과정 수료자는 위원회 공식 AI윤리전문가로 위촉되어 홈페이지 프로필 주소를 함께 제시할 수 있고, 심화과정 우수 수료자는 전문강사 양성·출강, Fellowship·캠페인 등 실제 활동 기회와 연계됩니다.</div>
         </details>
         <details class="acc">
-          <summary>응시료 결제는 어떻게 하나요?</summary>
-          <div class="acc-body">응시료는 성균관대학교 RISE사업 공식 지원기업인 성균관컨설팅(skkc.co.kr)의 안전결제(신용카드·간편결제)로
-            납부하실 수 있습니다. 접수를 완료하면 결제 페이지로 자동 연결되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
+          <summary>교육비 결제는 어떻게 하나요?</summary>
+          <div class="acc-body">교육비는 성균관대학교 RISE사업 공식 지원기업인 성균관컨설팅(skkc.co.kr)의 안전결제(신용카드·간편결제)로
+            납부하실 수 있습니다. 신청을 완료하면 결제 페이지로 자동 연결되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
             카드전표 등 결제 증빙은 결제 시 발급됩니다.</div>
         </details>
         <details class="acc">
-          <summary>응시 비용과 접수 마감은 언제인가요?</summary>
+          <summary>교육비와 접수 마감은 언제인가요?</summary>
           <div class="acc-body">1기 접수는 {DEADLINE}까지이며, 전문성 있는 인력 양성을 위해 연 {QUOTA}명 한정으로 선발합니다.
-            2급은 정가 {won(LIST_L2)}에서 1기 특별가 {won(PRICE_L2)}, 1급은 정가 {won(LIST_L1)}에서 1기 특별가 {won(PRICE_L1)}입니다.
-            비용에는 온라인 교육, 자격검정 1회, 자격증 발급이 모두 포함됩니다.</div>
+            기본과정은 정가 {won(LIST_L2)}에서 1기 특별가 {won(PRICE_L2)}, 심화과정은 정가 {won(LIST_L1)}에서 1기 특별가 {won(PRICE_L1)}입니다.
+            비용에는 온라인 강의 {LECTURES}강, 수료 시험(재응시 1회 포함), 수료증 발급이 모두 포함됩니다.</div>
         </details>
         <details class="acc">
-          <summary>자격검정은 어떻게 진행되나요?</summary>
-          <div class="acc-body">강의 수강을 마친 뒤 안내된 링크로 온라인 검정에 응시합니다. 2급은 객관식 30문항,
-            1급은 객관식 40문항으로 구성되며 응시 시간은 60분, 100점 만점에 70점 이상이면 합격입니다.
-            문항은 교육 내용 안에서 출제되므로 강의를 충실히 들으면 충분히 준비할 수 있습니다.</div>
+          <summary>수료 시험은 어떻게 진행되나요?</summary>
+          <div class="acc-body">강의 수강을 마친 뒤 안내된 링크로 온라인 시험에 응시합니다. 기본과정은 수료 시험 {EXAM_BASIC[0]}문항(100점 만점)에서 {EXAM_BASIC[1]}점 이상,
+            심화과정은 {EXAM_ADV[0]}문항에서 {EXAM_ADV[1]}점 이상이면 수료입니다.
+            문항은 강의 내용 안에서 출제되므로 {LECTURES}강을 충실히 들으면 충분히 준비할 수 있습니다.</div>
         </details>
         <details class="acc">
-          <summary>불합격하면 어떻게 되나요? 자격증은 언제 받나요?</summary>
-          <div class="acc-body">불합격 시 추가 비용 없이 1회 재응시할 수 있습니다. 합격자에게는 합격 확인 후
-            7일 이내에 「AI윤리전문가」 자격증(PDF)을 이메일로 발급하며, 자격번호로 발급 사실을 확인할 수 있습니다.
+          <summary>기준에 못 미치면 어떻게 되나요? 수료증은 언제 받나요?</summary>
+          <div class="acc-body">불합격 시 추가 비용 없이 1회 재응시할 수 있습니다. 수료자에게는 결과 확인 후
+            7일 이내에 「{DOC_FULL}」(PDF)을 이메일로 발급하며, 심화과정 수료자에게는 위촉·등재 신청 방법을 함께 안내합니다.
             기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>로 보내주세요.</div>
         </details>
       </div>
@@ -2913,7 +2968,7 @@ def build_expert():
         <div class="cta-band reveal">
           <div>
             <h2>유망한 분야는 먼저 시작한 사람의 것입니다</h2>
-            <p>AI 규제 시대의 전문 자격, AI윤리전문가. 1기 접수 마감 {DEADLINE}, 연 {QUOTA}명 한정 양성입니다.</p>
+            <p>AI 규제 시대에 기업과 기관이 찾는 역량, AI윤리전문가. 1기 접수 마감 {DEADLINE}, 연 {QUOTA}명 한정 양성입니다.</p>
           </div>
           <div class="btns">
             <a class="btn btn-white" href="{CERT_HREF}">{CERT_CTA}</a>
@@ -2923,31 +2978,38 @@ def build_expert():
       </div>
     </section>"""
 
-    course_ld = f"""<script type="application/ld+json">
+    def course_ld(name, desc, price, url):
+        return f"""<script type="application/ld+json">
 {{
   "@context": "https://schema.org",
   "@type": "Course",
-  "name": "AI윤리전문가 2급 자격과정",
-  "description": "한국AI윤리위원회가 직접 운영하는 AI윤리전문가 2급 자격과정. 온라인 교육 2시간과 온라인 자격검정으로 위원회 명의 자격증을 발급합니다.",
+  "name": "{name}",
+  "description": "{desc}",
   "provider": {{"@type": "Organization", "name": "{SITE_NAME}", "url": "{SITE_URL}/"}},
   "inLanguage": "ko-KR",
-  "educationalCredentialAwarded": "AI윤리전문가 2급 (한국AI윤리위원회)",
+  "educationalCredentialAwarded": "{DOC_FULL} ({SITE_NAME})",
   "offers": {{
     "@type": "Offer",
-    "price": "{PRICE_L2}",
+    "price": "{price}",
     "priceCurrency": "KRW",
     "availability": "https://schema.org/InStock",
-    "validThrough": "2026-10-30",
-    "url": "{SITE_URL}{url_for("expert-apply.html")}"
+    "validThrough": "{DEADLINE_ISO}",
+    "url": "{url}"
   }},
   "hasCourseInstance": {{
     "@type": "CourseInstance",
     "courseMode": "online",
-    "courseWorkload": "PT2H"
+    "courseWorkload": "{TOTAL_ISO}"
   }}
 }}
 </script>
 """
+    ld = (course_ld("AI윤리전문가 양성과정 기본과정",
+                    f"한국AI윤리위원회가 주관하는 AI윤리전문가 양성과정 기본과정. 온라인 강의 {LECTURES}강({TOTAL_TIME})과 온라인 수료 시험({EXAM_BASIC[0]}문항, {EXAM_BASIC[1]}점 이상)으로 위원회 명의 수료증을 발급합니다.",
+                    PRICE_L2, f"{SITE_URL}{url_for('expert-apply.html')}?course=2")
+          + course_ld("AI윤리전문가 양성과정 심화과정",
+                      f"한국AI윤리위원회가 주관하는 AI윤리전문가 양성과정 심화과정. 온라인 강의 {LECTURES}강과 심화 수료 시험({EXAM_ADV[0]}문항, {EXAM_ADV[1]}점 이상)을 통과하면 수료증과 함께 위원회 공식 AI윤리전문가로 위촉되어 홈페이지 전문가 명단에 오릅니다.",
+                      PRICE_L1, f"{SITE_URL}{url_for('expert-apply.html')}?course=1"))
     sq_js = """  <script>
   (function(){
     document.querySelectorAll('.sq').forEach(function(q){
@@ -2966,20 +3028,20 @@ def build_expert():
   })();
   </script>
 """
-    page("expert.html", "AI윤리전문가 자격과정 (2급·1급)",
-         "AI기본법 시행 시대, 한국AI윤리위원회 AI윤리전문가 자격과정. 2급(2시간)·1급(4시간) 온라인 교육과 자격검정으로 AI 윤리 전문 역량을 인증받으세요. 1기 모집 중.",
-         body, extra_head=course_ld, extra_script=sq_js, sticky="all",
-         keywords=["AI윤리전문가", "AI 윤리 자격증", "AI 윤리 자격과정", "AI 윤리 교육", "AI기본법",
+    page("expert.html", "AI윤리전문가 양성과정 (기본·심화) 1기 모집",
+         f"한국AI윤리위원회 주관 AI윤리전문가 양성과정. 온라인 강의 {LECTURES}강({TOTAL_TIME})과 온라인 수료 시험으로 위원회 명의 수료증을 받고, 심화과정은 공식 AI윤리전문가로 위촉·등재됩니다. 1기 모집 중.",
+         body, extra_head=ld, extra_script=sq_js, sticky="all",
+         keywords=["AI윤리전문가", "AI윤리전문가 양성과정", "AI 윤리 교육 수료증", "AI 윤리 전문가 과정", "AI 윤리 교육", "AI기본법",
                    "AI 컴플라이언스", "인공지능 윤리 전문가", "생성형 AI 교육", "AI 리터러시", "AI 거버넌스"])
 
 
 # -------------------------------------------------------- expert-apply.html
 def build_expert_apply():
-    """AI윤리전문가 응시 접수 폼 (자체 코딩 · 전환·자기설득 중심 개편 2026.09)
-    - 과정 선택 → 활용 목적(자기설득) → 응시자 정보 → 절차·검정 안내 → 개인정보 동의 → 결제
+    """AI윤리전문가 양성과정 수강 신청 폼 (자체 코딩 · 전환·자기설득 중심 개편 2026.09, 양성과정 표기 2026.09.14)
+    - 과정 선택 → 수강 목적(자기설득) → 수강자 정보 → 절차·수료 시험 안내 → 개인정보 동의 → 결제
     - 제출 시 시트 웹훅으로 접수 기록 + 위원회 알림 메일, 완료 화면에서 결제 페이지로 자동 이동"""
     PURPOSES = [
-        "이력·커리어에 AI 윤리 전문 자격증을 추가하고 싶습니다.",
+        "이력서와 포트폴리오에 AI 윤리 전문 교육 이력(수료증)을 추가하고 싶습니다.",
         "현재 직무에서 AI 윤리 역량을 활용하고 싶습니다.",
         "기업·기관의 AI 윤리·컴플라이언스 관련 업무에 활용하고 싶습니다.",
         "무분별한 AI 활용의 문제와 위험성에 관심이 있어 올바른 AI 활용과 윤리를 배우고 싶습니다.",
@@ -2998,10 +3060,10 @@ def build_expert_apply():
         "대학생·대학원생", "기업·기관 재직자", "교사·강사", "교수·연구자",
         "취업준비생", "프리랜서·전문직", "사업자·기업 대표", "기타"])
     USE_CARDS = [
-        ("award", "자격증 발급", "AI윤리전문가 1급 자격증 발급"),
-        ("badge-check", "위원회 홈페이지 등록", "위원회 홈페이지에 등록되어 전문 이력으로 활용"),
+        ("award", "위원회 명의 수료증", "「AI윤리전문가 양성과정 수료증」(심화과정) 발급"),
+        ("badge-check", "공식 위촉 · 홈페이지 등재", "위원회 공식 AI윤리전문가로 위촉되어 홈페이지 전문가 명단에 등재"),
         ("monitor-play", "전문강사·교육 활동", "AI 윤리 관련 전문강사 및 교육 활동에 활용"),
-        ("briefcase", "전문 활동 영역 확대", "AI 윤리·책임 있는 AI 활용 관련 다양한 전문 활동에 활용"),
+        ("briefcase", "전문 활동 영역 확대", "AI 윤리·책임 있는 AI 활용 관련 다양한 전문 활동으로 확장"),
     ]
     USE_HTML = "".join(
         f'<div class="use-card"><i data-lucide="{ic}"></i><strong>{t}</strong><span>{d}</span></div>'
@@ -3011,83 +3073,83 @@ def build_expert_apply():
       <div class="gform-wrap">
 
         <div class="gform-card gform-head">
-          <span class="gform-kicker">AI윤리전문가 1기 · 응시 접수</span>
-          <h1>한국AI윤리위원회 AI윤리전문가 1기 응시 접수</h1>
+          <span class="gform-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정 1기</span>
+          <h1>AI윤리전문가 양성과정 1기 수강 신청</h1>
           <p class="gform-lead">2026년, 기업·기관의 AI 활용 확대와 함께 ‘AI 윤리 전문가’의 역할이 커지고 있습니다.</p>
           <p>생성형 AI가 기업·기관·학교의 실제 업무 전반으로 확산되면서 저작권, 개인정보, 정보보안,
              할루시네이션, 편향과 차별, 결과물의 신뢰성과 책임까지 AI 윤리는 중요한 전문 영역으로 자리 잡고 있습니다.</p>
-          <p>AI윤리전문가는 이러한 변화에 필요한 AI 윤리 지식과 실무 판단 역량을 체계적으로 학습하고 검정하여,
-             이력과 커리어에 AI 윤리 전문 자격증을 더할 수 있는 자격과정입니다.</p>
-          <p>자격 취득 후에는 등급에 따라 취업·이직·직무 활용부터 전문강사·교육 활동까지 다양한 영역에서 활용할 수 있습니다.</p>
+          <p>AI윤리전문가 양성과정은 이러한 변화에 필요한 AI 윤리 지식과 실무 판단 역량을 온라인 강의 {LECTURES}강({TOTAL_TIME})으로 체계적으로 배우고 수료 시험으로 확인하여,
+             이력서와 커리어에 한국AI윤리위원회 명의 「{DOC_FULL}」을 더하는 전문 교육과정입니다.</p>
+          <p>수료 후에는 취업·이직·현재 직무에 바로 활용할 수 있고, 심화과정은 위원회 공식 AI윤리전문가 위촉과 전문강사·교육 활동까지 이어집니다.</p>
           <div class="gform-callout"><i data-lucide="trending-up"></i>
             <div><strong>AI 윤리·거버넌스, 연평균 44% 이상 성장하는 전문분야.</strong><br>
-                 AI윤리전문가 자격이 당신의 새로운 전문 경쟁력이 됩니다.
+                 AI윤리전문가 양성과정 수료가 당신의 새로운 전문 경쟁력이 됩니다.
                  <small class="src">출처: MarketsandMarkets, AI Governance Market 2024~2029 (CAGR 45.3%)</small></div></div>
           <div class="gform-urgency"><i data-lucide="clock"></i> 1기 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</div>
-          <p class="gform-org-note">한국AI윤리위원회 주관 · 성균관컨설팅 자격시험 운영</p>
+          <p class="gform-org-note">한국AI윤리위원회 주관 · 성균관컨설팅 교육 운영(접수·결제)</p>
         </div>
 
         <form id="examForm" novalidate>
 
           <div class="gform-card" id="secCourse">
             <div class="gform-sec">SECTION 1</div>
-            <h2>응시 과정 선택 <span class="req">*</span></h2>
-            <p class="gform-desc">응시하실 과정을 선택해 주세요.</p>
+            <h2>수강 과정 선택 <span class="req">*</span></h2>
+            <p class="gform-desc">수강하실 과정을 선택해 주세요. 두 과정 모두 같은 온라인 강의 {LECTURES}강을 이수하며, 수료 시험의 기준과 수료 후 혜택이 다릅니다.</p>
             <div class="choice-list">
               <label class="choice">
-                <input type="radio" name="course" value="2급">
+                <input type="radio" name="course" value="기본과정">
                 <span class="choice-radio"></span>
                 <span class="choice-body">
                   <span class="choice-badge">대표 과정</span>
-                  <strong>AI윤리전문가 2급 자격증</strong>
-                  <span>이력과 커리어에 AI 윤리 전문 자격증을 더해 취업·이직·직무 경쟁력을 높이는 실무형 자격과정</span>
+                  <strong>AI윤리전문가 양성과정 · 기본과정</strong>
+                  <span>온라인 강의 {LECTURES}강을 이수하고 수료 시험({EXAM_BASIC[0]}문항, {EXAM_BASIC[1]}점 이상)을 통과하면 위원회 명의 수료증 발급. 이력서와 커리어에 AI 윤리 전문 교육 이력을 더해 취업·이직·직무 경쟁력을 높이는 대표 과정</span>
                   <span class="apply-price">
                     <span class="ap-badge">1기 특별가</span>
                     <span class="ap-now">{won(PRICE_L2)}</span>
                     <span class="ap-was">정가 {won(LIST_L2)}</span>
                   </span>
-                  <span class="choice-note">온라인 교육 약 2시간 + 온라인 자격검정</span>
+                  <span class="choice-note">온라인 강의 {LECTURES}강({TOTAL_TIME}) + 온라인 수료 시험 {EXAM_BASIC[0]}문항 · 수료증</span>
                 </span>
               </label>
               <label class="choice">
-                <input type="radio" name="course" value="1급">
+                <input type="radio" name="course" value="심화과정">
                 <span class="choice-radio"></span>
                 <span class="choice-body">
-                  <span class="choice-badge">심화 과정</span>
-                  <strong>AI윤리전문가 1급 자격증</strong>
-                  <span>전문강사·교육 활동이 가능하며, 위원회 홈페이지에 등록되어 전문 이력으로 활용할 수 있는 심화 자격과정</span>
+                  <span class="choice-badge">전문가 등재 과정</span>
+                  <strong>AI윤리전문가 양성과정 · 심화과정</strong>
+                  <span>같은 {LECTURES}강을 이수하고 심화 수료 시험({EXAM_ADV[0]}문항, {EXAM_ADV[1]}점 이상)을 통과하면 수료증과 함께 위원회 공식 AI윤리전문가로 위촉되어 홈페이지 전문가 명단에 등재. 전문강사·자문 활동 연계</span>
                   <span class="apply-price">
                     <span class="ap-badge">1기 특별가</span>
                     <span class="ap-now">{won(PRICE_L1)}</span>
                     <span class="ap-was">정가 {won(LIST_L1)}</span>
                   </span>
-                  <span class="choice-note">온라인 교육 약 4시간 + 온라인 자격검정</span>
+                  <span class="choice-note">온라인 강의 {LECTURES}강 + 심화 수료 시험 {EXAM_ADV[0]}문항 · 수료증 + 공식 위촉·등재</span>
                 </span>
               </label>
             </div>
             <div class="pick-help">
               <div class="pick-help-title">어떤 과정을 선택해야 할까요?</div>
               <div class="pick-grid">
-                <div class="pick-card"><span class="pick-tag pick-tag--l2">2급 추천</span>
-                  <p>AI 윤리 분야를 처음 시작하거나, 이력·커리어에 AI 윤리 전문 자격증을 더해 취업·이직·현재 직무에 활용하고 싶은 분께 추천합니다.</p></div>
-                <div class="pick-card"><span class="pick-tag pick-tag--l1">1급 추천</span>
-                  <p>위원회 홈페이지 전문가 등록과 교육 활동을 원하는 분께 추천합니다.</p></div>
+                <div class="pick-card"><span class="pick-tag pick-tag--l2">기본과정 추천</span>
+                  <p>AI 윤리 분야를 처음 시작하거나, 이력서와 커리어에 AI 윤리 전문 교육 이력을 더해 취업·이직·현재 직무에 활용하고 싶은 분께 추천합니다.</p></div>
+                <div class="pick-card"><span class="pick-tag pick-tag--l1">심화과정 추천</span>
+                  <p>위원회 공식 AI윤리전문가 위촉과 홈페이지 등재, 전문강사·자문 활동을 원하는 분께 추천합니다.</p></div>
               </div>
             </div>
-            <p class="err-msg">응시하실 과정을 선택해 주세요.</p>
+            <p class="err-msg">수강하실 과정을 선택해 주세요.</p>
           </div>
 
           <div class="gform-card" id="secPurpose">
             <div class="gform-sec">SECTION 2</div>
-            <h2>자격 취득 및 활용 목적 <span class="req">*</span></h2>
-            <p class="gform-desc">AI윤리전문가 자격에 관심을 갖게 된 이유와 활용 목적을 선택해 주세요. 복수 선택할 수 있습니다.</p>
+            <h2>수강 및 활용 목적 <span class="req">*</span></h2>
+            <p class="gform-desc">AI윤리전문가 양성과정에 관심을 갖게 된 이유와 활용 목적을 선택해 주세요. 복수 선택할 수 있습니다.</p>
             <div class="check-grid" id="purposeGrid">{PURPOSE_ITEMS}</div>
             <p class="err-msg">활용 목적을 하나 이상 선택해 주세요.</p>
           </div>
 
           <div class="gform-card" id="secInfo">
             <div class="gform-sec">SECTION 3</div>
-            <h2>응시자 정보</h2>
+            <h2>수강자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
                 <label>성명 <span class="req">*</span></label>
@@ -3097,7 +3159,7 @@ def build_expert_apply():
               <div class="field" id="fEmail">
                 <label>이메일 주소 <span class="req">*</span></label>
                 <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
-                <p class="field-hint">온라인 교육과 자격검정 안내가 발송되는 이메일입니다.
+                <p class="field-hint">온라인 강의 수강 링크와 수료 시험 안내가 발송되는 이메일입니다.
                    실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
@@ -3111,31 +3173,31 @@ def build_expert_apply():
 
           <div class="gform-card" id="secFlow">
             <div class="gform-sec">SECTION 4</div>
-            <h2>교육 및 자격검정 안내</h2>
-            <p class="gform-desc">AI윤리전문가 과정은 교육부터 자격검정까지 온라인으로 진행됩니다.</p>
+            <h2>교육 및 수료 시험 안내</h2>
+            <p class="gform-desc">AI윤리전문가 양성과정은 강의 수강부터 수료 시험까지 온라인으로 진행됩니다.</p>
             <ol class="gform-flow">
-              <li>응시 신청</li>
-              <li>교육·자격검정 비용 결제</li>
-              <li>온라인 교육 수강</li>
-              <li>온라인 자격검정 응시</li>
-              <li>합격</li>
-              <li class="is-final">AI윤리전문가 자격증 발급</li>
+              <li>수강 신청</li>
+              <li>교육비 결제</li>
+              <li>온라인 강의 {LECTURES}강 수강</li>
+              <li>온라인 수료 시험 응시</li>
+              <li>수료 기준 충족</li>
+              <li class="is-final">수료증 발급 (심화과정은 공식 위촉·등재)</li>
             </ol>
-            <p class="gform-body">결제 완료 후 신청하신 이메일로 온라인 교육 링크와 자격검정 안내가 발송됩니다.
-               교육을 이수한 후 온라인 자격검정에 응시할 수 있으며, 합격기준 충족 시 한국AI윤리위원회 AI윤리전문가 자격증이 발급됩니다.</p>
+            <p class="gform-body">결제 완료 후 신청하신 이메일로 온라인 강의 수강 링크와 수료 시험 안내가 발송됩니다.
+               {LECTURES}강({TOTAL_TIME})을 이수한 후 온라인 수료 시험에 응시할 수 있으며, 수료 기준 충족 시 한국AI윤리위원회 명의 「{DOC_FULL}」이 발급됩니다.</p>
             <div class="exam-info">
-              <div><span>검정방식</span>온라인 자격검정</div>
-              <div><span>응시자격</span>해당 과정 온라인 교육 이수자</div>
-              <div><span>합격기준</span><b>100점 만점 중 70점 이상</b></div>
+              <div><span>시험 방식</span>온라인 수료 시험 (강의 내용 범위에서 출제)</div>
+              <div><span>응시 대상</span>온라인 강의 {LECTURES}강 이수자</div>
+              <div><span>수료 기준</span><b>기본과정 {EXAM_BASIC[0]}문항 · {EXAM_BASIC[1]}점 이상 / 심화과정 {EXAM_ADV[0]}문항 · {EXAM_ADV[1]}점 이상</b></div>
               <div><span>재응시</span>불합격 시 1회 무료 재응시 가능</div>
-              <div><span>자격증 발급</span>합격기준 충족 시 한국AI윤리위원회 AI윤리전문가 자격증 발급</div>
+              <div><span>수료증 발급</span>수료 기준 충족 시 한국AI윤리위원회 명의 수료증 발급, 심화과정은 공식 AI윤리전문가 위촉·홈페이지 등재</div>
             </div>
             <label class="agree"><input type="checkbox" name="flowok"><span class="agree-box"></span>
-              <span>교육 및 자격검정 진행 절차를 확인했습니다. <span class="req">*</span></span></label>
+              <span>교육 및 수료 시험 진행 절차를 확인했습니다. <span class="req">*</span></span></label>
             <p class="err-msg">진행 절차 확인에 체크해 주세요.</p>
 
             <div class="use-block">
-              <div class="use-block-title"><i data-lucide="award"></i> AI윤리전문가 1급 취득자 활용</div>
+              <div class="use-block-title"><i data-lucide="award"></i> 심화과정 수료자 혜택</div>
               <div class="use-grid">{USE_HTML}</div>
             </div>
           </div>
@@ -3143,10 +3205,10 @@ def build_expert_apply():
           <div class="gform-card" id="secPriv">
             <div class="gform-sec">SECTION 5</div>
             <h2>개인정보 수집·이용 동의</h2>
-            <p class="gform-desc">AI윤리전문가 자격과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
+            <p class="gform-desc">AI윤리전문가 양성과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
             <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 자격 취득 및 활용 목적, 신청정보</div>
-              <div><span>이용목적</span>응시자 확인, 교육 및 자격검정 운영, 합격자 관리 및 자격증 발급</div>
+              <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 수강 및 활용 목적, 신청정보</div>
+              <div><span>이용목적</span>수강자 확인, 교육 및 수료 시험 운영, 수료자 관리 및 수료증 발급</div>
               <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
             </div>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
@@ -3155,20 +3217,20 @@ def build_expert_apply():
           </div>
 
           <div class="gform-card gform-submit">
-            <h2>AI윤리전문가 1기 응시 신청</h2>
-            <p>이력과 커리어에 AI 윤리 전문 자격증을 더해보세요. 교육부터 자격검정까지 온라인으로 진행됩니다.</p>
+            <h2>AI윤리전문가 양성과정 1기 수강 신청</h2>
+            <p>이력서와 커리어에 한국AI윤리위원회 명의 수료증을 더해보세요. 강의 수강부터 수료 시험까지 온라인으로 진행됩니다.</p>
             <div class="sel-info" id="selInfo"><i data-lucide="check-circle-2"></i><span id="selText"></span></div>
             <div class="pay-summary">
-              <div class="pay-mini"><div class="lv">AI윤리전문가 2급 자격증</div>
+              <div class="pay-mini"><div class="lv">기본과정 · 수료증</div>
                 <div class="list">정가 {won(LIST_L2)}</div><div class="sale">1기 특별가 {won(PRICE_L2)}</div></div>
-              <div class="pay-mini"><div class="lv">AI윤리전문가 1급 자격증</div>
+              <div class="pay-mini"><div class="lv">심화과정 · 수료증 + 공식 위촉·등재</div>
                 <div class="list">정가 {won(LIST_L1)}</div><div class="sale">1기 특별가 {won(PRICE_L1)}</div></div>
             </div>
-            <p>신청서를 제출한 후 교육·자격검정 비용 결제를 완료하면 1기 등록이 최종 확정됩니다.</p>
-            <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 1기 응시 신청하기 <i data-lucide="arrow-right"></i></button>
+            <p>신청서를 제출한 후 교육비 결제를 완료하면 1기 등록이 최종 확정됩니다.</p>
+            <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 양성과정 1기 신청하기 <i data-lucide="arrow-right"></i></button>
             <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
             <div class="trust-row">
-              <div><i data-lucide="award"></i> 한국AI윤리위원회 발급</div>
+              <div><i data-lucide="award"></i> 한국AI윤리위원회 명의 수료증</div>
               <div><i data-lucide="shield-check"></i> 성균관컨설팅 안전결제</div>
               <div><i data-lucide="building-2"></i> 성균관대 RISE사업 공식 지원</div>
             </div>
@@ -3177,9 +3239,9 @@ def build_expert_apply():
 
         <div class="gform-card gform-done" id="doneView" hidden>
           <div class="done-icon"><i data-lucide="check"></i></div>
-          <h2>AI윤리전문가 1기 응시 신청이 완료되었습니다.</h2>
-          <p>최종 등록을 위해 아래 결제 페이지에서 선택하신 과정의 교육·자격검정 비용을 결제해 주세요.</p>
-          <a id="payBtn" class="btn btn-primary" hidden>AI윤리전문가 교육·자격검정 결제하기 <i data-lucide="credit-card"></i></a>
+          <h2>AI윤리전문가 양성과정 1기 신청이 완료되었습니다.</h2>
+          <p>최종 등록을 위해 아래 결제 페이지에서 선택하신 과정의 교육비를 결제해 주세요.</p>
+          <a id="payBtn" class="btn btn-primary" hidden>양성과정 교육비 결제하기 <i data-lucide="credit-card"></i></a>
           <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 결제 페이지로 자동 이동합니다.</p>
           <p class="gform-paynote">결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅의 안전결제 페이지에서 진행됩니다.</p>
           <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
@@ -3198,8 +3260,8 @@ def build_expert_apply():
   <script>
   (function(){
     var form=document.getElementById('examForm');
-    var PAY={'2급':'__PAY2__','1급':'__PAY1__'};
-    var SELTXT={'2급':'__SEL2__','1급':'__SEL1__'};
+    var PAY={'기본과정':'__PAY2__','심화과정':'__PAY1__'};
+    var SELTXT={'기본과정':'__SEL2__','심화과정':'__SEL1__'};
 
     function course(){var c=form.querySelector('[name=course]:checked');return c?c.value:'';}
     function syncCourse(){
@@ -3211,10 +3273,10 @@ def build_expert_apply():
     }
     form.querySelectorAll('[name=course]').forEach(function(r){r.addEventListener('change',syncCourse);});
 
-    /* expert.html 카드에서 ?course=2 / ?course=1 로 들어오면 미리 선택 */
+    /* expert.html 카드에서 ?course=2(기본) / ?course=1(심화) 로 들어오면 미리 선택 */
     var q=new URLSearchParams(location.search).get('course');
     if(q==='2'||q==='1'){
-      var cv=(q==='2')?'2급':'1급';
+      var cv=(q==='2')?'기본과정':'심화과정';
       var r=form.querySelector('[name=course][value="'+cv+'"]');
       if(r){r.checked=true;syncCourse();}
     }
@@ -3241,21 +3303,21 @@ def build_expert_apply():
       var c=course();
       var pstr=pz.join(', ');
       var lines=[
-        '한국AI윤리위원회 AI윤리전문가 1기 응시 신청','',
-        '■ 응시 과정 : AI윤리전문가 '+c,
+        '한국AI윤리위원회 AI윤리전문가 양성과정 1기 수강 신청','',
+        '■ 신청 과정 : AI윤리전문가 양성과정 '+c,
         '■ 성명 : '+v('name'),
         '■ 이메일 : '+v('email'),
         '■ 직업/활동 분야 : '+job.value,
-        '■ 자격 취득 및 활용 목적 : '+pstr,'',
-        '■ 교육 및 자격검정 진행 절차 확인 : 동의',
+        '■ 수강 및 활용 목적 : '+pstr,'',
+        '■ 교육 및 수료 시험 진행 절차 확인 : 동의',
         '■ 개인정보 수집·이용 : 동의','',
-        '--- kaiec.kr AI윤리전문가 응시 접수 페이지에서 작성됨 ---'
+        '--- kaiec.kr AI윤리전문가 양성과정 신청 페이지에서 작성됨 ---'
       ];
 
       /* 접수 데이터 전송: 시트 웹훅으로 GET 전송(주소에 데이터), 없으면 메일 앱 폴백 */
       var HOOK='__HOOK__';
       if(HOOK){
-        var qs='course='+encodeURIComponent('AI윤리전문가 '+c)+'&name='+encodeURIComponent(v('name'))
+        var qs='course='+encodeURIComponent('AI윤리전문가 양성과정 '+c)+'&name='+encodeURIComponent(v('name'))
              +'&email='+encodeURIComponent(v('email'))+'&job='+encodeURIComponent(job.value)
              +'&purpose='+encodeURIComponent(pstr)+'&t='+Date.now();
         var url=HOOK+'?'+qs; var ok=false;
@@ -3263,7 +3325,7 @@ def build_expert_apply():
         if(!ok){try{var im=new Image();im.src=url;}catch(e2){}}
         document.getElementById('mailBox').hidden=true;
       }else{
-        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 1기 응시] '+v('name')+' · '+c)
+        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 양성과정 1기 신청] '+v('name')+' · '+c)
                 +'&body='+encodeURIComponent(lines.join('\n'));
         setTimeout(function(){location.href=mail;},400);
       }
@@ -3301,21 +3363,20 @@ def build_expert_apply():
     });
   })();
   </script>
-""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1).replace('__HOOK__', SHEET_WEBHOOK).replace('__SEL2__', f'선택: AI윤리전문가 2급 자격증 · 1기 특별가 {won(PRICE_L2)}').replace('__SEL1__', f'선택: AI윤리전문가 1급 자격증 · 1기 특별가 {won(PRICE_L1)}')
+""".replace('__FEMAIL__', EMAIL).replace('__PAY2__', PAY_URL_L2).replace('__PAY1__', PAY_URL_L1).replace('__HOOK__', SHEET_WEBHOOK).replace('__SEL2__', f'선택: AI윤리전문가 양성과정 기본과정 · 1기 특별가 {won(PRICE_L2)}').replace('__SEL1__', f'선택: AI윤리전문가 양성과정 심화과정 · 1기 특별가 {won(PRICE_L1)}')
 
-    page("expert-apply.html", "AI윤리전문가 1기 응시 접수",
-         "한국AI윤리위원회 AI윤리전문가 1기 응시 접수 페이지입니다. 2급·1급 과정을 선택하고 응시자 정보를 입력하면 온라인 교육과 자격검정 안내를 받을 수 있습니다.",
+    page("expert-apply.html", "AI윤리전문가 양성과정 1기 수강 신청",
+         "한국AI윤리위원회 주관 AI윤리전문가 양성과정 1기 수강 신청 페이지입니다. 기본과정·심화과정을 선택하고 수강자 정보를 입력하면 온라인 강의와 수료 시험 안내를 받을 수 있습니다.",
          body, extra_script=script,
-         keywords=["AI윤리전문가 응시", "AI윤리전문가 접수", "AI 윤리 자격증 신청", "AI윤리전문가 2급",
-                   "AI윤리전문가 1급", "AI 윤리 자격검정", "한국AI윤리위원회"])
+         keywords=["AI윤리전문가 양성과정 신청", "AI윤리전문가 수강 신청", "AI 윤리 교육 신청", "AI윤리전문가 기본과정",
+                   "AI윤리전문가 심화과정", "AI 윤리 수료증", "한국AI윤리위원회"])
 
 
 # ---------------------------------------------------------------- experts.html
 def build_experts():
-    """KAIEC 공식 AI윤리전문가: AI윤리전문가의 필요성·가치를 스토리텔링으로 설득하고, 자격 취득(2급 접수) 또는 KAIEC 참여로 이어지는 페이지
+    """KAIEC 공식 AI윤리전문가: AI윤리전문가의 필요성·가치를 스토리텔링으로 설득하고, 양성과정 신청(기본과정 미리 선택) 또는 KAIEC 참여로 이어지는 페이지
     - 명단은 assets/js/experts-data.js 의 KAIEC_EXPERTS 배열로 관리 (비어 있으면 '위촉 예정' 안내가 표시됨)
-    - 특정 급수(1급)를 내세우지 않고 '자격 취득'으로 통일 (접수 링크는 2급이 미리 선택된 상태), 등재·등록만 강조하지 않음
-    - 무료 대안(KAIEC 참여) 카드는 자격증 신청 이탈을 유발해 넣지 않음 (2026.09.13 결정)"""
+    - 공식 위촉·홈페이지 등재는 심화과정 수료자 혜택 (2026.09.14). 무료 대안(KAIEC 참여) 카드는 신청 이탈을 유발해 넣지 않음 (2026.09.13 결정)"""
     APPLY = "expert-apply.html?course=2"
     WHY = [
         ("2026.1", "AI기본법 시행", "AI를 만드는 기업뿐 아니라 활용하는 기업·기관도 책임의 주체가 됩니다."),
@@ -3326,7 +3387,7 @@ def build_experts():
         ("file-search", "“생성형 AI로 만든 보고서, 고객에게 그대로 보내도 될까?”", "저작권·기밀·할루시네이션을 판단할 사람이 필요합니다."),
         ("graduation-cap", "“학생 과제의 AI 활용, 어디까지 허용해야 할까?”", "학교와 교육 현장은 기준을 세우고 지도할 사람을 찾습니다."),
         ("shield-check", "“우리 조직에 AI를 도입하면 개인정보·편향 문제는 없을까?”", "도입 전 위험 점검과 내부 교육을 맡을 사람이 필요합니다."),
-        ("briefcase", "“AI를 책임 있게 다룰 줄 안다는 것을 어떻게 증명할까?”", "취업·이직 서류에서 말이 아닌 자격으로 보여줄 수 있어야 합니다."),
+        ("briefcase", "“AI를 책임 있게 다룰 줄 안다는 것을 어떻게 증명할까?”", "취업·이직 서류에서 말이 아닌 수료증과 위촉 이력으로 보여줄 수 있어야 합니다."),
     ]
     USES = [
         ("briefcase", "이력서·포트폴리오", "위원회가 공식 위촉한 AI윤리전문가로 이력에 기재하고, 홈페이지 프로필 주소를 함께 제시할 수 있습니다."),
@@ -3337,32 +3398,32 @@ def build_experts():
         ("trending-up", "커리어 확장", "AI 윤리·거버넌스 분야로 직무를 넓히거나 전환하는 발판이 됩니다."),
     ]
     PATH = [
-        ("AI윤리전문가 자격 취득",
-         "온라인 교육(약 2시간)과 온라인 자격검정으로 한국AI윤리위원회 명의의 AI윤리전문가 자격증을 취득합니다. 합격 기준 70점, 불합격 시 1회 무료 재응시.",
-         ["온라인 교육", "온라인 자격검정", "위원회 명의 자격증"]),
+        ("AI윤리전문가 양성과정 수료",
+         f"온라인 강의 {LECTURES}강({TOTAL_TIME})과 온라인 수료 시험으로 한국AI윤리위원회 명의 「{DOC_FULL}」을 받습니다. 기본과정 {EXAM_BASIC[0]}문항·{EXAM_BASIC[1]}점, 심화과정 {EXAM_ADV[0]}문항·{EXAM_ADV[1]}점, 불합격 시 1회 무료 재응시.",
+         [f"온라인 강의 {LECTURES}강", "온라인 수료 시험", "위원회 명의 수료증"]),
         ("위원회 공식 위촉·등재",
-         "등재를 신청하면(성명·사진·전문분야 제출, 소속은 희망 시에만) 위원회가 검토해 공식 위촉장과 자격증 카드를 발급하고, 홈페이지 공식 AI윤리전문가 명단에 프로필을 공개합니다. 별도 비용은 없습니다.",
-         ["위촉장 · 자격증 카드", "홈페이지 프로필 공개", "보통 3~5일 검토"]),
+         "심화과정을 수료하고 등재를 신청하면(성명·사진·전문분야 제출, 소속은 희망 시에만) 위원회가 검토해 공식 위촉장을 발급하고, 홈페이지 공식 AI윤리전문가 명단에 프로필을 공개합니다. 별도 비용은 없습니다.",
+         ["위촉장", "홈페이지 프로필 공개", "보통 3~5일 검토"]),
         ("전문가로서의 활동",
          "전문강사·교육·자문, 캠페인과 콘텐츠 제작 등 위원회 활동에 참여하고, 활동 실적에 대해 활동증명서를 발급받아 경력으로 남깁니다.",
          ["전문강사 · 교육", "자문 · 캠페인", "활동증명서"]),
     ]
     FAQ = [
-        ("AI윤리전문가 자격은 왜 중요한가요?",
+        ("AI윤리전문가 양성과정은 왜 중요한가요?",
          "2026년 AI기본법 시행과 EU AI Act 적용으로 기업·기관·학교 모두 AI를 책임 있게 활용할 기준과 사람을 요구받고 있습니다. "
          "저작권, 개인정보, 편향, 결과물의 신뢰성 같은 문제를 판단하고 설명할 수 있는 역량이 필요해졌고, "
-         "AI윤리전문가 자격은 그 역량을 위원회 명의로 증명하는 전문 자격입니다. 취업·이직과 현재 직무는 물론 교육·연구·전문 활동까지 활용 범위가 넓습니다."),
+         "AI윤리전문가 양성과정은 그 역량을 체계적으로 배우고 한국AI윤리위원회 명의 수료증으로 증명하는 전문 교육과정입니다. 취업·이직과 현재 직무는 물론 교육·연구·전문 활동까지 활용 범위가 넓습니다."),
         ("AI나 윤리를 전공하지 않았는데 괜찮을까요?",
-         "네. AI윤리전문가 자격과정은 전공·경력 제한 없이 누구나 응시할 수 있으며, 실무에서 마주치는 판단 기준을 온라인 교육으로 체계적으로 배운 뒤 검정을 치릅니다. "
+         "네. AI윤리전문가 양성과정은 전공·경력 제한 없이 누구나 수강할 수 있으며, 실무에서 마주치는 판단 기준을 온라인 강의로 체계적으로 배운 뒤 수료 시험을 치릅니다. "
          "AI를 업무나 학업에 쓰고 있는 분이라면 이미 출발선에 서 있습니다."),
-        ("어떤 자격이 있어야 등재할 수 있나요?",
-         "AI윤리전문가 자격을 취득한 분은 누구나 등재를 신청할 수 있습니다. 위원회는 자격과 프로필을 검토해 공식 AI윤리전문가로 위촉하며, "
-         "전문강사·교육·자문 등 활동 영역은 이수 과정과 본인 희망에 따라 안내합니다."),
+        ("어떤 과정을 수료해야 등재할 수 있나요?",
+         "AI윤리전문가 양성과정 심화과정을 수료한 분은 누구나 등재를 신청할 수 있습니다. 위원회는 수료 사실과 프로필을 검토해 공식 AI윤리전문가로 위촉하며, "
+         "기본과정으로 시작한 분도 이후 심화과정을 수료하면 등재할 수 있습니다. 전문강사·교육·자문 등 활동 영역은 본인 희망에 따라 안내합니다."),
         ("경력이나 소속이 없어도 등재할 수 있나요?",
          "네. 취업이나 이직을 준비 중이어도 등재할 수 있습니다. 소속은 희망하는 경우에만 표기하며, "
          "등재된 프로필 주소는 이력서와 포트폴리오에 바로 활용할 수 있습니다."),
-        ("자격검정에 합격하지 못하면 어떻게 되나요?",
-         "불합격 시 1회 무료로 재응시할 수 있습니다. 온라인 교육을 이수한 뒤 검정을 치르는 구조라 교육 내용을 충실히 따라오면 합격 기준(70점)에 충분히 도달할 수 있습니다."),
+        ("수료 시험 기준에 못 미치면 어떻게 되나요?",
+         f"불합격 시 1회 무료로 재응시할 수 있습니다. 온라인 강의 {LECTURES}강을 이수한 뒤 시험을 치르는 구조라 강의 내용을 충실히 따라오면 수료 기준(기본 {EXAM_BASIC[1]}점, 심화 {EXAM_ADV[1]}점)에 충분히 도달할 수 있습니다."),
     ]
     why_html = "".join(
         f'<div><strong>{n}</strong><b>{t}</b><span>{d}</span></div>' for n, t, d in WHY)
@@ -3382,12 +3443,12 @@ def build_experts():
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
-        <span class="hl-pill"><i data-lucide="badge-check"></i>AI 시대의 새로운 전문 자격 · 한국AI윤리위원회 공식 위촉</span>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>AI 시대의 새로운 전문 역량 · 한국AI윤리위원회 공식 위촉</span>
         <h1>KAIEC 공식 AI윤리전문가</h1>
-        <p>AI를 잘 쓰는 사람은 많아졌습니다. AI를 책임 있게 쓸 수 있다고 증명할 수 있는 사람은 아직 드뭅니다.
-           한국AI윤리위원회가 검정하고 공식 위촉하는 AI윤리전문가, 그 자리를 지금 준비하세요.</p>
+        <p>AI를 잘 쓰는 사람은 많아졌습니다. AI를 책임 있게 쓴다고 증명할 수 있는 사람은 아직 드뭅니다.
+           한국AI윤리위원회가 양성하고 공식 위촉하는 AI윤리전문가, 그 자리를 지금 준비하세요.</p>
         <div class="btns" style="margin-top:22px">
-          <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#list">등재 전문가 보기</a>
         </div>
       </div>
@@ -3408,8 +3469,8 @@ def build_experts():
             <p>기업은 AI 활용 가이드라인과 위험 점검을 요구받고, 학교는 학생의 AI 활용 기준을 세워야 하며,
                공공기관은 도입 단계부터 개인정보와 편향 문제를 검토해야 합니다.</p>
             <p>그런데 이 판단을 검증된 사람이 맡고 있는 조직은 아직 많지 않습니다. 수요는 이미 시작됐고 사람은 부족합니다.
-               AI윤리전문가 자격의 가치가 가장 큰 시기가 바로 지금입니다.</p>
-            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+               AI윤리전문가 양성과정 수료의 가치가 가장 큰 시기가 바로 지금입니다.</p>
+            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           </div>
           <div class="moment-list">
             <div class="moment-title">이런 순간에 AI윤리전문가가 필요합니다</div>
@@ -3436,7 +3497,7 @@ def build_experts():
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Your Path</span>
           <h2 class="h-sec">KAIEC 공식 AI윤리전문가가 되는 길</h2>
-          <p class="h-sub" style="margin:0 auto">자격 취득에서 위원회 위촉, 전문가 활동까지 하나의 흐름으로 이어집니다.</p>
+          <p class="h-sub" style="margin:0 auto">양성과정 수료에서 위원회 위촉, 전문가 활동까지 하나의 흐름으로 이어집니다.</p>
         </div>
         <div class="path-grid">{path_html}</div>
       </div>
@@ -3453,11 +3514,11 @@ def build_experts():
         <div class="expert-empty" id="expertEmpty" hidden>
           <div class="expert-empty-icon"><i data-lucide="award"></i></div>
           <h3>제1기 AI윤리전문가 위촉 예정</h3>
-          <p>현재 AI윤리전문가 1기 과정이 진행 중입니다. 자격검정 합격자의 등재 신청을 검토해 위촉하며,
+          <p>현재 AI윤리전문가 양성과정 1기가 진행 중입니다. 심화과정 수료자의 등재 신청을 검토해 위촉하며,
              위촉된 전문가의 프로필이 이 자리에 공개됩니다. 첫 번째 이름이 당신일 수 있습니다.</p>
           <div class="btns" style="justify-content:center;margin-top:18px">
-            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
-            <a class="btn btn-ghost" href="expert.html">자격과정 안내</a>
+            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
+            <a class="btn btn-ghost" href="expert.html">양성과정 안내</a>
           </div>
         </div>
       </div>
@@ -3468,7 +3529,7 @@ def build_experts():
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Get Started</span>
           <h2 class="h-sec">지금 시작하세요</h2>
-          <p class="h-sub" style="margin:0 auto">AI윤리전문가 자격증 취득이 KAIEC 공식 AI윤리전문가로 가는 첫걸음입니다. 1기 특별가는 접수 마감 전까지만 적용됩니다.</p>
+          <p class="h-sub" style="margin:0 auto">AI윤리전문가 양성과정 수료가 KAIEC 공식 AI윤리전문가로 가는 첫걸음입니다. 1기 특별가는 접수 마감 전까지만 적용됩니다.</p>
         </div>
         <div class="start-one">
           <div class="offer-card reveal">
@@ -3476,20 +3537,20 @@ def build_experts():
               <span class="badge">1기 모집 중 · 마감 {DEADLINE}</span>
               <span class="offer-quota">연 {QUOTA}명 한정 양성</span>
             </div>
-            <h3>AI윤리전문가 자격증 취득</h3>
-            <p>AI 윤리 전문 자격을 이력에 더하고, 위원회 공식 AI윤리전문가로 등재되는 가장 빠른 길입니다.</p>
+            <h3>AI윤리전문가 양성과정 · 기본과정</h3>
+            <p>AI 윤리 전문 교육 이력을 이력서에 더하는 가장 빠른 길입니다. 위원회 공식 등재를 원한다면 심화과정({won(PRICE_L1)})을 선택하세요.</p>
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_L2)}</span>
               <span class="price-now">{won(PRICE_L2)}</span>
               <span class="price-tag">1기 특별가</span>
             </div>
             <ul class="offer-list">
-              <li>온라인 교육 약 2시간 + 온라인 자격검정, 전 과정 온라인</li>
-              <li>전공·경력 제한 없이 누구나 응시, 합격 기준 70점</li>
-              <li>한국AI윤리위원회 명의 자격증, 등재 시 위촉장·자격증 카드 발급</li>
+              <li>온라인 강의 {LECTURES}강({TOTAL_TIME}) + 온라인 수료 시험, 전 과정 온라인</li>
+              <li>전공·경력 제한 없이 누구나 수강, 수료 기준 {EXAM_BASIC[1]}점(1회 무료 재응시)</li>
+              <li>한국AI윤리위원회 명의 「{DOC_FULL}」, 심화과정 수료 시 공식 위촉·홈페이지 등재</li>
             </ul>
             <div class="offer-btns">
-              <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 자격증 취득하기 <i data-lucide="arrow-right"></i></a>
+              <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
               <a class="btn btn-ghost" href="expert.html">과정 자세히 보기</a>
             </div>
           </div>
@@ -3511,10 +3572,10 @@ def build_experts():
       <div class="wrap">
         <div class="cta-band">
           <div><h2>AI 시대에 가장 먼저 필요한 전문가가 되세요</h2>
-            <p>자격 취득부터 위원회 위촉과 활동까지, 한국AI윤리위원회가 함께합니다.</p></div>
+            <p>양성과정 수료부터 위원회 위촉과 활동까지, 한국AI윤리위원회가 함께합니다.</p></div>
           <div class="btns">
-            <a class="btn btn-white" href="{APPLY}">AI윤리전문가 자격증 취득하기</a>
-            <a class="btn btn-light" href="expert.html">자격과정 안내</a>
+            <a class="btn btn-white" href="{APPLY}">AI윤리전문가 양성과정 신청하기</a>
+            <a class="btn btn-light" href="expert.html">양성과정 안내</a>
           </div>
         </div>
       </div>
@@ -3545,9 +3606,9 @@ def build_experts():
   </script>
 """
     page("experts.html", "KAIEC 공식 AI윤리전문가",
-         "AI 시대에 가장 먼저 필요해진 전문가, AI윤리전문가. 한국AI윤리위원회가 검정하고 공식 위촉한 AI윤리전문가를 소개하고, 자격 취득부터 위원회 위촉·등재, 전문 활동까지의 길을 안내합니다.",
+         "AI 시대에 가장 먼저 필요해진 전문가, AI윤리전문가. 한국AI윤리위원회가 양성하고 공식 위촉한 AI윤리전문가를 소개하고, 양성과정 수료부터 위원회 위촉·등재, 전문 활동까지의 길을 안내합니다.",
          body, extra_script=script, sticky="all",
-         keywords=["AI윤리전문가", "AI 윤리 전문가 명단", "AI윤리전문가 자격증", "AI 윤리 전문가 등재", "AI 윤리 강사", "한국AI윤리위원회"])
+         keywords=["AI윤리전문가", "AI 윤리 전문가 명단", "AI윤리전문가 양성과정", "AI 윤리 전문가 등재", "AI 윤리 강사", "한국AI윤리위원회"])
 
 
 # ---------------------------------------------------------------- join.html
@@ -3555,7 +3616,7 @@ def build_join():
     """KAIEC 참여하기: 개인·전문가·기업·기관 참여 프로그램을 한 페이지에서 안내하고 자체 신청서로 접수
     - 참여 구분은 구글폼처럼 한 목록에서 고르며(대상·역할 설명 포함), 잘 모르면 '위원회 추천' 선택 가능
     - 허들 최소화: 필수는 참여 구분·성명·이메일·직업·지원 동기·자기소개·동의뿐, 소속은 '적기' 버튼을 누른 분만(기업·기관 선택 시 기관명 칸 자동 표시)
-    - 접수 데이터는 응시 접수와 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
+    - 접수 데이터는 수강 신청과 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
     ROLES = [
         # (아이콘, 구분명, 배지, 이런 분께, 주요 역할)
         ("megaphone", "AI 윤리 캠페인위원", "열린 참여",
@@ -3564,14 +3625,14 @@ def build_join():
         ("briefcase", "운영위원", "위원회 운영",
          "위원회 사업과 행사를 함께 기획하고 운영하고 싶은 분",
          "사업 기획, 프로그램 운영, 활동 관리"),
-        ("monitor-play", "전문위원", "AI윤리전문가 1급 이상",
-         "AI윤리전문가 1급 자격을 갖춘 AI·윤리·법·교육 분야 전문가 (석·박사, 현직 전문가, 강사)",
+        ("monitor-play", "전문위원", "심화과정 수료자",
+         "AI윤리전문가 양성과정 심화과정을 수료한 AI·윤리·법·교육 분야 전문가 (석·박사, 현직 전문가, 강사)",
          "AI 윤리 교육·전문강사 활동, 자문"),
-        ("map-pin", "지역 운영위원", "AI윤리전문가 2급 이상",
-         "AI윤리전문가 자격(2급 이상)을 갖추고 거주 지역에서 위원회 활동과 네트워크를 이끌고 싶은 분",
+        ("map-pin", "지역 운영위원", "양성과정 수료자",
+         "AI윤리전문가 양성과정(기본과정 이상)을 수료하고 거주 지역에서 위원회 활동과 네트워크를 이끌고 싶은 분",
          "권역별 지역 조직 운영, 지역 캠페인·행사"),
-        ("graduation-cap", "캠퍼스 위원장", "AI윤리전문가 2급 이상",
-         "AI윤리전문가 자격(2급 이상)을 갖추고 소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
+        ("graduation-cap", "캠퍼스 위원장", "양성과정 수료자",
+         "AI윤리전문가 양성과정(기본과정 이상)을 수료하고 소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
          "캠퍼스 위원회 운영, 교내 확산 활동"),
         ("handshake", "제휴 파트너", "기업·기관",
          "위원회와 공동 사업·교육·캠페인을 제안하는 개인·기업·기관",
@@ -3612,7 +3673,7 @@ def build_join():
         ("monitor-play", "온라인·재택 활동", "대부분의 활동이 온라인으로 진행되어 학업·직장과 병행할 수 있습니다."),
         ("trending-up", "커리어가 되는 활동", "AI기본법 시행 이후 기업·기관·학교가 요구하는 AI 윤리 이력을 실제 활동으로 만듭니다."),
         ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원사와 교류하며 활동 영역을 넓힙니다."),
-        ("gift", "활동 인센티브", "캠페인 활동 실적에 따른 인센티브와 위원회 자격과정·교육 프로그램 우대를 제공합니다."),
+        ("gift", "활동 인센티브", "캠페인 활동 실적에 따른 인센티브와 위원회 양성과정·교육 프로그램 우대를 제공합니다."),
     ]
     benefits_html = "".join(
         f'<article class="card reveal"><div class="card-icon"><i data-lucide="{ic}"></i></div><h3>{t}</h3><p>{d}</p></article>'
@@ -3691,8 +3752,8 @@ def build_join():
             <h2>참여 구분 <span class="req">*</span></h2>
             <p class="gform-desc">참여를 희망하는 역할을 하나 선택해 주세요. 잘 모르겠다면 맨 아래 '위원회 추천'을 선택하세요.</p>
             <div class="choice-list">{ROLE_ITEMS}</div>
-            <p class="field-hint">전문위원·지역 운영위원·캠퍼스 위원장은 AI윤리전문가 자격 취득자를 대상으로 합니다.
-               자격이 아직 없다면 <a href="expert-apply.html?course=2" style="color:var(--blue);font-weight:700">AI윤리전문가 자격증 취득하기</a>에서 먼저 준비하거나, AI 윤리 캠페인위원으로 시작할 수 있습니다.</p>
+            <p class="field-hint">전문위원·지역 운영위원·캠퍼스 위원장은 AI윤리전문가 양성과정 수료자를 대상으로 합니다.
+               아직 수료하지 않았다면 <a href="expert-apply.html?course=2" style="color:var(--blue);font-weight:700">AI윤리전문가 양성과정 신청하기</a>에서 먼저 준비하거나, AI 윤리 캠페인위원으로 시작할 수 있습니다.</p>
             <p class="err-msg">참여 구분을 선택해 주세요.</p>
           </div>
 
@@ -3783,7 +3844,7 @@ KAIEC에서 … 활동을 해보고 싶고, 제 강점은 … 입니다."></text
           <h2>참여 신청이 접수되었습니다.</h2>
           <p>위원회에서 검토 후 작성하신 이메일로 보통 3~5일 안에 안내드립니다. 함께해 주셔서 감사합니다.</p>
           <div class="btns" style="justify-content:center">
-            <a class="btn btn-primary" href="expert.html">AI윤리전문가 자격과정 보기</a>
+            <a class="btn btn-primary" href="expert.html">AI윤리전문가 양성과정 보기</a>
             <a class="btn btn-ghost" href="about.html">위원회 소개 보기</a>
           </div>
           <div class="done-mailbox" id="mailBox">
@@ -3937,7 +3998,7 @@ KAIEC에서 … 활동을 해보고 싶고, 제 강점은 … 입니다."></text
 
 # ---------------------------------------------------------------- quiz.html
 def build_quiz():
-    """AI 윤리 자가진단: 실제 업무 장면 7개를 고르며 자기 기준을 점검 → 결과 화면에서 자격과정으로 연결 (체류·자기설득 장치)"""
+    """AI 윤리 자가진단: 실제 업무 장면 7개를 고르며 자기 기준을 점검 → 결과 화면에서 양성과정으로 연결 (체류·자기설득 장치)"""
     QUIZ = [
         ("AI 활용 표기", "생성형 AI로 초안을 쓴 보고서를 상사나 고객에게 제출하려 합니다.",
          [("그대로 제출한다. AI가 쓴 글이라 문제없을 것이다", 0),
@@ -3978,13 +4039,13 @@ def build_quiz():
     RESULTS = [
         (12, "AI 윤리 리더형", "이미 기준을 갖고 판단하고 있습니다.",
          "대부분의 장면에서 책임 있는 판단을 하고 있습니다. 이제 필요한 것은 그 판단력을 조직 밖에서도 인정받는 증명입니다. "
-         "AI윤리전문가 자격은 지금의 감각을 위원회 명의 자격증으로 공식화하고, 전문강사·자문 활동으로 넓히는 가장 빠른 길입니다."),
+         "AI윤리전문가 양성과정은 지금의 감각을 한국AI윤리위원회 명의 수료증으로 공식화하고, 심화과정 수료 시 공식 위촉·등재와 전문강사·자문 활동으로 넓히는 가장 빠른 길입니다."),
         (7, "실무 감각형", "큰 방향은 맞지만, 상황마다 흔들리는 지점이 있습니다.",
          "판단의 방향은 옳은데 기준이 정리되어 있지 않아 장면마다 결과가 달라집니다. 체계적으로 한 번 정리하면 판단이 빨라지고, "
-         "그 기준을 자격으로 남길 수 있습니다. AI윤리전문가 2급이 정확히 그 역할을 합니다."),
+         "그 기준을 수료증으로 남길 수 있습니다. AI윤리전문가 양성과정 기본과정이 정확히 그 역할을 합니다."),
         (0, "출발선형", "AI를 쓰고는 있지만, 기준은 아직입니다.",
          "AI를 이미 업무와 학습에 쓰고 있다면 기준이 없는 상태가 가장 위험합니다. 반대로 말하면 지금이 가장 좋은 출발점입니다. "
-         "온라인 교육 2시간으로 핵심 원칙과 안전 수칙부터 갖추고, 자격검정으로 증명하세요."),
+         "온라인 강의 8강으로 핵심 원칙과 안전 수칙부터 갖추고, 수료 시험으로 증명하세요."),
     ]
     import json as _json
     quiz_json = _json.dumps([{"t": t, "q": q, "o": [o for o, _ in opts], "s": [sc for _, sc in opts], "e": e}
@@ -4031,11 +4092,11 @@ def build_quiz():
           </div>
           <div class="quiz-next">
             <strong>다음 단계</strong>
-            <p>AI윤리전문가 2급 자격과정: 온라인 교육 약 2시간 + 자격검정, 위원회 명의 자격증.
+            <p>AI윤리전문가 양성과정 기본과정: 온라인 강의 {LECTURES}강({TOTAL_TIME}) + 수료 시험, 한국AI윤리위원회 명의 수료증.
                1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}) · 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</p>
             <div class="btns">
               <a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
-              <a class="btn btn-ghost" href="expert.html">자격과정 안내</a>
+              <a class="btn btn-ghost" href="expert.html">양성과정 안내</a>
             </div>
           </div>
           <button type="button" class="quiz-retry" id="qRetry">다시 풀기</button>
@@ -4049,7 +4110,7 @@ def build_quiz():
           <span class="eyebrow">Why It Matters</span>
           <h2 class="h-sec">기준을 아는 한 사람이 조직 전체의 리스크를 줄입니다</h2>
           <p class="h-sub" style="margin:0 auto">2026년 AI기본법 시행 이후 기업·기관·학교는 AI를 어디까지 어떻게 써야 하는지 답할 사람을 찾고 있습니다.
-             이 자가진단의 7개 장면이 바로 그 기준이고, AI윤리전문가 자격과정은 그 기준을 체계적으로 배우고 증명하는 과정입니다.</p>
+             이 자가진단의 7개 장면이 바로 그 기준이고, AI윤리전문가 양성과정은 그 기준을 체계적으로 배우고 증명하는 과정입니다.</p>
         </div>
       </div>
     </section>"""
@@ -4213,7 +4274,7 @@ def build_apply():
           <article class="card reveal"><div class="card-icon"><i data-lucide="monitor-play"></i></div>
             <h3>AI 윤리 교육 할인</h3><p>임직원 대상 출강 교육(1~4시간 맞춤 과정)을 회원 등급에 따라 할인된 비용으로 이용합니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="award"></i></div>
-            <h3>자격과정 응시 우대</h3><p>임직원의 AI윤리전문가 자격과정(2급·1급) 응시 시 우선 접수와 우대 혜택이 적용됩니다.</p></article>
+            <h3>양성과정 수강 우대</h3><p>임직원의 AI윤리전문가 양성과정(기본·심화) 수강 시 우선 접수와 우대 혜택이 적용됩니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="shield-check"></i></div>
             <h3>AI 활용 기준 자문</h3><p>사내 생성형 AI 활용 지침과 AI기본법 대응 방향에 대한 기초 자문을 제공합니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="megaphone"></i></div>
@@ -4252,7 +4313,7 @@ def build_apply():
               <li>· 준회원 혜택 전체 포함</li>
               <li>· 회원사 현판 제공</li>
               <li>· AI 윤리 교육 20% 할인</li>
-              <li>· 임직원 자격과정 응시 우대</li>
+              <li>· 임직원 양성과정 수강 우대</li>
               <li>· 위원회 홈페이지 로고 게재</li>
             </ul>
           </div>
