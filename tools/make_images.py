@@ -9,20 +9,20 @@ CAT_COLOR={"공지":"#5B8DEF","칼럼":"#6FE3D8","연구·정책":"#9FB7FF","캠
 
 # slug → (대표 문구, 부제)
 LABELS={
- "2024-03-15-founding":("한국AI윤리협회 출범","설립 취지와 초대 임원진 안내"),
- "2025-03-14-first-anniversary":("설립 1년, 걸어온 길","한국AI윤리협회 1주년"),
+ "2024-03-15-founding":("한국AI윤리위원회 출범","설립 취지와 초대 임원진 안내"),
+ "2025-03-14-first-anniversary":("설립 1년, 걸어온 길","한국AI윤리위원회 1주년"),
  "2025-05-20-company-checklist":("기업 AI 윤리 체크리스트 7가지","생성형 AI 도입 전 점검"),
  "2025-07-08-school-ai-ethics-edu":("학교·공공기관 AI 윤리교육","사용법 교육만으로는 부족한 이유"),
  "2025-09-16-genai-copyright":("생성형 AI 저작권 논란 정리","창작과 연구 현장의 기준"),
  "2025-11-11-ai-act-preview":("AI기본법 시행을 앞두고","기업과 기관이 준비해야 할 것"),
  "2026-02-05-ai-act-first-month":("AI기본법 시행 한 달","현장에서 가장 많이 받은 질문 5가지"),
- "2026-06-10-new-president":("제2대 회장 취임","신동복 회장"),
- "2026-07-02-executive-appointments":("신임 임원진 선임","부회장 · 사무총장 · 감사"),
+ "2026-06-10-new-president":("제2대 위원장 취임","신동복 위원장"),
+ "2026-07-02-executive-appointments":("신임 임원진 선임","부위원장 · 사무총장 · 감사"),
  "2026-07-28-university-ai-policy-2026":("2026 대학가 AI 정책의 방향","'금지'에서 '표기'로"),
  "2026-07-30-ai-writing-traits":("AI가 쓴 글의 특징 10가지","전문가는 어떻게 구별하는가"),
  "2026-08-01-journal-submission-ai-check":("학술지 투고 전 AI 검사","게재 철회를 부르는 3가지 실수"),
  "2026-08-03-student-report-ai-guide":("과제·레포트 AI 활용 가이드","대학생이 안전하게 챗GPT 쓰는 법"),
- "2026-08-05-advisors-experts":("고문·자문위원 및 전문위원 위촉","협회 전문성을 뒷받침할 전문가"),
+ "2026-08-05-advisors-experts":("고문·자문위원 및 전문위원 위촉","위원회 전문성을 뒷받침할 전문가"),
  "2026-08-05-ai-fake-references":("AI가 만든 가짜 참고문헌","DOI 검증이 필수가 된 이유"),
  "2026-08-07-copyclean-precheck-guide":("제출 전 AI 유사도 사전점검","카피클린 활용 가이드"),
  "2026-08-10-jaso-ai-check":("자기소개서 AI 검사 시대","챗GPT로 쓴 자소서, 기업은 알아볼까"),
@@ -33,7 +33,7 @@ LABELS={
  "2026-08-17-recruit":("전문위원 · AI 윤리위원 상시 모집","전공·경력 무관, 온라인 활동"),
  "2026-08-17-website-open":("공식 홈페이지 개설","kaiec.kr"),
  "2026-08-18-how-ai-detectors-work":("AI 검사기의 원리","AI가 쓴 글은 어떻게 탐지되는가"),
- "2026-08-19-ai-detection-bypass-risk":("AI 탐지 우회 도구의 실체","협회가 사용을 권하지 않는 5가지 이유"),
+ "2026-08-19-ai-detection-bypass-risk":("AI 탐지 우회 도구의 실체","위원회가 사용을 권하지 않는 5가지 이유"),
  "2026-08-20-lower-ai-similarity":("AI 유사도 낮추기 전에","반드시 알아야 할 올바른 대응"),
  "2026-08-21-ai-similarity-check-guide":("AI 유사도 검사 가이드","제출 전 확인 절차"),
  "2026-08-22-new-members":("신규 회원사 안내","성균관대학교 RISE사업단 · 성균관컨설팅 · 카피클린"),
@@ -87,7 +87,7 @@ def post_html(cat, color, title, sub, date):
     <div class="sub">{sub}</div>
   </div>
   <div class="foot">
-    <div class="brand"><div class="badge">KAIEC</div><div><div class="bko">한국AI윤리협회</div><div class="ben">KOREA AI ETHICS COMPLIANCE</div></div></div>
+    <div class="brand"><div class="badge">KAIEC</div><div><div class="bko">한국AI윤리위원회</div><div class="ben">KOREA AI ETHICS COMMITTEE</div></div></div>
     <div>{date}</div>
   </div>
 </div></body></html>"""
@@ -102,8 +102,8 @@ h1{{font-size:58px;margin-top:26px;max-width:900px}}
 <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="orb"></div>
 <div class="wrap">
   <div>
-    <div class="brand"><div class="badge">KAIEC</div><div><div class="bko">한국AI윤리협회</div><div class="ben">KOREA AI ETHICS COMPLIANCE</div></div></div>
-    <h1>한국AI윤리협회(KAIEC)<br><span class="accent">책임 있는 AI 활용을 위한 전문기관</span></h1>
+    <div class="brand"><div class="badge">KAIEC</div><div><div class="bko">한국AI윤리위원회</div><div class="ben">KOREA AI ETHICS COMMITTEE</div></div></div>
+    <h1>한국AI윤리위원회(KAIEC)<br><span class="accent">책임 있는 AI 활용을 위한 전문기관</span></h1>
     <div class="sub">AI 윤리 교육 · 연구 · 캠페인 · AI윤리전문가 양성 및 국내외 협력</div>
   </div>
   <div class="chips"><span>AI윤리전문가 자격과정</span><span>AI 윤리 교육 · 출강</span><span>사전점검 캠페인</span><span>기업 · 기관 협력</span></div>

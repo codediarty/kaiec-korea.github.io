@@ -1,5 +1,5 @@
 /* ==========================================================================
-   한국AI윤리협회 (KAIEC) : Design System
+   한국AI윤리위원회 (KAIEC) : Design System
    ========================================================================== */
 
 :root{
@@ -1337,3 +1337,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 @media (max-width:860px){.quiz-teaser{grid-template-columns:1fr;padding:26px 24px}.quiz-teaser-side{justify-self:start;flex-direction:row;align-items:center;flex-wrap:wrap}
   .trust-col{margin-top:8px}}
 @media (max-width:600px){.quiz-card{padding:22px 18px}.sq{padding:18px 16px}.tutor{padding:16px}.curri-meta{display:block;margin:4px 0 0}}
+
+/* 2026.09.14 기관명 원복: '한국AI윤리위원회(KAIEC)'가 작은 폰에서 한 줄에 들어가도록 히어로 제목 크기 미세 조정 */
+@media (max-width:420px){.hero h1{font-size:27.5px}}
+@media (max-width:370px){.hero h1{font-size:25px}}

@@ -1,4 +1,4 @@
-# 한국AI윤리협회(KAIEC) 공식 홈페이지
+# 한국AI윤리위원회(KAIEC) 공식 홈페이지
 
 - 주소: https://kaiec.kr (GitHub Pages, main 브랜치 루트에서 서빙, 커스텀 도메인은 CNAME 파일)
 - 저장소: codediarty/kaiec-korea.github.io

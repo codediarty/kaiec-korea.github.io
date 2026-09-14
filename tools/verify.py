@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-한국AI윤리협회(kaiec.kr) 빌드 결과 전체 검증
+한국AI윤리위원회(kaiec.kr) 빌드 결과 전체 검증
   사용법: 저장소 루트에서  python3 build.py  →  python3 tools/verify.py
   마지막 줄이 "전체 통과"여야 커밋·푸시합니다. 실패가 있으면 항목별로 원인이 표시됩니다.
 검사 항목
   1. 생성 페이지·게시글 페이지·이동 스텁이 모두 존재하고, 원본 없는 잔존 결과물이 없는지
   2. 줄표(U+2014) 미사용 (저장소의 모든 텍스트 파일)
-  3. 옛 명칭(한국AI윤리위원회) 미사용, 법적 지위를 넘어서는 표현·'민간'·자리표시 도메인 미사용
+  3. 폐기 명칭(한국AI윤리협회, 2026.09.11~13 사용 후 SEO 문제로 원복)·협회 직함(회장)·옛 영문명 미사용,
+     법적 지위를 넘어서는 표현·'민간'·자리표시 도메인 미사용
   4. 각 페이지의 canonical·네이버 인증 메타·설명·OG 이미지·브레드크럼 존재, JSON-LD 전부 파싱
   5. 내부 링크·이미지·CSS·JS 경로가 실제 파일을 가리키는지
   6. sitemap.xml·rss.xml 파싱, 사이트맵 항목과 실제 페이지 일치
@@ -22,7 +23,9 @@ os.chdir(BASE)
 import build  # 상수·url_for·out_path·load_posts 를 그대로 사용 (빌드는 실행되지 않음)
 
 DASH = "\u2014"   # 줄표(긴 대시)
-OLD_NAMES = ["한국AI윤리위원회", "한국 AI 윤리위원회"]
+# 2026.09.14 원복: 기관명은 한국AI윤리위원회(Korea AI Ethics Committee). 아래 표기는 어디에도 남기지 않는다
+OLD_NAMES = ["한국AI윤리협회", "한국 AI 윤리협회", "AI윤리협회", "AI 윤리 협회", "Association", "Ethics & Compliance",
+             "Ethics Compliance", "ETHICS COMPLIANCE", "회장", "PRESIDENT"]
 BANNED = ["민간", "국가공인", "지정기부금", "세액공제", "기부금 영수증", "YOUR-DOMAIN",
           "kaiec-korea.github.io/", "kaiec.skkc.co.kr"]
 DOC_FILES = {"작업-메모.md", "README.md", "배포-가이드.md", "앱스스크립트-접수시트연동.txt",
@@ -108,13 +111,13 @@ for path in text_files():
     txt = read(path)
     for w in OLD_NAMES:
         if w in txt:
-            probs.append(f"{r}: 옛 명칭 '{w}' {txt.count(w)}곳")
+            probs.append(f"{r}: 폐기 명칭·표기 '{w}' {txt.count(w)}곳")
     if r in DOC_FILES:
         continue
     for w in BANNED:
         if w in txt:
             probs.append(f"{r}: 금지 표현 '{w}' {txt.count(w)}곳")
-check("옛 명칭·법적 지위 초과 표현·자리표시 도메인 미사용", probs)
+check("폐기 명칭(협회·회장·옛 영문명)·법적 지위 초과 표현·자리표시 도메인 미사용", probs)
 
 # ---------------------------------------------------------------- 4. 페이지 메타·JSON-LD
 probs = []

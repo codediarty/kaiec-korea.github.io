@@ -1,4 +1,4 @@
-/* 한국AI윤리협회 (KAIEC) : main.js */
+/* 한국AI윤리위원회 (KAIEC) : main.js */
 (function () {
   'use strict';
 
