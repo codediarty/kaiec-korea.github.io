@@ -262,12 +262,21 @@ LOGO_SVG = """<svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="htt
   <path d="M24 12.2v3.2M16 16l2.6 1.6M32 16l-2.6 1.6" stroke="#8FB7FF" stroke-width="1.3" stroke-linecap="round" opacity=".8"/>
 </svg>"""
 
-BRAND = f"""<a class="brand" href="index.html" aria-label="{SITE_NAME} 홈">
+# 워드마크: 글꼴 외곽선을 벡터 패스로 굳힌 SVG (tools/make_wordmark.py로 생성, 2026.09.14).
+# 웹폰트 로딩·OS 힌팅과 무관하게 어떤 화면에서도 선명하게 렌더링됩니다. 헤더가 원본(id 포함), 푸터는 <use>로 재사용.
+# 색은 CSS 변수 --wm-ko / --wm-en (헤더 남색·회색, 푸터 흰색·연회색)로 지정합니다.
+WORDMARK_SVG = io.open(os.path.join(BASE, "tools", "wordmark.svg"), encoding="utf-8").read().strip()
+_wm_vb = re.search(r'viewBox="([^"]+)"', WORDMARK_SVG).group(1)
+WORDMARK_USE = (f'<svg class="brand-wm" viewBox="{_wm_vb}" aria-hidden="true" focusable="false">'
+                f'<use href="#wm-ko"/><use href="#wm-en"/></svg>')
+
+
+def brand(reuse=False):
+    """헤더·푸터 공통 브랜드 블록. reuse=True(푸터)는 헤더 SVG의 패스를 <use>로 참조해 페이지 용량을 아낍니다."""
+    wm = WORDMARK_USE if reuse else WORDMARK_SVG
+    return f"""<a class="brand" href="index.html" aria-label="{SITE_NAME} 홈">
         <span class="brand-badge">KAIEC</span>
-        <span class="brand-text">
-          <span class="brand-ko">{SITE_NAME}</span>
-          <span class="brand-en">{SITE_EN.replace(' & ', ' ')}</span>
-        </span>
+        <span class="brand-text">{wm}<span class="sr-only">{SITE_NAME} {SITE_EN}</span></span>
       </a>"""
 
 
@@ -288,7 +297,7 @@ def header():
       </div>
     </div>
     <div class="header-inner">
-      {BRAND}
+      {brand()}
       <nav class="nav" id="nav">
           {links}
           <span class="header-cta"><a class="btn btn-primary btn-sm" href="experts.html">AI윤리전문가 보기</a><a class="btn btn-ghost btn-sm" href="join.html">KAIEC 참여하기</a></span>
@@ -307,7 +316,7 @@ def footer():
     <div class="wrap">
       <div class="footer-top">
         <div class="footer-brand">
-          {BRAND}
+          {brand(True)}
           <p class="footer-desc">생성형 AI 시대의 책임 있는 AI 활용과 건전한 AI 윤리 문화 확산을 위해 교육·연구·캠페인·대외협력 활동을 수행하는 AI 윤리 전문기관입니다.</p>
         </div>
         <div class="footer-col">

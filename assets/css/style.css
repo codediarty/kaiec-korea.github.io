@@ -152,20 +152,13 @@ button{font-family:inherit}
   content:"";position:absolute;inset:3.5px;border:1px solid rgba(255,255,255,.22);
   border-radius:4.5px;pointer-events:none;
 }
-.brand-text{display:flex;flex-direction:column;line-height:1.24;gap:3px;padding:2px 0}
-.brand-ko{
-  font-family:'Noto Serif KR','Noto Serif CJK KR',AppleMyungjo,'Nanum Myeongjo',serif;
-  font-size:21px;font-weight:900;letter-spacing:.012em;color:#0B1B36;
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-  text-rendering:optimizeLegibility;font-synthesis:none;
-}
-.brand-en{
-  font-family:'Archivo','Pretendard Variable',Pretendard,sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.13em;color:#76839A;text-transform:uppercase;
-}
+.brand-text{display:flex;align-items:center;padding:2px 0}
+/* 워드마크: 벡터 패스 SVG (2026.09.14, 이전 웹폰트 텍스트 대체). 색은 --wm-ko / --wm-en 로 제어 */
+.brand-wm{display:block;width:170px;height:32px;--wm-ko:#0B1B36;--wm-en:#76839A}
+.footer-brand .brand-wm{--wm-ko:#fff;--wm-en:#7E96B8}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media (max-width:400px){
-  .brand-ko{font-size:17px}
-  .brand-en{font-size:7.5px}
+  .brand-wm{width:138px;height:26px}
   .brand-badge{font-size:13px;padding:11px 11px 11px 14px}
 }
 
@@ -429,8 +422,6 @@ table.tbl tr:hover td{background:#FCFDFF}
 .site-footer{background:var(--ink);color:#8FA6C4;padding:60px 0 34px;font-size:14px}
 .footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:36px;padding-bottom:38px;
   border-bottom:1px solid rgba(255,255,255,.10)}
-.footer-brand .brand-ko{color:#fff}
-.footer-brand .brand-en{color:#7E96B8}
 .footer-desc{margin-top:16px;line-height:1.8;font-size:13.5px;color:#8FA6C4;max-width:330px}
 .footer-col h4{font-size:13.5px;color:#fff;margin-bottom:15px;letter-spacing:.02em}
 .footer-col li{margin-bottom:9px}
