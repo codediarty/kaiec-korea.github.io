@@ -1369,3 +1369,9 @@ table.tbl tr:hover td{background:#FCFDFF}
 .expert-adv-note{text-align:center;margin-top:16px}
 .br-pc{display:inline}
 @media (max-width:700px){.br-pc{display:none}}
+/* 2026.09.15: experts Why Now HOT 태그, join 자기소개 예시 문장 칩 */
+.hot-tag{display:inline-block;vertical-align:middle;margin-left:8px;padding:3px 9px;border-radius:999px;background:linear-gradient(96deg,#FF6B4A,#FF3D77);color:#fff;font-size:12px;font-weight:800;letter-spacing:.08em;transform:translateY(-4px)}
+.msg-quick{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+.msg-quick button{font:inherit;font-size:12.5px;line-height:1.3;padding:6px 11px;border-radius:999px;border:1px solid var(--gray-200);background:#fff;color:var(--gray-600);cursor:pointer;text-align:left}
+.msg-quick button:hover{border-color:var(--blue);color:var(--blue);background:#F3F7FF}
+@media (max-width:600px){.hot-tag{font-size:11px;padding:2px 7px}}

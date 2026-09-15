@@ -3510,18 +3510,19 @@ def build_experts():
       <div class="wrap">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Why Now</span>
-          <h2 class="h-sec">AI를 쓰는 사람은 많아졌고, 바르게 쓰는 사람이 돋보이는 때입니다</h2>
-          <p class="h-sub" style="margin:0 auto">보고서도 과제도 회의록도 AI로 만드는 시대. 기업·기관·학교는 AI를 무분별하게 쓰는 사람이 아니라
-             <strong>윤리적으로 쓸 줄 아는 사람</strong>을 찾기 시작했습니다.</p>
+          <h2 class="h-sec">2026년, 가장 빠르게 떠오르는 스펙 <span class="hot-tag">HOT</span></h2>
+          <p class="h-sub" style="margin:0 auto">AI기본법 시행, EU AI Act 집행, 연평균 44% 성장. 규제와 시장이 동시에 움직이면서
+             기업·기관·학교가 지금 가장 급하게 찾는 사람이 <strong>AI윤리전문가</strong>입니다.
+             유망하다는 말이 붙는 분야 중 전공·경력 제한 없이 온라인 강의 {LECTURES}강으로 시작할 수 있는 스펙은 흔치 않습니다.</p>
         </div>
         <div class="why-row">{why_html}</div>
         <div class="split" style="align-items:start;margin-top:34px">
           <div class="story">
-            <h3>지금 시작하는 사람이 가장 유리합니다</h3>
-            <p>기밀 문서를 통째로 AI에 넣고, 출처 없는 수치를 그대로 인용하고, AI가 쓴 글을 자기 글로 내는 일이 어느 조직에서나 일어나고 있습니다.
-               기업은 AI 활용 기준을, 학교는 지도 기준을, 공공기관은 도입 기준을 세워야 합니다.</p>
-            <p>그런데 그 기준을 제대로 배운 사람은 아직 드뭅니다. 수요는 이미 커졌고 준비된 사람은 적은 지금이,
-               AI윤리전문가 양성과정 수료 한 줄이 가장 크게 보이는 시기입니다.</p>
+            <h3>왜 지금 이렇게 뜨거운가</h3>
+            <p>기업은 사내 AI 활용 기준과 임직원 교육을 맡을 사람을, 학교는 학생의 AI 활용을 지도할 사람을, 공공기관은 도입 전 위험을 점검할 사람을
+               찾기 시작했습니다. 채용과 승진, 사내 공모에서 'AI 윤리·거버넌스' 역량을 묻는 조직이 빠르게 늘고 있습니다.</p>
+            <p>그런데 이 역량을 증명할 수 있는 사람은 아직 소수입니다. 수요가 먼저 커진 시장에서는 먼저 준비한 사람이 전문가 그룹의 첫 자리를 차지합니다.
+               AI윤리전문가 양성과정 수료 한 줄이 가장 크게 보이는 때가 바로 지금입니다.</p>
             <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           </div>
           <div class="moment-list">
@@ -3660,7 +3661,7 @@ def build_experts():
 def build_join():
     """KAIEC 참여하기: 개인·전문가·기업·기관 참여 프로그램을 한 페이지에서 안내하고 자체 신청서로 접수
     - 참여 구분은 구글폼처럼 한 목록에서 고르며(대상·역할 설명 포함), 잘 모르면 '위원회 추천' 선택 가능
-    - 허들 최소화: 필수는 참여 구분·성명·이메일·직업·지원 동기·자기소개·동의뿐, 소속은 '적기' 버튼을 누른 분만(기업·기관 선택 시 기관명 칸 자동 표시)
+    - 허들 최소화: 필수는 참여 구분·성명·이메일·직업·지원 동기(체크)·동의뿐(자기소개는 2026.09.15부터 선택, 예시 문장 칩으로 한 줄 입력), 소속은 '적기' 버튼을 누른 분만(기업·기관 선택 시 기관명 칸 자동 표시)
     - 접수 데이터는 수강 신청과 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
     ROLES = [
         # (아이콘, 구분명, 배지, 이런 분께, 주요 역할)
@@ -3846,11 +3847,15 @@ def build_join():
             <p class="err-msg">기대하는 것을 하나 이상 선택해 주세요.</p>
             <div class="gform-fields" style="margin-top:18px">
               <div class="field" id="fMsg">
-                <label>지원 사유 및 자기소개 <span class="req">*</span></label>
-                <textarea name="msg" maxlength="600" rows="6" placeholder="예) 저는 ○○에서 ○○을 하고 있으며, AI 윤리에 관심을 갖게 된 계기는 … 입니다.
-KAIEC에서 … 활동을 해보고 싶고, 제 강점은 … 입니다."></textarea>
-                <p class="field-hint">형식은 자유입니다. 관심을 갖게 된 계기, 하고 싶은 활동, 본인의 강점을 3~5문장으로 적어주세요. <span id="msgCount">0</span>/600</p>
-                <p class="err-msg">지원 사유를 20자 이상 적어주세요.</p>
+                <label>한 줄 자기소개 <span class="field-opt">(선택)</span></label>
+                <div class="msg-quick" id="msgQuick" aria-label="자기소개 예시 문장">
+                  <button type="button">AI를 자주 쓰는데 올바른 기준이 궁금해서 지원합니다.</button>
+                  <button type="button">취업 준비 중이라 AI 윤리 활동 경험을 쌓고 싶습니다.</button>
+                  <button type="button">학교·직장에서 AI 윤리 활동을 이끌어 보고 싶습니다.</button>
+                  <button type="button">AI 윤리 캠페인과 콘텐츠 제작에 참여하고 싶습니다.</button>
+                </div>
+                <textarea name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 쓰는데 올바른 기준이 궁금해서 지원합니다."></textarea>
+                <p class="field-hint">한 줄이면 충분합니다. 위 문장을 누르면 그대로 들어가고, 비워 두셔도 됩니다. <span id="msgCount">0</span>/600</p>
               </div>
             </div>
           </div>
@@ -3967,9 +3972,16 @@ KAIEC에서 … 활동을 해보고 싶고, 제 강점은 … 입니다."></text
     function pick(t){var r=form.querySelector('[name=jtype][value="'+t+'"]');if(r){r.checked=true;syncType();}}
     var q=new URLSearchParams(location.search).get('type'); if(q){pick(q);}
 
-    /* 자기소개 글자 수 */
+    /* 자기소개 글자 수 + 예시 문장 칩(누르면 입력) */
     var msg=form.querySelector('[name=msg]'), mc=document.getElementById('msgCount');
     msg.addEventListener('input',function(){mc.textContent=this.value.length;});
+    document.querySelectorAll('#msgQuick button').forEach(function(b){
+      b.addEventListener('click',function(){
+        var t=b.textContent.trim(), cur=msg.value.trim();
+        if(cur.indexOf(t)>=0){return;}
+        msg.value=(cur?cur+' ':'')+t; mc.textContent=msg.value.length; msg.focus();
+      });
+    });
 
     /* 휴대전화 자동 하이픈 */
     var phone=form.querySelector('[name=phone]');
@@ -3990,7 +4002,6 @@ KAIEC에서 … 활동을 해보고 싶고, 제 강점은 … 입니다."></text
       bad('fPhone',digits.length>0&&!(digits.length>=10&&digits.length<=11&&digits.slice(0,2)==='01'));
       bad('fJob',!job);
       bad('secMotive',mot.length===0);
-      bad('fMsg',v('msg').length<20);
       bad('secPriv',!form.querySelector('[name=privok]').checked);
       var first=document.querySelector('.is-invalid');
       document.getElementById('topErr').style.display=first?'block':'none';
