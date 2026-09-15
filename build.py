@@ -318,7 +318,7 @@ def header():
         <span class="topbar-right">
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
-          <a href="{COPYCLEAN_URL}" target="_blank" rel="noopener" style="color:#6FE3D8">카피클린</a><span class="tsep">|</span>
+          <a href="expert.html" style="color:#6FE3D8">인증시험</a><span class="tsep">|</span>
           <a href="mou.html#inquiry">제휴·MOU 문의</a>
         </span>
       </div>
