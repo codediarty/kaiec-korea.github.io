@@ -524,6 +524,15 @@ def hero_sub(title, desc, crumb):
     </section>"""
 
 
+# 메인 피처 카드 '카피클린 문서검사' 타일: 래스터 대신 벡터 게이지 (어떤 배율에서도 글씨가 깨지지 않음, 2026.09.15)
+GAUGE_SVG = ('<svg class="gauge" viewBox="0 0 92 114" role="img" aria-label="카피클린 AI 문서 분석 결과서 AI 유사도 게이지 53%">'
+             '<path d="M14 78 A34 34 0 0 1 30 26" fill="none" stroke="#2E8B57" stroke-width="7" stroke-linecap="round"/>'
+             '<path d="M36 22 A34 34 0 0 1 60 24" fill="none" stroke="#F28C28" stroke-width="7" stroke-linecap="round"/>'
+             '<path d="M66 28 A34 34 0 0 1 78 78" fill="none" stroke="#D23B2C" stroke-width="7" stroke-linecap="round"/>'
+             '<text x="46" y="60" text-anchor="middle" font-size="22" font-weight="800" fill="#fff" letter-spacing="-.5">53%</text>'
+             '<text x="46" y="75" text-anchor="middle" font-size="9.5" font-weight="700" fill="#DDF5F0">AI 유사도</text>'
+             '<text x="46" y="100" text-anchor="middle" font-size="7" font-weight="600" fill="#9ED9CE" letter-spacing=".3">CopyClean</text>'
+             '</svg>')
 CERT_CTA = "AI윤리전문가 양성과정 신청하기"        # 사이트 공통 1순위 버튼 문구
 CERT_HREF = "expert-apply.html?course=2"          # 항상 기본과정(대표 과정)이 선택된 신청 페이지로
 
@@ -675,7 +684,7 @@ def build_index(posts):
             </div>
           </a>
           <a class="fcard reveal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">
-            <div class="fc-visual fc-v3"><img src="assets/img/cards/card-copyclean.png" alt="카피클린 AI 문서 분석 결과서 AI 유사도 게이지" loading="lazy"></div>
+            <div class="fc-visual fc-v3 fc-gauge">{GAUGE_SVG}</div>
             <div class="fc-body">
               <h3>카피클린 문서검사</h3>
               <p>AI 사용 여부 확인<br>제출 전 사전점검</p>
@@ -698,10 +707,10 @@ def build_index(posts):
       <div class="wrap">
         <div class="offer-grid">
           <div class="offer-why reveal">
-            <span class="eyebrow">Why Now</span>
-            <h2 class="h-sec" style="text-align:left">AI 윤리는 이제 선택이 아니라 실무입니다</h2>
-            <p class="h-sub" style="text-align:left;margin:0 0 22px">2026년 1월 AI기본법 시행, 8월 EU AI Act 본격 집행. AI를 개발하는 기업만이 아니라
-               <strong>활용하는 기업·기관·학교도 의무의 주체</strong>가 되었습니다. 기준을 아는 한 사람이 조직 전체의 리스크를 줄입니다.</p>
+            <span class="eyebrow">AI Ethics Expert Program</span>
+            <h2 class="h-sec" style="text-align:left">한국AI윤리위원회<br>AI윤리전문가 양성과정</h2>
+            <p class="h-sub" style="text-align:left;margin:0 0 22px">온라인 강의 {LECTURES}강과 수료 시험으로 <strong>위원회 공식 수료증과 공식 등록</strong>까지.
+               2026년 AI기본법 시행으로 기업·기관·학교가 찾기 시작한 스펙을 지금 준비하세요.</p>
             <div class="why-stats">
               <div><strong>2026. 1</strong><span>AI기본법 시행</span></div>
               <div><strong>2026. 8</strong><span>EU AI Act 본격 집행</span></div>
@@ -809,7 +818,7 @@ def build_index(posts):
             <span class="badge badge--teal" style="align-self:flex-start">ONLINE · 재택</span>
             <h3 style="font-size:26px;letter-spacing:-.035em">함께 알리는 사람이<br>문화를 만듭니다</h3>
             <p style="color:#B8CBE8;font-size:15px;line-height:1.8">
-              거창한 자격이나 경력이 필요하지 않습니다. AI를 쓰는 사람이라면 누구나
+              거창한 자격이나 경력이 필요하지 않습니다. AI를 활용하는 분이라면 누구나
               AI 윤리를 알리는 주체가 될 수 있습니다.</p>
           </div>
         </div>
@@ -948,7 +957,7 @@ def build_about():
             AI를 활용하고도 떳떳하게 밝히지 못하는 문화, 그리고 막연한 불안 속에 정당한 활용마저
             주저하게 되는 위축이 그것입니다.</p>
             <p>한국AI윤리위원회는 이 공백을 메우고자 뜻을 모은 <strong>AI 윤리 전문 기구</strong>입니다.
-            우리는 규제와 처벌이 아니라, AI를 쓰는 사람이라면 누구나 스스로 지킬 수 있는
+            우리는 규제와 처벌이 아니라, AI를 활용하는 누구나 스스로 지킬 수 있는
             기준과 문화의 힘을 믿습니다. 제출 전에 한 번 더 점검하고, 활용했다면 숨기지 않고 밝히며,
             결과에 책임지는 태도. 그 작은 실천들이 모여 신뢰할 수 있는 AI 시대를 만든다고 확신합니다.</p>
             <p>위원회는 교육과 연구, 캠페인과 대외협력을 통해 이 실천을 넓혀가고자 합니다.
@@ -989,7 +998,7 @@ def build_about():
         </p>
         <p class="lead">
           한국AI윤리위원회는 이 공백을 메우기 위해 출발했습니다. 규제하거나 처벌하는 기구가 아니라,
-          AI를 쓰는 사람들이 <strong>스스로 지킬 수 있는 기준</strong>을 정리하고 알리며,
+          AI를 활용하는 사람들이 <strong>스스로 지킬 수 있는 기준</strong>을 정리하고 알리며,
           함께 실천할 사람들을 모으는 위원회입니다.
         </p>
       </div>
@@ -1154,7 +1163,7 @@ def build_business():
         <div class="center" style="margin-bottom:52px">
           <span class="eyebrow">Main Business</span>
           <h2 class="h-sec">6대 주요사업</h2>
-          <p class="h-sub">교육 · 연구 · 캠페인 · 대외협력을 축으로, AI를 쓰는 사람이 실제로 활용할 수 있는 결과물을 만드는 데 집중합니다.</p>
+          <p class="h-sub">교육 · 연구 · 캠페인 · 대외협력을 축으로, 현장에서 실제로 활용할 수 있는 결과물을 만드는 데 집중합니다.</p>
         </div>
 {"".join(blocks)}
       </div>
@@ -1499,10 +1508,10 @@ def build_partner():
     <section class="section">
       <div class="wrap-narrow center">
         <span class="eyebrow">Partner Program</span>
-        <h2 class="h-sec">AI를 쓰는 사람이<br>AI 윤리를 알리는 사람이 됩니다</h2>
+        <h2 class="h-sec">AI 윤리를 알리는 사람,<br>지금 AI 윤리위원으로 시작하세요</h2>
         <p class="h-sub" style="margin:0 auto">
-          AI 윤리는 전문가 몇 명이 만드는 것이 아니라, AI를 실제로 사용하는 사람들이 함께 만들어가는 것입니다.
-          AI 윤리위원은 그 확산을 현장에서 담당하는 위원회의 실천 조직입니다.
+          AI 윤리는 전문가 몇 명이 아니라, AI를 매일 활용하는 사람들이 함께 만들어갑니다.
+          AI 윤리위원은 그 확산을 현장에서 이끄는 위원회의 실천 조직입니다. 온라인·재택으로 참여할 수 있습니다.
         </p>
         <div style="display:flex;gap:11px;justify-content:center;flex-wrap:wrap;margin-top:28px">
           <a class="btn btn-primary" href="join.html#apply">위원 지원하기 <i data-lucide="arrow-right"></i></a>
@@ -1914,7 +1923,7 @@ def build_post(p, posts):
                     + '</ol></nav>')
     mid_cta = f"""<aside class="post-cta">
   <span class="post-cta-kicker">AI윤리전문가 양성과정 · 1기 모집 중</span>
-  <strong>AI를 어디까지 어떻게 써야 하는지, 기준을 아는 사람이 조직의 리스크를 줄입니다.</strong>
+  <strong>AI를 어디까지 어떻게 활용해야 하는지, 기준을 아는 사람이 조직의 리스크를 줄입니다.</strong>
   <p>온라인 강의 {LECTURES}강과 수료 시험으로 한국AI윤리위원회 공식 수료증을 받고 위원회에 공식 등록되세요. 기본과정 1기 특별가 {won(PRICE_L2)} (정가 {won(LIST_L2)}), 접수 마감 {DEADLINE}.</p>
   <span class="post-cta-links"><a class="btn btn-primary btn-sm" href="{CERT_HREF}">{CERT_CTA}</a><a class="btn btn-ghost btn-sm" href="quiz.html">3분 자가진단</a></span>
 </aside>
@@ -2663,7 +2672,7 @@ def build_expert():
         ("shield-check", "현장 · 상시화된 AI 리스크", "지금",
          "기밀 정보 입력, 허위 정보(환각) 인용, 저작권 분쟁, AI 표절 논란. 생성형 AI가 업무와 학습의 일상이 되면서 사고도 일상이 되었습니다. <strong>기준을 아는 한 사람</strong>이 조직 전체의 리스크를 줄입니다."),
         ("trending-up", "기회 · 아직 소수인 전문 인력", "선점",
-         "AI를 쓸 줄 아는 사람은 많지만, AI 윤리와 규제 대응을 체계적으로 배운 사람은 아직 소수입니다. 수요가 먼저 커진 시장에서 <strong>지금 시작하는 사람이 전문가 그룹의 첫 자리</strong>를 차지합니다."),
+         "AI를 활용할 줄 아는 사람은 많지만, AI 윤리와 규제 대응을 체계적으로 배운 사람은 아직 소수입니다. 수요가 먼저 커진 시장에서 <strong>지금 시작하는 사람이 전문가 그룹의 첫 자리</strong>를 차지합니다."),
     ]
     why_cards = "\n".join(f"""          <article class="card reveal">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
@@ -2676,7 +2685,7 @@ def build_expert():
 
     CAREER = [
         ("file-check", "이력서의 확실한 한 줄",
-         f"한국AI윤리위원회 공식 「{DOC_FULL}」으로, AI를 '잘' 쓰는 것을 넘어 <strong>윤리적으로 다룰 줄 아는 사람</strong>임을 교육 이력으로 증명합니다. AI 활용 능력이 평준화될수록 이 한 줄의 차별화 가치는 커집니다."),
+         f"한국AI윤리위원회 공식 「{DOC_FULL}」으로, AI를 '잘' 활용하는 것을 넘어 <strong>윤리적으로 다룰 줄 아는 사람</strong>임을 교육 이력으로 증명합니다. AI 활용 능력이 평준화될수록 이 한 줄의 차별화 가치는 커집니다."),
         ("building-2", "기업·기관이 실제로 찾는 스펙",
          "AI기본법 시행으로 기업·기관마다 사내 AI 활용 기준과 임직원 교육을 맡을 사람이 필요해졌습니다. 체계적인 AI 윤리 교육을 수료한 사람은 그 역할의 <strong>가장 자연스러운 후보</strong>가 됩니다."),
         ("trending-up", "앞으로가 더 유망한 분야",
@@ -2728,7 +2737,7 @@ def build_expert():
 {why_cards}
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
-          <strong>핵심은 하나입니다.</strong> 규제와 사고가 늘어날수록, 조직마다 "AI를 어디까지 어떻게 써야 하는가"에
+          <strong>핵심은 하나입니다.</strong> 규제와 사고가 늘어날수록, 조직마다 "AI를 어디까지 어떻게 활용해야 하는가"에
           답할 수 있는 사람이 필요해집니다. AI윤리전문가 양성과정은 그 답을 체계적으로 배우고 증명하는 가장 빠른 경로입니다.
         </div>
       </div>
@@ -2764,7 +2773,7 @@ def build_expert():
         <div class="center" style="margin-bottom:44px">
           <span class="eyebrow">Programs</span>
           <h2 class="h-sec">미래 유망 직업, AI윤리전문가</h2>
-          <p class="h-sub">AI 확산과 규제 강화로 수요가 커지는 유망 분야입니다. 현장에서 바로 쓰는 기준을 배우고,
+          <p class="h-sub">AI 확산과 규제 강화로 수요가 커지는 유망 분야입니다. 현장에서 바로 통하는 기준을 배우고,
              <strong>온라인 강의 {LECTURES}강 + 온라인 수료 시험</strong>으로 커리어에 힘이 되는 위원회 공식 수료증과 공식 등록까지 한 번에 완성합니다.</p>
         </div>
         <div class="grid grid-2" style="align-items:stretch">
@@ -2775,7 +2784,7 @@ def build_expert():
             </div>
             <h3 style="font-size:24px;letter-spacing:-.03em;color:#fff">기본과정</h3>
             <p style="color:#CFE0FF;font-size:15.5px;line-height:1.8">
-              AI를 쓰는 사람이라면 누구나. 온라인 강의 {LECTURES}강({TOTAL_TIME})을 이수하고 수료 시험({EXAM_BASIC[0]}문항, {EXAM_BASIC[1]}점 이상)을 통과하면
+              AI를 활용하는 분이라면 누구나. 온라인 강의 {LECTURES}강({TOTAL_TIME})을 이수하고 수료 시험({EXAM_BASIC[0]}문항, {EXAM_BASIC[1]}점 이상)을 통과하면
               <strong style="color:#fff">윤리적으로 AI를 다룰 줄 아는 사람</strong>임을 한국AI윤리위원회 공식 수료증으로 증명하고, 수료와 동시에 위원회에 공식 등록됩니다. 전공·경력 제한 없이 전 과정 온라인으로 진행됩니다.</p>
             <div style="display:flex;gap:7px;flex-wrap:wrap">
               <span class="chip" style="background:rgba(255,255,255,.14);color:#DCE9FF">#위원회 공식 수료증</span>
@@ -3448,7 +3457,7 @@ def build_experts():
          "수료와 동시에 위원회 수료자 명부에 공식 등록되고 수료번호가 부여됩니다. 이력서·포트폴리오에 기재한 한 줄을 위원회가 뒷받침하며, 기업·기관의 확인 요청에 수료 사실을 확인해 드립니다.",
          ["수료자 명부 등록", "수료번호 부여", "수료 사실 확인"]),
         ("스펙으로, 활동으로 확장",
-         "취업·이직·현재 직무에 바로 쓰고, 위원회 캠페인·Fellowship 등 공식 활동에 참여합니다. <small class=\"adv-note\">심화과정 수료자는 전문위원으로 등록되어 홈페이지에 프로필이 공개되고 전문강사·자문 활동이 가능합니다.</small>",
+         "취업·이직·현재 직무에 바로 활용하고, 위원회 캠페인·Fellowship 등 공식 활동에 참여합니다. <small class=\"adv-note\">심화과정 수료자는 전문위원으로 등록되어 홈페이지에 프로필이 공개되고 전문강사·자문 활동이 가능합니다.</small>",
          ["취업 · 이직 · 직무", "위원회 활동 참여", "커리어 확장"]),
     ]
     FAQ = [
@@ -3458,7 +3467,7 @@ def build_experts():
          "AI윤리전문가 양성과정은 그 역량을 체계적으로 배우고 한국AI윤리위원회 공식 수료증으로 증명하는 전문 교육과정입니다. 취업·이직과 현재 직무는 물론 교육·연구·전문 활동까지 활용 범위가 넓습니다."),
         ("AI나 윤리를 전공하지 않았는데 괜찮을까요?",
          "네. AI윤리전문가 양성과정은 전공·경력 제한 없이 누구나 수강할 수 있으며, 실무에서 마주치는 판단 기준을 온라인 강의로 체계적으로 배운 뒤 수료 시험을 치릅니다. "
-         "AI를 업무나 학업에 쓰고 있는 분이라면 이미 출발선에 서 있습니다."),
+         "AI를 업무나 학업에 활용하고 있는 분이라면 이미 출발선에 서 있습니다."),
         ("위원회 공식 등록은 어떻게 되나요?",
          "수료 기준을 충족하면 별도 절차 없이 한국AI윤리위원회 수료자 명부에 공식 등록되고, 수료번호가 부여된 공식 수료증(PDF)이 발급됩니다. "
          "심화과정 수료자는 등록 신청(성명·전문분야 제출, 소속은 희망 시에만)을 거쳐 위원회 전문위원으로 등록되고 홈페이지에 프로필이 공개되며, 전문강사·자문 활동이 가능합니다."),
@@ -3498,7 +3507,7 @@ def build_experts():
         <h1>KAIEC 공식 AI윤리전문가</h1>
         <p>올해 이력서에 새로 채울 한 줄, <strong style="color:#6FE3D8">AI윤리전문가</strong>.
            기업과 기관이 원하는 스펙을 온라인 강의 {LECTURES}강과 수료 시험으로 완성하고, 한국AI윤리위원회 공식 수료증으로 증명하세요.
-           AI를 쓰는 사람은 넘치지만, 윤리적으로 쓸 줄 안다고 증명한 사람은 아직 소수입니다.</p>
+           AI를 활용하는 사람은 넘치지만, 윤리적으로 활용할 줄 안다고 증명한 사람은 아직 소수입니다.</p>
         <div class="btns" style="margin-top:22px">
           <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#list">공식 등록 혜택 보기</a>
@@ -3756,7 +3765,7 @@ def build_join():
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; KAIEC 참여하기</p>
         <span class="join-eyebrow">JOIN KAIEC</span>
         <h1>한국AI윤리위원회(KAIEC)와 함께<br class="br-pc">AI 윤리를 알리는 사람이 되어 주세요</h1>
-        <p>보고서도 과제도 회의록도 AI로 만드는 시대, 무분별한 AI 사용을 막고 바르게 쓰는 문화를 만드는 일은 혼자서는 어렵지만 함께라면 캠페인이 됩니다.
+        <p>보고서도 과제도 회의록도 AI로 만드는 시대, 무분별한 AI 사용을 막고 바르게 활용하는 문화를 만드는 일은 혼자서는 어렵지만 함께라면 캠페인이 됩니다.
            한국AI윤리위원회(KAIEC)는 「무분별한 AI 사용 방지 캠페인」과 「AI 윤리 알리기」를 함께할 개인·전문가·기업·기관을 찾습니다.
            캠페인위원부터 전문위원, 지역·캠퍼스 위원, 제휴 파트너와 회원사까지, 당신에게 맞는 자리가 준비되어 있습니다.</p>
         <div class="btns" style="margin-top:22px">
@@ -3849,12 +3858,12 @@ def build_join():
               <div class="field" id="fMsg">
                 <label>한 줄 자기소개 <span class="field-opt">(선택)</span></label>
                 <div class="msg-quick" id="msgQuick" aria-label="자기소개 예시 문장">
-                  <button type="button">AI를 자주 쓰는데 올바른 기준이 궁금해서 지원합니다.</button>
+                  <button type="button">AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다.</button>
                   <button type="button">취업 준비 중이라 AI 윤리 활동 경험을 쌓고 싶습니다.</button>
                   <button type="button">학교·직장에서 AI 윤리 활동을 이끌어 보고 싶습니다.</button>
                   <button type="button">AI 윤리 캠페인과 콘텐츠 제작에 참여하고 싶습니다.</button>
                 </div>
-                <textarea name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 쓰는데 올바른 기준이 궁금해서 지원합니다."></textarea>
+                <textarea name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다."></textarea>
                 <p class="field-hint">한 줄이면 충분합니다. 위 문장을 누르면 그대로 들어가고, 비워 두셔도 됩니다. <span id="msgCount">0</span>/600</p>
               </div>
             </div>
@@ -4100,8 +4109,8 @@ def build_quiz():
         (7, "실무 감각형", "큰 방향은 맞지만, 상황마다 흔들리는 지점이 있습니다.",
          "판단의 방향은 옳은데 기준이 정리되어 있지 않아 장면마다 결과가 달라집니다. 체계적으로 한 번 정리하면 판단이 빨라지고, "
          "그 기준을 수료증으로 남길 수 있습니다. AI윤리전문가 양성과정 기본과정이 정확히 그 역할을 합니다."),
-        (0, "출발선형", "AI를 쓰고는 있지만, 기준은 아직입니다.",
-         "AI를 이미 업무와 학습에 쓰고 있다면 기준이 없는 상태가 가장 위험합니다. 반대로 말하면 지금이 가장 좋은 출발점입니다. "
+        (0, "출발선형", "AI를 활용하고는 있지만, 기준은 아직입니다.",
+         "AI를 이미 업무와 학습에 활용하고 있다면 기준이 없는 상태가 가장 위험합니다. 반대로 말하면 지금이 가장 좋은 출발점입니다. "
          "온라인 강의 8강으로 핵심 원칙과 안전 수칙부터 갖추고, 수료 시험으로 증명하세요."),
     ]
     import json as _json
@@ -4166,7 +4175,7 @@ def build_quiz():
         <div class="center" style="margin-bottom:24px">
           <span class="eyebrow">Why It Matters</span>
           <h2 class="h-sec">기준을 아는 한 사람이 조직 전체의 리스크를 줄입니다</h2>
-          <p class="h-sub" style="margin:0 auto">2026년 AI기본법 시행 이후 기업·기관·학교는 AI를 어디까지 어떻게 써야 하는지 답할 사람을 찾고 있습니다.
+          <p class="h-sub" style="margin:0 auto">2026년 AI기본법 시행 이후 기업·기관·학교는 AI를 어디까지 어떻게 활용해야 하는지 답할 사람을 찾고 있습니다.
              이 자가진단의 7개 장면이 바로 그 기준이고, AI윤리전문가 양성과정은 그 기준을 체계적으로 배우고 증명하는 과정입니다.</p>
         </div>
       </div>

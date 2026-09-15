@@ -759,7 +759,9 @@ table.tbl tr:hover td{background:#FCFDFF}
 .fcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:#C9D8F5}
 .fc-visual{position:relative;width:92px;height:114px;flex-shrink:0;border-radius:12px;
   display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}
-.fc-visual img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .3s var(--ease)}
+.fc-visual img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform .3s var(--ease);will-change:transform;backface-visibility:hidden}  /* 항상 합성 레이어로 그려 마우스를 올리기 전에도 선명하게 (2026.09.15) */
+.fc-gauge .gauge{width:92px;height:114px;display:block;filter:none;font-family:inherit}
+.fc-visual .gauge{position:static;z-index:auto}
 .fcard:hover .fc-visual img{transform:scale(1.05)}
 .fc-visual svg,.fc-visual i{width:28px;height:28px;position:relative;z-index:1;filter:drop-shadow(0 5px 12px rgba(4,12,30,.35))}
 .fc-v1{background:radial-gradient(220px 130px at 80% -10%,rgba(111,227,216,.35),transparent 70%),linear-gradient(140deg,#12356F,#1F5FE0)}
