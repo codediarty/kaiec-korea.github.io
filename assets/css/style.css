@@ -1361,3 +1361,11 @@ table.tbl tr:hover td{background:#FCFDFF}
 .resume-tag--adv{background:var(--teal-050);color:#00857A}
 .resume-rows code{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--gray-100);padding:7px 12px;border-radius:9px;line-height:1.5}
 @media (max-width:700px){.exam-grid{grid-template-columns:1fr}.lec{padding:16px 16px 14px}.lec-head strong{font-size:15.5px}.resume-rows code{font-size:13px}}
+
+/* 2026.09.15: 심화과정은 작게(보조 안내), 수료증 예시 이미지는 expert 페이지에서 제거 */
+.adv-note{display:block;margin-top:8px;font-size:12.5px;line-height:1.6;color:var(--gray-500);font-weight:500}
+.card p .adv-note{margin-top:8px}
+.offer-card .adv-note{margin-top:12px}
+.expert-adv-note{text-align:center;margin-top:16px}
+.br-pc{display:inline}
+@media (max-width:700px){.br-pc{display:none}}

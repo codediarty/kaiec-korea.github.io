@@ -27,12 +27,16 @@ DASH = "\u2014"   # 줄표(긴 대시)
 OLD_NAMES = ["한국AI윤리협회", "한국 AI 윤리협회", "AI윤리협회", "AI 윤리 협회", "Association", "Ethics & Compliance",
              "Ethics Compliance", "ETHICS COMPLIANCE", "회장", "PRESIDENT",
              # 2026.09.14 양성과정 전환: 등록된 자격 제도가 아니므로 인증·검정·급수 표기를 쓰지 않는다 (양성과정·수료 시험·수료증으로 표기)
-             "자격증", "자격검정", "자격과정", "자격 취득", "2급", "1급", "응시료", "합격증"]
+             "자격증", "자격검정", "자격과정", "자격 취득", "2급", "1급", "응시료", "합격증",
+             # 2026.09.15 카피 개편: 수료증은 '위원회 공식'으로만 수식(명의 X), 심화과정은 위촉·등재 대신 '전문위원 등록', 삭제한 약한 문구 재유입 방지
+             "명의 수료증", "명의 「", "위촉·등재", "첫 번째 이름이 당신", "새로운 전문 역량", "누가 책임지나요"]
 BANNED = ["민간", "국가공인", "지정기부금", "세액공제", "기부금 영수증", "YOUR-DOMAIN",
+          "탐지 우회", "우회 도구",   # 2026.09.15: 카피클린 제휴 관계상 탐지 우회를 다루는 콘텐츠를 싣지 않음 (문장 단위 사전점검으로 대체)
           "kaiec-korea.github.io/", "kaiec.skkc.co.kr"]
 DOC_FILES = {"작업-메모.md", "README.md", "배포-가이드.md", "앱스스크립트-접수시트연동.txt",
              os.path.join("posts-src", "_작성방법.txt")}
-RETIRED_STUBS = {"post-2026-09-11-name-change.html"}   # 삭제된 게시글의 은퇴 스텁 (build.py가 만들지 않음)
+RETIRED_STUBS = {"post-2026-09-11-name-change.html"}   # 삭제된 명칭변경 공지의 은퇴 스텁 (build.py가 만들지 않음)
+# 교체된 게시글(md 머리 '교체: <새 slug>')은 build.load_posts()가 RETIRED_POSTS에 모으고 옛 주소 2곳에 새 글로 이동하는 스텁을 씁니다 (2026.09.15)
 CORE = ["about.html", "business.html", "members.html", "lecture.html", "expert.html",
         "expert-apply.html", "experts.html", "join.html", "quiz.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
 
@@ -62,6 +66,11 @@ def text_files():
 
 
 posts = build.load_posts()
+RETIRED_NEWS = {slug: f"/news/{t}/" for slug, t in build.RETIRED_POSTS.items()}   # 옛 slug → 새 주소
+RETIRED_STUBS |= {f"post-{slug}.html" for slug in build.RETIRED_POSTS}
+for slug, t in build.RETIRED_POSTS.items():
+    if not os.path.isfile(os.path.join("posts-src", f"{t}.md")):
+        print(f"  ✗ 교체 대상 게시글 없음: {slug} → {t}"); raise SystemExit(1)
 pages = {}   # filename → 생성 결과 경로 (index.html, 핵심 페이지, 게시글)
 pages["index.html"] = "index.html"
 for f in CORE:
@@ -81,6 +90,11 @@ if not os.path.isfile("404.html"):
 expected_news = {p["slug"] for p in posts}
 for d in sorted(glob.glob("news/*/")):
     slug = d.rstrip("/\\").split(os.sep)[-1].split("/")[-1]
+    if slug in RETIRED_NEWS:
+        stub = read(os.path.join(d, "index.html")) if os.path.isfile(os.path.join(d, "index.html")) else ""
+        if "noindex" not in stub or RETIRED_NEWS[slug] not in stub:
+            probs.append(f"{d}: 교체된 칼럼의 은퇴 스텁 형식 이상 (noindex 또는 새 주소 {RETIRED_NEWS[slug]} 없음)")
+        continue
     if slug not in expected_news:
         probs.append(f"원본 md 없는 게시글 결과물 잔존: {d} (지우세요)")
 for f in sorted(glob.glob("post-*.html")):

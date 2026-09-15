@@ -33,7 +33,7 @@ LABELS={
  "2026-08-17-recruit":("전문위원 · AI 윤리위원 상시 모집","전공·경력 무관, 온라인 활동"),
  "2026-08-17-website-open":("공식 홈페이지 개설","kaiec.kr"),
  "2026-08-18-how-ai-detectors-work":("AI 검사기의 원리","AI가 쓴 글은 어떻게 탐지되는가"),
- "2026-08-19-ai-detection-bypass-risk":("AI 탐지 우회 도구의 실체","위원회가 사용을 권하지 않는 5가지 이유"),
+ "2026-08-19-sentence-level-ai-check":("제출 전 AI 검사, 문장 단위로","전체 점수만 보면 놓치는 것들"),
  "2026-08-20-lower-ai-similarity":("AI 유사도 낮추기 전에","반드시 알아야 할 올바른 대응"),
  "2026-08-21-ai-similarity-check-guide":("AI 유사도 검사 가이드","제출 전 확인 절차"),
  "2026-08-22-new-members":("신규 회원사 안내","성균관대학교 RISE사업단 · 성균관컨설팅 · 카피클린"),
@@ -123,6 +123,8 @@ def main():
         for md in sorted(glob.glob(f"{SITE}/posts-src/*.md")):
             slug = os.path.basename(md)[:-3]
             s = io.open(md, encoding="utf-8").read()
+            if re.search(r"^교체:", s, re.M):   # 교체된 게시글(은퇴 스텁만 생성)은 썸네일을 만들지 않음
+                continue
             cat = re.search(r"^분류:\s*(.+)$", s, re.M).group(1).strip()
             date = re.search(r"^날짜:\s*(.+)$", s, re.M).group(1).strip()
             title, sub = LABELS.get(slug, (re.search(r"^제목:\s*(.+)$", s, re.M).group(1).strip(), ""))

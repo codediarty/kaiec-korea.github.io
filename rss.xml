@@ -46,12 +46,12 @@
       <description>&quot;AI 유사도 낮추기&quot;를 검색하고 계신가요? 변환 도구부터 찾기 전에, 왜 유사도가 높게 나왔는지와 안전하고 올바른 대응 순서를 먼저 확인하세요. 위원회가 권하는 3단계 대응법을 정리했습니다.</description>
     </item>
     <item>
-      <title>AI 탐지 우회 도구의 실체, 위원회가 사용을 권하지 않는 5가지 이유</title>
-      <link>https://kaiec.kr/news/2026-08-19-ai-detection-bypass-risk/</link>
-      <guid>https://kaiec.kr/news/2026-08-19-ai-detection-bypass-risk/</guid>
+      <title>제출 전 AI 검사는 문장 단위로 확인해야 합니다: 전체 점수만 보면 놓치는 것들</title>
+      <link>https://kaiec.kr/news/2026-08-19-sentence-level-ai-check/</link>
+      <guid>https://kaiec.kr/news/2026-08-19-sentence-level-ai-check/</guid>
       <pubDate>Wed, 19 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
-      <description>&quot;AI 탐지 우회&quot;를 검색하면 수많은 우회 도구 광고가 나옵니다. 한국AI윤리위원회가 이런 도구를 권하지 않는 이유를 기술적·제도적·실리적 관점에서 정리했습니다. 우회보다 빠르고 안전한 길이 있습니다.</description>
+      <description>논문·과제·자기소개서를 내기 전 AI 검사를 한다면 전체 유사도 숫자 하나로 끝내면 안 됩니다. 어느 문장이 왜 AI로 판정되는지 문장 단위로 확인해야 고칠 수 있고, 밝힐 수 있고, 설명할 수 있습니다. 한국AI윤리위원회가 권하는 제출 전 점검 습관을 정리했습니다.</description>
     </item>
     <item>
       <title>AI 검사기의 원리, AI가 쓴 글은 어떻게 탐지되는가</title>
@@ -59,7 +59,7 @@
       <guid>https://kaiec.kr/news/2026-08-18-how-ai-detectors-work/</guid>
       <pubDate>Tue, 18 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
-      <description>AI 검사기는 어떻게 사람 글과 AI 글을 구별할까요? 퍼플렉시티, 버스티니스 등 탐지의 핵심 원리를 비전공자도 이해할 수 있게 풀었습니다. 원리를 알면 왜 &#x27;우회&#x27;가 어려운지도 보입니다.</description>
+      <description>AI 검사기는 어떻게 사람 글과 AI 글을 구별할까요? 퍼플렉시티, 버스티니스 등 탐지의 핵심 원리를 비전공자도 이해할 수 있게 풀었습니다. 원리를 알면 제출 전에 무엇을 확인해야 하는지도 보입니다.</description>
     </item>
     <item>
       <title>한국AI윤리위원회 공식 홈페이지를 열었습니다</title>
