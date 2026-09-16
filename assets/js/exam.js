@@ -35,6 +35,17 @@
   var COURSE_KEY = { '기본과정': 'basic', '심화과정': 'adv' };
   var KEY_COURSE = { basic: '기본과정', adv: '심화과정' };
   var FORM_LABEL = { A: '1차 A형', B: '재응시 B형' };
+  // 응시 이름: 이 과정의 첫 응시(A형)는 '1차 A형', 그다음부터는 '재응시 A형/B형' (무제한 재응시, A형·B형 번갈아)
+  function formName(c, form) {
+    var used = c && c.results ? c.results.length : 0;
+    return !used && form === 'A' ? '1차 A형' : '재응시 ' + form + '형';
+  }
+  function retakeRule(ex) {
+    var n = ex && ex.retakes;
+    if (n === 0) return '재응시 없음';
+    if (n > 0) return '이수하지 못하면 재응시 ' + n + '회(추가 비용 없음)';
+    return '응시 기간 안에서는 이수할 때까지 재응시(추가 비용 없음, A형·B형 번갈아 출제)';
+  }
   var ROMAN = { I: 'Ⅰ', II: 'Ⅱ', III: 'Ⅲ', IV: 'Ⅳ', V: 'Ⅴ', VI: 'Ⅵ', VII: 'Ⅶ', VIII: 'Ⅷ' };
   var FS_STEPS = [0.9, 1, 1.12, 1.25, 1.4];
   var DAY = 86400000, KST = 9 * 3600000;
@@ -223,13 +234,12 @@
       });
   }
 
-  /* ---------------------------------------------------------------- 4. 체험 모드 모의 서버 (계약서 1.1.0과 같은 응답 형식) */
+  /* ---------------------------------------------------------------- 4. 체험 모드 모의 서버 (백엔드 1.2.0과 같은 응답 형식: 성명 입력, 무제한 재응시) */
   var Demo = (function () {
     var PASS = 70;
     var MSG = {
       pass: '이수 기준을 충족했습니다. 실제 평가에서는 위원회 확인 후 7일 이내에 「AI윤리전문가 이수증」을 이메일(PDF)로 보내 드립니다.',
-      failA: '이번 평가는 이수 기준에 미치지 못했습니다. 재응시(B형) 1회가 열렸습니다. 응시 기간 안에 복습 후 응시해 주십시오.',
-      failB: '재응시에서도 이수 기준에 미치지 못했습니다. 이후 절차는 위원회가 이메일로 안내해 드립니다.'
+      fail: '이번 평가는 이수 기준에 미치지 못했습니다. 재응시({form}형)가 열렸습니다. 응시 기간 안에서는 이수할 때까지 추가 비용 없이 다시 응시할 수 있습니다.'
     };
     function rand() { return Math.random().toString(36).slice(2, 10).toUpperCase(); }
     function load() { return sget(KEY.demoDb); }
@@ -248,23 +258,28 @@
       var t = Date.now(), endMs = dayStart(db.end) + DAY - 1000, open = t <= endMs;
       var completed = db.forms.A === '이수' || db.forms.B === '이수';
       var next;
-      if (db.attempt) next = { action: 'resume', form: db.attempt.form, note: FORM_LABEL[db.attempt.form] + ' 평가가 진행 중입니다. 남은 시간 안에 이어서 응시해 주십시오.' };
+      var used = db.results.length;
+      var nameOf = function (f) { return !used && f === 'A' ? '1차 A형' : '재응시 ' + f + '형'; };
+      if (db.attempt) next = { action: 'resume', form: db.attempt.form, note: nameOf(db.attempt.form) + ' 평가가 진행 중입니다. 남은 시간 안에 이어서 응시해 주십시오.' };
       else if (completed) next = { action: 'none', form: null, note: '이수 기준을 충족했습니다. 실제 평가에서는 위원회 확인 후 이수증이 발급됩니다.' };
       else if (!open) next = { action: 'none', form: null, note: '응시 기간이 끝났습니다.' };
-      else if (db.forms.A === '응시 가능') next = { action: 'start', form: 'A', note: '1차 A형 평가를 시작할 수 있습니다. 체험 모드는 예시 ' + total() + '문항, 시험 시간 ' + DEMO.minutes + '분입니다.' };
-      else if (db.forms.B === '응시 가능') next = { action: 'start', form: 'B', note: '재응시 B형 평가를 시작할 수 있습니다. 복습한 뒤 응시해 주십시오.' };
-      else next = { action: 'none', form: null, note: '재응시 기회를 모두 사용했습니다. 이후 절차는 위원회가 이메일로 안내해 드립니다.' };
+      else if (db.forms.A === '응시 가능' && !used) next = { action: 'start', form: 'A', note: '1차 A형 평가를 시작할 수 있습니다. 체험 모드는 예시 ' + total() + '문항, 시험 시간 ' + DEMO.minutes + '분입니다.' };
+      else if (db.forms.A === '응시 가능' || db.forms.B === '응시 가능') {
+        var f = db.forms.A === '응시 가능' ? 'A' : 'B';
+        next = { action: 'start', form: f, note: '재응시 ' + f + '형 평가를 시작할 수 있습니다. 응시 기간 안에서는 이수할 때까지 다시 응시할 수 있습니다.' };
+      }
+      else next = { action: 'none', form: null, note: '지금 응시할 수 있는 평가지가 없습니다.' };
       return {
         course: '기본과정',
-        exam: { total: total(), minutes: DEMO.minutes, point: point(), passScore: PASS, passCount: Math.ceil(PASS / point() - 1e-9) },
+        exam: { total: total(), minutes: DEMO.minutes, point: point(), passScore: PASS, passCount: Math.ceil(PASS / point() - 1e-9), retakes: -1 },
         window: { start: db.start, end: db.end, daysLeft: Math.max(0, Math.round((dayStart(db.end) - dayStart(ymd(t))) / DAY)), state: open ? 'open' : 'expired' },
-        forms: [{ form: 'A', label: FORM_LABEL.A, status: db.forms.A }, { form: 'B', label: FORM_LABEL.B, status: db.forms.B }],
+        forms: [{ form: 'A', label: 'A형', status: db.forms.A }, { form: 'B', label: 'B형', status: db.forms.B }],
         next: next, completed: completed, results: db.results.slice().reverse()
       };
     }
     function publicAttempt(a) {
       return {
-        id: a.id, name: a.name || '', course: '기본과정', form: a.form, label: FORM_LABEL[a.form], startedAt: a.startedAt, deadline: a.deadline,
+        id: a.id, name: a.name || '', course: '기본과정', form: a.form, label: a.label || FORM_LABEL[a.form], startedAt: a.startedAt, deadline: a.deadline,
         serverNow: Date.now(), minutes: DEMO.minutes, total: total(), point: point(), passScore: PASS
       };
     }
@@ -283,10 +298,13 @@
       var t = Date.now(), score = Math.round(correct * point() * 10) / 10, passed = score >= PASS;
       var retake = { available: false, form: null }, msg;
       if (passed) { db.forms[a.form] = '이수'; msg = MSG.pass; }
-      else if (a.form === 'A') { db.forms.A = '미이수'; db.forms.B = '응시 가능'; retake = { available: true, form: 'B' }; msg = MSG.failA; }
-      else { db.forms.B = '미이수'; msg = MSG.failB; }
+      else {
+        var other = a.form === 'A' ? 'B' : 'A';
+        db.forms[a.form] = '미이수'; db.forms[other] = '응시 가능';
+        retake = { available: true, form: other }; msg = MSG.fail.replace('{form}', other);
+      }
       var r = {
-        attemptId: a.id, name: a.name || '', course: '기본과정', form: a.form, label: FORM_LABEL[a.form], submittedAt: t, startedAt: a.startedAt,
+        attemptId: a.id, name: a.name || '', course: '기본과정', form: a.form, label: a.label || FORM_LABEL[a.form], submittedAt: t, startedAt: a.startedAt,
         durationMin: Math.max(1, Math.round((Math.min(t, a.deadline) - a.startedAt) / 60000)),
         total: total(), answered: answered, correct: correct, score: score, passScore: PASS, passed: passed,
         areas: areas, submitType: type, retake: retake, message: msg
@@ -335,7 +353,8 @@
           if (!nm) return fail('NAME', NAME_MSG);
           if (!db.name) db.name = nm;
           t = Math.floor(Date.now() / 1000) * 1000;
-          a = db.attempt = { id: 'DEMO-' + form + '-' + rand(), name: nm, form: form, startedAt: t, deadline: t + DEMO.minutes * 60000, answers: {}, flags: [], blurCount: 0 };
+          a = db.attempt = { id: 'DEMO-' + form + '-' + rand(), name: nm, form: form, label: !db.results.length && form === 'A' ? '1차 A형' : '재응시 ' + form + '형',
+            startedAt: t, deadline: t + DEMO.minutes * 60000, answers: {}, flags: [], blurCount: 0 };
           db.forms[form] = '응시 중';
           save(db);
           return ok({ attempt: publicAttempt(a), questions: DEMO.questions, answers: {}, flags: [], blurCount: 0, resumed: false });
@@ -757,7 +776,7 @@
     if (n.action === 'resume') return ['progress', '응시 중'];
     if (w.state === 'expired') return ['closed', '기간 만료'];
     if (w.state === 'before') return ['closed', '응시 기간 전'];
-    if (n.action === 'start') return n.form === 'B' ? ['open', '재응시 가능'] : ['open', '응시 가능'];
+    if (n.action === 'start') return rs.length || n.form === 'B' ? ['open', '재응시 가능'] : ['open', '응시 가능'];
     if (rs.length && !rs[0].passed) return ['fail', '미이수'];
     return ['closed', '확인 중'];
   }
@@ -767,7 +786,7 @@
       var key = COURSE_KEY[c.course] || 'basic', f = c.next.form;
       return '<div class="ex-alert ex-alert--live" data-live-box="' + key + '">' + ico('timer') +
         '<div class="ex-alert-txt"><strong class="ex-live-title">진행 중인 시험이 있습니다</strong>' +
-          '<span>' + esc(c.course) + ' · ' + esc(FORM_LABEL[f] || '') + ' · 남은 시간 <b class="ex-num ex-left" data-left="' + key + '">확인 중</b></span>' +
+          '<span>' + esc(c.course) + ' · ' + esc(f ? formName(c, f) : '') + ' · 남은 시간 <b class="ex-num ex-left" data-left="' + key + '">확인 중</b></span>' +
           '<small class="ex-live-note">시험 시간은 서버 시각 기준으로 계속 흐르고 있습니다.</small></div>' +
         '<button type="button" class="ex-btn ex-btn--primary" data-act="resume" data-course="' + key + '">' + ico('rotate-ccw') + '<span class="ex-live-btn">이어서 응시</span></button></div>';
     }).join('');
@@ -838,7 +857,7 @@
     ];
     var act = '';
     if (isLive(c)) {
-      act += '<div class="ex-live" data-live-box="' + key + '"><span class="ex-live-k ex-live-title">' + esc(FORM_LABEL[n.form] || '') + ' 진행 중</span>' +
+      act += '<div class="ex-live" data-live-box="' + key + '"><span class="ex-live-k ex-live-title">' + esc(n.form ? formName(c, n.form) : '') + ' 진행 중</span>' +
         '<span class="ex-live-v">남은 시간 <b class="ex-num ex-left" data-left="' + key + '">확인 중</b></span>' +
         '<p class="ex-live-note">' + esc(dotDates(n.note)) + '</p></div>';
     } else if (n.note) {
@@ -849,7 +868,7 @@
     var btns = '';
     if (n.action === 'start') {
       btns += '<button type="button" class="ex-btn ex-btn--primary" data-act="pledge" data-course="' + key + '">' + ico('pen-line') +
-        (n.form === 'B' ? '재응시 B형 응시하기' : '응시하기') + '</button>';
+        (rs.length || n.form === 'B' ? '재응시 ' + n.form + '형 응시하기' : '응시하기') + '</button>';
     } else if (isLive(c)) {
       btns += '<button type="button" class="ex-btn ex-btn--primary" data-act="resume" data-course="' + key + '">' + ico('rotate-ccw') + '<span class="ex-live-btn">이어서 응시</span></button>';
     }
@@ -906,9 +925,9 @@
     var bm = b.minutes || 60, am = a.minutes || 75;
     var time = bm === am ? '시험 시간은 모두 ' + bm + '분입니다' : '시험 시간은 기본과정 ' + bm + '분, 심화과정 ' + am + '분입니다';
     return panel('평가 안내', kv([
-      ['응시 기간', '<b>결제일부터 ' + (CFG.windowDays || 30) + '일</b><span class="ex-sub-line">1차 A형과 재응시 B형을 모두 이 기간 안에 응시합니다.</span>'],
+      ['응시 기간', '<b>결제일부터 ' + (CFG.windowDays || 30) + '일</b><span class="ex-sub-line">재응시를 포함한 모든 응시를 이 기간 안에 마칩니다.</span>'],
       ['평가 구성', '<b>기본과정 ' + (b.total || 40) + '문항 · 심화과정 ' + (a.total || 50) + '문항</b><span class="ex-sub-line">4지선다형 100점 만점, ' + time + '.</span>'],
-      ['이수 기준', '<b>두 과정 모두 ' + passOf(b) + '점 이상</b><span class="ex-sub-line">1차 A형에서 이수하지 못하면 재응시 B형 1회를 무료로 응시합니다. 이수증은 결과 확인 후 7일 이내 PDF로 발급합니다.</span>'],
+      ['이수 기준', '<b>두 과정 모두 ' + passOf(b) + '점 이상</b><span class="ex-sub-line">이수하지 못하면 응시 기간 안에서 이수할 때까지 추가 비용 없이 재응시합니다(A형·B형 번갈아 출제). 이수증은 결과 확인 후 7일 이내 PDF로 발급합니다.</span>'],
       ['응시 환경', '<b>PC·태블릿 권장</b><span class="ex-sub-line">최신 크롬·엣지·사파리에서 응시해 주십시오. 다른 창이나 탭으로 이동하면 화면 이탈로 기록됩니다.</span>']
     ]), { cls: 'ex-guide' });
   }
@@ -1074,14 +1093,14 @@
         '<p class="ex-field-err" id="exNameErr" role="alert" hidden></p>', 'ex-kv-field'],
       ['아이디(이메일)', '<span class="ex-break">' + esc(d.email || s.email || '-') + '</span>'],
       ['과정', esc(c.course)],
-      ['평가지', esc(FORM_LABEL[form])]
+      ['평가지', esc(formName(c, form))]
     ]);
     var rules = kv([
       ['문항 수', '4지선다형 <b>' + ex.total + '문항</b>'],
       ['시험 시간', '<b>' + ex.minutes + '분</b> · 시험 시작을 누른 때부터 흐릅니다'],
       ['배점', '문항당 ' + fmtNum(point) + '점 · 100점 만점'],
       ['이수 기준', '<b>' + passOf(ex) + '점 이상</b> · ' + ex.total + '문항 중 ' + passCountOf(ex) + '문항 이상 정답'],
-      ['응시 횟수', form === 'B' ? '<b>재응시 B형 1회</b> · 이번이 마지막 응시 기회입니다' : '1차 A형 1회 · 이수하지 못하면 재응시 B형 1회 무료'],
+      ['응시 횟수', '<b>' + esc(formName(c, form)) + '</b> · ' + esc(retakeRule(ex))],
       ['시간 종료', '시험 시간이 끝나면 그때까지 표기한 답안이 <b>자동 제출</b>됩니다'],
       ['답안 저장', '답안은 자동 저장되며, 연결이 끊겨도 시험 시간 안에 다시 로그인해 이어서 응시할 수 있습니다'],
       ['화면 이탈', '응시 중 다른 창이나 탭으로 이동하면 <b>횟수가 기록</b>되어 위원회가 검토합니다'],
@@ -1094,7 +1113,7 @@
     var html = stepper(1) +
       '<div class="ex-pledge">' +
         '<div class="ex-pledge-main">' +
-          '<section class="ex-panel ex-pledge-intro"><header class="ex-panel-head"><h2 class="ex-h">응시 전 확인</h2>' + badge(c.course + ' · ' + FORM_LABEL[form], 'open') + '</header>' +
+          '<section class="ex-panel ex-pledge-intro"><header class="ex-panel-head"><h2 class="ex-h">응시 전 확인</h2>' + badge(c.course + ' · ' + formName(c, form), 'open') + '</header>' +
             '<p class="ex-panel-lead">시험을 시작하기 전에 응시자 정보를 확인하고, 시험 안내를 읽은 뒤 응시 서약에 동의해 주십시오.</p></section>' +
           panel('<span class="ex-h-no">1</span>응시자 확인', cand) +
           panel('<span class="ex-h-no">2</span>시험 안내', rules) +
@@ -1185,7 +1204,7 @@
         kv([
           ['성명', '<b>' + esc(name) + '</b>'],
           ['과정', esc(c.course)],
-          ['평가지', esc(FORM_LABEL[form])],
+          ['평가지', esc(formName(c, form))],
           ['문항 수', ex.total + '문항'],
           ['시험 시간', '<b>' + ex.minutes + '분</b>']
         ]) +
@@ -1865,15 +1884,16 @@
         demoNote
       ], S.demo ? '<button type="button" class="ex-btn ex-btn--secondary" data-act="demo-restart">' + ico('rotate-ccw') + '체험 처음부터 다시 하기</button>' : '');
     } else if (r.retake && r.retake.available) {
-      next = nextBox('retake', '재응시 B형 1회가 열렸습니다', [
-        '응시 기간 안에서는 횟수 제한 없이 다시 응시할 수 있고, 추가 비용은 없습니다.',
-        '재응시 B형은 1차 A형과 다른 문항으로 구성됩니다.',
+      var rf = r.retake.form || 'B';
+      next = nextBox('retake', '재응시 ' + rf + '형이 열렸습니다', [
+        '응시 기간 안에서는 이수할 때까지 다시 응시할 수 있고, 추가 비용은 없습니다.',
+        '재응시는 방금 응시한 평가지와 다른 문항(' + rf + '형)으로 출제됩니다.',
         '재응시에서도 이수 기준은 ' + pass + '점 이상입니다.',
         demoNote
-      ], '<button type="button" class="ex-btn ex-btn--primary" data-act="retake" data-course="' + key + '">' + ico('pen-line') + '재응시 B형 응시하기</button>');
+      ], '<button type="button" class="ex-btn ex-btn--primary" data-act="retake" data-course="' + key + '">' + ico('pen-line') + '재응시 ' + rf + '형 응시하기</button>');
     } else {
       next = nextBox('wait', '위원회 안내를 기다려 주십시오', [
-        r.form === 'B' ? '재응시 기회를 모두 사용했습니다.' : '지금은 재응시할 수 있는 평가지가 없습니다.',
+        /기회를 모두 사용/.test(r.message || '') ? '재응시 기회를 모두 사용했습니다.' : (/기간이 끝나/.test(r.message || '') ? '응시 기간이 끝나 재응시를 시작할 수 없습니다.' : '지금은 재응시할 수 있는 평가지가 없습니다.'),
         '이후 절차는 위원회가 이메일로 안내해 드립니다.',
         '문의: ' + (CFG.email || ''),
         demoNote
@@ -1944,9 +1964,13 @@
   /* 제출 직후 이수·미이수 판정 연출 (클릭하거나 잠시 뒤 사라집니다) */
   function showVerdict(r) {
     var pass = !!r.passed;
+    var c = courseBy(r.course), lim = c && c.exam ? c.exam.retakes : -1;
+    var rf = r.retake && r.retake.available ? (r.retake.form || 'B') : '';
     var sub = pass
       ? '「AI윤리전문가 이수증」이 이메일로 발급되고<br>한국AI윤리위원회 이수자 명부에 공식 등록됩니다'
-      : '응시 기간 안에는 횟수 제한 없이<br>다시 응시할 수 있습니다';
+      : (!rf ? '이후 절차는 결과 화면의<br>안내를 확인해 주십시오'
+        : (lim == null || lim < 0 ? '응시 기간 안에는 횟수 제한 없이<br>다시 응시할 수 있습니다'
+          : '재응시 ' + rf + '형이 열렸습니다<br>추가 비용 없이 다시 응시할 수 있습니다'));
     var spark = '';
     if (pass) for (var i = 0; i < 12; i++) spark += '<i style="--i:' + i + '"></i>';
     var box = document.createElement('div');
