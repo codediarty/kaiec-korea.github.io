@@ -330,7 +330,7 @@ def header():
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
           <a href="exam.html" style="color:#6FE3D8">평가응시</a><span class="tsep">|</span>
-          <a href="mou.html#inquiry">업무협약 문의</a>
+          <a href="mou.html#inquiry">제휴·협력 문의</a>
         </span>
       </div>
     </div>
@@ -376,7 +376,7 @@ def footer():
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
             <li><a href="join.html">KAIEC 참여하기</a></li>
-            <li><a href="mou.html#inquiry">업무협약 문의</a></li>
+            <li><a href="mou.html#inquiry">제휴·협력 문의</a></li>
           </ul>
         </div>
       </div>
@@ -611,9 +611,9 @@ BUSINESS = [
     ("award", "AI윤리전문가 양성과정 운영",
      "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가 양성과정」(기본·심화)과 전문강사 양성을 운영하고, 이수자를 위원회에 공식 등록하고 심화과정 이수자는 전문위원으로 등록해, AI 윤리위원·전문위원 제도로 현장 활동까지 연결합니다.",
      ["AI윤리전문가 양성과정(기본·심화) 운영", "전문강사 양성 및 출강 연계", "AI 윤리위원·전문위원 위촉 및 활동 지원"]),
-    ("handshake", "대학·기업·기관과의 업무협약(MOU) 체결",
-     "대학, 기업, 협회, 연구기관 등과 업무협약을 체결하고 공동 캠페인·교육·연구를 추진합니다. 각 기관의 현장 상황에 맞는 AI 윤리 실천 방안을 함께 설계합니다.",
-     ["기관 간 업무협약(MOU) 체결", "공동 캠페인 및 세미나 개최", "기관 맞춤형 AI 윤리 자문"]),
+    ("handshake", "대학·기업·기관과의 제휴·협력",
+     "대학, 기업, 협회, 연구기관과 뜻을 모아 AI 윤리 캠페인과 교육, 연구를 함께합니다. 각 기관의 현장 상황에 맞는 AI 윤리 실천 방안을 대가 없이 함께 설계합니다.",
+     ["공동 AI 윤리 캠페인", "공동 세미나·교육 개최", "기관 맞춤형 AI 윤리 자문"]),
     ("file-search", "AI 활용 문서의 책임 있는 사전점검",
      "논문·과제·보고서 등 AI를 활용해 작성한 문서를 제출 전에 스스로 점검하는 문화를 확산합니다. 제재가 아닌 <strong>자기 점검</strong>을 통해 불필요한 오해와 분쟁을 예방하는 것이 목적입니다.",
      ["사전점검 문화 확산 캠페인", "제휴 서비스 「카피클린」과의 공동 활동", "점검 가이드라인 안내"]),
@@ -1299,7 +1299,7 @@ def build_members():
               </div>
               <div class="oc-childs">
                 <div class="oc-child">기획운영팀 <small>사업 기획 · 총무 · 회의 운영</small></div>
-                <div class="oc-child">대외협력팀 <small>업무협약 · 기관 협력 · 국제 교류</small></div>
+                <div class="oc-child">대외협력팀 <small>공동 캠페인 · 기관 협력 · 국제 교류</small></div>
                 <div class="oc-child">콘텐츠·홍보팀 <small>캠페인 · 콘텐츠 · 채널 운영</small></div>
               </div>
             </div>
@@ -1860,7 +1860,7 @@ def build_copyclean():
 
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("업무협약 문의하기", "mou.html#inquiry")}
+        {cert_band_inner("제휴·협력 문의", "mou.html#inquiry")}
       </div>
     </section>"""
 
@@ -2105,7 +2105,7 @@ def build_rss(posts):
 # ------------------------------------------------------------------ mou.html
 def build_mou():
     body = hero_sub("대외협력",
-                    "대학·기업·기관·연구기관과 업무협약을 맺고 AI 윤리 문화를 현장으로 넓혀갑니다.",
+                    "AI 윤리를 알리는 일에 뜻을 같이하는 대학·기업·기관과 제휴·협력으로 함께합니다.",
                     "대외협력") + f"""
 
     <section class="section">
@@ -2132,12 +2132,12 @@ def build_mou():
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Partners</span>
-          <h2 class="h-sec">협력 기관</h2>
+          <h2 class="h-sec">제휴·협력 기관</h2>
           <p class="h-sub">위원회와 함께하는 기관입니다.</p>
         </div>
         <div class="logo-grid" id="partnerLogos"></div>
         <div class="notice notice--gray" style="margin-top:30px">
-          <strong>협력 기관 추가 방법:</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
+          <strong>제휴·협력 기관 추가 방법:</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
           로고 이미지는 <code>assets/img/</code> 폴더에 올린 뒤 파일명을 지정하면 됩니다.
           로고가 없으면 기관명이 텍스트로 표시됩니다.
         </div>
@@ -2148,7 +2148,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">협약 절차</h2>
+          <h2 class="h-sec">제휴 절차</h2>
         </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 문의</h3><p style="font-size:14px">아래 양식으로 접수</p></div>
@@ -2163,7 +2163,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Contact</span>
-          <h2 class="h-sec">협력 문의</h2>
+          <h2 class="h-sec">제휴·협력 문의</h2>
           <p class="h-sub" style="margin:0 auto">아래 양식을 작성해 주시면 담당자가 확인 후 회신드립니다.</p>
         </div>
 
@@ -2188,7 +2188,7 @@ def build_mou():
             <textarea id="msg" name="문의내용" required placeholder="협력을 희망하시는 내용을 자유롭게 적어 주세요."></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="justify-self:start">
-            협력 문의 보내기 <i data-lucide="send"></i>
+            제휴·협력 문의 보내기 <i data-lucide="send"></i>
           </button>
           <p class="field-hint">
             버튼을 누르면 메일 앱이 열리고 작성 내용이 자동으로 담깁니다.
@@ -2204,7 +2204,7 @@ def build_mou():
     var box=document.getElementById('partnerLogos');
     if(!box||!window.KAIEC_PARTNERS)return;
     if(!window.KAIEC_PARTNERS.length){
-      box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">협력 기관을 모집하고 있습니다.</p>';return;
+      box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">제휴·협력 기관을 모집하고 있습니다.</p>';return;
     }
     box.innerHTML=window.KAIEC_PARTNERS.map(function(p){
       var inner=p.logo?'<img src="assets/img/'+p.logo+'" alt="'+p.name+' 로고" loading="lazy">'
@@ -2213,14 +2213,14 @@ def build_mou():
       return p.url?'<a href="'+p.url+'" target="_blank" rel="noopener">'+body+'</a>':body;
     }).join('');
   })();
-  /* 협력 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
+  /* 제휴·협력 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
   (function(){
     var f=document.getElementById('mouForm');
     if(!f)return;
     f.addEventListener('submit',function(e){
       e.preventDefault();
       function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():''}
-      var subject='[업무협약 문의] '+v('기관명');
+      var subject='[기관 제휴·협력 문의] '+v('기관명');
       var lines=[
         '■ 기관·기업명 : '+v('기관명'),
         '■ 담당자      : '+v('담당자'),
@@ -2229,7 +2229,7 @@ def build_mou():
         '■ 문의 내용',
         v('문의내용'),
         '',
-        '--- 한국AI윤리위원회 홈페이지 협력 문의 양식에서 작성됨 ---'
+        '--- 한국AI윤리위원회 홈페이지 대외협력 문의 양식에서 작성됨 ---'
       ];
       location.href='mailto:__EMAIL__?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\\n'));
     });
@@ -2237,8 +2237,8 @@ def build_mou():
   </script>
 """.replace('__EMAIL__', EMAIL)
     page("mou.html", "MOU · 대외협력",
-         "한국AI윤리위원회는 대학·기업·기관·연구기관과 업무협약(MOU)을 체결하고 공동 캠페인, 교육, 연구를 추진합니다. 온라인으로 협력을 문의하실 수 있습니다.",
-         body + cert_band("협력 문의하기", "#inquiry"), extra_script=script)
+         "한국AI윤리위원회는 AI 윤리를 알리는 일에 뜻을 같이하는 대학·기업·기관과 공동 캠페인, 교육, 연구를 함께합니다. 기관 제휴·협력을 온라인으로 문의하실 수 있습니다.",
+         body + cert_band("제휴·협력 문의", "#inquiry"), extra_script=script)
 
 
 # -------------------------------------------------------------- lecture.html
@@ -3757,7 +3757,7 @@ def build_join():
         ("graduation-cap", "캠퍼스 위원장", "양성과정 이수자",
          "AI윤리전문가 양성과정(기본과정 이상)을 이수하고 소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
          "캠퍼스 위원회 운영, 교내 확산 활동"),
-        ("handshake", "협력 기관", "기업·기관",
+        ("handshake", "제휴·협력 기관", "기업·기관",
          "위원회와 공동 사업·교육·캠페인을 제안하는 개인·기업·기관",
          "협력 협약(MOU), 공동 프로그램 운영"),
         ("building-2", "회원기관", "기업·기관",
@@ -4025,7 +4025,7 @@ def build_join():
   <script>
   (function(){
     var form=document.getElementById('joinForm');
-    var ORG_TYPES={'협력 기관':1,'회원기관':1};
+    var ORG_TYPES={'제휴·협력 기관':1,'회원기관':1};
     function v(n){var el=form.querySelector('[name='+n+']');return (el&&el.value?el.value:'').trim();}
     function jtype(){var c=form.querySelector('[name=jtype]:checked');return c?c.value:'';}
     function bad(id,on){document.getElementById(id).classList.toggle('is-invalid',!!on);return !!on;}
