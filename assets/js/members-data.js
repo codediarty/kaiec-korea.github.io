@@ -75,6 +75,6 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
 window.KAIEC_OFFICIAL_PARTNERS = [
   { name: '성균관대학교 RISE사업단', logo: 'partner-rise.jpg', url: '' },
   { name: '성균관컨설팅', logo: '', url: 'https://www.skkc.co.kr' },
-  { name: '카피클린 (CopyClean)', logo: '', url: 'copyclean.html' },
+  { name: '카피클린 (CopyClean)', logo: '', url: '/copyclean/' },
   // ↓ 여기에 계속 추가하세요.
 ];

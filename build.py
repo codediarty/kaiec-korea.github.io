@@ -760,7 +760,7 @@ def build_index(posts):
                2026년 AI기본법 시행으로 기업·기관·학교가 찾기 시작한 스펙을 지금 준비하세요.</p>
             <div class="why-stats">
               <div><strong>2026. 1</strong><span>AI기본법 시행</span></div>
-              <div><strong>2026. 8</strong><span>EU AI Act 본격 집행</span></div>
+              <div><strong>2026. 8</strong><span>EU AI Act 투명성 의무 발효</span></div>
               <div><strong>2024. 3</strong><span>한국AI윤리위원회 설립</span></div>
               <div><strong>6개 분과</strong><span>전문위원회 운영</span></div>
             </div>
@@ -1277,7 +1277,7 @@ def build_members():
         <div class="center" style="margin-bottom:46px">
           <span class="eyebrow">Organization Chart</span>
           <h2 class="h-sec">조직도</h2>
-          <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, 30명 규모의 AI 윤리 캠페인위원을 두고,
+          <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, AI 윤리 캠페인위원을 두고,
              전국 단위의 지역 운영위원회·캠퍼스 위원회로 확장되는 구조입니다.</p>
         </div>
 
@@ -1352,7 +1352,7 @@ def build_members():
               <div class="oc-node oc-pillar oc-pillar--teal" style="border-top-color:var(--teal)">
                 <div class="oc-tag" style="color:#00857A">CAMPAIGN COMMITTEE</div>
                 <div class="oc-title">AI 윤리 캠페인위원</div>
-                <div class="oc-desc">30명 · 온라인 전국 활동</div>
+                <div class="oc-desc">온라인 전국 활동 · 상시 모집</div>
               </div>
               <div class="oc-childs">
                 <div class="oc-child">캠페인 참여 <small>온라인 캠페인 · 확산 활동</small></div>
@@ -2208,7 +2208,7 @@ def build_mou():
               </label>""" for val, badge, title, desc in PICKS)
 
     body = hero_sub("사회공헌·협력",
-                    "한국AI윤리위원회 전문위원과 전국 지역 AI 윤리위원이 직접 현장으로 갑니다. "
+                    "한국AI윤리위원회 전문위원과 AI 윤리위원이 직접 현장으로 갑니다. "
                     "어르신과 어린이를 위한 AI 교육을 대가 없이 열고, 캠페인과 공익 자료도 모두 무료로 공개합니다.",
                     "사회공헌·협력") + f"""
 
@@ -2217,7 +2217,7 @@ def build_mou():
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Free Education</span>
           <h2 class="h-sec">위원회가 직접 찾아가는 무료 교육</h2>
-          <p class="h-sub">한국AI윤리위원회 <strong>전문위원과 지역 AI 윤리위원이 직접 나가는 기관 재능기부</strong>입니다.
+          <p class="h-sub">한국AI윤리위원회 <strong>위원회 전문위원과 AI 윤리위원이 직접 나가는 기관 재능기부</strong>입니다.
              신청 기관은 장소와 인원만 준비해 주시면 되고, 강사비와 교재비는 받지 않습니다.</p>
         </div>
         <div class="vol-grid">
@@ -2236,14 +2236,14 @@ def build_mou():
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Our Volunteers</span>
           <h2 class="h-sec">누가 직접 찾아가나요</h2>
-          <p class="h-sub">외부 강사를 부르지 않습니다. 위원회에 등록된 <strong>전문위원과 전국 지역 AI 윤리위원</strong>이
-             현장으로 갑니다. 모두 보수를 받지 않고 봉사로 참여합니다.</p>
+          <p class="h-sub">외부 강사를 부르지 않습니다. 위원회에 등록된 <strong>전문위원과 AI 윤리위원</strong>이
+             현장으로 갑니다. 모두 보수를 받지 않고 봉사로 참여하며, 지역 조직은 순차적으로 넓혀 가고 있습니다.</p>
         </div>
         <div class="grid grid-4">
           <article class="card reveal"><div class="card-icon"><i data-lucide="user-check"></i></div>
             <h3>전문위원</h3><p>AI윤리전문가 양성과정 심화과정을 이수하고 위원회에 등록된 전문위원이 교안을 맡습니다</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="map-pin"></i></div>
-            <h3>지역 운영위원</h3><p>권역별 지역위원이 가까운 경로당·복지관·학교로 직접 찾아갑니다</p></article>
+            <h3>지역 운영위원</h3><p>권역별로 위촉되는 대로 가까운 경로당·복지관·학교를 맡습니다(현재 순차 위촉 중)</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="school"></i></div>
             <h3>캠퍼스 위원장</h3><p>대학의 캠퍼스 위원회가 지역 아동·청소년 교육에 함께 나섭니다</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="megaphone"></i></div>
@@ -2888,9 +2888,9 @@ def build_expert():
          "AI 활용 고지문, 위험도 점검표가 바로 만들어집니다. 이력서·자기소개서에는 교육·연수 이력 한 줄이 남습니다.",
          ["이력서 · 자기소개서", "사내 AI 기준 수립", "실무 양식 13종"]),
         ("trending-up", "규제가 만드는 수요, 지금이 가장 앞자리",
-         "2026년 1월 AI기본법이 시행되고 8월부터 EU AI Act 집행이 본격화되면서, AI를 활용하는 기업·기관까지 의무의 주체가 되었습니다. "
-         "AI 거버넌스 시장은 연평균 40%대 성장이 전망되는데 담당할 사람은 아직 적습니다. <strong>1기 이수자는 이 분야의 첫 경력자</strong>로 남습니다.",
-         ["2026 AI기본법 시행", "EU AI Act 집행", "1기 선점 효과"]),
+         "2026년 1월 AI기본법이 시행되고 8월 EU AI Act 투명성 의무가 발효되면서, AI를 활용하는 기업·기관까지 의무의 주체가 되었습니다. "
+         "AI 거버넌스 시장 규모는 연평균 45.3% 성장이 전망되는데 담당할 사람은 아직 적습니다. <strong>1기 이수자는 이 분야의 첫 경력자</strong>로 남습니다.",
+         ["2026 AI기본법 시행", "EU AI Act 적용", "1기 선점 효과"]),
     ]
     worth_html = "".join(f"""
             <div class="worth reveal">
@@ -2921,8 +2921,8 @@ def build_expert():
     WHY = [
         ("scale", "국내 · AI기본법 시행", "2026. 1",
          "「인공지능 발전과 신뢰 기반 조성 등에 관한 기본법」(AI기본법)이 2026년 1월 22일 시행되었습니다. 고영향·생성형 AI에 대한 투명성 고지, AI 생성물 표시 등 새로운 의무가 도입되었고, AI를 <strong>개발하는 기업만이 아니라 활용하는 기업·기관도 의무의 주체</strong>가 됩니다."),
-        ("building-2", "글로벌 · EU AI Act 본격 집행", "2026. 8",
-         "EU AI Act는 2025년 금지 규정과 조직 구성원의 <strong>AI 리터러시 확보 의무</strong>를 시작으로, 2026년 8월부터 대부분 조항의 시행과 집행이 본격화되었습니다. 글로벌 기준에 맞는 AI 윤리 역량은 이제 수출·협력 기업의 실무 요건입니다."),
+        ("building-2", "글로벌 · EU AI Act 단계 적용", "2026. 8",
+         "EU AI Act는 2025년 금지 규정과 조직 구성원의 <strong>AI 리터러시 확보 의무</strong>를 시작으로, 2026년 8월 생성형 AI 표시 등 조항의 시행과 집행이 본격화되었습니다. 글로벌 기준에 맞는 AI 윤리 역량은 이제 수출·협력 기업의 실무 요건입니다."),
         ("shield-check", "현장 · 상시화된 AI 리스크", "지금",
          "기밀 정보 입력, 허위 정보(환각) 인용, 저작권 분쟁, AI 표절 논란. 생성형 AI가 업무와 학습의 일상이 되면서 사고도 일상이 되었습니다. <strong>기준을 아는 한 사람</strong>이 조직 전체의 리스크를 줄입니다."),
         ("trending-up", "기회 · 아직 소수인 전문 인력", "선점",
@@ -2981,7 +2981,7 @@ def build_expert():
       <div class="wrap">
         <div class="stats reveal">
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 1</div><div class="stat-label">AI기본법 시행</div><div class="stat-sub">국내 AI 의무 규제 시대 개막</div></div>
-          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 8</div><div class="stat-label">EU AI Act 본격 집행</div><div class="stat-sub">글로벌 AI 규제 확산</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 8</div><div class="stat-label">EU AI Act 투명성 의무</div><div class="stat-sub">고위험 의무는 2027년부터 단계 적용</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">{STUDY_MONTHS}개월+</div><div class="stat-label">산학 공동 연구 · 집필</div><div class="stat-sub">위원회 표준교재 + 온라인 이수 평가</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">1기</div><div class="stat-label">지금 모집 중</div><div class="stat-sub">첫 번째 전문가 그룹</div></div>
         </div>
@@ -2993,7 +2993,7 @@ def build_expert():
         <div class="center" style="margin-bottom:44px">
           <span class="eyebrow">Why Now</span>
           <h2 class="h-sec">왜 지금, AI윤리전문가인가 <span class="hot-tag">HOT</span></h2>
-          <p class="h-sub">AI기본법 시행과 EU AI Act 집행이 같은 해에 시작됐습니다. 법과 시장이 동시에 움직이면서
+          <p class="h-sub">AI기본법 시행과 EU AI Act 적용이 같은 해에 시작됐습니다. 법과 시장이 동시에 움직이면서
              AI 윤리는 교양에서 <strong>실무 요건</strong>으로 넘어왔습니다. 수요가 먼저 커진 분야에서는, 먼저 준비한 사람이 첫 자리를 차지합니다.</p>
         </div>
         <div class="grid grid-2">
@@ -3402,7 +3402,7 @@ def build_expert_apply():
              이력서와 커리어에 한국AI윤리위원회 공식 「{DOC_FULL}」을 더하는 전문 교육과정입니다.</p>
           <p>이수와 동시에 위원회에 공식 등록되어 취업·이직·현재 직무에 바로 활용할 수 있고, 심화과정은 전문위원 등록과 전문강사·자문 활동까지 이어집니다.</p>
           <div class="gform-callout"><i data-lucide="trending-up"></i>
-            <div><strong>AI 윤리·거버넌스, 연평균 44% 이상 성장하는 전문분야.</strong><br>
+            <div><strong>AI 거버넌스 시장 규모, 연평균 45.3% 성장 전망.</strong><br>
                  AI윤리전문가 양성과정 이수가 당신의 새로운 전문 경쟁력이 됩니다.
                  <small class="src">출처: MarketsandMarkets, AI Governance Market 2024~2029 (CAGR 45.3%)</small></div></div>
           <div class="gform-urgency"><i data-lucide="clock"></i> 1기 접수 마감 {DEADLINE} · 연 {QUOTA}명 한정 양성</div>
@@ -3472,13 +3472,13 @@ def build_expert_apply():
             <h2>수강자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
-                <label>성명 <span class="req">*</span></label>
-                <input type="text" name="name" autocomplete="name" placeholder="홍길동">
+                <label for="f-name">성명 <span class="req">*</span></label>
+                <input id="f-name" type="text" name="name" autocomplete="name" placeholder="홍길동">
                 <p class="err-msg">성명을 입력해 주세요.</p>
               </div>
               <div class="field" id="fEmail">
-                <label>이메일 주소 <span class="req">*</span></label>
-                <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
+                <label for="f-email">이메일 주소 <span class="req">*</span></label>
+                <input id="f-email" type="email" name="email" autocomplete="email" placeholder="example@email.com">
                 <p class="field-hint">학습자료(PDF 5종)가 발송되는 이메일입니다. 결제 때에도 같은 이메일을 입력해 주세요(이수 평가 로그인 아이디가 됩니다).
                    실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
@@ -3525,8 +3525,8 @@ def build_expert_apply():
             <p class="gform-desc">AI윤리전문가 양성과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
             <div class="gform-privacy">
               <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 수강 및 활용 목적, 신청정보</div>
-              <div><span>이용목적</span>수강자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급</div>
-              <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
+              <div><span>이용목적</span>수강자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
+              <div><span>보유기간</span>수집일로부터 3년. 이수자 명부는 이수 사실 확인을 위해 보관하며, 삭제를 요청하시면 즉시 파기합니다</div>
             </div>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
@@ -3571,7 +3571,7 @@ def build_expert_apply():
           <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
                <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
-            <textarea id="doneCopy" readonly></textarea>
+            <textarea id="doneCopy" readonly aria-label="전송 내용 사본" tabindex="-1"></textarea>
             <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
           </div>
         </div>
@@ -3705,8 +3705,8 @@ def build_experts():
     APPLY = "expert-apply.html?course=2"
     WHY = [
         ("2026.1", "AI기본법 시행", "AI를 만드는 기업뿐 아니라 활용하는 기업·기관도 책임의 주체가 됩니다."),
-        ("2026.8", "EU AI Act 본격 적용", "해외 거래·수출 기업에 AI 윤리·컴플라이언스 기준이 요구됩니다."),
-        ("44%", "연평균 성장 전문분야", "AI 윤리·거버넌스는 가장 빠르게 커지는 전문 영역입니다. <small class=\"src\">출처: MarketsandMarkets, AI Governance Market 2024~2029 (CAGR 45.3%)</small>"),
+        ("2026.8", "EU AI Act 투명성 의무 발효", "해외 거래·수출 기업에 AI 윤리·컴플라이언스 기준이 요구됩니다."),
+        ("45.3%", "시장 규모 연평균 성장 전망", "AI 윤리·거버넌스는 가장 빠르게 커지는 전문 영역입니다. <small class=\"src\">출처: MarketsandMarkets, AI Governance Market 2024~2029 (CAGR 45.3%)</small>"),
     ]
     MOMENTS = [
         ("file-search", "“생성형 AI로 만든 보고서, 고객에게 그대로 보내도 될까?”", "저작권·기밀·할루시네이션을 판단할 사람이 필요합니다."),
@@ -3793,7 +3793,7 @@ def build_experts():
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Why Now</span>
           <h2 class="h-sec">2026년, 가장 빠르게 떠오르는 스펙 <span class="hot-tag">HOT</span></h2>
-          <p class="h-sub" style="margin:0 auto">AI기본법 시행, EU AI Act 집행, 연평균 44% 성장. 규제와 시장이 동시에 움직이면서
+          <p class="h-sub" style="margin:0 auto">AI기본법 시행, EU AI Act 적용, 시장 연평균 45.3% 성장 전망. 규제와 시장이 동시에 움직이면서
              기업·기관·학교가 지금 가장 급하게 찾는 사람이 <strong>AI윤리전문가</strong>입니다.
              유망하다는 말이 붙는 분야 중 전공·경력 제한 없이 표준교재 한 권으로 시작할 수 있는 스펙은 흔치 않습니다.</p>
         </div>
@@ -4092,19 +4092,19 @@ def build_join():
             <h2>지원자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
-                <label>성명 (기업·기관은 담당자 성명) <span class="req">*</span></label>
-                <input type="text" name="name" autocomplete="name" placeholder="홍길동">
+                <label for="f-name">성명 (기업·기관은 담당자 성명) <span class="req">*</span></label>
+                <input id="f-name" type="text" name="name" autocomplete="name" placeholder="홍길동">
                 <p class="err-msg">성명을 입력해 주세요.</p>
               </div>
               <div class="field" id="fEmail">
-                <label>이메일 주소 <span class="req">*</span></label>
-                <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
+                <label for="f-email">이메일 주소 <span class="req">*</span></label>
+                <input id="f-email" type="email" name="email" autocomplete="email" placeholder="example@email.com">
                 <p class="field-hint">검토 결과와 활동 안내가 발송되는 이메일입니다. 실제 사용하시는 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fPhone">
-                <label>휴대전화 번호 <span class="field-opt">(선택)</span></label>
-                <input type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
+                <label for="f-phone">휴대전화 번호 <span class="field-opt">(선택)</span></label>
+                <input id="f-phone" type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
                 <p class="err-msg">휴대전화 번호를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fJob">
@@ -4115,8 +4115,8 @@ def build_join():
               <div class="field" id="fOrg">
                 <button type="button" class="org-toggle" id="orgToggle"><i data-lucide="plus"></i> 소속·기관명 적기 <span class="field-opt">(원하시는 분만)</span></button>
                 <div class="org-box" id="orgBox" hidden>
-                  <label id="orgLabel">소속 <span class="field-opt">(선택)</span></label>
-                  <input type="text" name="org" placeholder="예: ○○대학교 / ○○기업 인사팀">
+                  <label id="orgLabel" for="f-org">소속 <span class="field-opt">(선택)</span></label>
+                  <input id="f-org" type="text" name="org" placeholder="예: ○○대학교 / ○○기업 인사팀">
                 </div>
               </div>
             </div>
@@ -4130,14 +4130,14 @@ def build_join():
             <p class="err-msg">기대하는 것을 하나 이상 선택해 주세요.</p>
             <div class="gform-fields" style="margin-top:18px">
               <div class="field" id="fMsg">
-                <label>한 줄 자기소개 <span class="field-opt">(선택)</span></label>
+                <label for="f-msg">한 줄 자기소개 <span class="field-opt">(선택)</span></label>
                 <div class="msg-quick" id="msgQuick" aria-label="자기소개 예시 문장">
                   <button type="button">AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다.</button>
                   <button type="button">취업 준비 중이라 AI 윤리 활동 경험을 쌓고 싶습니다.</button>
                   <button type="button">학교·직장에서 AI 윤리 활동을 이끌어 보고 싶습니다.</button>
                   <button type="button">AI 윤리 캠페인과 콘텐츠 제작에 참여하고 싶습니다.</button>
                 </div>
-                <textarea name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다."></textarea>
+                <textarea id="f-msg" name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다."></textarea>
                 <p class="field-hint">한 줄이면 충분합니다. 위 문장을 누르면 그대로 들어가고, 비워 두셔도 됩니다. <span id="msgCount">0</span>/600</p>
               </div>
             </div>
@@ -4148,8 +4148,8 @@ def build_join():
             <h2>개인정보 수집·이용 동의</h2>
             <div class="gform-privacy">
               <div><span>수집항목</span>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 지원 동기·자기소개</div>
-              <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내</div>
-              <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
+              <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내, 위촉 시 홈페이지 프로필 공개(희망하신 경우)</div>
+              <div><span>보유기간</span>수집일로부터 3년. 활동이 끝나거나 삭제를 요청하시면 즉시 파기합니다</div>
             </div>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
@@ -4184,7 +4184,7 @@ def build_join():
           <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
                <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
-            <textarea id="doneCopy" readonly></textarea>
+            <textarea id="doneCopy" readonly aria-label="전송 내용 사본" tabindex="-1"></textarea>
             <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
           </div>
         </div>
@@ -4657,7 +4657,7 @@ def build_exam():
         <div class="ex-phead-in">
           <div class="ex-phead-main">
             <p class="ex-crumb" id="exCrumb"><a href="index.html">홈</a><span class="ex-crumb-sep" aria-hidden="true">›</span><span aria-current="page">평가응시</span></p>
-            <h1 class="ex-phead-title">평가응시</h1>
+            <p class="ex-phead-title">평가응시</p>
           </div>
           <div class="ex-phead-side">
             <div class="ex-phead-meta">

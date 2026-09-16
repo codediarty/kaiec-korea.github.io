@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=73a6086fd9">
+<link rel="stylesheet" href="/assets/css/style.css?v=834647613d">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -89,7 +89,7 @@
              이력서와 커리어에 한국AI윤리위원회 공식 「AI윤리전문가 양성과정 이수증」을 더하는 전문 교육과정입니다.</p>
           <p>이수와 동시에 위원회에 공식 등록되어 취업·이직·현재 직무에 바로 활용할 수 있고, 심화과정은 전문위원 등록과 전문강사·자문 활동까지 이어집니다.</p>
           <div class="gform-callout"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 7h6v6" /> <path d="m22 7-8.5 8.5-5-5L2 17" /></svg>
-            <div><strong>AI 윤리·거버넌스, 연평균 44% 이상 성장하는 전문분야.</strong><br>
+            <div><strong>AI 거버넌스 시장 규모, 연평균 45.3% 성장 전망.</strong><br>
                  AI윤리전문가 양성과정 이수가 당신의 새로운 전문 경쟁력이 됩니다.
                  <small class="src">출처: MarketsandMarkets, AI Governance Market 2024~2029 (CAGR 45.3%)</small></div></div>
           <div class="gform-urgency"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" /></svg> 1기 접수 마감 10월 30일 · 연 100명 한정 양성</div>
@@ -159,13 +159,13 @@
             <h2>수강자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
-                <label>성명 <span class="req">*</span></label>
-                <input type="text" name="name" autocomplete="name" placeholder="홍길동">
+                <label for="f-name">성명 <span class="req">*</span></label>
+                <input id="f-name" type="text" name="name" autocomplete="name" placeholder="홍길동">
                 <p class="err-msg">성명을 입력해 주세요.</p>
               </div>
               <div class="field" id="fEmail">
-                <label>이메일 주소 <span class="req">*</span></label>
-                <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
+                <label for="f-email">이메일 주소 <span class="req">*</span></label>
+                <input id="f-email" type="email" name="email" autocomplete="email" placeholder="example@email.com">
                 <p class="field-hint">학습자료(PDF 5종)가 발송되는 이메일입니다. 결제 때에도 같은 이메일을 입력해 주세요(이수 평가 로그인 아이디가 됩니다).
                    실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
@@ -212,8 +212,8 @@
             <p class="gform-desc">AI윤리전문가 양성과정 운영을 위해 아래와 같이 개인정보를 수집·이용합니다.</p>
             <div class="gform-privacy">
               <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 수강 및 활용 목적, 신청정보</div>
-              <div><span>이용목적</span>수강자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급</div>
-              <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
+              <div><span>이용목적</span>수강자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
+              <div><span>보유기간</span>수집일로부터 3년. 이수자 명부는 이수 사실 확인을 위해 보관하며, 삭제를 요청하시면 즉시 파기합니다</div>
             </div>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
@@ -258,7 +258,7 @@
           <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
                <a href="mailto:kaiec.korea@gmail.com">kaiec.korea@gmail.com</a> 으로 보내주세요.</p>
-            <textarea id="doneCopy" readonly></textarea>
+            <textarea id="doneCopy" readonly aria-label="전송 내용 사본" tabindex="-1"></textarea>
             <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
           </div>
         </div>
@@ -315,7 +315,7 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=73a6086fd9"></script>
+  <script src="/assets/js/main.js?v=834647613d"></script>
 
   <script>
   (function(){

@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=73a6086fd9">
+<link rel="stylesheet" href="/assets/css/style.css?v=834647613d">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -142,19 +142,19 @@
             <h2>지원자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
-                <label>성명 (기업·기관은 담당자 성명) <span class="req">*</span></label>
-                <input type="text" name="name" autocomplete="name" placeholder="홍길동">
+                <label for="f-name">성명 (기업·기관은 담당자 성명) <span class="req">*</span></label>
+                <input id="f-name" type="text" name="name" autocomplete="name" placeholder="홍길동">
                 <p class="err-msg">성명을 입력해 주세요.</p>
               </div>
               <div class="field" id="fEmail">
-                <label>이메일 주소 <span class="req">*</span></label>
-                <input type="email" name="email" autocomplete="email" placeholder="example@email.com">
+                <label for="f-email">이메일 주소 <span class="req">*</span></label>
+                <input id="f-email" type="email" name="email" autocomplete="email" placeholder="example@email.com">
                 <p class="field-hint">검토 결과와 활동 안내가 발송되는 이메일입니다. 실제 사용하시는 주소를 정확하게 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fPhone">
-                <label>휴대전화 번호 <span class="field-opt">(선택)</span></label>
-                <input type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
+                <label for="f-phone">휴대전화 번호 <span class="field-opt">(선택)</span></label>
+                <input id="f-phone" type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
                 <p class="err-msg">휴대전화 번호를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fJob">
@@ -165,8 +165,8 @@
               <div class="field" id="fOrg">
                 <button type="button" class="org-toggle" id="orgToggle"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /> <path d="M12 5v14" /></svg> 소속·기관명 적기 <span class="field-opt">(원하시는 분만)</span></button>
                 <div class="org-box" id="orgBox" hidden>
-                  <label id="orgLabel">소속 <span class="field-opt">(선택)</span></label>
-                  <input type="text" name="org" placeholder="예: ○○대학교 / ○○기업 인사팀">
+                  <label id="orgLabel" for="f-org">소속 <span class="field-opt">(선택)</span></label>
+                  <input id="f-org" type="text" name="org" placeholder="예: ○○대학교 / ○○기업 인사팀">
                 </div>
               </div>
             </div>
@@ -180,14 +180,14 @@
             <p class="err-msg">기대하는 것을 하나 이상 선택해 주세요.</p>
             <div class="gform-fields" style="margin-top:18px">
               <div class="field" id="fMsg">
-                <label>한 줄 자기소개 <span class="field-opt">(선택)</span></label>
+                <label for="f-msg">한 줄 자기소개 <span class="field-opt">(선택)</span></label>
                 <div class="msg-quick" id="msgQuick" aria-label="자기소개 예시 문장">
                   <button type="button">AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다.</button>
                   <button type="button">취업 준비 중이라 AI 윤리 활동 경험을 쌓고 싶습니다.</button>
                   <button type="button">학교·직장에서 AI 윤리 활동을 이끌어 보고 싶습니다.</button>
                   <button type="button">AI 윤리 캠페인과 콘텐츠 제작에 참여하고 싶습니다.</button>
                 </div>
-                <textarea name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다."></textarea>
+                <textarea id="f-msg" name="msg" maxlength="600" rows="3" placeholder="예) AI를 자주 활용하는데 올바른 기준이 궁금해서 지원합니다."></textarea>
                 <p class="field-hint">한 줄이면 충분합니다. 위 문장을 누르면 그대로 들어가고, 비워 두셔도 됩니다. <span id="msgCount">0</span>/600</p>
               </div>
             </div>
@@ -198,8 +198,8 @@
             <h2>개인정보 수집·이용 동의</h2>
             <div class="gform-privacy">
               <div><span>수집항목</span>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 지원 동기·자기소개</div>
-              <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내</div>
-              <div><span>보유기간</span>개인정보처리방침에 따른 보유기간</div>
+              <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내, 위촉 시 홈페이지 프로필 공개(희망하신 경우)</div>
+              <div><span>보유기간</span>수집일로부터 3년. 활동이 끝나거나 삭제를 요청하시면 즉시 파기합니다</div>
             </div>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
@@ -234,7 +234,7 @@
           <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
                <a href="mailto:kaiec.korea@gmail.com">kaiec.korea@gmail.com</a> 으로 보내주세요.</p>
-            <textarea id="doneCopy" readonly></textarea>
+            <textarea id="doneCopy" readonly aria-label="전송 내용 사본" tabindex="-1"></textarea>
             <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
           </div>
         </div>
@@ -326,7 +326,7 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=73a6086fd9"></script>
+  <script src="/assets/js/main.js?v=834647613d"></script>
 
   <script>
   (function(){
