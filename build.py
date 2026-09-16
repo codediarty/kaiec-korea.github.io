@@ -58,8 +58,8 @@ DOC = "이수증"
 DOC_FULL = f"{PROG} {DOC}"                # 「AI윤리전문가 양성과정 이수증」
 EXAM_BASIC = (40, 70)                     # 기본과정 이수 평가: 문항 수, 이수 기준 점수
 EXAM_ADV = (50, 70)                       # 심화과정 이수 평가: 문항 수, 이수 기준 점수 (2026.09.16 80 → 70, 기본·심화 모두 70점)
-EXAM_MIN_BASIC = 60                       # 기본과정 제한 시간(분)
-EXAM_MIN_ADV = 75                         # 심화과정 제한 시간(분)
+EXAM_MIN_BASIC = 60                       # 기본과정 시험 시간(분): 응시자가 [시험 시작]을 누른 때부터 (2026.09.16 90분 통일 검토 후 기존 60분 유지)
+EXAM_MIN_ADV = 75                         # 심화과정 시험 시간(분) (기존 75분 유지)
 EXAM_WINDOW_DAYS = 30                     # 응시 가능 기간: 결제일부터 30일
 # 수강생에게 제공하는 학습자료 (과정 설명에 한 줄로 표기, 2026.09.16)
 MATERIALS = "『핵심이론』 교재, 실전 모의고사 2회와 별책 정답 및 해설, 『실무 도구집』"   # 모두 PDF로 제공
@@ -97,6 +97,13 @@ CURRICULUM = [
      ["문화다양성", "사회적 가치"]),
 ]
 def won(n): return f"{n:,}원"
+
+
+def exam_time_text():
+    """평가 구성 문장의 시험 시간 부분: 두 과정 시간이 같으면 '시험 시간은 모두 N분', 다르면 과정별로 적습니다."""
+    if EXAM_MIN_BASIC == EXAM_MIN_ADV:
+        return f"시험 시간은 모두 {EXAM_MIN_BASIC}분"
+    return f"시험 시간은 기본과정 {EXAM_MIN_BASIC}분, 심화과정 {EXAM_MIN_ADV}분"
 
 
 # =============================================================================
@@ -2636,7 +2643,7 @@ SAMPLE_Q = [
 def build_expert():
     """AI윤리전문가 양성과정: 양성 필요성과 과정 안내 (전환형 랜딩)
     - 등록된 자격 제도가 아니므로 인증(자격)·검정·급수 표현을 쓰지 않음 (2026.09.14). 2026.09.16부터 '이수 평가·이수증'으로 표기
-    - 기본과정(40문항·60분·70점, 공식 이수증·위원회 공식 등록) / 심화과정(50문항·75분·70점, 전문위원 등록), 온라인 강의 8강 약 2시간 12분 + 학습자료(PDF)
+    - 기본과정(40문항·70점, 공식 이수증·위원회 공식 등록) / 심화과정(50문항·70점, 전문위원 등록), 시험 시간은 기본 60분·심화 75분, 온라인 강의 8강 약 2시간 12분 + 학습자료(PDF)
     - 2026.09.15 카피 개편: 훅(기업·기관이 원하는 스펙, 올해 이거 땄다), 혜택 4카드(공식 이수증·공식 등록·취업 활용·스펙 향상) + 심화는 작게, 성균관컨설팅 운영 명시, 문서 예시 이미지 제거, 강사진에 법률 자문 추가
     - 2026.09.16: 수강·이수 절차 6단계(양성과정 신청 → 학습자료 확인 → 자율학습 → 평가응시 → 이수 기준 충족 → 이수증 발급), 응시는 상단 [평가응시] 로그인"""
     # 결제는 접수 완료 화면에서 자동 연결되므로(폼 → 결제) 절차 아래에는 신청 버튼 하나만 둡니다.
@@ -2993,8 +3000,8 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>기본과정과 심화과정은 무엇이 다른가요?</summary>
-          <div class="acc-body">두 과정 모두 같은 온라인 강의 {LECTURES}강({TOTAL_TIME})을 수강하고 같은 학습자료를 받습니다. 기본과정은 이수 평가({EXAM_BASIC[0]}문항, {EXAM_MIN_BASIC}분)에서 {EXAM_BASIC[1]}점 이상이면 이수하고 위원회 공식 이수증을 받으며 위원회에 공식 등록됩니다.
-            심화과정은 문항 수가 많고({EXAM_ADV[0]}문항, {EXAM_MIN_ADV}분) 거버넌스·법제·사례 분석까지 다루는 심화 범위에서 출제되며, 이수 기준은 같은 {EXAM_ADV[1]}점입니다. 이수하면 이수증과 함께 위원회 전문위원으로 등록되어 홈페이지에 프로필이 공개되고, 전문강사·자문 활동이 가능합니다.
+          <div class="acc-body">두 과정 모두 같은 온라인 강의 {LECTURES}강({TOTAL_TIME})을 수강하고 같은 학습자료를 받습니다. 기본과정은 이수 평가({EXAM_BASIC[0]}문항)에서 {EXAM_BASIC[1]}점 이상이면 이수하고 위원회 공식 이수증을 받으며 위원회에 공식 등록됩니다.
+            심화과정은 문항 수가 많고({EXAM_ADV[0]}문항) 거버넌스·법제·사례 분석까지 다루는 심화 범위에서 출제되며, 이수 기준은 같은 {EXAM_ADV[1]}점입니다({exam_time_text()}). 이수하면 이수증과 함께 위원회 전문위원으로 등록되어 홈페이지에 프로필이 공개되고, 전문강사·자문 활동이 가능합니다.
             처음이라면 기본과정을, 전문위원 등록과 강의·자문 활동을 목표한다면 심화과정을 권합니다.</div>
         </details>
         <details class="acc">
@@ -3020,7 +3027,7 @@ def build_expert():
           <summary>이수 평가는 어떻게 응시하나요?</summary>
           <div class="acc-body">학습을 마친 뒤 홈페이지 상단 <a href="exam.html" style="color:var(--blue);font-weight:600">[평가응시]</a>에서 로그인해 응시합니다.
             아이디는 결제 때 입력한 이메일, 비밀번호는 결제 때 입력한 휴대전화 번호 뒤 4자리이며, 결제 후 {EXAM_WINDOW_DAYS}일 이내에 응시할 수 있습니다.
-            기본과정은 {EXAM_BASIC[0]}문항({EXAM_MIN_BASIC}분), 심화과정은 {EXAM_ADV[0]}문항({EXAM_MIN_ADV}분)이며 두 과정 모두 100점 만점에 {EXAM_BASIC[1]}점 이상이면 이수입니다.
+            기본과정은 {EXAM_BASIC[0]}문항, 심화과정은 {EXAM_ADV[0]}문항이고, {exam_time_text()}으로 [시험 시작]을 누른 때부터 흐릅니다. 두 과정 모두 100점 만점에 {EXAM_BASIC[1]}점 이상이면 이수입니다.
             문항은 강의와 학습자료 범위에서 출제되므로 충실히 학습하면 충분히 준비할 수 있습니다.</div>
         </details>
         <details class="acc">
@@ -3258,7 +3265,7 @@ def build_expert_apply():
             <div class="exam-info">
               <div><span>평가 방식</span>온라인 이수 평가 (강의·학습자료 범위에서 출제, 4지선다형)</div>
               <div><span>응시 방법</span>홈페이지 상단 [평가응시]에서 로그인 · 결제 후 {EXAM_WINDOW_DAYS}일 이내 응시</div>
-              <div><span>평가 구성</span>기본과정 {EXAM_BASIC[0]}문항 · {EXAM_MIN_BASIC}분 / 심화과정 {EXAM_ADV[0]}문항 · {EXAM_MIN_ADV}분</div>
+              <div><span>평가 구성</span>기본과정 {EXAM_BASIC[0]}문항 · 심화과정 {EXAM_ADV[0]}문항 ({exam_time_text()})</div>
               <div><span>이수 기준</span><b>기본·심화 모두 {EXAM_BASIC[1]}점 이상</b></div>
               <div><span>재응시</span>미이수 시 재응시(B형) 1회 무료</div>
               <div><span>이수증 발급</span>이수 기준 충족 시 결과 확인 후 7일 이내 한국AI윤리위원회 공식 이수증(PDF) 발급과 위원회 공식 등록, 심화과정은 전문위원 등록·홈페이지 프로필 공개</div>
@@ -4297,7 +4304,7 @@ EXAM_ICONS = {
     "copy-slash": '<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/><path d="m3 3 18 18"/>',
 }
 EXAM_SPRITE_BASE = ["arrow-left", "arrow-right", "award", "badge-check", "bar-chart-3", "book-open", "check",
-                    "check-circle-2", "chevron-right", "clipboard-list", "clock", "database", "eye", "file-check",
+                    "check-circle-2", "chevron-right", "clipboard-list", "clock", "database", "external-link", "eye", "file-check",
                     "graduation-cap", "help-circle", "id-card", "lock", "monitor-play", "pen-line", "send",
                     "shield-check", "user-check", "users", "wifi", "x"]
 
@@ -4330,11 +4337,15 @@ EXAM_DEMO_MINUTES = 5
 
 
 def build_exam():
-    """평가응시(/exam/): AI윤리전문가 양성과정 온라인 이수 평가 시스템 (2026.09.16 신설)
-    - 흐름: 로그인(결제 이메일 + 휴대전화 번호 뒤 4자리) → 대시보드 → 응시 전 확인(서약) → 응시(전체 화면 레이어) → 제출 확인 → 결과
-    - 로그인 화면만 정적 HTML이고 나머지 화면은 assets/js/exam.js가 그립니다(URL 해시로 새로고침 복원, 토큰은 sessionStorage)
-    - 백엔드는 EXAM_API(평가 운영 시트의 앱스 스크립트 웹 앱). 비어 있으면 '연결 준비 중' 안내와 체험 모드(브라우저 안 모의 API)만 동작
-    - 설정은 window.KAIEC_EXAM, 체험 문항은 window.KAIEC_EXAM_DEMO 로 주입"""
+    """평가응시(/exam/): AI윤리전문가 양성과정 온라인 이수 평가 시스템 (2026.09.16 신설, 같은 날 2차 개편)
+    - 흐름: 로그인(결제 이메일 + 휴대전화 번호 뒤 4자리) → 대시보드 → 응시 전 확인(성명 입력·서약) → [시험 시작] 확인 창
+            → 시험(전체 화면 레이어, 시험 시간 타이머: 기본 60분·심화 75분) → 제출 확인 → 결과. 진행 중인 시험은 [이어서 응시]로 들어감
+    - 로그인 전에는 이메일·비밀번호 상자와 결제 링크 2개(PAY_URL_L2 기본과정, PAY_URL_L1 심화과정)만 보입니다.
+      자세한 안내(이수 절차·평가 구성·이수 기준·응시 환경)는 로그인 뒤 대시보드에서 assets/js/exam.js가 그립니다
+    - 로그인 상자와 얇은 페이지 머리(로그인 뒤 표시)만 정적 HTML이고, 나머지 화면은 exam.js가 그립니다(URL 해시로 새로고침 복원, 토큰은 sessionStorage)
+    - 백엔드는 EXAM_API(평가 운영 시트의 앱스 스크립트 웹 앱). 비어 있으면 '평가 시스템 연결 준비 중' 안내와 함께 로그인을 막음
+    - 체험 모드는 /exam/?demo=1 주소로만 진입(브라우저 안 모의 API)
+    - 설정은 window.KAIEC_EXAM(과정별 문항 수·시험 시간·배점·이수 기준, 결제 링크 payBasic·payAdv), 체험 문항은 window.KAIEC_EXAM_DEMO 로 주입"""
     import json as _json
 
     def _n(x):
@@ -4343,10 +4354,13 @@ def build_exam():
     def _ic(name, cls=""):
         return f'<svg class="ex-ico{(" " + cls) if cls else ""}" aria-hidden="true" focusable="false"><use href="#exi-{name}"></use></svg>'
 
-    cfg = ('<script>window.KAIEC_EXAM={api:"%s",windowDays:%d,email:"%s",courses:{'
+    def _js(v):
+        return _json.dumps(v, ensure_ascii=False)
+
+    cfg = ('<script>window.KAIEC_EXAM={api:%s,windowDays:%d,email:%s,payBasic:%s,payAdv:%s,courses:{'
            '"기본과정":{total:%d,minutes:%d,point:%s,passScore:%d},'
            '"심화과정":{total:%d,minutes:%d,point:%s,passScore:%d}}};</script>'
-           % (EXAM_API, EXAM_WINDOW_DAYS, EMAIL,
+           % (_js(EXAM_API), EXAM_WINDOW_DAYS, _js(EMAIL), _js(PAY_URL_L2), _js(PAY_URL_L1),
               EXAM_BASIC[0], EXAM_MIN_BASIC, _n(100 / EXAM_BASIC[0]), EXAM_BASIC[1],
               EXAM_ADV[0], EXAM_MIN_ADV, _n(100 / EXAM_ADV[0]), EXAM_ADV[1]))
 
@@ -4365,7 +4379,7 @@ def build_exam():
                              ensure_ascii=False, separators=(",", ":"))
                + ';</script>')
 
-    # 아이콘 스프라이트 + KAIEC 배지 글자(벡터)
+    # 아이콘 스프라이트 + KAIEC 배지 글자(벡터, 시험 화면 머리에서 사용)
     allicons = dict(ICONS)
     allicons.update(EXAM_ICONS)
     badge_vb = re.search(r'viewBox="([^"]+)"', BADGE_SVG).group(1)
@@ -4377,111 +4391,69 @@ def build_exam():
               + f'<symbol id="exi-kaiec" viewBox="{badge_vb}">{badge_inner}</symbol>'
               + '</defs></svg>')
 
-    FLOW = [
-        ("양성과정 신청", "수강 신청과 교육비 결제"),
-        ("학습자료 확인", "이메일로 받은 강의·학습자료 확인"),
-        ("자율학습", "온라인 강의와 교재로 기간 안에 학습"),
-        ("평가응시", "이 화면에서 로그인한 뒤 응시"),
-        ("이수 기준 충족", f"기본·심화 모두 {EXAM_BASIC[1]}점 이상"),
-        (f"{DOC} 발급", f"「AI윤리전문가 {DOC}」 이메일(PDF) 발급"),
-    ]
-    now_cls, now_tag = ' class="is-now"', '<em>현재 단계</em>'
-    flow_html = "".join(
-        f'<li{now_cls if i == 4 else ""}><span class="ex-flow-no">{i}</span>'
-        f'<div class="ex-flow-txt"><strong>{t}</strong><span>{d}</span></div>'
-        f'{now_tag if i == 4 else ""}</li>'
-        for i, (t, d) in enumerate(FLOW, 1))
-    TRUST = [("user-check", "본인 확인 로그인", "결제 정보로 응시자 확인"),
-             ("save", "답안 자동 저장", "응시 중 답안 수시 저장"),
-             ("shield-check", "문항 보호", "복제·유출 방지 화면")]
-    trust_html = "".join(f'<li>{_ic(ic)}<div><strong>{t}</strong><span>{d}</span></div></li>' for ic, t, d in TRUST)
-    GUIDE = [
-        ("calendar", "응시 기간", f"결제일부터 {EXAM_WINDOW_DAYS}일",
-         "기간 안에 1차 평가와 재응시까지 마쳐 주십시오. 남은 기간은 로그인 후 확인할 수 있습니다."),
-        ("clipboard-list", "평가 구성",
-         f"기본과정 {EXAM_BASIC[0]}문항 · {EXAM_MIN_BASIC}분<br>심화과정 {EXAM_ADV[0]}문항 · {EXAM_MIN_ADV}분",
-         f"4지선다형 100점 만점. 문항당 기본과정 {_n(100 / EXAM_BASIC[0])}점, 심화과정 {_n(100 / EXAM_ADV[0])}점입니다."),
-        ("award", "이수 기준", f"기본·심화 모두 {EXAM_BASIC[1]}점 이상",
-         f"1차 A형 1회, 미이수 시 재응시 B형 1회 무료. {DOC}은 결과 확인 후 7일 이내 PDF로 발급합니다."),
-        ("monitor", "응시 환경", "PC·태블릿 권장",
-         "최신 크롬·엣지·사파리와 안정적인 인터넷에서 응시해 주십시오. 다른 창으로 이동하면 화면 이탈로 기록됩니다."),
-    ]
-    guide_html = "".join(
-        f'<div class="ex-guide-item">{_ic(ic)}<div><span class="ex-guide-k">{k}</span>'
-        f'<strong>{v}</strong><p>{d}</p></div></div>' for ic, k, v, d in GUIDE)
+    # 로그인 상자 아래 결제 버튼 (성균관컨설팅 결제 페이지, 새 창). 링크가 비어 있으면 그 버튼은 만들지 않음
+    pay_btns = "".join(
+        f'<a class="ex-btn ex-btn--secondary" href="{u}" target="_blank" rel="noopener">{t}{_ic("external-link")}'
+        f'<span class="sr-only">(새 창)</span></a>'
+        for u, t in ((PAY_URL_L2, "기본과정 결제하기"), (PAY_URL_L1, "심화과정 결제하기")) if u)
+    pay_html = f"""
+            <div class="ex-lbox-pay">
+              <p class="ex-lbox-q">아직 수강 신청 전이신가요?</p>
+              <div class="ex-paybtns">{pay_btns}</div>
+              <p class="ex-lbox-note">결제는 성균관컨설팅 안전결제로 진행됩니다.</p>
+            </div>""" if pay_btns else ""
 
-    body = f"""    <section class="ex-hero">
-      <div class="wrap ex-hero-inner">
-        <div class="ex-hero-main">
-          <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; 평가응시</p>
-          <h1>평가응시</h1>
-          <p>AI윤리전문가 양성과정 수강생 전용 온라인 이수 평가 · 결제일부터 {EXAM_WINDOW_DAYS}일 이내 응시</p>
+    body = f"""    <div class="ex-shell" id="examApp">
+      <header class="ex-phead" id="exHead" hidden>
+        <div class="ex-phead-in">
+          <div class="ex-phead-main">
+            <p class="ex-crumb" id="exCrumb"><a href="index.html">홈</a><span class="ex-crumb-sep" aria-hidden="true">›</span><span aria-current="page">평가응시</span></p>
+            <h1 class="ex-phead-title">평가응시</h1>
+          </div>
+          <div class="ex-phead-side">
+            <div class="ex-phead-meta">
+              <span class="ex-sys" id="exSysState" data-state="check" role="status"><i class="ex-dot" aria-hidden="true"></i><b>연결 상태 확인 중</b></span>
+              <span class="ex-clock" id="exClock"></span>
+            </div>
+            <div class="ex-phead-tools" id="exHeadTools" hidden></div>
+          </div>
         </div>
-        <div class="ex-sys" aria-live="polite">
-          <span class="ex-sys-label">KAIEC 온라인 평가 시스템</span>
-          <span class="ex-sys-state" id="exSysState" data-state="check"><i class="ex-dot"></i><b>연결 상태 확인 중</b></span>
-          <span class="ex-sys-clock">{_ic("clock")}<span id="exClock">--:--:--</span></span>
-        </div>
-      </div>
-    </section>
+      </header>
 
-    <div class="ex-shell" id="examApp">
       <div class="ex-demo-bar" id="exDemoBar" hidden>
-        <div class="ex-demo-bar-in">{_ic("monitor-play")}<strong>체험 모드</strong><span>실제 응시 기록이 남지 않습니다. 예시 5문항 · 제한 시간 5분</span>
+        <div class="ex-demo-bar-in">{_ic("monitor-play")}<strong>체험 모드</strong><span>실제 응시 기록이 남지 않습니다. 예시 {len(demo_q)}문항 · 시험 시간 {EXAM_DEMO_MINUTES}분</span>
           <button type="button" class="ex-demo-exit" data-act="demo-exit">체험 종료</button></div>
       </div>
 
       <section class="ex-login" id="exLogin" aria-labelledby="exLoginTitle">
-        <div class="ex-login-grid">
-          <div class="ex-intro">
-            <div class="ex-intro-brand">
-              <span class="brand-badge ex-intro-badge">{BADGE_SVG}</span>
-              {WORDMARK_USE}
-            </div>
-            <span class="ex-kicker">OFFICIAL ONLINE ASSESSMENT</span>
-            <h2 class="ex-intro-title">AI윤리전문가 양성과정<br>이수 평가</h2>
-            <p class="ex-intro-sub">한국AI윤리위원회 공식 온라인 평가</p>
-            <ol class="ex-flow" aria-label="이수 절차">{flow_html}</ol>
-            <ul class="ex-trust">{trust_html}</ul>
+        <div class="ex-lbox">
+          <div class="ex-lbox-head">
+            <div class="ex-lbox-brand"><span class="brand-badge">{BADGE_SVG}</span>{WORDMARK_USE}<span class="sr-only">{SITE_NAME}</span></div>
+            <p class="ex-lbox-prog">AI윤리전문가 양성과정</p>
+            <h1 class="ex-lbox-title" id="exLoginTitle">이수 평가 시스템</h1>
           </div>
-
-          <div class="ex-login-card">
-            <div class="ex-login-head">
-              <span class="ex-kicker ex-kicker--blue">STUDENT LOGIN</span>
-              <h2 id="exLoginTitle">수강생 로그인</h2>
-              <p>양성과정 결제 때 입력하신 정보로 로그인해 주십시오.</p>
-            </div>
-            <div class="ex-ready" id="exReady" hidden>
-              {_ic("hourglass")}
-              <div><strong>평가 시스템 연결 준비 중</strong>
-                <p>온라인 평가 시스템을 연결하고 있습니다. 준비가 끝나면 이 화면에서 바로 로그인할 수 있으며, 지금은 평가 화면을 미리 체험해 보실 수 있습니다.</p></div>
-            </div>
+          <div class="ex-lbox-body">
+            <h2 class="ex-lbox-sub">수강생 로그인</h2>
+            <div class="ex-ready" id="exReady" hidden>{_ic("hourglass")}<p><strong>평가 시스템 연결 준비 중</strong>연결이 끝나면 이 화면에서 로그인할 수 있습니다.</p></div>
             <form class="ex-form" id="exLoginForm" novalidate>
               <div class="ex-field">
-                <label for="exEmail">아이디 <small>결제 이메일</small></label>
-                <div class="ex-input">{_ic("mail")}<input id="exEmail" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="example@email.com" required></div>
+                <label class="ex-label" for="exEmail">이메일(아이디)</label>
+                <input class="ex-text" id="exEmail" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="결제 때 입력한 이메일" required>
               </div>
               <div class="ex-field">
-                <label for="exPin">비밀번호 <small>숫자 4자리</small></label>
-                <div class="ex-input">{_ic("lock")}<input id="exPin" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="current-password" placeholder="휴대전화 번호 뒤 4자리" required>
-                  <button type="button" class="ex-eye" id="exPinToggle" aria-label="비밀번호 보기" aria-pressed="false">{_ic("eye", "ex-eye-on")}{_ic("eye-off", "ex-eye-off")}</button></div>
-                <p class="ex-help">{_ic("info")}<span>비밀번호는 결제 때 입력하신 휴대전화 번호 뒤 4자리입니다.</span></p>
+                <label class="ex-label" for="exPin">비밀번호 <small>숫자 4자리</small></label>
+                <div class="ex-pinbox">
+                  <input class="ex-text" id="exPin" name="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="current-password" placeholder="숫자 4자리" aria-describedby="exPinHelp" required>
+                  <button type="button" class="ex-eye" id="exPinToggle" aria-label="비밀번호 보기" aria-pressed="false">{_ic("eye", "ex-eye-on")}{_ic("eye-off", "ex-eye-off")}</button>
+                </div>
+                <p class="ex-field-help" id="exPinHelp">결제 때 입력한 휴대전화 번호 뒤 4자리</p>
               </div>
               <p class="ex-error" id="exLoginErr" role="alert" hidden></p>
-              <button type="submit" class="ex-btn ex-btn--primary ex-btn--lg ex-btn--block" id="exLoginBtn">{_ic("log-in")}로그인</button>
-              <p class="ex-secure">{_ic("shield-check")}로그인 정보와 답안은 암호화된 연결(HTTPS)로 전송됩니다</p>
+              <button type="submit" class="ex-btn ex-btn--primary ex-btn--lg ex-btn--block" id="exLoginBtn">로그인</button>
             </form>
-            <div class="ex-or"><span>또는</span></div>
-            <a class="ex-btn ex-btn--outline ex-btn--block" href="exam.html?demo=1" id="exDemoBtn" data-act="demo">{_ic("monitor-play")}평가 화면 미리 체험하기</a>
-            <p class="ex-demo-note">예시 5문항 · 5분 · 실제 응시 기록이 남지 않습니다</p>
-            <div class="ex-login-foot">
-              {_ic("help-circle")}
-              <p>로그인이 되지 않으면 성명과 결제 이메일을 적어 <a href="mailto:{EMAIL}">{EMAIL}</a> 로 문의해 주십시오.</p>
-            </div>
-          </div>
+          </div>{pay_html}
+          <p class="ex-lbox-foot">로그인 문의 <a href="mailto:{EMAIL}">{EMAIL}</a></p>
         </div>
-
-        <div class="ex-guide" aria-label="응시 안내">{guide_html}</div>
       </section>
 
       <div class="ex-view" id="exView" hidden></div>
@@ -4497,7 +4469,7 @@ def build_exam():
 
     page("exam.html", "평가응시",
          "한국AI윤리위원회 AI윤리전문가 양성과정 수강생 전용 온라인 이수 평가입니다. 결제 이메일과 휴대전화 번호 뒤 4자리로 로그인해 "
-         f"기본과정 {EXAM_BASIC[0]}문항({EXAM_MIN_BASIC}분) · 심화과정 {EXAM_ADV[0]}문항({EXAM_MIN_ADV}분) 평가에 응시하고 결과를 확인하세요.",
+         f"기본과정 {EXAM_BASIC[0]}문항 · 심화과정 {EXAM_ADV[0]}문항({exam_time_text()}) 평가에 응시하고 결과를 확인하세요.",
          body,
          extra_head=f'<link rel="stylesheet" href="assets/css/exam.css?v={BUILD_V}">\n',
          extra_script=(f"  {cfg}\n  {demo_js}\n"

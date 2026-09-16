@@ -1387,3 +1387,18 @@ table.tbl tr:hover td{background:#FCFDFF}
 .msg-quick button{font:inherit;font-size:12.5px;line-height:1.3;padding:6px 11px;border-radius:999px;border:1px solid var(--gray-200);background:#fff;color:var(--gray-600);cursor:pointer;text-align:left}
 .msg-quick button:hover{border-color:var(--blue);color:var(--blue);background:#F3F7FF}
 @media (max-width:600px){.hot-tag{font-size:11px;padding:2px 7px}}
+/* 2026.09.16: expert 페이지 '이수증 한 장으로 끝나지 않습니다' 가치 블록 (공신력·활용성·선점) */
+.worth-list{display:grid;gap:12px;margin-top:22px}
+.worth{position:relative;display:flex;gap:15px;align-items:flex-start;background:#fff;border:1px solid var(--gray-200);
+  border-radius:16px;padding:20px 22px;transition:box-shadow .2s var(--ease),transform .2s var(--ease),border-color .2s}
+.worth:hover{box-shadow:var(--shadow);transform:translateY(-2px);border-color:#C9D8F5}
+.worth-ic{flex:none;width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,var(--blue-050),var(--teal-050));color:var(--blue)}
+.worth-ic svg{width:21px;height:21px}
+.worth-b{min-width:0}
+.worth-b>strong{display:block;font-size:17px;letter-spacing:-.025em;color:var(--ink);margin:2px 0 7px;padding-right:34px}
+.worth-b p strong{font-size:inherit;color:var(--ink);font-weight:800}
+.worth-b p{font-size:14px;color:var(--gray-600);line-height:1.75;margin:0}
+.worth-b .chips{margin-top:11px}
+.worth-no{position:absolute;right:18px;top:17px;font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--gray-400)}
+@media (max-width:600px){.worth{padding:17px 16px;gap:12px}.worth-b>strong{font-size:16px}}

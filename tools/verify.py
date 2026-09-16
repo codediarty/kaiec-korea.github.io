@@ -246,6 +246,18 @@ for name, url in (("PAY_URL_L2", build.PAY_URL_L2), ("PAY_URL_L1", build.PAY_URL
     # 결제 링크는 접수 완료 화면(자동 이동)에만 있으면 됨. expert 페이지의 직접 결제 버튼은 2026.09.13 제거
     if url and url not in apply_html:
         probs.append(f"{name} 미반영 ({url})")
+# 2026.09.16 평가응시 2차 개편: 로그인 화면에 기본·심화 결제 버튼(새 창), 설정에 시험 시간·결제 링크·EXAM_API 주입
+exam_html = read(pages["exam.html"])
+for name, url in (("PAY_URL_L2", build.PAY_URL_L2), ("PAY_URL_L1", build.PAY_URL_L1)):
+    if url and f'href="{url}" target="_blank" rel="noopener"' not in exam_html:
+        probs.append(f"/exam/ 로그인 화면에 {name} 결제 버튼(새 창) 없음 ({url})")
+if f'api:{json.dumps(build.EXAM_API)}' not in exam_html:
+    probs.append("/exam/ 설정(window.KAIEC_EXAM)에 EXAM_API 미반영")
+for course, (total, _pass), minutes in (("기본과정", build.EXAM_BASIC, build.EXAM_MIN_BASIC), ("심화과정", build.EXAM_ADV, build.EXAM_MIN_ADV)):
+    if f'"{course}":{{total:{total},minutes:{minutes},' not in exam_html:
+        probs.append(f"/exam/ 설정에 {course} 문항 수·시험 시간({total}문항·{minutes}분) 미반영")
+if 'id="exLoginForm"' not in exam_html or 'id="exDemoBtn"' in exam_html:
+    probs.append("/exam/ 로그인 화면 구성 이상 (로그인 폼 없음 또는 체험 버튼이 다시 들어감)")
 if build.won(build.PRICE_L2) not in expert_html or build.won(build.PRICE_L2) not in index_html:
     probs.append(f"기본과정 특별가 {build.won(build.PRICE_L2)} 미반영")
 if build.DEADLINE not in expert_html:
@@ -256,7 +268,7 @@ if "/join/#apply" not in read(pages["apply.html"]):
     probs.append("apply 페이지가 통합 신청 폼(/join/#apply)으로 연결되지 않음")
 if 'id="joinForm"' not in read(pages["join.html"]) or build.SHEET_WEBHOOK not in read(pages["join.html"]):
     probs.append("join 페이지 신청 폼 또는 시트 웹훅 미반영")
-check("build.py 상수(웹훅·결제 링크·가격·마감·구글폼) 페이지 반영", probs)
+check("build.py 상수(웹훅·결제 링크·가격·마감·구글폼·평가응시 설정) 페이지 반영", probs)
 
 # ---------------------------------------------------------------- 8. 배포 파일
 probs = []
