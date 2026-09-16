@@ -1373,6 +1373,28 @@ table.tbl tr:hover td{background:#FCFDFF}
 .resume-tag--adv{background:var(--teal-050);color:#00857A}
 .resume-rows code{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--gray-100);padding:7px 12px;border-radius:9px;line-height:1.5}
 @media (max-width:700px){.exam-grid{grid-template-columns:1fr}.lec{padding:16px 16px 14px}.lec-head strong{font-size:15.5px}.resume-rows code{font-size:13px}}
+/* 이력서 기재 예시 확장 (2026.09.16): 경력사항·전문이력 두 줄 + 설명 */
+.resume-line{padding:22px 24px}
+.resume-rows{gap:14px}
+.resume-rows .rrow{display:flex;align-items:flex-start;gap:13px;flex-wrap:nowrap}
+.resume-rows .rrow + .rrow{padding-top:14px;border-top:1px solid var(--gray-100)}
+.rrow .resume-tag{margin-top:5px}
+.rlines{min-width:0;flex:1}
+.rlines p{display:flex;align-items:center;gap:10px;margin:0 0 7px;flex-wrap:wrap}
+.rlines p b{flex:none;width:58px;font-size:12.5px;font-weight:800;color:var(--gray-500);letter-spacing:.02em}
+.rlines p code{flex:1;min-width:0}
+.rlines small{display:block;margin-top:9px;font-size:12.5px;color:var(--gray-500);line-height:1.75}
+.rlines small strong{color:var(--ink);font-weight:800}
+.rlines code.rc-in{display:inline;font-size:12.5px;font-weight:700;padding:2px 7px;background:#fff;border:1px solid var(--gray-200);word-break:keep-all;overflow-wrap:anywhere}
+@media (max-width:600px){
+  .resume-line{padding:18px 16px}
+  .resume-rows .rrow{flex-direction:column;gap:9px}
+  .rrow .resume-tag{margin-top:0}
+  .rlines p{gap:6px}
+  .rlines p b{width:auto}
+  .rlines p code{flex:none;width:100%}
+  .rlines code.rc-in{display:block;margin-top:6px;width:fit-content;max-width:100%}
+}
 
 /* 2026.09.15: 심화과정은 작게(보조 안내), 문서 예시 이미지는 expert 페이지에서 제거 */
 .adv-note{display:block;margin-top:8px;font-size:12.5px;line-height:1.6;color:var(--gray-500);font-weight:500}

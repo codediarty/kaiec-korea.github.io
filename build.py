@@ -56,6 +56,7 @@ POSTS_LASTMOD = "2026-09-14"            # 게시글 전체 틀이 바뀐 마지�
 PROG = "AI윤리전문가 양성과정"
 DOC = "이수증"
 DOC_FULL = f"{PROG} {DOC}"                # 「AI윤리전문가 양성과정 이수증」
+PROG_EN = "KAIEC AI Ethics Professional"  # 이력서 영문 표기 (기본과정 이수 시 부여)
 EXAM_BASIC = (40, 70)                     # 기본과정 이수 평가: 문항 수, 이수 기준 점수
 EXAM_ADV = (50, 70)                       # 심화과정 이수 평가: 문항 수, 이수 기준 점수 (2026.09.16 80 → 70, 기본·심화 모두 70점)
 EXAM_MIN_BASIC = 60                       # 기본과정 시험 시간(분): 응시자가 [시험 시작]을 누른 때부터 (2026.09.16 90분 통일 검토 후 기존 60분 유지)
@@ -524,6 +525,33 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
         with io.open(os.path.join(BASE, filename), "w", encoding="utf-8") as f:
             f.write(stub)
     print("  ✓", url_for(filename))
+
+
+
+def resume_box(note_basic=True):
+    """이력서 기재 예시 (2026.09.16): 기본과정은 전문이력 한 줄, 심화과정은 경력사항 한 줄이 더 붙습니다."""
+    return f"""        <div class="resume-line reveal">
+          <span class="resume-label">이력서에는 이렇게 씁니다</span>
+          <div class="resume-rows">
+            <div class="rrow">
+              <span class="resume-tag">기본과정 이수</span>
+              <div class="rlines">
+                <p><b>전문이력</b><code>{PROG_EN} 과정 이수</code></p>
+                <small><strong>{PROG_EN} 과정 이수</strong>는 한국AI윤리위원회 주관 「{PROG} 기본과정」을 이수하면 쓰실 수 있는 공식 표기입니다.
+                  국문으로 적으실 때는 <code class="rc-in">한국AI윤리위원회 {PROG}(기본과정) 이수 · 위원회 공식 등록</code></small>
+              </div>
+            </div>
+            <div class="rrow">
+              <span class="resume-tag resume-tag--adv">심화과정 이수</span>
+              <div class="rlines">
+                <p><b>경력사항</b><code>한국AI윤리위원회(KAIEC) 전문위원</code></p>
+                <p><b>전문이력</b><code>{PROG_EN} 과정 이수</code></p>
+                <small>심화과정 이수자는 위원회 전문위원으로 등록되어 <strong>경력사항에 한 줄이 더 생깁니다.</strong>
+                  홈페이지에 프로필이 공개되고 전문강사 · 자문 활동이 가능합니다.</small>
+              </div>
+            </div>
+          </div>
+        </div>"""
 
 
 def hero_sub(title, desc, crumb):
@@ -2958,13 +2986,7 @@ def build_expert():
         <div class="grid grid-2" style="margin-bottom:26px">
 {career_cards}
         </div>
-        <div class="resume-line reveal">
-          <span class="resume-label">이력서에는 이렇게 남습니다</span>
-          <div class="resume-rows">
-            <div><span class="resume-tag">기본과정</span><code>한국AI윤리위원회 주관 AI윤리전문가 양성과정(기본과정) 이수 · 위원회 공식 등록</code></div>
-            <div><span class="resume-tag resume-tag--adv">심화과정</span><code>한국AI윤리위원회 주관 AI윤리전문가 양성과정(심화과정) 이수 · 한국AI윤리위원회 전문위원 등록</code></div>
-          </div>
-        </div>
+{resume_box()}
         <div class="grid grid-3" style="margin-top:26px">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">기본과정 이수</h3><p style="font-size:14px">위원회 공식 이수증과 공식 등록으로 남는 첫 번째 이력</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 02</span><h3 style="font-size:16px">스펙 향상 · 커리어 활용</h3><p style="font-size:14px">취업 · 이직 · 승진, 사내 AI 활용 기준 담당으로</p></div>
@@ -3771,7 +3793,8 @@ def build_experts():
           <p class="h-sub" style="margin:0 auto">AI 윤리는 기업·기관·학교 어디서나 필요해진 전문 영역입니다.
              KAIEC 공식 AI윤리전문가 이력은 이렇게 쓰입니다.</p>
         </div>
-        <div class="grid grid-3">{uses_html}</div>
+        <div class="grid grid-3" style="margin-bottom:26px">{uses_html}</div>
+{resume_box()}
       </div>
     </section>
 
