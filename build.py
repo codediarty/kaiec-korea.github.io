@@ -2148,7 +2148,7 @@ def build_mou():
     ]
     vol_html = "".join(f"""
           <article class="vol reveal">
-            <span class="vol-free">무료</span>
+            <span class="vol-free">KAIEC 재능기부</span>
             <div class="vol-ic"><i data-lucide="{ic}"></i></div>
             <h3>{t}</h3>
             <p class="vol-who"><i data-lucide="map-pin"></i>{who}</p>
@@ -2179,11 +2179,11 @@ def build_mou():
 
     # 신청·문의 항목: 무료 봉사 활동을 앞에, 기관 협력·MOU를 뒤에 둡니다
     PICKS = [
-        ("어르신 AI 활용 교육 (무료)", "무료 재능기부", "어르신 AI 활용 교육",
+        ("어르신 AI 활용 교육 (무료)", "KAIEC 재능기부", "어르신 AI 활용 교육",
          "경로당·복지관·평생학습관·주민센터로 강사가 찾아갑니다. 강사비와 교재비는 받지 않습니다."),
-        ("초등학생 AI 윤리 교육 (무료)", "무료 재능기부", "초등학생 AI 윤리 교육",
+        ("초등학생 AI 윤리 교육 (무료)", "KAIEC 재능기부", "초등학생 AI 윤리 교육",
          "초등학교·지역아동센터·작은도서관으로 찾아갑니다. 학급 단위로도 진행할 수 있습니다."),
-        ("그 밖의 교육기부 요청 (무료)", "무료 재능기부", "그 밖의 교육기부",
+        ("그 밖의 교육기부 요청 (무료)", "KAIEC 재능기부", "그 밖의 교육기부",
          "중·고등학교, 대학, 비영리기관의 AI 윤리 교육 요청입니다. 대상과 인원에 맞춰 내용을 다시 짭니다."),
         ("AI 윤리 캠페인 함께하기", "공익 활동", "AI 윤리 캠페인 함께하기",
          "무분별한 AI 사용을 줄이자는 캠페인에 기관이나 단체로 함께합니다. 공동 카드뉴스·영상·실천 수칙 배포."),
@@ -2193,6 +2193,8 @@ def build_mou():
          "대학·기업·공공기관과의 공동 사업, 연구 협력, 업무협약(MOU) 체결을 논의합니다."),
         ("사회공헌 파트너십", "기관 협력", "사회공헌 파트너십",
          "기업의 사회공헌(CSR) 사업으로 위원회의 무료 교육과 캠페인을 함께 후원하거나 운영합니다."),
+        ("회원기관 가입 문의", "회원기관", "회원기관 가입 문의",
+         "위원회 회원기관으로 이름을 올리고 교육·자문·캠페인에 상시로 함께합니다. 혜택과 연회비는 담당자가 안내드립니다."),
     ]
     picks_html = "".join(f"""
               <label class="choice choice--role">
@@ -2206,16 +2208,16 @@ def build_mou():
               </label>""" for val, badge, title, desc in PICKS)
 
     body = hero_sub("사회공헌·협력",
-                    "AI 윤리는 함께 알릴 때 넓어집니다. 어르신과 어린이를 위한 무료 AI 교육부터 캠페인과 공익 콘텐츠까지, "
-                    "위원회는 대가 없이 여는 일을 먼저 합니다.",
+                    "한국AI윤리위원회 전문위원과 전국 지역 AI 윤리위원이 직접 현장으로 갑니다. "
+                    "어르신과 어린이를 위한 AI 교육을 대가 없이 열고, 캠페인과 공익 자료도 모두 무료로 공개합니다.",
                     "사회공헌·협력") + f"""
 
     <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Free Education</span>
-          <h2 class="h-sec">지금 신청하실 수 있는 무료 교육</h2>
-          <p class="h-sub">한국AI윤리위원회가 강사를 파견하는 <strong>무료 재능기부 교육</strong>입니다.
+          <h2 class="h-sec">위원회가 직접 찾아가는 무료 교육</h2>
+          <p class="h-sub">한국AI윤리위원회 <strong>전문위원과 지역 AI 윤리위원이 직접 나가는 기관 재능기부</strong>입니다.
              신청 기관은 장소와 인원만 준비해 주시면 되고, 강사비와 교재비는 받지 않습니다.</p>
         </div>
         <div class="vol-grid">
@@ -2223,13 +2225,39 @@ def build_mou():
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
           <strong>왜 무료인가요.</strong> AI를 가장 먼저 배워야 할 분들이 오히려 배울 곳이 가장 적습니다.
-          위원회는 이 두 교육을 수익 사업이 아니라 공익 활동으로 봅니다. 그 밖의 학교·비영리기관 교육 요청도
-          아래 <a href="#inquiry">신청 양식</a>에서 함께 받습니다.
+          위원회는 이 두 교육을 수익 사업이 아니라 위원들이 함께 나서는 공익 활동으로 봅니다.
+          그 밖의 학교·비영리기관 교육 요청도 아래 <a href="#inquiry">신청 양식</a>에서 함께 받습니다.
         </div>
       </div>
     </section>
 
     <section class="section section--gray">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:34px">
+          <span class="eyebrow">Our Volunteers</span>
+          <h2 class="h-sec">누가 직접 찾아가나요</h2>
+          <p class="h-sub">외부 강사를 부르지 않습니다. 위원회에 등록된 <strong>전문위원과 전국 지역 AI 윤리위원</strong>이
+             현장으로 갑니다. 모두 보수를 받지 않고 봉사로 참여합니다.</p>
+        </div>
+        <div class="grid grid-4">
+          <article class="card reveal"><div class="card-icon"><i data-lucide="user-check"></i></div>
+            <h3>전문위원</h3><p>AI윤리전문가 양성과정 심화과정을 이수하고 위원회에 등록된 전문위원이 교안을 맡습니다</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="map-pin"></i></div>
+            <h3>지역 운영위원</h3><p>권역별 지역위원이 가까운 경로당·복지관·학교로 직접 찾아갑니다</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="school"></i></div>
+            <h3>캠퍼스 위원장</h3><p>대학의 캠퍼스 위원회가 지역 아동·청소년 교육에 함께 나섭니다</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="megaphone"></i></div>
+            <h3>AI 윤리 캠페인위원</h3><p>전공과 경력에 관계없이 참여한 캠페인위원이 현장 진행과 자료 배포를 돕습니다</p></article>
+        </div>
+        <div class="notice notice--teal" style="margin-top:26px">
+          <strong>강사비가 없는 이유는 간단합니다.</strong> 위원들이 봉사로 나서기 때문입니다.
+          함께 나서고 싶으시다면 전공과 경력에 관계없이 <a href="join.html">KAIEC 참여하기</a>에서
+          AI 윤리위원으로 신청하실 수 있습니다. 참여에 드는 비용은 없습니다.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Social Contribution</span>
@@ -2243,7 +2271,7 @@ def build_mou():
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--gray">
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Partnership</span>
@@ -2263,7 +2291,7 @@ def build_mou():
       </div>
     </section>
 
-    <section class="section section--gray">
+    <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Partners</span>
@@ -2276,7 +2304,7 @@ def build_mou():
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--gray">
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
@@ -2291,12 +2319,12 @@ def build_mou():
       </div>
     </section>
 
-    <section class="section section--gray" id="inquiry">
+    <section class="section" id="inquiry">
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Apply</span>
           <h2 class="h-sec">신청 · 협력 문의</h2>
-          <p class="h-sub" style="margin:0 auto">무료 교육 신청과 기관 협력 제안을 한 양식에서 받습니다.
+          <p class="h-sub" style="margin:0 auto">찾아가는 무료 교육 신청과 기관 협력 제안, 회원기관 가입 문의를 한 양식에서 받습니다.
              원하시는 항목을 고른 뒤 연락처만 남겨 주시면 담당자가 확인 후 회신드립니다.</p>
         </div>
 
@@ -2307,6 +2335,8 @@ def build_mou():
 {picks_html}
             </div>
             <p class="field-hint" id="pickErr" hidden style="color:#B42318;font-weight:700">항목을 하나 선택해 주세요.</p>
+            <p class="field-hint">위원회 <a href="apply.html#member" style="color:var(--blue);font-weight:700">회원기관 안내</a>와
+              <a href="join.html" style="color:var(--blue);font-weight:700">AI 윤리위원 참여</a>도 함께 보실 수 있습니다.</p>
           </div>
           <div class="form-row">
             <div class="field">
@@ -2408,8 +2438,8 @@ def build_mou():
   </script>
 """.replace('__EMAIL__', EMAIL)
     page("mou.html", "사회공헌·협력",
-         "한국AI윤리위원회의 무료 교육 재능기부와 기관 협력 안내. 어르신 AI 활용 교육과 초등학생 AI 윤리 교육을 무료로 지원하고, "
-         "AI 윤리 캠페인·공익 콘텐츠·교육기부·기관 협력·업무협약(MOU)·사회공헌 파트너십 신청을 한 양식에서 받습니다.",
+         "한국AI윤리위원회 전문위원과 전국 지역 AI 윤리위원이 직접 찾아가는 무료 교육 안내. 어르신 AI 활용 교육과 초등학생 AI 윤리 교육을 "
+         "기관 재능기부로 지원하고, AI 윤리 캠페인·공익 콘텐츠·교육기부·기관 협력·업무협약(MOU)·사회공헌 파트너십·회원기관 가입 신청을 한 양식에서 받습니다.",
          body + cert_band("사회공헌·협력 신청하기", "#inquiry"), extra_script=script)
 
 
@@ -3971,7 +4001,7 @@ def build_join():
         ("id-card", "위원회 직함과 명단 등재", "한국AI윤리위원회 위원 직함을 명함과 프로필에 표기하고, 위원회 조직·위원 명단에 이름을 올립니다."),
         ("monitor-play", "온라인·재택 활동", "대부분의 활동이 온라인으로 진행되어 학업·직장과 병행할 수 있습니다."),
         ("trending-up", "커리어가 되는 활동", "AI기본법 시행 이후 기업·기관·학교가 요구하는 AI 윤리 이력을 실제 활동으로 만듭니다."),
-        ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원기관와 교류하며 활동 영역을 넓힙니다."),
+        ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원기관과 교류하며 활동 영역을 넓힙니다."),
         ("gift", "활동 인센티브", "캠페인 활동 실적에 따른 인센티브와 위원회 양성과정·교육 프로그램 우대를 제공합니다."),
     ]
     benefits_html = "".join(
@@ -3995,7 +4025,7 @@ def build_join():
          "네. AI 윤리 캠페인위원을 비롯한 대부분의 프로그램은 전공·경력에 관계없이 참여할 수 있습니다. "
          "어떤 역할이 맞는지 모르겠다면 신청서에서 '위원회 추천'을 선택하세요. 신청 내용을 보고 적합한 역할을 제안해 드립니다."),
         ("참여에 비용이 드나요?",
-         "개인 위원 참여에는 가입비·교육비 등 어떠한 비용도 없습니다. 기업·기관 회원기관는 별도의 연회비 안내를 받습니다."),
+         "개인 위원 참여에는 가입비·교육비 등 어떠한 비용도 없습니다. 기업·기관 회원기관은 별도의 연회비 안내를 받습니다."),
         ("활동 시간은 얼마나 필요한가요? 직장·학업과 병행할 수 있나요?",
          "대부분의 활동이 온라인으로 진행되며 주 1~2시간 정도로도 참여할 수 있습니다. 위촉 후 본인 상황에 맞는 활동을 함께 정합니다."),
         ("신청 후 언제, 어떻게 연락을 받나요?",
@@ -4714,7 +4744,7 @@ def build_apply():
           </article>""" for ic, t, d, tag in roles)
 
     body = hero_sub("위원·회원기관 신청",
-                    "책임 있는 AI를 함께 실천할 개인 위원과 기업·기관 회원기관를 상시 모집합니다.",
+                    "책임 있는 AI를 함께 실천할 개인 위원과 기업·기관 회원기관을 상시 모집합니다.",
                     "위원·회원기관 신청") + f"""
 
     <section class="section section--tight" style="padding-bottom:0">
