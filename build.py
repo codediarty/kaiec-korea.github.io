@@ -266,7 +266,7 @@ NAV = [
     ("join.html", "KAIEC 참여"),
     ("copyclean.html", "카피클린"),
     ("news.html", "커뮤니티"),
-    ("mou.html", "대외협력"),
+    ("mou.html", "사회공헌·협력"),
 ]
 
 LOGO_SVG = """<svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -330,7 +330,7 @@ def header():
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
           <a href="exam.html" style="color:#6FE3D8">평가응시</a><span class="tsep">|</span>
-          <a href="mou.html#inquiry">제휴·협력 문의</a>
+          <a href="mou.html#inquiry">사회공헌·협력</a>
         </span>
       </div>
     </div>
@@ -376,7 +376,7 @@ def footer():
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
             <li><a href="join.html">KAIEC 참여하기</a></li>
-            <li><a href="mou.html#inquiry">제휴·협력 문의</a></li>
+            <li><a href="mou.html#inquiry">사회공헌·협력</a></li>
           </ul>
         </div>
       </div>
@@ -1860,7 +1860,7 @@ def build_copyclean():
 
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("제휴·협력 문의", "mou.html#inquiry")}
+        {cert_band_inner("사회공헌·협력 문의", "mou.html#inquiry")}
       </div>
     </section>"""
 
@@ -2104,43 +2104,82 @@ def build_rss(posts):
 
 # ------------------------------------------------------------------ mou.html
 def build_mou():
-    body = hero_sub("대외협력",
-                    "AI 윤리를 알리는 일에 뜻을 같이하는 대학·기업·기관과 제휴·협력으로 함께합니다.",
-                    "대외협력") + f"""
+    # 사회공헌 활동: 공익기관으로서 무엇을 해 왔는지 먼저 보여 주고, 그다음 협력 제안을 받습니다 (2026.09.16)
+    GIVING = [
+        ("megaphone", "AI 윤리 캠페인", "누구나 참여",
+         "무분별한 AI 사용을 줄이자는 온라인 캠페인을 상시 운영합니다. 카드뉴스와 영상, 실천 수칙을 만들어 배포하고, AI 윤리위원이 함께 알립니다."),
+        ("graduation-cap", "교육기부", "학교 · 비영리기관 무상",
+         "학교와 비영리기관에는 AI 윤리 교육을 <strong>무상으로 지원</strong>합니다. 학생과 구성원이 AI를 숨기지 않고 밝히며 검증하는 습관을 갖도록 돕는 것이 목적입니다."),
+        ("book-open", "공익 콘텐츠 무료 공개", "전면 무료",
+         "AI 활용 원칙과 분야별 체크리스트, 국내외 동향 정리를 홈페이지에 모두 무료로 공개합니다. 회원 가입이나 결제 없이 누구나 보고 활용할 수 있습니다."),
+        ("users-round", "AI 윤리위원 운영", "전공·경력 무관",
+         "전공과 경력에 관계없이 누구나 AI 윤리위원으로 참여해 캠페인과 콘텐츠 제작에 함께할 수 있도록 열어 두었습니다. 참여에 드는 비용은 없습니다."),
+        ("file-search", "제출 전 사전점검 문화 확산", "분쟁 예방",
+         "논문·과제·보고서를 제출하기 전에 스스로 점검하는 문화를 알립니다. 적발과 제재가 아니라 오해와 분쟁을 미리 막자는 것이 위원회의 입장입니다."),
+        ("handshake", "사회공헌 파트너십", "기관 협력 · MOU",
+         "대학·기업·기관과 뜻을 모아 공동 캠페인과 교육을 엽니다. 공익 목적의 협력은 대가 없이 함께 설계하며, 필요한 경우 업무협약(MOU)을 맺습니다."),
+    ]
+    giving_html = "".join(f"""
+          <article class="card reveal">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
+              <div class="card-icon" style="margin-bottom:0"><i data-lucide="{ic}"></i></div>
+              <span class="badge badge--teal">{tag}</span>
+            </div>
+            <h3>{t}</h3><p>{d}</p>
+          </article>""" for ic, t, tag, d in GIVING)
+
+    body = hero_sub("사회공헌·협력",
+                    "AI 윤리는 함께 알릴 때 넓어집니다. 위원회는 캠페인과 교육기부, 공익 콘텐츠로 책임 있는 AI 활용 문화를 넓히고 있습니다.",
+                    "사회공헌·협력") + f"""
 
     <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
-          <span class="eyebrow">Partnership</span>
-          <h2 class="h-sec">협력 분야</h2>
-          <p class="h-sub">기관의 상황과 필요에 맞춰 협력 형태를 함께 설계합니다.</p>
+          <span class="eyebrow">Social Contribution</span>
+          <h2 class="h-sec">위원회의 사회공헌 활동</h2>
+          <p class="h-sub">한국AI윤리위원회는 <strong>AI 윤리를 알리는 일</strong>을 공익 활동으로 봅니다.
+             캠페인과 교육기부, 공개 콘텐츠는 대가 없이 운영합니다.</p>
         </div>
-        <div class="grid grid-4">
-          <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
-            <h3>대학 · 학과</h3><p>학생 대상 AI 윤리 교육, 캠페인, 사전점검 문화 안내</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="building-2"></i></div>
-            <h3>기업</h3><p>임직원 AI 활용 가이드라인 자문 및 사내 교육 협력</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="users"></i></div>
-            <h3>협회 · 단체</h3><p>공동 캠페인, 세미나, 회원 대상 콘텐츠 제공</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="flask-conical"></i></div>
-            <h3>연구기관</h3><p>AI 윤리 연구 협력 및 이슈 브리프 공동 발행</p></article>
+        <div class="grid grid-3">
+{giving_html}
+        </div>
+        <div class="notice notice--teal" style="margin-top:26px">
+          <strong>AI 윤리는 특정 기관의 것이 아닙니다.</strong> 위원회가 정리한 원칙과 자료는 누구나 출처를 밝히고 쓰실 수 있습니다.
+          학교·비영리기관의 교육기부 요청과 기관 협력 제안은 아래에서 받습니다.
         </div>
       </div>
     </section>
 
     <section class="section section--gray">
       <div class="wrap">
+        <div class="center" style="margin-bottom:42px">
+          <span class="eyebrow">Partnership</span>
+          <h2 class="h-sec">함께할 수 있는 일</h2>
+          <p class="h-sub">기관의 상황과 필요에 맞춰 협력 형태를 함께 설계합니다.</p>
+        </div>
+        <div class="grid grid-4">
+          <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
+            <h3>대학 · 학교</h3><p>학생 대상 AI 윤리 교육기부, 공동 캠페인, 사전점검 문화 안내</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="building-2"></i></div>
+            <h3>기업</h3><p>임직원 AI 활용 가이드라인 자문, 사내 교육, 사회공헌 파트너십</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="users"></i></div>
+            <h3>공공 · 비영리</h3><p>공동 캠페인과 세미나, 구성원 대상 교육기부와 콘텐츠 제공</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="flask-conical"></i></div>
+            <h3>연구기관</h3><p>AI 윤리 연구 협력, 이슈 브리프 공동 발행, 업무협약(MOU)</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Partners</span>
-          <h2 class="h-sec">제휴·협력 기관</h2>
+          <h2 class="h-sec">함께하는 기관</h2>
           <p class="h-sub">위원회와 함께하는 기관입니다.</p>
         </div>
         <div class="logo-grid" id="partnerLogos"></div>
-        <div class="notice notice--gray" style="margin-top:30px">
-          <strong>제휴·협력 기관 추가 방법:</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
-          로고 이미지는 <code>assets/img/</code> 폴더에 올린 뒤 파일명을 지정하면 됩니다.
-          로고가 없으면 기관명이 텍스트로 표시됩니다.
-        </div>
+        <p class="h-sub center" style="margin:26px auto 0;max-width:640px">함께하실 기관은 아래 문의 양식으로 연락 주시면
+          담당자가 협력 범위를 함께 정리해 드립니다.</p>
       </div>
     </section>
 
@@ -2148,7 +2187,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">제휴 절차</h2>
+          <h2 class="h-sec">협력 진행 절차</h2>
         </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 문의</h3><p style="font-size:14px">아래 양식으로 접수</p></div>
@@ -2163,7 +2202,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Contact</span>
-          <h2 class="h-sec">제휴·협력 문의</h2>
+          <h2 class="h-sec">사회공헌·협력 문의</h2>
           <p class="h-sub" style="margin:0 auto">아래 양식을 작성해 주시면 담당자가 확인 후 회신드립니다.</p>
         </div>
 
@@ -2188,7 +2227,7 @@ def build_mou():
             <textarea id="msg" name="문의내용" required placeholder="협력을 희망하시는 내용을 자유롭게 적어 주세요."></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="justify-self:start">
-            제휴·협력 문의 보내기 <i data-lucide="send"></i>
+            문의 보내기 <i data-lucide="send"></i>
           </button>
           <p class="field-hint">
             버튼을 누르면 메일 앱이 열리고 작성 내용이 자동으로 담깁니다.
@@ -2204,7 +2243,7 @@ def build_mou():
     var box=document.getElementById('partnerLogos');
     if(!box||!window.KAIEC_PARTNERS)return;
     if(!window.KAIEC_PARTNERS.length){
-      box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">제휴·협력 기관을 모집하고 있습니다.</p>';return;
+      box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">함께하실 기관을 기다리고 있습니다.</p>';return;
     }
     box.innerHTML=window.KAIEC_PARTNERS.map(function(p){
       var inner=p.logo?'<img src="assets/img/'+p.logo+'" alt="'+p.name+' 로고" loading="lazy">'
@@ -2220,7 +2259,7 @@ def build_mou():
     f.addEventListener('submit',function(e){
       e.preventDefault();
       function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():''}
-      var subject='[기관 제휴·협력 문의] '+v('기관명');
+      var subject='[사회공헌·협력 문의] '+v('기관명');
       var lines=[
         '■ 기관·기업명 : '+v('기관명'),
         '■ 담당자      : '+v('담당자'),
@@ -2229,7 +2268,7 @@ def build_mou():
         '■ 문의 내용',
         v('문의내용'),
         '',
-        '--- 한국AI윤리위원회 홈페이지 대외협력 문의 양식에서 작성됨 ---'
+        '--- 한국AI윤리위원회 홈페이지 사회공헌·협력 문의 양식에서 작성됨 ---'
       ];
       location.href='mailto:__EMAIL__?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\\n'));
     });
@@ -2237,8 +2276,8 @@ def build_mou():
   </script>
 """.replace('__EMAIL__', EMAIL)
     page("mou.html", "MOU · 대외협력",
-         "한국AI윤리위원회는 AI 윤리를 알리는 일에 뜻을 같이하는 대학·기업·기관과 공동 캠페인, 교육, 연구를 함께합니다. 기관 제휴·협력을 온라인으로 문의하실 수 있습니다.",
-         body + cert_band("제휴·협력 문의", "#inquiry"), extra_script=script)
+         "한국AI윤리위원회의 사회공헌 활동과 기관 협력 안내. AI 윤리 캠페인, 학교·비영리기관 교육기부, 공익 콘텐츠 무료 공개, 기관 협력과 업무협약(MOU), 사회공헌 파트너십을 소개하고 온라인으로 문의를 받습니다.",
+         body + cert_band("사회공헌·협력 문의", "#inquiry"), extra_script=script)
 
 
 # -------------------------------------------------------------- lecture.html
@@ -2754,12 +2793,21 @@ def build_expert():
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가 양성과정</p>
         <span class="hl-pill" data-deadline="{DEADLINE_ISO}"><i data-lucide="badge-check"></i>한국AI윤리위원회 주관 · 1기 접수 마감 {DEADLINE} <b class="dday" data-dday></b> · 연 {QUOTA}명 한정 양성</span>
-        <h1>AI윤리전문가 양성과정</h1>
-        <p style="font-size:17.5px;max-width:760px">올해 이력서에 채울 가장 확실한 한 줄, <strong style="color:#6FE3D8">AI윤리전문가</strong>.<br>
-           기업과 기관이 원하는 스펙, AI를 <strong style="color:#6FE3D8">윤리적으로 다룰 줄 아는 사람</strong>이라는 증명을<br>
-           한국AI윤리위원회 공식 「{DOC_FULL}」으로 손에 넣으세요.<br>
-           <strong style="color:#fff">위원회가 직접 집필한 표준교재로 공부하고 온라인 이수 평가 하나로 완성되며, 이수와 동시에 위원회에 공식 등록됩니다.</strong></p>
-        <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:30px">
+        <h1>AI윤리전문가 양성과정 <span class="hot-tag">HOT</span></h1>
+        <p class="ph-lead">AI를 <b>잘</b> 쓰는 사람은 이미 흔합니다.<br>
+           <b class="t">책임지고</b> 쓸 줄 안다고 증명한 사람은 아직 드뭅니다.</p>
+        <p class="ph-body">AI기본법이 시행된 2026년, 기업과 기관, 학교가 지금 가장 급하게 찾는 사람이 <strong>AI윤리전문가</strong>입니다.
+           위원회가 직접 집필한 표준교재로 공부하고, 온라인 이수 평가 하나로 끝납니다.
+           이수와 동시에 한국AI윤리위원회에 <strong>공식 등록</strong>되고, 이력서에는 공식 「{DOC_FULL}」 한 줄이 남습니다.<br>
+           <b>지금 신청하시면 1기, 이 분야의 첫 번째 이수자 그룹입니다.</b></p>
+        <div class="hero-hooks">
+          <span><i data-lucide="check"></i>전공 · 경력 제한 없음</span>
+          <span><i data-lucide="check"></i>전 과정 온라인</span>
+          <span><i data-lucide="check"></i>이수 기준 {EXAM_BASIC[1]}점</span>
+          <span><i data-lucide="check"></i>재응시 추가 비용 없음</span>
+          <span><i data-lucide="check"></i>이수 즉시 위원회 공식 등록</span>
+        </div>
+        <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:26px">
           <a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#course">학습자료 보기</a>
           <a class="btn btn-light" href="quiz.html">3분 자가진단</a>
@@ -2782,8 +2830,9 @@ def build_expert():
       <div class="wrap">
         <div class="center" style="margin-bottom:44px">
           <span class="eyebrow">Why Now</span>
-          <h2 class="h-sec">왜 지금, AI윤리전문가인가</h2>
-          <p class="h-sub">AI 윤리는 교양에서 <strong>실무 요건</strong>이 되었습니다. 법과 시장이 동시에 움직이고 있습니다.</p>
+          <h2 class="h-sec">왜 지금, AI윤리전문가인가 <span class="hot-tag">HOT</span></h2>
+          <p class="h-sub">AI기본법 시행과 EU AI Act 집행이 같은 해에 시작됐습니다. 법과 시장이 동시에 움직이면서
+             AI 윤리는 교양에서 <strong>실무 요건</strong>으로 넘어왔습니다. 수요가 먼저 커진 분야에서는, 먼저 준비한 사람이 첫 자리를 차지합니다.</p>
         </div>
         <div class="grid grid-2">
 {why_cards}
@@ -2799,8 +2848,8 @@ def build_expert():
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Career Value</span>
-          <h2 class="h-sec">AI윤리전문가 이수증은 커리어에 이렇게 작동합니다</h2>
-          <p class="h-sub">공부를 위한 공부가 아닙니다. 이수하는 순간부터 이력서와 실무에서 쓰입니다.</p>
+          <h2 class="h-sec">“올해 한 건, 이거 하나는 확실합니다”</h2>
+          <p class="h-sub">공부를 위한 공부가 아닙니다. 이수하는 순간부터 이력서와 면접, 실무에서 바로 쓰입니다.</p>
         </div>
         <div class="grid grid-2" style="margin-bottom:26px">
 {career_cards}

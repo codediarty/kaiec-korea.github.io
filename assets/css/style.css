@@ -1217,7 +1217,7 @@ table.tbl tr:hover td{background:#FCFDFF}
 .sticky-cta .btn{flex:none;box-shadow:0 6px 18px rgba(31,95,224,.45)}
 .dday{display:inline-block;font-weight:800;color:#6FE3D8;margin-left:2px}
 .dday:empty{display:none}
-.hl-pill .dday{color:#FFD166}
+.hl-pill .dday{color:#FFD166;white-space:nowrap}
 @media (min-width:861px){.sticky-cta--mobile{display:none}}
 @media (max-width:600px){.sticky-cta-inner{padding:10px 12px;gap:8px}
   .sticky-cta-text strong{font-size:13px;letter-spacing:-.02em;white-space:normal;line-height:1.25;word-break:keep-all;overflow:visible;text-overflow:clip}
@@ -1417,3 +1417,23 @@ table.tbl tr:hover td{background:#FCFDFF}
 .done-pay .gform-paywait{margin-top:10px;font-size:13px;color:var(--gray-600)}
 .gform-done .gform-paynote{margin-top:16px;font-size:12.5px;color:var(--gray-500);line-height:1.7}
 @media (max-width:600px){ .gform-done{padding:38px 20px} .done-pay{padding:16px 14px 14px} }
+
+/* 양성과정 히어로 훅 강화: 리드 문장 + 체크 칩 (2026.09.16) */
+.ph-lead{font-size:clamp(19px,2.5vw,25px)!important;line-height:1.5!important;font-weight:800;letter-spacing:-.035em;
+  color:#DCE9FA!important;max-width:760px;margin:2px 0 16px}
+.ph-lead b{font-weight:800;color:#fff}
+.ph-lead b.t{color:#6FE3D8}
+.ph-body{font-size:16px!important;max-width:770px!important;color:#A9C0E0!important;line-height:1.85!important}
+.ph-body strong{color:#fff;font-weight:700}
+.ph-body b{display:inline-block;margin-top:9px;font-weight:800;color:#FFD166}
+.hero-hooks{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;max-width:820px}
+.hero-hooks span{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(143,232,221,.28);
+  font-size:13px;font-weight:700;letter-spacing:-.02em;color:#C7DCF2}
+.hero-hooks i,.hero-hooks svg{width:14px;height:14px;color:#6FE3D8;flex:none}
+@media (max-width:600px){
+  .ph-lead{font-size:20px!important;letter-spacing:-.04em}
+  .ph-body{font-size:14.5px!important;line-height:1.8!important}
+  .hero-hooks{gap:6px;margin-top:18px}
+  .hero-hooks span{font-size:12px;padding:6px 11px}
+}
