@@ -1545,6 +1545,9 @@
     if (mc) mc.textContent = c + '/' + t;
   }
 
+  var autoNext = null;                       // 보기를 고르면 잠시 뒤 다음 문항으로 (2026.09.16)
+  function cancelAuto() { if (autoNext) { clearTimeout(autoNext); autoNext = null; } }
+
   function pick(v) {
     if (!E || E.submitting || !(v >= 1 && v <= 4)) return;
     var q = E.questions[E.cur], n = String(q.n);
@@ -1560,10 +1563,19 @@
     renderGrid();
     updateProgress();
     markDirty();
+    cancelAuto();
+    if (E.cur < E.questions.length - 1) {          // 마지막 문항에서는 제출 버튼을 직접 누르게 둡니다
+      var at = E.cur;
+      autoNext = setTimeout(function () {
+        autoNext = null;
+        if (E && !E.submitting && E.cur === at) go(at + 1);
+      }, 300);
+    }
   }
 
   function go(i) {
     if (!E || E.submitting) return;
+    cancelAuto();
     i = Math.max(0, Math.min(E.questions.length - 1, i));
     if (i === E.cur) return;
     E.cur = i;
@@ -1745,6 +1757,7 @@
   function submit(reason) {
     if (!E || E.submitting) return;
     E.submitting = true;
+    cancelAuto();
     clearTimeout(E.timers.debounce);
     clearTimeout(E.timers.retry);
     closeModal();
@@ -1797,6 +1810,7 @@
     if (!result) { refresh().then(showDashboard, function () { showDashboard(); }); return; }
     if (!msg && result.submitType === '시간 종료') msg = '시험 시간이 끝나 답안이 자동 제출되었습니다.';
     toast(msg || '답안이 제출되었습니다.', msg ? 'info' : 'ok', 5000);
+    S.reveal = true;                       // 방금 제출한 결과에만 판정 연출을 보여 줍니다
     showResult(result);
     refresh().catch(function () { /* 대시보드로 갈 때 다시 불러옴 */ });
   }
@@ -1846,13 +1860,13 @@
     if (r.passed) {
       next = nextBox('pass', '이수증 발급 안내', [
         '위원회가 응시 기록을 확인한 뒤 7일 이내에 「AI윤리전문가 이수증」(PDF)을 이메일로 보내 드립니다.',
-        '이수번호는 이수증과 함께 이메일로 안내해 드립니다.',
+        '이수번호가 부여되어 한국AI윤리위원회 이수자 명부에 공식 등록됩니다.',
         r.course === '심화과정' ? '심화과정 이수자에게는 전문위원 등록 안내가 함께 발송됩니다.' : '이수 사실은 위원회를 통해 확인할 수 있습니다.',
         demoNote
       ], S.demo ? '<button type="button" class="ex-btn ex-btn--secondary" data-act="demo-restart">' + ico('rotate-ccw') + '체험 처음부터 다시 하기</button>' : '');
     } else if (r.retake && r.retake.available) {
       next = nextBox('retake', '재응시 B형 1회가 열렸습니다', [
-        '응시 기간 안에 학습자료로 복습한 뒤 응시해 주십시오.',
+        '응시 기간 안에서는 횟수 제한 없이 다시 응시할 수 있고, 추가 비용은 없습니다.',
         '재응시 B형은 1차 A형과 다른 문항으로 구성됩니다.',
         '재응시에서도 이수 기준은 ' + pass + '점 이상입니다.',
         demoNote
@@ -1902,6 +1916,66 @@
       arc.getBoundingClientRect();
       requestAnimationFrame(function () { arc.style.strokeDashoffset = arc.getAttribute('data-off'); });
     }
+    var reveal = S.reveal; S.reveal = false;
+    if (!reduceMotion()) {
+      countUp(el.view.querySelector('.ex-gauge-val strong'), +r.score || 0);
+      if (reveal) showVerdict(r);
+    }
+  }
+
+  function reduceMotion() {
+    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
+  }
+
+  /* 점수 0 → 실제 점수 카운트업 */
+  function countUp(node, to) {
+    if (!node || !(to > 0)) return;
+    var t0 = 0, dur = 1000;
+    node.textContent = '0';
+    requestAnimationFrame(function step(ts) {
+      if (!t0) t0 = ts;
+      var k = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      node.textContent = fmtNum(Math.round(to * e * 10) / 10);
+      if (k < 1) requestAnimationFrame(step);
+      else node.textContent = fmtNum(to);
+    });
+  }
+
+  /* 제출 직후 이수·미이수 판정 연출 (클릭하거나 잠시 뒤 사라집니다) */
+  function showVerdict(r) {
+    var pass = !!r.passed;
+    var sub = pass
+      ? '「AI윤리전문가 이수증」이 이메일로 발급되고<br>한국AI윤리위원회 이수자 명부에 공식 등록됩니다'
+      : '응시 기간 안에는 횟수 제한 없이<br>다시 응시할 수 있습니다';
+    var spark = '';
+    if (pass) for (var i = 0; i < 12; i++) spark += '<i style="--i:' + i + '"></i>';
+    var box = document.createElement('div');
+    box.className = 'ex-reveal' + (pass ? ' is-pass' : ' is-fail');
+    box.setAttribute('role', 'status');
+    box.innerHTML =
+      '<div class="ex-reveal-in">' +
+        '<div class="ex-reveal-badge">' +
+          '<svg class="ex-reveal-ring" viewBox="0 0 132 132" aria-hidden="true">' +
+            '<circle class="ex-reveal-trk" cx="66" cy="66" r="58"/>' +
+            '<circle class="ex-reveal-arc" cx="66" cy="66" r="58"/></svg>' +
+          '<span class="ex-reveal-ic">' + ico(pass ? 'badge-check' : 'rotate-ccw') + '</span>' +
+        '</div>' +
+        '<strong class="ex-reveal-word">' + (pass ? '이 수' : '미 이 수') + '</strong>' +
+        '<span class="ex-reveal-meta">' + esc(r.course || '') + ' · ' + fmtNum(r.score) + '점</span>' +
+        '<span class="ex-reveal-sub">' + sub + '</span>' +
+        (spark ? '<div class="ex-reveal-spark" aria-hidden="true">' + spark + '</div>' : '') +
+      '</div>';
+    document.body.appendChild(box);
+    var done = false;
+    function close() {
+      if (done) return;
+      done = true;
+      box.classList.add('is-out');
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 460);
+    }
+    box.addEventListener('click', close);
+    requestAnimationFrame(function () { box.classList.add('is-on'); });
+    setTimeout(close, pass ? 3200 : 2600);
   }
 
   /* ---------------------------------------------------------------- 13. 이벤트 */

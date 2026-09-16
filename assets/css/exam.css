@@ -833,3 +833,41 @@ body.ex-lock{overflow:hidden}
   body.ex-lock main,body.ex-lock .site-header,body.ex-lock .site-footer,body.ex-lock .ex-layer{display:none!important}
   body.ex-lock::before{content:"평가 문항은 인쇄할 수 없습니다. 한국AI윤리위원회";display:block;padding:40px;font-size:16pt;text-align:center}
 }
+
+/* 2026.09.16: 제출 직후 이수·미이수 판정 연출 (보기 클릭 자동 진행과 함께 추가) */
+.ex-reveal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;
+  text-align:center;opacity:0;transition:opacity .38s ease;cursor:pointer;
+  background:radial-gradient(62% 52% at 50% 42%,rgba(13,40,86,.93),rgba(6,17,36,.975));
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ex-reveal.is-on{opacity:1}
+.ex-reveal.is-out{opacity:0}
+.ex-reveal-in{position:relative;display:flex;flex-direction:column;align-items:center;
+  transform:scale(.94);transition:transform .5s cubic-bezier(.2,.8,.25,1)}
+.ex-reveal.is-on .ex-reveal-in{transform:scale(1)}
+.ex-reveal-badge{position:relative;width:132px;height:132px}
+.ex-reveal-ring{width:132px;height:132px;display:block;transform:rotate(-90deg)}
+.ex-reveal-trk{fill:none;stroke:rgba(255,255,255,.15);stroke-width:5}
+.ex-reveal-arc{fill:none;stroke:#6FE3D8;stroke-width:5;stroke-linecap:round;stroke-dasharray:364.4;stroke-dashoffset:364.4;
+  transition:stroke-dashoffset .95s cubic-bezier(.3,.7,.2,1) .12s}
+.ex-reveal.is-fail .ex-reveal-arc{stroke:#9FB3D1}
+.ex-reveal.is-on .ex-reveal-arc{stroke-dashoffset:0}
+.ex-reveal-ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);
+  transition:opacity .4s ease .55s,transform .55s cubic-bezier(.18,1.3,.4,1) .55s}
+.ex-reveal.is-on .ex-reveal-ic{opacity:1;transform:scale(1)}
+.ex-reveal-ic .ex-ico{width:52px;height:52px;color:#6FE3D8}
+.ex-reveal.is-fail .ex-reveal-ic .ex-ico{color:#C7D6EE}
+.ex-reveal-word{margin-top:22px;font-size:40px;font-weight:900;color:#fff;letter-spacing:.5em;padding-left:.5em;opacity:0;
+  transition:opacity .5s ease .78s,letter-spacing .7s cubic-bezier(.2,.8,.25,1) .78s,padding-left .7s cubic-bezier(.2,.8,.25,1) .78s}
+.ex-reveal.is-on .ex-reveal-word{opacity:1;letter-spacing:.2em;padding-left:.2em}
+.ex-reveal-meta{margin-top:12px;font-size:15px;font-weight:700;color:#9FC6FF;opacity:0;transform:translateY(8px);
+  transition:opacity .45s ease .98s,transform .45s ease .98s}
+.ex-reveal-sub{margin-top:14px;font-size:14px;line-height:1.85;color:#C7D6EE;opacity:0;transform:translateY(8px);
+  transition:opacity .45s ease 1.12s,transform .45s ease 1.12s}
+.ex-reveal.is-on .ex-reveal-meta,.ex-reveal.is-on .ex-reveal-sub{opacity:1;transform:none}
+.ex-reveal-spark{position:absolute;left:50%;top:66px;width:0;height:0}
+.ex-reveal-spark i{position:absolute;width:6px;height:6px;border-radius:50%;background:#6FE3D8;opacity:0}
+.ex-reveal.is-on .ex-reveal-spark i{animation:exSpark 1.5s cubic-bezier(.2,.7,.3,1) forwards;animation-delay:calc(.6s + var(--i) * .045s)}
+@keyframes exSpark{0%{opacity:0;transform:translate(0,0) scale(.4)}25%{opacity:.95}
+  100%{opacity:0;transform:translate(calc((var(--i) - 5.5) * 26px),-150px) scale(.7)}}
+@media (max-width:560px){.ex-reveal-word{font-size:31px}.ex-reveal-badge,.ex-reveal-ring{width:112px;height:112px}}
+@media (prefers-reduced-motion:reduce){.ex-reveal{display:none}}
