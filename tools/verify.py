@@ -29,7 +29,11 @@ OLD_NAMES = ["한국AI윤리협회", "한국 AI 윤리협회", "AI윤리협회",
              # 2026.09.14 양성과정 전환: 등록된 자격 제도가 아니므로 인증·검정·급수 표기를 쓰지 않는다 (양성과정·수료 시험·수료증으로 표기)
              "자격증", "자격검정", "자격과정", "자격 취득", "2급", "1급", "응시료", "합격증",
              # 2026.09.15 카피 개편: 수료증은 '위원회 공식'으로만 수식(명의 X), 심화과정은 위촉·등재 대신 '전문위원 등록', 삭제한 약한 문구 재유입 방지
-             "명의 수료증", "명의 「", "위촉·등재", "첫 번째 이름이 당신", "새로운 전문 역량", "누가 책임지나요"]
+             "명의 수료증", "명의 「", "위촉·등재", "첫 번째 이름이 당신", "새로운 전문 역량", "누가 책임지나요",
+             # 2026.09.16 용어 전환: 수료 시험 → 이수 평가, 수료증 → 이수증 (평가응시 시스템 신설과 함께, 옛 표기 재유입 방지)
+             "수료 시험", "수료증",
+             # 2026.09.16 상단바 '인증시험' → '평가응시' 교체 (인증 표기 금지 규칙과 일치)
+             "인증시험"]
 BANNED = ["민간", "국가공인", "지정기부금", "세액공제", "기부금 영수증", "YOUR-DOMAIN",
           "탐지 우회", "우회 도구",   # 2026.09.15: 카피클린 제휴 관계상 탐지 우회를 다루는 콘텐츠를 싣지 않음 (문장 단위 사전점검으로 대체)
           "kaiec-korea.github.io/", "kaiec.skkc.co.kr"]
@@ -38,7 +42,7 @@ DOC_FILES = {"작업-메모.md", "README.md", "배포-가이드.md", "앱스스�
 RETIRED_STUBS = {"post-2026-09-11-name-change.html"}   # 삭제된 명칭변경 공지의 은퇴 스텁 (build.py가 만들지 않음)
 # 교체된 게시글(md 머리 '교체: <새 slug>')은 build.load_posts()가 RETIRED_POSTS에 모으고 옛 주소 2곳에 새 글로 이동하는 스텁을 씁니다 (2026.09.15)
 CORE = ["about.html", "business.html", "members.html", "lecture.html", "expert.html",
-        "expert-apply.html", "experts.html", "join.html", "quiz.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
+        "expert-apply.html", "experts.html", "join.html", "quiz.html", "exam.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html"]
 
 results = []   # (이름, 통과 여부, 상세 목록)
 
