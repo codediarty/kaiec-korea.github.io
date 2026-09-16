@@ -44,8 +44,8 @@ PAY_URL_L1 = "https://skkc.co.kr/shop_view?idx=27"   # 심화과정 교육비 �
 # 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 신청 내용이 메일 앱으로 발송됩니다.
 SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec"
 # 양성과정 가격·모집 정보 (변경 시 여기만 수정 후 재실행: expert·신청 폼·메인 배너·게시글 배너에 일괄 반영)
-LIST_L2, PRICE_L2 = 400000, 199000     # 기본과정 정가 / 1기 특별가 (내부 코드 2 = 기본과정)
-LIST_L1, PRICE_L1 = 700000, 399000     # 심화과정 정가 / 1기 특별가 (내부 코드 1 = 심화과정, 0이면 "결제 페이지에서 확인"으로 표시)
+LIST_L2, PRICE_L2 = 290000, 149000     # 기본과정 정가 / 1기 특별가 (내부 코드 2 = 기본과정)
+LIST_L1, PRICE_L1 = 590000, 299000     # 심화과정 정가 / 1기 특별가 (내부 코드 1 = 심화과정, 0이면 "결제 페이지에서 확인"으로 표시)
 DEADLINE = "10월 30일"                  # 1기 접수 마감
 DEADLINE_ISO = "2026-10-30"             # 카운트다운(D-day)·구조화 데이터용
 QUOTA = 100                             # 연간 한정 양성 정원
@@ -538,38 +538,17 @@ def hero_sub(title, desc, crumb):
 
 # 메인 피처 카드 '카피클린 문서검사' 타일: 래스터 대신 벡터 게이지 (어떤 배율에서도 글씨가 깨지지 않음, 2026.09.15)
 GAUGE_SVG = (
-    '<svg class="gauge" viewBox="0 0 92 114" role="img" aria-label="카피클린 AI 문서 분석 결과서: 문장별 AI 유사도 53%">'
-    '<defs>'
-    '<linearGradient id="ccA" x1="0" y1="0" x2="1" y2="1">'
-    '<stop offset="0" stop-color="#F7C14B"/><stop offset=".55" stop-color="#EE8C3C"/><stop offset="1" stop-color="#DE4E39"/>'
-    '</linearGradient>'
-    '<linearGradient id="ccP" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#EDF5F3"/></linearGradient>'
-    '<filter id="ccS1" x="-45%" y="-45%" width="190%" height="190%">'
-    '<feDropShadow dx="0" dy="2.2" stdDeviation="2.6" flood-color="#00130F" flood-opacity=".45"/></filter>'
-    '<filter id="ccS2" x="-60%" y="-60%" width="220%" height="220%">'
-    '<feDropShadow dx="0" dy="2.4" stdDeviation="2.8" flood-color="#001C17" flood-opacity=".55"/></filter>'
-    '</defs>'
-    # 검사한 문서: 문장 단위로 표시된 결과서(노랑=주의, 빨강=AI 유사)
-    '<g transform="rotate(-5 38 40)" filter="url(#ccS1)">'
-    '<path d="M14 7h34l11 11v54a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V11a4 4 0 0 1 4-4z" fill="url(#ccP)"/>'
-    '<path d="M48 7l11 11H50a2 2 0 0 1-2-2z" fill="#CCE0DC"/>'
-    '<rect x="20" y="20" width="20" height="3.4" rx="1.7" fill="#0C2340"/>'
-    '<rect x="20" y="30" width="33" height="2.5" rx="1.25" fill="#DCE6E4"/>'
-    '<rect x="18" y="35.4" width="37" height="6.6" rx="2.3" fill="#F7C14B" opacity=".3"/>'
-    '<rect x="20" y="37.5" width="33" height="2.5" rx="1.25" fill="#DF9A1B"/>'
-    '<rect x="20" y="45" width="27" height="2.5" rx="1.25" fill="#DCE6E4"/>'
-    '<rect x="18" y="50.4" width="33" height="6.6" rx="2.3" fill="#DE4E39" opacity=".24"/>'
-    '<rect x="20" y="52.5" width="29" height="2.5" rx="1.25" fill="#D64934"/>'
-    '<rect x="20" y="60" width="21" height="2.5" rx="1.25" fill="#DCE6E4"/>'
-    '</g>'
-    # 결과 게이지 배지
-    '<circle cx="61" cy="83" r="26" fill="#00312B" opacity=".3"/>'
-    '<circle cx="61" cy="83" r="23.4" fill="#fff" filter="url(#ccS2)"/>'
-    '<circle cx="61" cy="83" r="16.8" fill="none" stroke="#E7EFEE" stroke-width="5.2"/>'
-    '<circle cx="61" cy="83" r="16.8" fill="none" stroke="url(#ccA)" stroke-width="5.2" stroke-linecap="round"'
-    ' stroke-dasharray="55.9 105.6" transform="rotate(-90 61 83)"/>'
-    '<text x="61" y="84.4" text-anchor="middle" font-size="13.6" font-weight="800" letter-spacing="-.6" fill="#0C2340">53%</text>'
-    '<text x="61" y="92" text-anchor="middle" font-size="5.2" font-weight="700" letter-spacing=".05" fill="#6F8E8A">AI 유사도</text>'
+    '<svg class="gauge" viewBox="0 0 92 114" role="img" aria-label="카피클린 AI 문서 분석 결과: AI 유사도 53%">'
+    '<defs><linearGradient id="ccArc" x1="1" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#FFC46B"/><stop offset=".55" stop-color="#F58C48"/><stop offset="1" stop-color="#E0553F"/>'
+    '</linearGradient></defs>'
+    '<circle cx="46" cy="46" r="26.5" fill="none" stroke="#fff" stroke-opacity=".17" stroke-width="4.6"/>'
+    '<circle cx="46" cy="46" r="26.5" fill="none" stroke="url(#ccArc)" stroke-width="4.6" stroke-linecap="round"'
+    ' stroke-dasharray="88.3 166.5" transform="rotate(-90 46 46)"/>'
+    '<text x="46" y="48.6" text-anchor="middle" font-size="20.5" font-weight="800" letter-spacing="-1.1" fill="#fff">53%</text>'
+    '<text x="46" y="59.4" text-anchor="middle" font-size="6.4" font-weight="700" letter-spacing=".02" fill="#8FD2C8">AI 유사도</text>'
+    '<path d="M32 86h28" stroke="#fff" stroke-opacity=".16" stroke-width=".9"/>'
+    '<text x="46" y="98.5" text-anchor="middle" font-size="6" font-weight="800" letter-spacing=".24" fill="#BFE8E1">COPYCLEAN</text>'
     '</svg>')
 
 
