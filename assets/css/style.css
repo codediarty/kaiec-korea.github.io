@@ -1432,6 +1432,8 @@ table.tbl tr:hover td{background:#FCFDFF}
   font-size:13px;font-weight:700;letter-spacing:-.02em;color:#C7DCF2}
 .hero-hooks i,.hero-hooks svg{width:14px;height:14px;color:#6FE3D8;flex:none}
 @media (max-width:600px){
+  .hl-pill{display:inline-block;line-height:1.6;padding:8px 14px}
+  .hl-pill i,.hl-pill svg{vertical-align:-3px;margin-right:4px}
   .ph-lead{font-size:20px!important;letter-spacing:-.04em}
   .ph-body{font-size:14.5px!important;line-height:1.8!important}
   .hero-hooks{gap:6px;margin-top:18px}
