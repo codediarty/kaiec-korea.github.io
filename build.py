@@ -356,7 +356,7 @@ def footer():
       <div class="footer-top">
         <div class="footer-brand">
           {brand(True)}
-          <p class="footer-desc">생성형 AI 시대의 책임 있는 AI 활용과 건전한 AI 윤리 문화 확산을 위해 교육·연구·캠페인·대외협력 활동을 수행하는 AI 윤리 전문기관입니다.</p>
+          <p class="footer-desc">생성형 AI 시대의 책임 있는 AI 활용과 건전한 AI 윤리 문화 확산을 위해 교육·연구·캠페인·사회공헌 활동을 수행하는 AI 윤리 전문기관입니다.</p>
         </div>
         <div class="footer-col">
           <h4>위원회</h4>
@@ -999,7 +999,7 @@ def build_about():
             우리는 규제와 처벌이 아니라, AI를 활용하는 누구나 스스로 지킬 수 있는
             기준과 문화의 힘을 믿습니다. 제출 전에 한 번 더 점검하고, 활용했다면 숨기지 않고 밝히며,
             결과에 책임지는 태도. 그 작은 실천들이 모여 신뢰할 수 있는 AI 시대를 만든다고 확신합니다.</p>
-            <p>위원회는 교육과 연구, 캠페인과 대외협력을 통해 이 실천을 넓혀가고자 합니다.
+            <p>위원회는 교육과 연구, 캠페인과 사회공헌 활동을 통해 이 실천을 넓혀가고자 합니다.
             대학과 기업, 연구 현장의 목소리에 귀 기울이고, 전문위원과 지역·캠퍼스 조직, 그리고 전국의
             AI 윤리위원과 함께 걸어가겠습니다.</p>
             <p>여러분의 관심과 참여가 건강한 AI 문화를 만드는 가장 큰 힘입니다.<br>감사합니다.</p>
@@ -1117,7 +1117,7 @@ def build_about():
                   <tr><th>설립</th><td>2024년 3월</td></tr>
                   <tr><th>성격</th><td>AI 윤리 전문기관</td></tr>
                   <tr><th>목적</th><td>책임 있는 생성형 AI 활용 및 AI 윤리 문화 확산</td></tr>
-                  <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 대외협력 · AI 윤리위원 운영</td></tr>
+                  <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 사회공헌 · AI 윤리위원 운영</td></tr>
                   <tr><th>운영 방식</th><td>온라인 기반 (위원 활동 재택 가능)</td></tr>
                   <tr><th>대표 문의</th><td><a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a></td></tr>
                 </tbody>
@@ -1202,7 +1202,7 @@ def build_business():
         <div class="center" style="margin-bottom:52px">
           <span class="eyebrow">Main Business</span>
           <h2 class="h-sec">6대 주요사업</h2>
-          <p class="h-sub">교육 · 연구 · 캠페인 · 대외협력을 축으로, 현장에서 실제로 활용할 수 있는 결과물을 만드는 데 집중합니다.</p>
+          <p class="h-sub">교육 · 연구 · 캠페인 · 사회공헌을 축으로, 현장에서 실제로 활용할 수 있는 결과물을 만드는 데 집중합니다.</p>
         </div>
 {"".join(blocks)}
       </div>
@@ -1845,7 +1845,7 @@ def build_copyclean():
             </thead>
             <tbody>
               <tr><th>성격</th><td>AI 윤리 전문기관</td><td>AI 문서 분석 서비스</td></tr>
-              <tr><th>역할</th><td>AI 윤리 문화 확산, 교육·연구·캠페인, 대외협력</td><td>문서의 AI 활용 여부 사전 확인 지원</td></tr>
+              <tr><th>역할</th><td>AI 윤리 문화 확산, 교육·연구·캠페인, 사회공헌</td><td>문서의 AI 활용 여부 사전 확인 지원</td></tr>
               <tr><th>관계</th><td colspan="2" style="text-align:center;font-weight:700;color:var(--blue)">캠페인·제휴 활동을 함께하는 협력 파트너</td></tr>
               <tr><th>대상</th><td>개인 · 대학 · 기업 · 협회 등</td><td>논문 · 과제 · 보고서 · 자기소개서 등 문서</td></tr>
             </tbody>
@@ -2104,20 +2104,41 @@ def build_rss(posts):
 
 # ------------------------------------------------------------------ mou.html
 def build_mou():
-    # 사회공헌 활동: 공익기관으로서 무엇을 해 왔는지 먼저 보여 주고, 그다음 협력 제안을 받습니다 (2026.09.16)
+    # 사회공헌·협력 (2026.09.16): 대가 없이 여는 무료 교육을 맨 앞에 두고, 신청 항목을 직접 고르게 한 뒤
+    # 마지막 선택지로 기관 협력·업무협약(MOU)·사회공헌 파트너십까지 한 양식에서 접수합니다.
+    VOLUNTEER = [
+        ("users-round", "어르신 AI 활용 교육", "voAged", "어르신 AI 활용 교육 (무료)",
+         "경로당 · 복지관 · 평생학습관 · 주민센터",
+         "스마트폰 AI 비서로 길 찾기와 번역하기, 사진 정리처럼 생활에 바로 쓰는 것부터 시작합니다. "
+         "AI가 만든 가짜 사진과 목소리를 알아보는 법, 보이스피싱과 허위 정보에 속지 않는 법을 함께 익힙니다.",
+         ["1회 60~90분", "10명 이상", "강사비 · 교재비 없음"]),
+        ("school", "초등학생 AI 윤리 교육", "voKid", "초등학생 AI 윤리 교육 (무료)",
+         "초등학교 · 지역아동센터 · 작은도서관",
+         "AI에게 숙제를 통째로 맡기는 것과 도움을 받는 것이 어떻게 다른지 이야기로 풀어 줍니다. "
+         "AI를 썼으면 밝히기, 답을 그대로 믿지 않고 한 번 확인하기. 두 가지 습관을 놀이처럼 익히도록 구성했습니다.",
+         ["1회 40~80분", "학급 단위 가능", "강사비 · 교재비 없음"]),
+    ]
+    vol_html = "".join(f"""
+          <article class="vol reveal">
+            <span class="vol-free">무료</span>
+            <div class="vol-ic"><i data-lucide="{ic}"></i></div>
+            <h3>{t}</h3>
+            <p class="vol-who"><i data-lucide="map-pin"></i>{who}</p>
+            <p class="vol-d">{d}</p>
+            <div class="chips">{"".join(f'<span class="chip">{c}</span>' for c in chips)}</div>
+            <button type="button" class="btn btn-primary vol-btn" data-pick="{val}">
+              {t} 신청하기 <i data-lucide="arrow-right"></i></button>
+          </article>""" for ic, t, _id, val, who, d, chips in VOLUNTEER)
+
     GIVING = [
         ("megaphone", "AI 윤리 캠페인", "누구나 참여",
          "무분별한 AI 사용을 줄이자는 온라인 캠페인을 상시 운영합니다. 카드뉴스와 영상, 실천 수칙을 만들어 배포하고, AI 윤리위원이 함께 알립니다."),
-        ("graduation-cap", "교육기부", "학교 · 비영리기관 무상",
-         "학교와 비영리기관에는 AI 윤리 교육을 <strong>무상으로 지원</strong>합니다. 학생과 구성원이 AI를 숨기지 않고 밝히며 검증하는 습관을 갖도록 돕는 것이 목적입니다."),
         ("book-open", "공익 콘텐츠 무료 공개", "전면 무료",
          "AI 활용 원칙과 분야별 체크리스트, 국내외 동향 정리를 홈페이지에 모두 무료로 공개합니다. 회원 가입이나 결제 없이 누구나 보고 활용할 수 있습니다."),
-        ("users-round", "AI 윤리위원 운영", "전공·경력 무관",
+        ("users", "AI 윤리위원 운영", "전공·경력 무관",
          "전공과 경력에 관계없이 누구나 AI 윤리위원으로 참여해 캠페인과 콘텐츠 제작에 함께할 수 있도록 열어 두었습니다. 참여에 드는 비용은 없습니다."),
         ("file-search", "제출 전 사전점검 문화 확산", "분쟁 예방",
          "논문·과제·보고서를 제출하기 전에 스스로 점검하는 문화를 알립니다. 적발과 제재가 아니라 오해와 분쟁을 미리 막자는 것이 위원회의 입장입니다."),
-        ("handshake", "사회공헌 파트너십", "기관 협력 · MOU",
-         "대학·기업·기관과 뜻을 모아 공동 캠페인과 교육을 엽니다. 공익 목적의 협력은 대가 없이 함께 설계하며, 필요한 경우 업무협약(MOU)을 맺습니다."),
     ]
     giving_html = "".join(f"""
           <article class="card reveal">
@@ -2128,24 +2149,54 @@ def build_mou():
             <h3>{t}</h3><p>{d}</p>
           </article>""" for ic, t, tag, d in GIVING)
 
+    # 신청·문의 항목: 무료 봉사 활동을 앞에, 기관 협력·MOU를 뒤에 둡니다
+    PICKS = [
+        ("어르신 AI 활용 교육 (무료)", "무료 재능기부", "어르신 AI 활용 교육",
+         "경로당·복지관·평생학습관·주민센터로 강사가 찾아갑니다. 강사비와 교재비는 받지 않습니다."),
+        ("초등학생 AI 윤리 교육 (무료)", "무료 재능기부", "초등학생 AI 윤리 교육",
+         "초등학교·지역아동센터·작은도서관으로 찾아갑니다. 학급 단위로도 진행할 수 있습니다."),
+        ("그 밖의 교육기부 요청 (무료)", "무료 재능기부", "그 밖의 교육기부",
+         "중·고등학교, 대학, 비영리기관의 AI 윤리 교육 요청입니다. 대상과 인원에 맞춰 내용을 다시 짭니다."),
+        ("AI 윤리 캠페인 함께하기", "공익 활동", "AI 윤리 캠페인 함께하기",
+         "무분별한 AI 사용을 줄이자는 캠페인에 기관이나 단체로 함께합니다. 공동 카드뉴스·영상·실천 수칙 배포."),
+        ("공익 활동 · 공개 콘텐츠 제안", "공익 활동", "공익 활동 · 공개 콘텐츠 제안",
+         "함께 만들고 싶은 공익 자료나 행사가 있다면 제안해 주세요. 결과물은 누구나 볼 수 있게 무료로 공개합니다."),
+        ("기관 협력 · 업무협약(MOU)", "기관 협력", "기관 협력 · 업무협약(MOU)",
+         "대학·기업·공공기관과의 공동 사업, 연구 협력, 업무협약(MOU) 체결을 논의합니다."),
+        ("사회공헌 파트너십", "기관 협력", "사회공헌 파트너십",
+         "기업의 사회공헌(CSR) 사업으로 위원회의 무료 교육과 캠페인을 함께 후원하거나 운영합니다."),
+    ]
+    picks_html = "".join(f"""
+              <label class="choice choice--role">
+                <input type="radio" name="분야" value="{val}">
+                <span class="choice-radio"></span>
+                <span class="choice-body">
+                  <span class="choice-badge">{badge}</span>
+                  <strong>{title}</strong>
+                  <span>{desc}</span>
+                </span>
+              </label>""" for val, badge, title, desc in PICKS)
+
     body = hero_sub("사회공헌·협력",
-                    "AI 윤리는 함께 알릴 때 넓어집니다. 위원회는 캠페인과 교육기부, 공익 콘텐츠로 책임 있는 AI 활용 문화를 넓히고 있습니다.",
+                    "AI 윤리는 함께 알릴 때 넓어집니다. 어르신과 어린이를 위한 무료 AI 교육부터 캠페인과 공익 콘텐츠까지, "
+                    "위원회는 대가 없이 여는 일을 먼저 합니다.",
                     "사회공헌·협력") + f"""
 
     <section class="section">
       <div class="wrap">
-        <div class="center" style="margin-bottom:42px">
-          <span class="eyebrow">Social Contribution</span>
-          <h2 class="h-sec">위원회의 사회공헌 활동</h2>
-          <p class="h-sub">한국AI윤리위원회는 <strong>AI 윤리를 알리는 일</strong>을 공익 활동으로 봅니다.
-             캠페인과 교육기부, 공개 콘텐츠는 대가 없이 운영합니다.</p>
+        <div class="center" style="margin-bottom:38px">
+          <span class="eyebrow">Free Education</span>
+          <h2 class="h-sec">지금 신청하실 수 있는 무료 교육</h2>
+          <p class="h-sub">한국AI윤리위원회가 강사를 파견하는 <strong>무료 재능기부 교육</strong>입니다.
+             신청 기관은 장소와 인원만 준비해 주시면 되고, 강사비와 교재비는 받지 않습니다.</p>
         </div>
-        <div class="grid grid-3">
-{giving_html}
+        <div class="vol-grid">
+{vol_html}
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
-          <strong>AI 윤리는 특정 기관의 것이 아닙니다.</strong> 위원회가 정리한 원칙과 자료는 누구나 출처를 밝히고 쓰실 수 있습니다.
-          학교·비영리기관의 교육기부 요청과 기관 협력 제안은 아래에서 받습니다.
+          <strong>왜 무료인가요.</strong> AI를 가장 먼저 배워야 할 분들이 오히려 배울 곳이 가장 적습니다.
+          위원회는 이 두 교육을 수익 사업이 아니라 공익 활동으로 봅니다. 그 밖의 학교·비영리기관 교육 요청도
+          아래 <a href="#inquiry">신청 양식</a>에서 함께 받습니다.
         </div>
       </div>
     </section>
@@ -2153,24 +2204,38 @@ def build_mou():
     <section class="section section--gray">
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
+          <span class="eyebrow">Social Contribution</span>
+          <h2 class="h-sec">위원회가 늘 해 오는 일</h2>
+          <p class="h-sub">교육 말고도 <strong>AI 윤리를 알리는 일</strong>은 모두 공익 활동으로 봅니다.
+             캠페인과 공개 자료는 대가 없이 운영합니다.</p>
+        </div>
+        <div class="grid grid-4">
+{giving_html}
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Partnership</span>
-          <h2 class="h-sec">함께할 수 있는 일</h2>
-          <p class="h-sub">기관의 상황과 필요에 맞춰 협력 형태를 함께 설계합니다.</p>
+          <h2 class="h-sec">기관과 함께할 수 있는 일</h2>
+          <p class="h-sub">기관의 상황과 필요에 맞춰 협력 형태를 함께 설계합니다. 공익 목적의 협력은 대가 없이 진행합니다.</p>
         </div>
         <div class="grid grid-4">
           <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
-            <h3>대학 · 학교</h3><p>학생 대상 AI 윤리 교육기부, 공동 캠페인, 사전점검 문화 안내</p></article>
+            <h3>대학 · 학교</h3><p>학생 대상 AI 윤리 교육기부, 공동 캠페인, 제출 전 사전점검 문화 안내</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="building-2"></i></div>
-            <h3>기업</h3><p>임직원 AI 활용 가이드라인 자문, 사내 교육, 사회공헌 파트너십</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="users"></i></div>
-            <h3>공공 · 비영리</h3><p>공동 캠페인과 세미나, 구성원 대상 교육기부와 콘텐츠 제공</p></article>
+            <h3>기업</h3><p>사회공헌(CSR) 파트너십, 임직원 AI 활용 가이드라인 자문, 사내 교육</p></article>
+          <article class="card reveal"><div class="card-icon"><i data-lucide="heart-handshake"></i></div>
+            <h3>공공 · 비영리</h3><p>어르신·아동 대상 무료 교육 공동 운영, 공동 캠페인과 세미나</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="flask-conical"></i></div>
             <h3>연구기관</h3><p>AI 윤리 연구 협력, 이슈 브리프 공동 발행, 업무협약(MOU)</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--gray">
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Partners</span>
@@ -2178,7 +2243,7 @@ def build_mou():
           <p class="h-sub">위원회와 함께하는 기관입니다.</p>
         </div>
         <div class="logo-grid" id="partnerLogos"></div>
-        <p class="h-sub center" style="margin:26px auto 0;max-width:640px">함께하실 기관은 아래 문의 양식으로 연락 주시면
+        <p class="h-sub center" style="margin:26px auto 0;max-width:640px">함께하실 기관은 아래 양식으로 연락 주시면
           담당자가 협력 범위를 함께 정리해 드립니다.</p>
       </div>
     </section>
@@ -2187,30 +2252,38 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">협력 진행 절차</h2>
+          <h2 class="h-sec">신청 후 진행 절차</h2>
         </div>
         <div class="grid grid-4">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 문의</h3><p style="font-size:14px">아래 양식으로 접수</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">협의</h3><p style="font-size:14px">협력 범위·내용 논의</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">협약 체결</h3><p style="font-size:14px">MOU 서명</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">공동 활동</h3><p style="font-size:14px">캠페인·교육 진행</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 신청</h3><p style="font-size:14px">아래 양식에서 항목 선택</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">일정 협의</h3><p style="font-size:14px">담당자 회신 · 날짜와 인원 확정</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">강사 배정 · 협약</h3><p style="font-size:14px">교육은 강사 배정, 협력은 협약 체결</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">진행</h3><p style="font-size:14px">교육 · 캠페인 · 공동 활동</p></div>
         </div>
       </div>
     </section>
 
     <section class="section section--gray" id="inquiry">
       <div class="wrap-narrow">
-        <div class="center" style="margin-bottom:34px">
-          <span class="eyebrow">Contact</span>
-          <h2 class="h-sec">사회공헌·협력 문의</h2>
-          <p class="h-sub" style="margin:0 auto">아래 양식을 작성해 주시면 담당자가 확인 후 회신드립니다.</p>
+        <div class="center" style="margin-bottom:30px">
+          <span class="eyebrow">Apply</span>
+          <h2 class="h-sec">신청 · 협력 문의</h2>
+          <p class="h-sub" style="margin:0 auto">무료 교육 신청과 기관 협력 제안을 한 양식에서 받습니다.
+             원하시는 항목을 고른 뒤 연락처만 남겨 주시면 담당자가 확인 후 회신드립니다.</p>
         </div>
 
         <form class="form" id="mouForm" action="#">
+          <div class="field" id="pickBox">
+            <label>어떤 일로 연락 주셨나요<span class="req">*</span></label>
+            <div class="choice-list" style="margin-top:8px">
+{picks_html}
+            </div>
+            <p class="field-hint" id="pickErr" hidden style="color:#B42318;font-weight:700">항목을 하나 선택해 주세요.</p>
+          </div>
           <div class="form-row">
             <div class="field">
-              <label for="org">기관·기업명<span class="req">*</span></label>
-              <input type="text" id="org" name="기관명" required placeholder="예) ○○대학교 ○○학과">
+              <label for="org">기관·단체명<span class="req">*</span></label>
+              <input type="text" id="org" name="기관명" required placeholder="예) ○○초등학교, ○○복지관">
             </div>
             <div class="field">
               <label for="name">담당자 성함<span class="req">*</span></label>
@@ -2223,11 +2296,15 @@ def build_mou():
             <p class="field-hint">회신받으실 연락처 하나만 남겨주시면 됩니다.</p>
           </div>
           <div class="field">
-            <label for="msg">문의 내용<span class="req">*</span></label>
-            <textarea id="msg" name="문의내용" required placeholder="협력을 희망하시는 내용을 자유롭게 적어 주세요."></textarea>
+            <label for="plan">희망 일정 · 인원 (선택)</label>
+            <input type="text" id="plan" name="일정인원" placeholder="예) 11월 중 평일 오전, 어르신 25명">
+          </div>
+          <div class="field">
+            <label for="msg">남기실 말씀<span class="req">*</span></label>
+            <textarea id="msg" name="문의내용" required placeholder="교육 장소와 대상, 또는 협력을 희망하시는 내용을 자유롭게 적어 주세요."></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="justify-self:start">
-            문의 보내기 <i data-lucide="send"></i>
+            신청 보내기 <i data-lucide="send"></i>
           </button>
           <p class="field-hint">
             버튼을 누르면 메일 앱이 열리고 작성 내용이 자동으로 담깁니다.
@@ -2252,32 +2329,60 @@ def build_mou():
       return p.url?'<a href="'+p.url+'" target="_blank" rel="noopener">'+body+'</a>':body;
     }).join('');
   })();
-  /* 제휴·협력 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
+  /* 무료 교육 카드의 신청 버튼: 아래 양식에서 해당 항목을 자동 선택하고 이동 */
   (function(){
     var f=document.getElementById('mouForm');
     if(!f)return;
+    var err=document.getElementById('pickErr');
+    function pick(v){
+      var r=f.querySelector('input[name="분야"][value="'+v+'"]');
+      if(r){r.checked=true; if(err)err.hidden=true;}
+    }
+    document.querySelectorAll('.vol-btn').forEach(function(b){
+      b.addEventListener('click',function(){
+        pick(b.getAttribute('data-pick'));
+        var t=document.getElementById('inquiry');
+        if(t)window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-80,behavior:'smooth'});
+      });
+    });
+    f.querySelectorAll('input[name="분야"]').forEach(function(r){
+      r.addEventListener('change',function(){ if(err)err.hidden=true; });
+    });
+    /* 해시로 들어온 경우(?pick=) 미리 선택 */
+    var q=new URLSearchParams(location.search).get('pick');
+    if(q)pick(q);
     f.addEventListener('submit',function(e){
       e.preventDefault();
       function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():''}
-      var subject='[사회공헌·협력 문의] '+v('기관명');
+      var sel=f.querySelector('input[name="분야"]:checked');
+      if(!sel){
+        if(err){err.hidden=false;}
+        var box=document.getElementById('pickBox');
+        if(box)window.scrollTo({top:box.getBoundingClientRect().top+window.pageYOffset-100,behavior:'smooth'});
+        return;
+      }
+      var subject='[사회공헌·협력] '+sel.value+' · '+v('기관명');
       var lines=[
-        '■ 기관·기업명 : '+v('기관명'),
+        '■ 신청 항목   : '+sel.value,
+        '■ 기관·단체명 : '+v('기관명'),
         '■ 담당자      : '+v('담당자'),
         '■ 연락처      : '+v('연락처'),
+        '■ 희망 일정·인원 : '+(v('일정인원')||'미기재'),
         '',
-        '■ 문의 내용',
+        '■ 남기실 말씀',
         v('문의내용'),
         '',
-        '--- 한국AI윤리위원회 홈페이지 사회공헌·협력 문의 양식에서 작성됨 ---'
+        '--- 한국AI윤리위원회 홈페이지 사회공헌·협력 신청 양식에서 작성됨 ---'
       ];
       location.href='mailto:__EMAIL__?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\\n'));
     });
   })();
   </script>
 """.replace('__EMAIL__', EMAIL)
-    page("mou.html", "MOU · 대외협력",
-         "한국AI윤리위원회의 사회공헌 활동과 기관 협력 안내. AI 윤리 캠페인, 학교·비영리기관 교육기부, 공익 콘텐츠 무료 공개, 기관 협력과 업무협약(MOU), 사회공헌 파트너십을 소개하고 온라인으로 문의를 받습니다.",
-         body + cert_band("사회공헌·협력 문의", "#inquiry"), extra_script=script)
+    page("mou.html", "사회공헌·협력",
+         "한국AI윤리위원회의 무료 교육 재능기부와 기관 협력 안내. 어르신 AI 활용 교육과 초등학생 AI 윤리 교육을 무료로 지원하고, "
+         "AI 윤리 캠페인·공익 콘텐츠·교육기부·기관 협력·업무협약(MOU)·사회공헌 파트너십 신청을 한 양식에서 받습니다.",
+         body + cert_band("사회공헌·협력 신청하기", "#inquiry"), extra_script=script)
 
 
 # -------------------------------------------------------------- lecture.html

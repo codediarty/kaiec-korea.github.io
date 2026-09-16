@@ -1439,3 +1439,30 @@ table.tbl tr:hover td{background:#FCFDFF}
   .hero-hooks{gap:6px;margin-top:18px}
   .hero-hooks span{font-size:12px;padding:6px 11px}
 }
+
+/* 사회공헌·협력: 무료 재능기부 교육 2종 카드 (2026.09.16) */
+.vol-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.vol{position:relative;background:#fff;border:1.5px solid #BFE4DE;border-radius:var(--radius-lg);
+  padding:30px 28px 26px;display:flex;flex-direction:column;
+  box-shadow:0 14px 34px rgba(0,133,122,.07);
+  transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s var(--ease)}
+.vol::before{content:"";position:absolute;inset:0 0 auto;height:4px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+  background:linear-gradient(90deg,#00B4A6,#2C6BE8)}
+.vol:hover{transform:translateY(-4px);box-shadow:0 20px 44px rgba(0,133,122,.13);border-color:#7FCEC4}
+.vol-free{position:absolute;top:20px;right:22px;font-size:12px;font-weight:800;letter-spacing:.04em;
+  color:#fff;background:linear-gradient(96deg,#00B4A6,#009488);padding:5px 12px;border-radius:999px}
+.vol-ic{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,var(--teal-050),var(--blue-050));color:#00857A;margin:6px 0 16px}
+.vol-ic i,.vol-ic svg{width:26px;height:26px}
+.vol h3{font-size:21px;letter-spacing:-.035em;margin-bottom:9px}
+.vol-who{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#00857A;margin-bottom:12px}
+.vol-who i,.vol-who svg{width:15px;height:15px;flex:none}
+.vol-d{font-size:14.5px;color:var(--gray-600);line-height:1.8;margin-bottom:14px}
+.vol .chips{margin-bottom:20px}
+.vol-btn{margin-top:auto;justify-content:center;width:100%;border:0;cursor:pointer;font:inherit;font-weight:700}
+@media (max-width:860px){.vol-grid{grid-template-columns:1fr}}
+@media (max-width:600px){
+  .vol{padding:26px 20px 22px}
+  .vol h3{font-size:19px}
+  .vol-free{top:17px;right:18px;font-size:11px;padding:4px 10px}
+}
