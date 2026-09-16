@@ -1402,3 +1402,18 @@ table.tbl tr:hover td{background:#FCFDFF}
 .worth-b .chips{margin-top:11px}
 .worth-no{position:absolute;right:18px;top:17px;font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--gray-400)}
 @media (max-width:600px){.worth{padding:17px 16px;gap:12px}.worth-b>strong{font-size:16px}}
+
+/* 신청 완료 화면: 안전결제 연결 안내를 3초 안에 읽히게 (2026.09.16) */
+.done-lead{font-size:16px!important;color:var(--ink)!important;margin-bottom:22px!important}
+.done-lead strong{font-weight:800;color:var(--blue)}
+.done-pay{max-width:430px;margin:0 auto;padding:18px 18px 16px;border:1px solid #C9D8F5;border-radius:14px;
+  background:linear-gradient(180deg,#F5F9FF,#fff);box-shadow:0 10px 26px rgba(16,42,90,.07)}
+.done-pay-head{display:flex;gap:11px;align-items:flex-start;text-align:left;margin-bottom:14px}
+.done-pay-head i,.done-pay-head svg{width:22px;height:22px;flex:none;color:var(--blue);margin-top:1px}
+.done-pay-head strong{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.025em;color:var(--ink);line-height:1.45}
+.done-pay-head span{display:block;margin-top:4px;font-size:12.5px;color:var(--gray-600);line-height:1.6}
+.done-pay .btn{width:100%;justify-content:center}
+.done-pay .gform-count{margin-top:10px;font-size:13px;color:var(--gray-600)}
+.done-pay .gform-paywait{margin-top:10px;font-size:13px;color:var(--gray-600)}
+.gform-done .gform-paynote{margin-top:16px;font-size:12.5px;color:var(--gray-500);line-height:1.7}
+@media (max-width:600px){ .gform-done{padding:38px 20px} .done-pay{padding:16px 14px 14px} }

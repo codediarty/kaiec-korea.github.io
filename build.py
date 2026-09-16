@@ -31,7 +31,7 @@ SITE_NAME = "한국AI윤리위원회"
 SITE_EN = "Korea AI Ethics Committee"         # 홈페이지·로고용 영문명 (KAIEC = Korea AI Ethics Committee)
 SITE_EN_FORMAL = "Korea AI Ethics Committee"  # 공식 영문 명칭 (위원회 소개 개요표 표기용, 브랜드명과 동일)
 EMAIL = "kaiec.korea@gmail.com"                # ← 대표 문의 메일
-# (구) 위원 지원서 구글폼. 2026.09.13부터 위원·회원사 신청은 자체 폼(join.html → 시트 웹훅)으로 받으므로 CTA에서는 사용하지 않음
+# (구) 위원 지원서 구글폼. 2026.09.13부터 위원·회원기관 신청은 자체 폼(join.html → 시트 웹훅)으로 받으므로 CTA에서는 사용하지 않음
 GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform"
 # 카피클린 문서검사 바로가기 (모든 카피클린 CTA가 이 주소로 연결됨)
 COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
@@ -69,7 +69,9 @@ EXAM_API = "https://script.google.com/macros/s/AKfycbzgPS8uXz2Xqjfy4PxtFOIbBV31G
 # 학습 방식 (2026.09.16: 온라인 강의를 없애고 위원회 표준교재 자율학습 + 온라인 이수 평가로 전환)
 STUDY_MONTHS = 30                          # 2024년 3월 연구 착수 이후 산학 공동 연구·집필 기간(개월)
 PAGES_BASIC, PAGES_ADV = 162, 241          # 과정별 제공 자료(PDF 5종) 합계 쪽수
-RETAKE = "이수할 때까지 무제한 재응시"        # 응시 기간 안에서는 재응시 횟수 제한이 없습니다
+# 재응시 표기 (2026.09.16): '무제한'을 앞세우면 평가가 가벼워 보이므로, 기준은 그대로 두고 기회만 열어 둔다는 뜻으로 적습니다
+RETAKE = "기준에 이를 때까지 재응시"           # 응시 기간 안에서는 응시 횟수를 제한하지 않습니다
+RETAKE_LONG = "기준은 낮추지 않되, 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다(추가 비용 없음)."
 # 제공 학습자료 5종: (제목, 기본과정 분량, 심화과정 분량, 설명, 키워드 칩)
 MATERIAL_ITEMS = [
     ("『핵심이론』 표준교재", "69쪽", "127쪽",
@@ -264,7 +266,7 @@ NAV = [
     ("join.html", "KAIEC 참여"),
     ("copyclean.html", "카피클린"),
     ("news.html", "커뮤니티"),
-    ("mou.html", "MOU·대외협력"),
+    ("mou.html", "대외협력"),
 ]
 
 LOGO_SVG = """<svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -328,7 +330,7 @@ def header():
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
           <a href="exam.html" style="color:#6FE3D8">평가응시</a><span class="tsep">|</span>
-          <a href="mou.html#inquiry">제휴·MOU 문의</a>
+          <a href="mou.html#inquiry">업무협약 문의</a>
         </span>
       </div>
     </div>
@@ -374,7 +376,7 @@ def footer():
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
             <li><a href="join.html">KAIEC 참여하기</a></li>
-            <li><a href="mou.html#inquiry">제휴·MOU 문의</a></li>
+            <li><a href="mou.html#inquiry">업무협약 문의</a></li>
           </ul>
         </div>
       </div>
@@ -535,14 +537,42 @@ def hero_sub(title, desc, crumb):
 
 
 # 메인 피처 카드 '카피클린 문서검사' 타일: 래스터 대신 벡터 게이지 (어떤 배율에서도 글씨가 깨지지 않음, 2026.09.15)
-GAUGE_SVG = ('<svg class="gauge" viewBox="0 0 92 114" role="img" aria-label="카피클린 AI 문서 분석 결과서 AI 유사도 게이지 53%">'
-             '<path d="M14 78 A34 34 0 0 1 30 26" fill="none" stroke="#2E8B57" stroke-width="7" stroke-linecap="round"/>'
-             '<path d="M36 22 A34 34 0 0 1 60 24" fill="none" stroke="#F28C28" stroke-width="7" stroke-linecap="round"/>'
-             '<path d="M66 28 A34 34 0 0 1 78 78" fill="none" stroke="#D23B2C" stroke-width="7" stroke-linecap="round"/>'
-             '<text x="46" y="60" text-anchor="middle" font-size="22" font-weight="800" fill="#fff" letter-spacing="-.5">53%</text>'
-             '<text x="46" y="75" text-anchor="middle" font-size="9.5" font-weight="700" fill="#DDF5F0">AI 유사도</text>'
-             '<text x="46" y="100" text-anchor="middle" font-size="7" font-weight="600" fill="#9ED9CE" letter-spacing=".3">CopyClean</text>'
-             '</svg>')
+GAUGE_SVG = (
+    '<svg class="gauge" viewBox="0 0 92 114" role="img" aria-label="카피클린 AI 문서 분석 결과서: 문장별 AI 유사도 53%">'
+    '<defs>'
+    '<linearGradient id="ccA" x1="0" y1="0" x2="1" y2="1">'
+    '<stop offset="0" stop-color="#F7C14B"/><stop offset=".55" stop-color="#EE8C3C"/><stop offset="1" stop-color="#DE4E39"/>'
+    '</linearGradient>'
+    '<linearGradient id="ccP" x1=".1" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#EDF5F3"/></linearGradient>'
+    '<filter id="ccS1" x="-45%" y="-45%" width="190%" height="190%">'
+    '<feDropShadow dx="0" dy="2.2" stdDeviation="2.6" flood-color="#00130F" flood-opacity=".45"/></filter>'
+    '<filter id="ccS2" x="-60%" y="-60%" width="220%" height="220%">'
+    '<feDropShadow dx="0" dy="2.4" stdDeviation="2.8" flood-color="#001C17" flood-opacity=".55"/></filter>'
+    '</defs>'
+    # 검사한 문서: 문장 단위로 표시된 결과서(노랑=주의, 빨강=AI 유사)
+    '<g transform="rotate(-5 38 40)" filter="url(#ccS1)">'
+    '<path d="M14 7h34l11 11v54a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V11a4 4 0 0 1 4-4z" fill="url(#ccP)"/>'
+    '<path d="M48 7l11 11H50a2 2 0 0 1-2-2z" fill="#CCE0DC"/>'
+    '<rect x="20" y="20" width="20" height="3.4" rx="1.7" fill="#0C2340"/>'
+    '<rect x="20" y="30" width="33" height="2.5" rx="1.25" fill="#DCE6E4"/>'
+    '<rect x="18" y="35.4" width="37" height="6.6" rx="2.3" fill="#F7C14B" opacity=".3"/>'
+    '<rect x="20" y="37.5" width="33" height="2.5" rx="1.25" fill="#DF9A1B"/>'
+    '<rect x="20" y="45" width="27" height="2.5" rx="1.25" fill="#DCE6E4"/>'
+    '<rect x="18" y="50.4" width="33" height="6.6" rx="2.3" fill="#DE4E39" opacity=".24"/>'
+    '<rect x="20" y="52.5" width="29" height="2.5" rx="1.25" fill="#D64934"/>'
+    '<rect x="20" y="60" width="21" height="2.5" rx="1.25" fill="#DCE6E4"/>'
+    '</g>'
+    # 결과 게이지 배지
+    '<circle cx="61" cy="83" r="26" fill="#00312B" opacity=".3"/>'
+    '<circle cx="61" cy="83" r="23.4" fill="#fff" filter="url(#ccS2)"/>'
+    '<circle cx="61" cy="83" r="16.8" fill="none" stroke="#E7EFEE" stroke-width="5.2"/>'
+    '<circle cx="61" cy="83" r="16.8" fill="none" stroke="url(#ccA)" stroke-width="5.2" stroke-linecap="round"'
+    ' stroke-dasharray="55.9 105.6" transform="rotate(-90 61 83)"/>'
+    '<text x="61" y="84.4" text-anchor="middle" font-size="13.6" font-weight="800" letter-spacing="-.6" fill="#0C2340">53%</text>'
+    '<text x="61" y="92" text-anchor="middle" font-size="5.2" font-weight="700" letter-spacing=".05" fill="#6F8E8A">AI 유사도</text>'
+    '</svg>')
+
+
 CERT_CTA = "AI윤리전문가 양성과정 신청하기"        # 사이트 공통 1순위 버튼 문구
 CERT_HREF = "expert-apply.html?course=2"          # 항상 기본과정(대표 과정)이 선택된 신청 페이지로
 
@@ -602,7 +632,7 @@ BUSINESS = [
     ("award", "AI윤리전문가 양성과정 운영",
      "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가 양성과정」(기본·심화)과 전문강사 양성을 운영하고, 이수자를 위원회에 공식 등록하고 심화과정 이수자는 전문위원으로 등록해, AI 윤리위원·전문위원 제도로 현장 활동까지 연결합니다.",
      ["AI윤리전문가 양성과정(기본·심화) 운영", "전문강사 양성 및 출강 연계", "AI 윤리위원·전문위원 위촉 및 활동 지원"]),
-    ("handshake", "대학·기업·협회와의 MOU 및 제휴",
+    ("handshake", "대학·기업·기관과의 업무협약(MOU) 체결",
      "대학, 기업, 협회, 연구기관 등과 업무협약을 체결하고 공동 캠페인·교육·연구를 추진합니다. 각 기관의 현장 상황에 맞는 AI 윤리 실천 방안을 함께 설계합니다.",
      ["기관 간 업무협약(MOU) 체결", "공동 캠페인 및 세미나 개최", "기관 맞춤형 AI 윤리 자문"]),
     ("file-search", "AI 활용 문서의 책임 있는 사전점검",
@@ -899,14 +929,34 @@ def build_index(posts):
       "publisher": {{ "@id": "{SITE_URL}/#organization" }}
     }},
     {{
+      "@type": "WebPage",
+      "@id": "{SITE_URL}/#webpage",
+      "url": "{SITE_URL}/",
+      "name": "한국AI윤리위원회(KAIEC) | 공식 홈페이지",
+      "isPartOf": {{ "@id": "{SITE_URL}/#website" }},
+      "about": {{ "@id": "{SITE_URL}/#organization" }},
+      "primaryImageOfPage": "{SITE_URL}/assets/img/og-image.png",
+      "inLanguage": "ko-KR"
+    }},
+    {{
       "@type": "Organization",
       "@id": "{SITE_URL}/#organization",
       "name": "한국AI윤리위원회",
       "legalName": "한국AI윤리위원회",
       "alternateName": ["KAIEC", "한국 AI 윤리위원회", "AI윤리위원회", "Korea AI Ethics Committee"],
       "url": "{SITE_URL}/",
-      "logo": "{SITE_URL}/assets/img/og-image.png",
+      "logo": {{
+        "@type": "ImageObject",
+        "url": "{SITE_URL}/assets/img/logo-512.png",
+        "width": 512,
+        "height": 512
+      }},
+      "image": "{SITE_URL}/assets/img/og-image.png",
+      "description": "한국AI윤리위원회(KAIEC)는 책임 있는 AI 활용 문화를 넓히기 위해 AI 윤리 교육과 연구, 캠페인, AI윤리전문가 양성과 기관 협력을 추진하는 AI 윤리 전문 기관입니다.",
+      "slogan": "책임 있는 AI 활용을 위한 전문기관",
       "foundingDate": "2024-03",
+      "knowsAbout": ["AI 윤리", "인공지능 윤리", "AI기본법", "EU AI Act", "AI 거버넌스", "생성형 AI 활용 윤리", "AI 리터러시", "AI 윤리 교육"],
+      "areaServed": {{ "@type": "Country", "name": "대한민국" }},
       "email": "{EMAIL}",
       "address": {{
         "@type": "PostalAddress",
@@ -1200,7 +1250,7 @@ def build_business():
 
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("제휴·교육 문의하기", "mou.html#inquiry")}
+        {cert_band_inner("협력·교육 문의하기", "mou.html#inquiry")}
       </div>
     </section>"""
 
@@ -1270,7 +1320,7 @@ def build_members():
               </div>
               <div class="oc-childs">
                 <div class="oc-child">기획운영팀 <small>사업 기획 · 총무 · 회의 운영</small></div>
-                <div class="oc-child">대외협력팀 <small>MOU · 기관 제휴 · 파트너십</small></div>
+                <div class="oc-child">대외협력팀 <small>업무협약 · 기관 협력 · 국제 교류</small></div>
                 <div class="oc-child">콘텐츠·홍보팀 <small>캠페인 · 콘텐츠 · 채널 운영</small></div>
               </div>
             </div>
@@ -1831,7 +1881,7 @@ def build_copyclean():
 
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("캠페인·제휴 문의하기", "mou.html#inquiry")}
+        {cert_band_inner("업무협약 문의하기", "mou.html#inquiry")}
       </div>
     </section>"""
 
@@ -2075,15 +2125,15 @@ def build_rss(posts):
 
 # ------------------------------------------------------------------ mou.html
 def build_mou():
-    body = hero_sub("MOU · 대외협력",
-                    "대학·기업·협회·연구기관과 함께 AI 윤리 문화를 현장으로 넓혀갑니다.",
-                    "MOU · 대외협력") + f"""
+    body = hero_sub("대외협력",
+                    "대학·기업·기관·연구기관과 업무협약을 맺고 AI 윤리 문화를 현장으로 넓혀갑니다.",
+                    "대외협력") + f"""
 
     <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Partnership</span>
-          <h2 class="h-sec">제휴 유형</h2>
+          <h2 class="h-sec">협력 분야</h2>
           <p class="h-sub">기관의 상황과 필요에 맞춰 협력 형태를 함께 설계합니다.</p>
         </div>
         <div class="grid grid-4">
@@ -2103,12 +2153,12 @@ def build_mou():
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Partners</span>
-          <h2 class="h-sec">제휴 기관</h2>
+          <h2 class="h-sec">협력 기관</h2>
           <p class="h-sub">위원회와 함께하는 기관입니다.</p>
         </div>
         <div class="logo-grid" id="partnerLogos"></div>
         <div class="notice notice--gray" style="margin-top:30px">
-          <strong>제휴 기관 추가 방법:</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
+          <strong>협력 기관 추가 방법:</strong> <code>assets/js/partners-data.js</code> 파일의 배열에 기관명을 추가하고,
           로고 이미지는 <code>assets/img/</code> 폴더에 올린 뒤 파일명을 지정하면 됩니다.
           로고가 없으면 기관명이 텍스트로 표시됩니다.
         </div>
@@ -2119,7 +2169,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">제휴 절차</h2>
+          <h2 class="h-sec">협약 절차</h2>
         </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">온라인 문의</h3><p style="font-size:14px">아래 양식으로 접수</p></div>
@@ -2134,7 +2184,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Contact</span>
-          <h2 class="h-sec">제휴 문의</h2>
+          <h2 class="h-sec">협력 문의</h2>
           <p class="h-sub" style="margin:0 auto">아래 양식을 작성해 주시면 담당자가 확인 후 회신드립니다.</p>
         </div>
 
@@ -2159,7 +2209,7 @@ def build_mou():
             <textarea id="msg" name="문의내용" required placeholder="협력을 희망하시는 내용을 자유롭게 적어 주세요."></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="justify-self:start">
-            제휴 문의 보내기 <i data-lucide="send"></i>
+            협력 문의 보내기 <i data-lucide="send"></i>
           </button>
           <p class="field-hint">
             버튼을 누르면 메일 앱이 열리고 작성 내용이 자동으로 담깁니다.
@@ -2175,7 +2225,7 @@ def build_mou():
     var box=document.getElementById('partnerLogos');
     if(!box||!window.KAIEC_PARTNERS)return;
     if(!window.KAIEC_PARTNERS.length){
-      box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">제휴 기관을 모집하고 있습니다.</p>';return;
+      box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">협력 기관을 모집하고 있습니다.</p>';return;
     }
     box.innerHTML=window.KAIEC_PARTNERS.map(function(p){
       var inner=p.logo?'<img src="assets/img/'+p.logo+'" alt="'+p.name+' 로고" loading="lazy">'
@@ -2184,14 +2234,14 @@ def build_mou():
       return p.url?'<a href="'+p.url+'" target="_blank" rel="noopener">'+body+'</a>':body;
     }).join('');
   })();
-  /* 제휴 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
+  /* 협력 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 (별도 서버 불필요) */
   (function(){
     var f=document.getElementById('mouForm');
     if(!f)return;
     f.addEventListener('submit',function(e){
       e.preventDefault();
       function v(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value.trim():''}
-      var subject='[제휴·MOU 문의] '+v('기관명');
+      var subject='[업무협약 문의] '+v('기관명');
       var lines=[
         '■ 기관·기업명 : '+v('기관명'),
         '■ 담당자      : '+v('담당자'),
@@ -2200,7 +2250,7 @@ def build_mou():
         '■ 문의 내용',
         v('문의내용'),
         '',
-        '--- 한국AI윤리위원회 홈페이지 제휴 문의 양식에서 작성됨 ---'
+        '--- 한국AI윤리위원회 홈페이지 협력 문의 양식에서 작성됨 ---'
       ];
       location.href='mailto:__EMAIL__?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\\n'));
     });
@@ -2208,8 +2258,8 @@ def build_mou():
   </script>
 """.replace('__EMAIL__', EMAIL)
     page("mou.html", "MOU · 대외협력",
-         "한국AI윤리위원회는 대학·기업·협회·연구기관과 업무협약(MOU)을 체결하고 공동 캠페인, 교육, 연구를 추진합니다. 온라인으로 제휴를 문의하실 수 있습니다.",
-         body + cert_band("제휴 문의하기", "#inquiry"), extra_script=script)
+         "한국AI윤리위원회는 대학·기업·기관·연구기관과 업무협약(MOU)을 체결하고 공동 캠페인, 교육, 연구를 추진합니다. 온라인으로 협력을 문의하실 수 있습니다.",
+         body + cert_band("협력 문의하기", "#inquiry"), extra_script=script)
 
 
 # -------------------------------------------------------------- lecture.html
@@ -2861,7 +2911,7 @@ def build_expert():
             <div class="exam-card">
               <span class="exam-tag">기본과정</span>
               <strong>온라인 이수 평가 {EXAM_BASIC[0]}문항 · {EXAM_MIN_BASIC}분</strong>
-              <span>100점 만점에 <b>{EXAM_BASIC[1]}점 이상</b>이면 이수 · 응시 기간 안 <b>{RETAKE}</b></span>
+              <span>100점 만점에 <b>{EXAM_BASIC[1]}점 이상</b>이면 이수 · 응시 기간 안 {RETAKE}</span>
             </div>
             <div class="exam-card exam-card--adv">
               <span class="exam-tag">심화과정</span>
@@ -2895,7 +2945,7 @@ def build_expert():
               <li><i data-lucide="award"></i><div><strong>한국AI윤리위원회 주관 · 공식 이수증 발급</strong><span>커리큘럼 구성, 이수 평가, 이수증 발급, 이수자 공식 등록까지 위원회가 직접 주관</span></div></li>
               <li><i data-lucide="badge-check"></i><div><strong>이수와 동시에 위원회 공식 등록</strong><span>이수번호가 부여된 이수증을 발급하고, 이수 사실은 위원회를 통해 확인할 수 있습니다</span></div></li>
               <li><i data-lucide="building-2"></i><div><strong>성균관대학교 RISE사업 공식 지원기업 성균관컨설팅 교육 운영</strong><span>접수·결제·수강 안내를 맡고, 교육비는 성균관컨설팅 안전결제로 처리</span></div></li>
-              <li><i data-lucide="check-circle-2"></i><div><strong>이수 기준 기본·심화 모두 {EXAM_BASIC[1]}점 · {RETAKE}</strong><span>응시 기간 안에서는 횟수 제한 없이 다시 응시할 수 있고, 추가 비용도 없습니다</span></div></li>
+              <li><i data-lucide="scale"></i><div><strong>이수 기준은 기본·심화 모두 {EXAM_BASIC[1]}점, 기준은 낮추지 않습니다</strong><span>대신 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다. 재응시에 드는 비용은 없습니다</span></div></li>
             </ul>
           </div>
         </div>
@@ -2977,7 +3027,7 @@ def build_expert():
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">학습자료 수령</h3><p style="font-size:14px">이메일로 학습자료(PDF 5종) 수령</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자율학습</h3><p style="font-size:14px">표준교재 · 실전 모의고사와 해설 별책</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">평가응시</h3><p style="font-size:14px">상단 <a href="exam.html" style="color:var(--blue);font-weight:700">[평가응시]</a>에서 로그인 · 결제 후 {EXAM_WINDOW_DAYS}일 이내</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 05</span><h3 style="font-size:16px">이수 기준 충족</h3><p style="font-size:14px">기본·심화 모두 {EXAM_BASIC[1]}점 이상 · {RETAKE}</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 05</span><h3 style="font-size:16px">이수 기준 충족</h3><p style="font-size:14px">기본·심화 모두 {EXAM_BASIC[1]}점 이상<br>기준에 이를 때까지 재응시</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 06</span><h3 style="font-size:16px">이수증 발급</h3><p style="font-size:14px">결과 확인 후 7일 이내 PDF · 위원회 공식 등록</p></div>
         </div>
         {pay_btns}
@@ -3025,7 +3075,7 @@ def build_expert():
           <summary>교육비와 접수 마감은 언제인가요?</summary>
           <div class="acc-body">1기 접수는 {DEADLINE}까지이며, 전문성 있는 인력 양성을 위해 연 {QUOTA}명 한정으로 선발합니다.
             기본과정은 정가 {won(LIST_L2)}에서 1기 특별가 {won(PRICE_L2)}, 심화과정은 정가 {won(LIST_L1)}에서 1기 특별가 {won(PRICE_L1)}입니다.
-            비용에는 공식 학습자료(PDF) 5종, 온라인 이수 평가와 {RETAKE}, 이수증 발급과 위원회 공식 등록이 모두 포함됩니다. 평가나 이수증 발급에 따로 내는 비용은 없습니다.</div>
+            비용에는 공식 학습자료(PDF) 5종, 온라인 이수 평가와 재응시, 이수증 발급과 위원회 공식 등록이 모두 포함됩니다. 평가를 다시 치르거나 이수증을 발급받는 데 따로 내는 비용은 없습니다.</div>
         </details>
         <details class="acc">
           <summary>이수 평가는 어떻게 응시하나요?</summary>
@@ -3036,13 +3086,13 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>한 번에 통과하지 못하면 어떻게 되나요?</summary>
-          <div class="acc-body">괜찮습니다. <strong>응시 기간({EXAM_WINDOW_DAYS}일) 안에서는 횟수 제한 없이 온라인으로 다시 응시</strong>할 수 있고, 재응시에 드는 추가 비용은 없습니다.
-            점수는 제출 즉시 화면에 표시되므로 어느 영역이 부족했는지 확인하고 해당 부분만 다시 보신 뒤 이어서 응시하시면 됩니다.
-            문항은 제공된 학습자료 범위에서만 출제되므로, 이수 기준({EXAM_BASIC[1]}점)은 충실히 학습하면 도달할 수 있는 수준입니다.</div>
+          <div class="acc-body">이수 기준({EXAM_BASIC[1]}점)은 누구에게도 낮춰 드리지 않습니다. 대신 <strong>응시 기간({EXAM_WINDOW_DAYS}일) 안에서는 기준에 이를 때까지 다시 응시</strong>하실 수 있고, 재응시에 드는 비용은 없습니다.
+            한 번의 시험으로 사람을 가르는 것이 목적이 아니라, 기준에 이른 분에게만 위원회 이름으로 이수를 확인해 드리는 것이 목적이기 때문입니다.
+            제출 즉시 영역별 점수가 표시되므로 부족한 부분만 다시 보신 뒤 이어서 응시하시면 됩니다. 문항은 제공된 학습자료 범위에서만 출제됩니다.</div>
         </details>
         <details class="acc">
           <summary>이수증은 언제 어떻게 받나요?</summary>
-          <div class="acc-body">{EXAM_BASIC[1]}점 이상이면 결과 화면에서 바로 이수가 확정되고, 확인 후 7일 이내에 「{DOC_FULL}」(PDF)을 신청하신 이메일로 발급합니다.
+          <div class="acc-body">{EXAM_BASIC[1]}점 이상이면 결과 화면에서 바로 이수가 확정되고, <strong>한국AI윤리위원회 AI윤리전문가로 등록</strong>됩니다. 확인 후 7일 이내에 「{DOC_FULL}」(PDF)을 신청하신 이메일로 발급합니다.
             이수증에는 이수번호가 부여되며 한국AI윤리위원회 이수자 명부에 공식 등록되어, 이후 위원회를 통해 이수 사실을 확인할 수 있습니다.
             심화과정 이수자에게는 전문위원 등록 신청 방법을 함께 안내합니다.
             기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>로 보내주세요.</div>
@@ -3260,7 +3310,7 @@ def build_expert_apply():
           <div class="gform-card" id="secFlow">
             <div class="gform-sec">SECTION 4</div>
             <h2>교육 및 이수 평가 안내</h2>
-            <p class="gform-desc">AI윤리전문가 양성과정은 강의 수강부터 이수 평가까지 온라인으로 진행됩니다.</p>
+            <p class="gform-desc">신청과 결제, 학습과 평가까지 모두 온라인으로 진행됩니다.</p>
             <ol class="gform-flow">
               <li>양성과정 신청 (수강 신청 · 교육비 결제)</li>
               <li>학습자료 확인</li>
@@ -3269,16 +3319,11 @@ def build_expert_apply():
               <li>이수 기준 충족 (기본·심화 모두 {EXAM_BASIC[1]}점 이상)</li>
               <li class="is-final">이수증 발급 · 위원회 공식 등록 (심화과정은 전문위원 등록)</li>
             </ol>
-            <p class="gform-body">결제 완료 후 신청하신 이메일로 학습자료({MATERIALS}, PDF 5종)가 발송됩니다.
-               학습을 마친 뒤 홈페이지 상단 [평가응시]에서 로그인(아이디: 결제 이메일, 비밀번호: 결제 때 입력한 휴대전화 번호 뒤 4자리)해 결제 후 {EXAM_WINDOW_DAYS}일 이내에 이수 평가에 응시하며,
-               이수 기준을 충족하면 한국AI윤리위원회 공식 「{DOC_FULL}」이 발급되고 위원회에 공식 등록됩니다.</p>
+            <p class="gform-body">결제가 끝나면 학습자료(PDF 5종)가 이메일로 발송되고, 같은 이메일이 <b>[평가응시] 아이디</b>가 됩니다(비밀번호는 휴대전화 번호 뒤 4자리).</p>
             <div class="exam-info">
-              <div><span>평가 방식</span>온라인 이수 평가 (강의·학습자료 범위에서 출제, 4지선다형)</div>
-              <div><span>응시 방법</span>홈페이지 상단 [평가응시]에서 로그인 · 결제 후 {EXAM_WINDOW_DAYS}일 이내 응시</div>
               <div><span>평가 구성</span>기본과정 {EXAM_BASIC[0]}문항 · 심화과정 {EXAM_ADV[0]}문항 ({exam_time_text()})</div>
               <div><span>이수 기준</span><b>기본·심화 모두 {EXAM_BASIC[1]}점 이상</b></div>
-              <div><span>재응시</span>응시 기간 안 {RETAKE}(추가 비용 없음)</div>
-              <div><span>이수증 발급</span>이수 기준 충족 시 결과 확인 후 7일 이내 한국AI윤리위원회 공식 이수증(PDF) 발급과 위원회 공식 등록, 심화과정은 전문위원 등록·홈페이지 프로필 공개</div>
+              <div><span>재응시</span>응시 기간({EXAM_WINDOW_DAYS}일) 안에서 기준에 이를 때까지, 추가 비용 없음</div>
             </div>
             <label class="agree"><input type="checkbox" name="flowok"><span class="agree-box"></span>
               <span>교육 및 이수 평가 진행 절차를 확인했습니다. <span class="req">*</span></span></label>
@@ -3306,7 +3351,7 @@ def build_expert_apply():
 
           <div class="gform-card gform-submit">
             <h2>AI윤리전문가 양성과정 1기 수강 신청</h2>
-            <p>이력서와 커리어에 한국AI윤리위원회 공식 이수증과 공식 등록 이력을 더해보세요. 강의 수강부터 이수 평가까지 온라인으로 진행됩니다.</p>
+            <p>이력서에 한 줄, 한국AI윤리위원회 공식 이수증과 위원회 등록 이력을 더하세요.</p>
             <div class="sel-info" id="selInfo"><i data-lucide="check-circle-2"></i><span id="selText"></span></div>
             <div class="pay-summary">
               <div class="pay-mini"><div class="lv">기본과정 · 이수증</div>
@@ -3327,13 +3372,18 @@ def build_expert_apply():
 
         <div class="gform-card gform-done" id="doneView" hidden>
           <div class="done-icon"><i data-lucide="check"></i></div>
-          <h2>AI윤리전문가 양성과정 1기 신청이 완료되었습니다.</h2>
-          <p>최종 등록을 위해 아래 결제 페이지에서 선택하신 과정의 교육비를 결제해 주세요.</p>
-          <a id="payBtn" class="btn btn-primary" hidden>양성과정 교육비 결제하기 <i data-lucide="credit-card"></i></a>
-          <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 결제 페이지로 자동 이동합니다.</p>
-          <p class="gform-paynote">결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅의 안전결제 페이지에서 진행됩니다.</p>
-          <p class="gform-paynote">결제 때 입력하시는 이메일(아이디)과 휴대전화 번호 뒤 4자리(비밀번호)로 학습 후 홈페이지 상단 [평가응시]에 로그인해 이수 평가에 응시합니다.</p>
-          <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
+          <h2>신청이 접수되었습니다</h2>
+          <p class="done-lead">이제 <strong>교육비 결제</strong> 한 단계만 남았습니다.</p>
+          <div class="done-pay">
+            <div class="done-pay-head"><i data-lucide="shield-check"></i>
+              <div><strong>성균관컨설팅 안전결제로 연결됩니다</strong>
+                <span>위원회 교육 운영사 · 성균관대학교 RISE사업 공식 지원기업</span></div>
+            </div>
+            <a id="payBtn" class="btn btn-primary" hidden>교육비 결제하기 <i data-lucide="credit-card"></i></a>
+            <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 자동으로 이동합니다</p>
+            <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
+          </div>
+          <p class="gform-paynote">결제 때 입력하신 이메일과 휴대전화 번호 뒤 4자리가 그대로 [평가응시] 로그인 정보가 됩니다.</p>
           <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
                <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
@@ -3490,7 +3540,7 @@ def build_experts():
     ]
     PATH = [
         ("AI윤리전문가 양성과정 이수",
-         f"위원회 표준교재 등 학습자료 5종(PDF)과 온라인 이수 평가로 한국AI윤리위원회 공식 「{DOC_FULL}」을 받습니다. 기본과정 {EXAM_BASIC[0]}문항·{EXAM_BASIC[1]}점, 응시 기간 안 {RETAKE}.",
+         f"위원회 표준교재 등 학습자료 5종(PDF)과 온라인 이수 평가로 한국AI윤리위원회 공식 「{DOC_FULL}」을 받습니다. 기본과정 {EXAM_BASIC[0]}문항·{EXAM_BASIC[1]}점, 이수하면 위원회 AI윤리전문가로 등록됩니다.",
          ["위원회 표준교재 5종", "온라인 이수 평가", "위원회 공식 이수증"]),
         ("한국AI윤리위원회 공식 등록",
          "이수와 동시에 위원회 이수자 명부에 공식 등록되고 이수번호가 부여됩니다. 이력서·포트폴리오에 기재한 한 줄을 위원회가 뒷받침하며, 기업·기관의 확인 요청에 이수 사실을 확인해 드립니다.",
@@ -3639,7 +3689,7 @@ def build_experts():
             </div>
             <ul class="offer-list">
               <li>위원회 표준교재 등 학습자료 5종 + 온라인 이수 평가, 전 과정 온라인</li>
-              <li>전공·경력 제한 없이 누구나 수강, 이수 기준 {EXAM_BASIC[1]}점({RETAKE})</li>
+              <li>전공·경력 제한 없이 누구나 수강, 이수 기준 {EXAM_BASIC[1]}점(기준에 이를 때까지 재응시)</li>
               <li>한국AI윤리위원회 공식 「{DOC_FULL}」 + 위원회 공식 등록</li>
             </ul>
             <div class="offer-btns">
@@ -3728,10 +3778,10 @@ def build_join():
         ("graduation-cap", "캠퍼스 위원장", "양성과정 이수자",
          "AI윤리전문가 양성과정(기본과정 이상)을 이수하고 소속 대학에서 AI 윤리 활동을 주도하고 싶은 대학생·대학원생",
          "캠퍼스 위원회 운영, 교내 확산 활동"),
-        ("handshake", "제휴 파트너", "기업·기관",
+        ("handshake", "협력 기관", "기업·기관",
          "위원회와 공동 사업·교육·캠페인을 제안하는 개인·기업·기관",
          "협력 협약(MOU), 공동 프로그램 운영"),
-        ("building-2", "회원사", "기업·기관",
+        ("building-2", "회원기관", "기업·기관",
          "기업·기관 단위로 위원회의 공식 회원 참여를 원하는 조직",
          "회원 인증서·현판, 교육 할인, AI 활용 기준 자문"),
         ("compass", "아직 잘 모르겠어요 (위원회 추천)", "추천 받기",
@@ -3766,7 +3816,7 @@ def build_join():
         ("id-card", "위원회 직함과 명단 등재", "한국AI윤리위원회 위원 직함을 명함과 프로필에 표기하고, 위원회 조직·위원 명단에 이름을 올립니다."),
         ("monitor-play", "온라인·재택 활동", "대부분의 활동이 온라인으로 진행되어 학업·직장과 병행할 수 있습니다."),
         ("trending-up", "커리어가 되는 활동", "AI기본법 시행 이후 기업·기관·학교가 요구하는 AI 윤리 이력을 실제 활동으로 만듭니다."),
-        ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원사와 교류하며 활동 영역을 넓힙니다."),
+        ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원기관와 교류하며 활동 영역을 넓힙니다."),
         ("gift", "활동 인센티브", "캠페인 활동 실적에 따른 인센티브와 위원회 양성과정·교육 프로그램 우대를 제공합니다."),
     ]
     benefits_html = "".join(
@@ -3790,7 +3840,7 @@ def build_join():
          "네. AI 윤리 캠페인위원을 비롯한 대부분의 프로그램은 전공·경력에 관계없이 참여할 수 있습니다. "
          "어떤 역할이 맞는지 모르겠다면 신청서에서 '위원회 추천'을 선택하세요. 신청 내용을 보고 적합한 역할을 제안해 드립니다."),
         ("참여에 비용이 드나요?",
-         "개인 위원 참여에는 가입비·교육비 등 어떠한 비용도 없습니다. 기업·기관 회원사는 별도의 연회비 안내를 받습니다."),
+         "개인 위원 참여에는 가입비·교육비 등 어떠한 비용도 없습니다. 기업·기관 회원기관는 별도의 연회비 안내를 받습니다."),
         ("활동 시간은 얼마나 필요한가요? 직장·학업과 병행할 수 있나요?",
          "대부분의 활동이 온라인으로 진행되며 주 1~2시간 정도로도 참여할 수 있습니다. 위촉 후 본인 상황에 맞는 활동을 함께 정합니다."),
         ("신청 후 언제, 어떻게 연락을 받나요?",
@@ -3806,7 +3856,7 @@ def build_join():
         <h1>한국AI윤리위원회(KAIEC)와 함께<br class="br-pc">AI 윤리를 알리는 사람이 되어 주세요</h1>
         <p>보고서도 과제도 회의록도 AI로 만드는 시대, 무분별한 AI 사용을 막고 바르게 활용하는 문화를 만드는 일은 혼자서는 어렵지만 함께라면 캠페인이 됩니다.
            한국AI윤리위원회(KAIEC)는 「무분별한 AI 사용 방지 캠페인」과 「AI 윤리 알리기」를 함께할 개인·전문가·기업·기관을 찾습니다.
-           캠페인위원부터 전문위원, 지역·캠퍼스 위원, 제휴 파트너와 회원사까지, 당신에게 맞는 자리가 준비되어 있습니다.</p>
+           캠페인위원부터 전문위원, 지역·캠퍼스 위원, 협력 기관과 회원기관까지, 당신에게 맞는 자리가 준비되어 있습니다.</p>
         <div class="btns" style="margin-top:22px">
           <a class="btn btn-primary" href="#apply">지금 지원하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#why">활동 혜택 보기</a>
@@ -3837,7 +3887,7 @@ def build_join():
             <span class="gform-kicker">JOIN KAIEC · 참여 신청</span>
             <h2 class="gform-title">KAIEC 참여 신청서</h2>
             <p class="gform-lead">한국AI윤리위원회와 함께 책임 있는 AI 활용 문화를 만들어갈 분을 모십니다.</p>
-            <p>운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 제휴 파트너·회원사까지, 나에게 맞는 역할을 골라 신청하세요.
+            <p>운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 협력 기관·회원기관까지, 나에게 맞는 역할을 골라 신청하세요.
                제출하시면 위원회가 검토 후 이메일로 안내드리며, 신청과 활동 과정에서 가입비·교육비 등 어떠한 비용도 요구하지 않습니다.</p>
             <p class="gform-org-note">한국AI윤리위원회 사무국 접수 · 검토 후 개별 안내</p>
           </div>
@@ -3965,7 +4015,7 @@ def build_join():
         <div class="grid grid-4">{after_html}</div>
         <p class="field-hint" style="text-align:center;margin-top:18px">
           개인 위원 제도의 자세한 안내는 <a href="partner.html" style="color:var(--blue);font-weight:700">AI 윤리위원 안내</a>,
-          회원사 혜택과 연회비는 <a href="apply.html#member" style="color:var(--blue);font-weight:700">회원사 안내</a>를 참고하세요.</p>
+          회원기관 혜택과 연회비는 <a href="apply.html#member" style="color:var(--blue);font-weight:700">회원기관 안내</a>를 참고하세요.</p>
       </div>
     </section>
 
@@ -3996,7 +4046,7 @@ def build_join():
   <script>
   (function(){
     var form=document.getElementById('joinForm');
-    var ORG_TYPES={'제휴 파트너':1,'회원사':1};
+    var ORG_TYPES={'협력 기관':1,'회원기관':1};
     function v(n){var el=form.querySelector('[name='+n+']');return (el&&el.value?el.value:'').trim();}
     function jtype(){var c=form.querySelector('[name=jtype]:checked');return c?c.value:'';}
     function bad(id,on){document.getElementById(id).classList.toggle('is-invalid',!!on);return !!on;}
@@ -4095,10 +4145,10 @@ def build_join():
 """.replace('__FEMAIL__', EMAIL).replace('__HOOK__', SHEET_WEBHOOK)
 
     page("join.html", "KAIEC 참여하기",
-         "한국AI윤리위원회(KAIEC) 참여 신청. 운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 제휴 파트너·회원사까지, 나에게 맞는 역할을 골라 온라인으로 바로 지원하세요.",
+         "한국AI윤리위원회(KAIEC) 참여 신청. 운영위원·전문위원·지역 운영위원·캠퍼스 위원장·AI 윤리 캠페인위원과 협력 기관·회원기관까지, 나에게 맞는 역할을 골라 온라인으로 바로 지원하세요.",
          body, extra_script=script,
          keywords=["KAIEC 참여", "한국AI윤리위원회 참여", "AI 윤리위원 지원", "AI 윤리 전문위원 모집", "캠퍼스 위원장",
-                   "AI 윤리 캠페인위원", "위원회 회원사 가입", "AI 윤리 제휴"])
+                   "AI 윤리 캠페인위원", "위원회 회원기관 가입", "AI 윤리 제휴"])
 
 
 # ---------------------------------------------------------------- quiz.html
@@ -4402,15 +4452,26 @@ def build_exam():
               + '</defs></svg>')
 
     # 로그인 상자 아래 결제 버튼 (성균관컨설팅 결제 페이지, 새 창). 링크가 비어 있으면 그 버튼은 만들지 않음
+    # 아직 등록 전인 분을 위한 '응시 자격' 안내와 과정 등록 버튼(성균관컨설팅 결제 페이지, 새 창)
     pay_btns = "".join(
-        f'<a class="ex-btn ex-btn--secondary" href="{u}" target="_blank" rel="noopener">{t}{_ic("external-link")}'
+        f'<a class="ex-paybtn" href="{u}" target="_blank" rel="noopener">'
+        f'<span class="ex-paybtn-t">{t} 도전하기{_ic("external-link")}</span>'
+        f'<span class="ex-paybtn-p"><i>정가 {won(lst)}</i>{won(now)} <em>1기 특별가</em></span>'
         f'<span class="sr-only">(새 창)</span></a>'
-        for u, t in ((PAY_URL_L2, "기본과정 결제하기"), (PAY_URL_L1, "심화과정 결제하기")) if u)
+        for u, t, lst, now in ((PAY_URL_L2, "기본과정", LIST_L2, PRICE_L2),
+                               (PAY_URL_L1, "심화과정", LIST_L1, PRICE_L1)) if u)
+    SPEC = [("award", f"이수 기준 {EXAM_BASIC[1]}점 이상"), ("badge-check", "이수 시 위원회 공식 등록")]
+    spec_html = "".join(f'<li>{_ic(ic)}<span>{t}</span></li>' for ic, t in SPEC)
     pay_html = f"""
             <div class="ex-lbox-pay">
-              <p class="ex-lbox-q">아직 수강 신청 전이신가요?</p>
+              <p class="ex-lbox-q">응시 자격</p>
+              <p class="ex-lbox-lead">이수 평가는 <strong>AI윤리전문가 양성과정 등록자</strong>에게만 열립니다.
+                등록하시면 학습자료 5종(PDF)이 발송되고, 이 화면의 <strong>아이디와 비밀번호가 자동으로 만들어집니다.</strong></p>
+              <ul class="ex-lbox-spec">{spec_html}</ul>
               <div class="ex-paybtns">{pay_btns}</div>
-              <p class="ex-lbox-note">결제는 성균관컨설팅 안전결제로 진행됩니다.</p>
+              <p class="ex-lbox-note">{_ic("shield-check")}<span>출제·평가·이수증 발급과 이수자 등록은 <strong>한국AI윤리위원회</strong>가 맡고,
+                교육비 결제와 수강 등록은 위원회 교육 운영사인 <strong>성균관컨설팅</strong>(성균관대학교 RISE사업 공식 지원기업)이
+                안전결제로 처리합니다.</span></p>
             </div>""" if pay_btns else ""
 
     body = f"""    <div class="ex-shell" id="examApp">
@@ -4439,11 +4500,12 @@ def build_exam():
         <div class="ex-lbox">
           <div class="ex-lbox-head">
             <div class="ex-lbox-brand"><span class="brand-badge">{BADGE_SVG}</span>{WORDMARK_USE}<span class="sr-only">{SITE_NAME}</span></div>
-            <p class="ex-lbox-prog">AI윤리전문가 양성과정</p>
+            <p class="ex-lbox-prog">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</p>
             <h1 class="ex-lbox-title" id="exLoginTitle">이수 평가 시스템</h1>
+            <p class="ex-lbox-en">KAIEC ONLINE ASSESSMENT SYSTEM</p>
           </div>
           <div class="ex-lbox-body">
-            <h2 class="ex-lbox-sub">수강생 로그인</h2>
+            <h2 class="ex-lbox-sub">응시자 로그인<span class="ex-secure">{_ic("lock")}본인 확인</span></h2>
             <div class="ex-ready" id="exReady" hidden>{_ic("hourglass")}<p><strong>평가 시스템 연결 준비 중</strong>연결이 끝나면 이 화면에서 로그인할 수 있습니다.</p></div>
             <form class="ex-form" id="exLoginForm" novalidate>
               <div class="ex-field">
@@ -4505,15 +4567,15 @@ def build_apply():
             <div class="chips"><span class="chip">{tag}</span></div>
           </article>""" for ic, t, d, tag in roles)
 
-    body = hero_sub("위원·회원사 신청",
-                    "책임 있는 AI를 함께 실천할 개인 위원과 기업·기관 회원사를 상시 모집합니다.",
-                    "위원·회원사 신청") + f"""
+    body = hero_sub("위원·회원기관 신청",
+                    "책임 있는 AI를 함께 실천할 개인 위원과 기업·기관 회원기관를 상시 모집합니다.",
+                    "위원·회원기관 신청") + f"""
 
     <section class="section section--tight" style="padding-bottom:0">
       <div class="wrap-narrow">
         <div class="apply-tabs">
           <a class="atab is-on" href="#individual"><i data-lucide="users"></i>개인 위원</a>
-          <a class="atab" href="#member"><i data-lucide="building-2"></i>기업·기관 회원사</a>
+          <a class="atab" href="#member"><i data-lucide="building-2"></i>기업·기관 회원기관</a>
         </div>
       </div>
     </section>
@@ -4552,7 +4614,7 @@ def build_apply():
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Application</span>
           <h2 class="h-sec">온라인 지원서</h2>
-          <p class="h-sub" style="margin:0 auto 24px">개인 위원과 기업·기관 회원사 신청은 KAIEC 참여 통합 신청서에서 접수합니다.
+          <p class="h-sub" style="margin:0 auto 24px">개인 위원과 기업·기관 회원기관 신청은 KAIEC 참여 통합 신청서에서 접수합니다.
              참여 구분을 선택하고 신청서를 제출하시면 검토 후 개별 연락드립니다.</p>
           <a class="btn btn-primary" href="join.html#apply">KAIEC 참여 신청서 작성하기 <i data-lucide="arrow-right"></i></a>
         </div>
@@ -4577,13 +4639,13 @@ def build_apply():
       <div class="wrap">
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Corporate Membership</span>
-          <h2 class="h-sec">한국AI윤리위원회 회원사</h2>
-          <p class="h-sub">책임 있는 AI를 실천하는 기업·기관의 네트워크입니다. 회원사는 위원회의 교육·자문·인증 자원을
-             우선적으로 활용하고, <strong>"한국AI윤리위원회 회원사"</strong>로서 대외 신뢰를 확보합니다.</p>
+          <h2 class="h-sec">한국AI윤리위원회 회원기관</h2>
+          <p class="h-sub">책임 있는 AI를 실천하는 기업·기관의 네트워크입니다. 회원기관는 위원회의 교육·자문·인증 자원을
+             우선적으로 활용하고, <strong>"한국AI윤리위원회 회원기관"</strong>로서 대외 신뢰를 확보합니다.</p>
         </div>
         <div class="grid grid-3">
           <article class="card reveal"><div class="card-icon"><i data-lucide="badge-check"></i></div>
-            <h3>회원사 인증서 · 현판</h3><p>위원회 명의의 회원사 인증서와 현판을 제공하며, 홈페이지·소개자료에 "한국AI윤리위원회 회원사" 표기를 사용할 수 있습니다.</p></article>
+            <h3>회원기관 인증서 · 현판</h3><p>위원회 명의의 회원기관 인증서와 현판을 제공하며, 홈페이지·소개자료에 "한국AI윤리위원회 회원기관" 표기를 사용할 수 있습니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="monitor-play"></i></div>
             <h3>AI 윤리 교육 할인</h3><p>임직원 대상 출강 교육(1~4시간 맞춤 과정)을 회원 등급에 따라 할인된 비용으로 이용합니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="award"></i></div>
@@ -4611,8 +4673,8 @@ def build_apply():
             <div class="price-num">30<small>만원 / 년</small></div>
             <div class="price-note">스타트업 · 1인 기업 · 소상공인</div>
             <ul style="text-align:left;margin-top:14px;display:grid;gap:7px;font-size:13.5px;color:var(--gray-600)">
-              <li>· 회원사 인증서 발급</li>
-              <li>· "위원회 회원사" 표기 사용</li>
+              <li>· 회원기관 인증서 발급</li>
+              <li>· "위원회 회원기관" 표기 사용</li>
               <li>· AI 윤리 교육 10% 할인</li>
               <li>· AI 규제·윤리 동향 뉴스레터</li>
             </ul>
@@ -4624,7 +4686,7 @@ def build_apply():
             <div class="price-note">기업 · 기관 · 단체</div>
             <ul style="text-align:left;margin-top:14px;display:grid;gap:7px;font-size:13.5px;color:var(--gray-600)">
               <li>· 준회원 혜택 전체 포함</li>
-              <li>· 회원사 현판 제공</li>
+              <li>· 회원기관 현판 제공</li>
               <li>· AI 윤리 교육 20% 할인</li>
               <li>· 임직원 양성과정 수강 우대</li>
               <li>· 위원회 홈페이지 로고 게재</li>
@@ -4652,7 +4714,7 @@ def build_apply():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">회원사 가입 절차</h2>
+          <h2 class="h-sec">회원기관 가입 절차</h2>
         </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">가입 문의</h3><p style="font-size:14px">온라인 문의 또는 메일 접수</p></div>
@@ -4661,7 +4723,7 @@ def build_apply():
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">활동 시작</h3><p style="font-size:14px">인증서·현판 발급 후 혜택 이용</p></div>
         </div>
         <div class="center" style="margin-top:34px;display:flex;gap:11px;justify-content:center;flex-wrap:wrap">
-          <a class="btn btn-primary" href="mou.html#inquiry">회원사 가입 문의하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-primary" href="mou.html#inquiry">회원기관 가입 문의하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-ghost" href="mailto:{EMAIL}">메일로 문의하기</a>
         </div>
       </div>
@@ -4687,11 +4749,11 @@ def build_apply():
   </script>
 """
 
-    page("apply.html", "위원·회원사 신청",
-         "한국AI윤리위원회 개인 위원 지원과 기업·기관 회원사 모집 안내. 모집 분야, 회원사 혜택, 연회비, 가입 절차를 확인하고 온라인으로 신청하세요.",
+    page("apply.html", "위원·회원기관 신청",
+         "한국AI윤리위원회 개인 위원 지원과 기업·기관 회원기관 모집 안내. 모집 분야, 회원기관 혜택, 연회비, 가입 절차를 확인하고 온라인으로 신청하세요.",
          body + cert_band("KAIEC 참여 신청서 작성", "join.html#apply"), extra_script=tab_js,
-         keywords=["한국AI윤리위원회 회원사", "AI 윤리 위원회 가입", "위원회 회원사 모집", "AI 윤리 위원",
-                   "AI 윤리위원", "기업 AI 윤리", "AI 윤리 위원회 회원사 연회비"])
+         keywords=["한국AI윤리위원회 회원기관", "AI 윤리 위원회 가입", "위원회 회원기관 모집", "AI 윤리 위원",
+                   "AI 윤리위원", "기업 AI 윤리", "AI 윤리 위원회 회원기관 연회비"])
 
 
 if __name__ == "__main__":
