@@ -122,11 +122,11 @@ html:not(.js) .ex-boot{display:none}
 .ex-demo-exit:hover{background:#FBEBD5}
 
 /* ---------- (1) 로그인 상자 ---------- */
-.ex-login{display:flex;justify-content:center;align-items:flex-start;padding:52px 16px 88px}
+.ex-login{display:flex;justify-content:center;align-items:flex-start;padding:38px 16px 64px}
 /* 로그인 카드: 공문서형(남색 머리 + 금색 얇은 선) 2026.09.16 */
 .ex-lbox{width:100%;max-width:452px;background:#fff;border:1px solid var(--ex-line);border-radius:10px;overflow:hidden;
   box-shadow:0 22px 52px rgba(8,22,42,.14),0 2px 6px rgba(8,22,42,.06)}
-.ex-lbox-head{position:relative;padding:30px 32px 26px;text-align:center;
+.ex-lbox-head{position:relative;padding:26px 32px 22px;text-align:center;
   background:linear-gradient(180deg,#123458 0%,#08213C 100%);border-bottom:3px solid #C5A66A}
 .ex-lbox-head::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(360px 130px at 50% -30%,rgba(158,196,240,.20),transparent 70%)}
@@ -136,10 +136,10 @@ html:not(.js) .ex-boot{display:none}
 .ex-lbox-brand .brand-badge::after{display:none}
 .ex-lbox-brand .badge-wm{width:51px;height:9.2px}
 .ex-lbox-brand .brand-wm{width:148px;height:28px;--wm-ko:#fff;--wm-en:#A3BCDB}
-.ex-lbox-prog{position:relative;margin-top:19px;font-size:12.5px;font-weight:600;letter-spacing:-.01em;color:#A3BCDB}
-.ex-lbox-title{position:relative;margin:4px 0 0;font-size:25px;font-weight:700;line-height:1.35;letter-spacing:-.02em;color:#fff}
+.ex-lbox-prog{position:relative;margin:0;font-size:12.5px;font-weight:600;letter-spacing:-.01em;color:#A3BCDB}
+.ex-lbox-title{position:relative;margin:5px 0 0;font-size:25px;font-weight:700;line-height:1.3;letter-spacing:-.02em;color:#fff}
 .ex-lbox-en{position:relative;margin:8px 0 0;font-size:10px;font-weight:700;letter-spacing:.22em;color:rgba(255,255,255,.42)}
-.ex-lbox-body{padding:24px 32px 26px}
+.ex-lbox-body{padding:24px 32px 24px}
 .ex-lbox-sub{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 16px;font-size:17px;font-weight:700;color:var(--ex-ink)}
 .ex-secure{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border:1px solid var(--ex-ok-line);border-radius:999px;
   background:var(--ex-ok-050);font-size:11.5px;font-weight:700;color:var(--ex-ok);letter-spacing:-.01em}
@@ -150,30 +150,18 @@ html:not(.js) .ex-boot{display:none}
 .ex-ready>.ex-ico{width:17px;height:17px;margin-top:2px;color:var(--ex-warn)}
 .ex-ready strong{display:block;font-size:14px}
 /* 응시 자격 · 과정 등록 */
-.ex-lbox-pay{padding:20px 32px 22px;border-top:1px solid var(--ex-line-2);background:#FAFBFD}
-.ex-lbox-q{display:flex;align-items:center;gap:9px;margin:0;font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ex-navy)}
-.ex-lbox-q::after{content:"";flex:1;height:1px;background:var(--ex-line)}
-.ex-lbox-lead{margin:10px 0 0;font-size:13.2px;line-height:1.72;color:var(--ex-text)}
-.ex-lbox-lead strong{font-weight:700;color:var(--ex-ink)}
-.ex-lbox-spec{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:12px 0 0;padding:0;list-style:none}
-.ex-lbox-spec li{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border:1px solid var(--ex-line);border-radius:6px;
-  background:#fff;font-size:11.8px;font-weight:600;color:var(--ex-sub);letter-spacing:-.01em}
-.ex-lbox-spec .ex-ico{width:13px;height:13px;color:var(--ex-navy)}
-.ex-paybtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:13px}
-.ex-paybtn{display:flex;flex-direction:column;gap:5px;padding:12px 12px 11px;border:1px solid var(--ex-navy-line);border-radius:8px;
-  background:#fff;text-align:left;transition:border-color .16s,box-shadow .16s,transform .16s}
+.ex-lbox-pay{padding:18px 32px 20px;border-top:1px solid var(--ex-line-2);background:#FAFBFD}
+.ex-lbox-q{margin:0;font-size:13px;font-weight:700;color:var(--ex-text);text-align:center;letter-spacing:-.02em}
+.ex-paybtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:11px}
+.ex-paybtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 8px 10px;border:1px solid var(--ex-navy-line);
+  border-radius:8px;background:#fff;transition:border-color .16s,box-shadow .16s,transform .16s}
 .ex-paybtn:hover{border-color:var(--ex-navy);box-shadow:0 8px 20px rgba(11,42,74,.14);transform:translateY(-1px)}
-.ex-paybtn-t{display:flex;align-items:center;gap:5px;font-size:14px;font-weight:700;color:var(--ex-navy);letter-spacing:-.02em}
-.ex-paybtn-t .ex-ico{width:12px;height:12px;color:var(--ex-mute);flex-shrink:0}
-.ex-paybtn-p{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px;font-size:15px;font-weight:800;color:var(--ex-ink);letter-spacing:-.02em}
-.ex-paybtn-p i{font-style:normal;font-size:11.5px;font-weight:600;color:var(--ex-mute);text-decoration:line-through}
-.ex-paybtn-p em{font-style:normal;font-size:10.5px;font-weight:700;color:var(--ex-ok);letter-spacing:-.01em}
-.ex-lbox-note{display:flex;gap:8px;align-items:flex-start;margin:14px 0 0;padding:11px 12px;border:1px solid var(--ex-line-2);border-radius:7px;
-  background:#fff;font-size:11.8px;line-height:1.68;color:var(--ex-sub);text-align:left}
-.ex-lbox-note .ex-ico{width:14px;height:14px;margin-top:2px;color:var(--ex-navy);flex-shrink:0}
-.ex-lbox-note strong{font-weight:700;color:var(--ex-text)}
-.ex-lbox-foot{padding:11px 20px;border-top:1px solid var(--ex-line-2);border-radius:0 0 var(--ex-r-lg) var(--ex-r-lg);background:#F8F9FB;
-  font-size:12.5px;color:var(--ex-mute);text-align:center}
+.ex-paybtn-t{display:flex;align-items:center;gap:4px;font-size:13.5px;font-weight:700;color:var(--ex-navy);letter-spacing:-.03em;white-space:nowrap}
+.ex-paybtn-t .ex-ico{width:11px;height:11px;color:var(--ex-mute);flex-shrink:0}
+.ex-paybtn-p{font-size:15px;font-weight:800;color:var(--ex-ink);letter-spacing:-.03em}
+.ex-lbox-note{margin:11px 0 0;font-size:11.8px;line-height:1.6;color:var(--ex-mute);text-align:center}
+.ex-lbox-foot{padding:11px 20px;border-top:1px solid var(--ex-line-2);background:#F8F9FB;
+  font-size:11.8px;line-height:1.7;color:var(--ex-mute);text-align:center}
 .ex-lbox-foot a{color:var(--ex-link);font-weight:600;word-break:break-all}
 
 /* ---------- 페이지 머리 (로그인 뒤) ---------- */
@@ -901,10 +889,9 @@ body.ex-lock{overflow:hidden}
 
 /* 로그인 카드 좁은 화면 (2026.09.16) */
 @media (max-width:480px){
-  .ex-lbox-head{padding:26px 20px 22px}
-  .ex-lbox-body{padding:20px 20px 22px}
-  .ex-lbox-pay{padding:18px 20px 20px}
+  .ex-login{padding:26px 14px 52px}
+  .ex-lbox-head{padding:22px 18px 19px}
+  .ex-lbox-body{padding:20px 18px 20px}
+  .ex-lbox-pay{padding:16px 18px 18px}
   .ex-lbox-title{font-size:22px}
-  .ex-lbox-sub{font-size:16px}
-  .ex-paybtns{grid-template-columns:1fr}
 }

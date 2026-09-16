@@ -4435,22 +4435,15 @@ def build_exam():
     pay_btns = "".join(
         f'<a class="ex-paybtn" href="{u}" target="_blank" rel="noopener">'
         f'<span class="ex-paybtn-t">{t} 도전하기{_ic("external-link")}</span>'
-        f'<span class="ex-paybtn-p"><i>정가 {won(lst)}</i>{won(now)} <em>1기 특별가</em></span>'
-        f'<span class="sr-only">(새 창)</span></a>'
+        f'<span class="ex-paybtn-p">{won(now)}</span>'
+        f'<span class="sr-only">(정가 {won(lst)}, 새 창)</span></a>'
         for u, t, lst, now in ((PAY_URL_L2, "기본과정", LIST_L2, PRICE_L2),
                                (PAY_URL_L1, "심화과정", LIST_L1, PRICE_L1)) if u)
-    SPEC = [("award", f"이수 기준 {EXAM_BASIC[1]}점 이상"), ("badge-check", "이수 시 위원회 공식 등록")]
-    spec_html = "".join(f'<li>{_ic(ic)}<span>{t}</span></li>' for ic, t in SPEC)
     pay_html = f"""
             <div class="ex-lbox-pay">
-              <p class="ex-lbox-q">응시 자격</p>
-              <p class="ex-lbox-lead">이수 평가는 <strong>AI윤리전문가 양성과정 등록자</strong>에게만 열립니다.
-                등록하시면 학습자료 5종(PDF)이 발송되고, 이 화면의 <strong>아이디와 비밀번호가 자동으로 만들어집니다.</strong></p>
-              <ul class="ex-lbox-spec">{spec_html}</ul>
+              <p class="ex-lbox-q">아직 등록 전이신가요?</p>
               <div class="ex-paybtns">{pay_btns}</div>
-              <p class="ex-lbox-note">{_ic("shield-check")}<span>출제·평가·이수증 발급과 이수자 등록은 <strong>한국AI윤리위원회</strong>가 맡고,
-                교육비 결제와 수강 등록은 위원회 교육 운영사인 <strong>성균관컨설팅</strong>(성균관대학교 RISE사업 공식 지원기업)이
-                안전결제로 처리합니다.</span></p>
+              <p class="ex-lbox-note">결제하시면 이 화면의 아이디와 비밀번호가 자동으로 만들어집니다.</p>
             </div>""" if pay_btns else ""
 
     body = f"""    <div class="ex-shell" id="examApp">
@@ -4478,13 +4471,11 @@ def build_exam():
       <section class="ex-login" id="exLogin" aria-labelledby="exLoginTitle">
         <div class="ex-lbox">
           <div class="ex-lbox-head">
-            <div class="ex-lbox-brand"><span class="brand-badge">{BADGE_SVG}</span>{WORDMARK_USE}<span class="sr-only">{SITE_NAME}</span></div>
-            <p class="ex-lbox-prog">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</p>
+            <p class="ex-lbox-prog">AI윤리전문가 양성과정</p>
             <h1 class="ex-lbox-title" id="exLoginTitle">이수 평가 시스템</h1>
             <p class="ex-lbox-en">KAIEC ONLINE ASSESSMENT SYSTEM</p>
           </div>
           <div class="ex-lbox-body">
-            <h2 class="ex-lbox-sub">응시자 로그인<span class="ex-secure">{_ic("lock")}본인 확인</span></h2>
             <div class="ex-ready" id="exReady" hidden>{_ic("hourglass")}<p><strong>평가 시스템 연결 준비 중</strong>연결이 끝나면 이 화면에서 로그인할 수 있습니다.</p></div>
             <form class="ex-form" id="exLoginForm" novalidate>
               <div class="ex-field">
@@ -4503,7 +4494,7 @@ def build_exam():
               <button type="submit" class="ex-btn ex-btn--primary ex-btn--lg ex-btn--block" id="exLoginBtn">로그인</button>
             </form>
           </div>{pay_html}
-          <p class="ex-lbox-foot">로그인 문의 <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+          <p class="ex-lbox-foot">결제는 성균관컨설팅 안전결제 · 이수증은 한국AI윤리위원회 발급<br>로그인 문의 <a href="mailto:{EMAIL}">{EMAIL}</a></p>
         </div>
       </section>
 
