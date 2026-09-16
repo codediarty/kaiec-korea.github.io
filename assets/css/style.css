@@ -1518,11 +1518,11 @@ table.tbl tr:hover td{background:#FCFDFF}
   color:var(--gray-600);background:#fff;transition:border-color .2s,color .2s}
 .lg-links a:hover{border-color:var(--blue);color:var(--blue)}
 .footer-info--sub{font-size:12px!important;color:#6F87A8!important;line-height:1.7}
-.footer-legal{display:flex;flex-wrap:wrap;gap:6px 20px;padding:14px 0 0;margin-top:2px}
-.footer-legal a{font-size:13px;font-weight:600;color:#9FB6D4}
-.footer-legal a:hover{color:#fff}
-.footer-legal a strong{font-weight:800;color:#C7DCF2}
-.footer-legal a:hover strong{color:#fff}
+.footer-legal{display:flex;flex-wrap:wrap;gap:4px 22px;padding:10px 0 0;margin-top:2px}
+.footer-legal a{font-size:12px;font-weight:500;color:#6F87A8;letter-spacing:-.01em}
+.footer-legal a:hover{color:#B9CDE6}
+.lg-part{margin:52px 0 26px;padding-top:26px;border-top:1px solid var(--gray-200);
+  font-size:15px;font-weight:800;letter-spacing:-.03em;color:var(--gray-500)}
 @media (max-width:700px){
   .legal{font-size:14.5px}
   .legal h2{font-size:16.5px}

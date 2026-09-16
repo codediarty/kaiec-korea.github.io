@@ -43,7 +43,7 @@ RETIRED_STUBS = {"post-2026-09-11-name-change.html"}   # 삭제된 명칭변경 
 # 교체된 게시글(md 머리 '교체: <새 slug>')은 build.load_posts()가 RETIRED_POSTS에 모으고 옛 주소 2곳에 새 글로 이동하는 스텁을 씁니다 (2026.09.15)
 CORE = ["about.html", "business.html", "members.html", "lecture.html", "expert.html",
         "expert-apply.html", "experts.html", "join.html", "quiz.html", "exam.html", "partner.html", "copyclean.html", "news.html", "mou.html", "apply.html",
-        "terms.html", "refund.html", "privacy.html", "disclaimer.html"]
+        "terms.html", "privacy.html"]
 
 results = []   # (이름, 통과 여부, 상세 목록)
 
