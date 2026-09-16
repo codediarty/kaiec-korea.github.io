@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=834647613d">
+<link rel="stylesheet" href="/assets/css/style.css?v=ce183598b2">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -218,6 +218,23 @@
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
             <p class="err-msg">개인정보 수집·이용 동의에 체크해 주세요.</p>
+            <p class="field-hint" style="margin-top:14px">자세한 내용은 <a href="/privacy/" style="color:var(--blue);font-weight:700">개인정보처리방침</a>을 확인해 주세요.</p>
+          </div>
+
+          <div class="gform-card" id="secRefund">
+            <div class="gform-sec">SECTION 6</div>
+            <h2>청약철회 제한 사항 확인 <span class="req">*</span></h2>
+            <p class="gform-desc">본 과정은 결제 후 학습자료(PDF)가 발송되는 전자문서 상품입니다. 신청 전에 아래 내용을 확인해 주세요.</p>
+            <div class="gform-privacy">
+              <div><span>발송 전</span>결제일부터 7일 이내 청약철회 가능 · 전액 환불</div>
+              <div><span>발송 후</span>학습자료 발송이 시작되면 청약철회가 제한됩니다(전자상거래법 제17조 제2항 제5호)</div>
+              <div><span>제외 사항</span>미이수·미응시·응시 기간 경과는 환불 사유에 해당하지 않습니다(재응시는 기간 안에서 추가 비용 없이 가능)</div>
+            </div>
+            <label class="agree"><input type="checkbox" name="refundok"><span class="agree-box"></span>
+              <span>학습자료 발송 개시 후에는 청약철회가 제한된다는 점을 확인했습니다. <span class="req">*</span></span></label>
+            <p class="err-msg">청약철회 제한 사항 확인에 체크해 주세요.</p>
+            <p class="field-hint" style="margin-top:14px">전문은 <a href="/refund/" style="color:var(--blue);font-weight:700">환불 · 청약철회 안내</a>와
+              <a href="/terms/" style="color:var(--blue);font-weight:700">이용약관</a>에서 확인하실 수 있습니다.</p>
           </div>
 
           <div class="gform-card gform-submit">
@@ -305,9 +322,21 @@
         </div>
       </div>
       <div class="footer-info">
+        <span>기관명 한국AI윤리위원회</span><span class="fsep">|</span>
+        <span>대표자 위원장 신동복</span><span class="fsep">|</span>
         <span>고유번호 272-32-01885</span><span class="fsep">|</span>
         <span>연구실 : 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리 (16419)</span><span class="fsep">|</span>
         <span>공식 문의 <a href="mailto:kaiec.korea@gmail.com" style="color:inherit">kaiec.korea@gmail.com</a></span>
+      </div>
+      <div class="footer-info footer-info--sub">
+        <span>교육비 결제 · 환급은 교육 운영사 <a href="https://www.skkc.co.kr" target="_blank" rel="noopener" style="color:inherit">성균관컨설팅</a>이 수행하며, 통신판매업 신고 등 판매자 정보는 해당 사이트에서 확인하실 수 있습니다.</span><span class="fsep">|</span>
+        <span>연구실 주소는 소재지 표기이며 해당 대학과의 제휴·후원·인증을 의미하지 않습니다.</span>
+      </div>
+      <div class="footer-legal">
+        <a href="/terms/">이용약관</a>
+        <a href="/refund/"><strong>환불 · 청약철회 안내</strong></a>
+        <a href="/privacy/"><strong>개인정보처리방침</strong></a>
+        <a href="/disclaimer/">면책 · 표기 안내</a>
       </div>
       <div class="footer-bottom">
         <span>© <span id="year">2026</span> 한국AI윤리위원회 (Korea AI Ethics Committee). All rights reserved.</span>
@@ -315,7 +344,7 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=834647613d"></script>
+  <script src="/assets/js/main.js?v=ce183598b2"></script>
 
   <script>
   (function(){
@@ -356,6 +385,7 @@
       bad('fJob',!job);
       bad('secFlow',!form.querySelector('[name=flowok]').checked);
       bad('secPriv',!form.querySelector('[name=privok]').checked);
+      bad('secRefund',!form.querySelector('[name=refundok]').checked);
       var first=document.querySelector('.is-invalid');
       document.getElementById('topErr').style.display=first?'block':'none';
       if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}

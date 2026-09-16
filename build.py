@@ -382,9 +382,21 @@ def footer():
         </div>
       </div>
       <div class="footer-info">
+        <span>기관명 한국AI윤리위원회</span><span class="fsep">|</span>
+        <span>대표자 위원장 신동복</span><span class="fsep">|</span>
         <span>고유번호 272-32-01885</span><span class="fsep">|</span>
         <span>연구실 : 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리 (16419)</span><span class="fsep">|</span>
         <span>공식 문의 <a href="mailto:{EMAIL}" style="color:inherit">{EMAIL}</a></span>
+      </div>
+      <div class="footer-info footer-info--sub">
+        <span>교육비 결제 · 환급은 교육 운영사 <a href="https://www.skkc.co.kr" target="_blank" rel="noopener" style="color:inherit">성균관컨설팅</a>이 수행하며, 통신판매업 신고 등 판매자 정보는 해당 사이트에서 확인하실 수 있습니다.</span><span class="fsep">|</span>
+        <span>연구실 주소는 소재지 표기이며 해당 대학과의 제휴·후원·인증을 의미하지 않습니다.</span>
+      </div>
+      <div class="footer-legal">
+        <a href="terms.html">이용약관</a>
+        <a href="refund.html"><strong>환불 · 청약철회 안내</strong></a>
+        <a href="privacy.html"><strong>개인정보처리방침</strong></a>
+        <a href="disclaimer.html">면책 · 표기 안내</a>
       </div>
       <div class="footer-bottom">
         <span>© <span id="year">2026</span> {SITE_NAME} (Korea AI Ethics Committee). All rights reserved.</span>
@@ -2076,6 +2088,393 @@ def _json_str(s):
     return json.dumps(s, ensure_ascii=False)
 
 
+# ---------------------------------------------- 법적 고지 문서 (2026.09.17 신설)
+LEGAL_DATE = "2026년 9월 17일"
+ORG_HEAD = "신동복"                      # 위원장 (대표자 표기)
+ORG_REG = "272-32-01885"                # 고유번호
+ORG_ADDR = "경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리 (16419)"
+PRIVACY_OFFICER = "오준호 사무총장"
+PAY_AGENT = "성균관컨설팅"
+PAY_AGENT_URL = "https://www.skkc.co.kr"
+
+
+def legal_page(fname, nav_title, h1, lead, sections, desc):
+    """약관·환불·개인정보·면책 문서 공통 틀. sections = [(소제목, 본문 HTML), ...]"""
+    secs = "\n".join(f"""        <section class="lg-sec">
+          <h2>{t}</h2>
+          {b}
+        </section>""" for t, b in sections)
+    body = f"""    <section class="page-hero">
+      <div class="wrap page-hero-inner" style="padding-block:60px 54px">
+        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; {nav_title}</p>
+        <h1>{h1}</h1>
+        <p style="max-width:720px">{lead}</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap-narrow">
+        <div class="lg-meta">
+          <span>시행일 {LEGAL_DATE}</span><span class="fsep">|</span>
+          <span>한국AI윤리위원회 (Korea AI Ethics Committee)</span>
+        </div>
+        <div class="legal">
+{secs}
+        </div>
+        <div class="lg-links">
+          <a href="terms.html">이용약관</a>
+          <a href="refund.html">환불 · 청약철회 안내</a>
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="disclaimer.html">면책 · 표기 안내</a>
+        </div>
+      </div>
+    </section>"""
+    page(fname, nav_title, desc, body, sticky=None)
+
+
+def build_legal():
+    # ---------------------------------------------------------------- 이용약관
+    legal_page(
+        "terms.html", "이용약관", "이용약관",
+        "한국AI윤리위원회가 운영하는 kaiec.kr 과 이곳에서 제공하는 교육·평가·발급 서비스의 이용 조건입니다. "
+        "신청 전에 반드시 읽어 주시기 바랍니다.",
+        [
+            ("제1조 (목적)",
+             "<p>이 약관은 한국AI윤리위원회(이하 “위원회”)가 kaiec.kr 을 통해 제공하는 AI윤리전문가 양성과정, "
+             "온라인 이수 평가, 이수증 발급과 이수자 등록, 그 밖의 부수 서비스(이하 “서비스”)의 이용에 관하여 "
+             "위원회와 이용자의 권리·의무 및 책임 사항을 정하는 것을 목적으로 합니다.</p>"),
+            ("제2조 (용어의 정의)",
+             "<ol><li><strong>이용자</strong>란 이 약관에 따라 서비스를 이용하는 모든 분을 말합니다.</li>"
+             "<li><strong>수강자</strong>란 AI윤리전문가 양성과정을 신청하고 교육비 결제를 완료한 이용자를 말합니다.</li>"
+             "<li><strong>학습자료</strong>란 위원회가 수강자에게 제공하는 표준교재, 모의고사, 정답 및 해설, 실무 도구집, "
+             "응시 안내 등 전자문서(PDF) 일체를 말합니다.</li>"
+             "<li><strong>이수 평가</strong>란 위원회가 온라인으로 시행하는 평가를 말합니다.</li>"
+             "<li><strong>이수증</strong>이란 이수 기준을 충족한 수강자에게 위원회가 발급하는 교육 이수 확인 문서를 말합니다.</li></ol>"),
+            ("제3조 (약관의 게시와 개정)",
+             "<ol><li>위원회는 이 약관을 서비스 화면에 게시하여 이용자가 언제든지 확인할 수 있도록 합니다.</li>"
+             "<li>위원회는 관계 법령을 위반하지 않는 범위에서 이 약관을 개정할 수 있으며, 개정 시 적용일과 개정 사유를 "
+             "명시하여 적용일 7일 전부터 서비스 화면에 공지합니다. 이용자에게 불리한 개정의 경우에는 30일 전부터 공지합니다.</li>"
+             "<li>이용자가 개정 약관의 적용에 동의하지 않는 경우 서비스 이용을 중단하고 탈퇴를 요청할 수 있습니다.</li></ol>"),
+            ("제4조 (서비스의 내용)",
+             "<p>위원회가 제공하는 서비스는 다음과 같습니다.</p>"
+             "<ol><li>AI윤리전문가 양성과정(기본과정·심화과정) 학습자료의 제공</li>"
+             "<li>온라인 이수 평가의 시행과 채점, 결과 안내</li>"
+             "<li>이수 기준 충족자에 대한 이수증(PDF) 발급과 이수자 명부 등록</li>"
+             "<li>AI 윤리 관련 공개 자료, 캠페인, 교육기부 등 공익 활동</li>"
+             "<li>기관 대상 출강·자문 및 협력 사업</li></ol>"),
+            ("제5조 (신청과 계약의 성립)",
+             "<ol><li>양성과정 이용계약은 이용자가 신청 양식을 작성하여 제출하고, 교육비 결제가 완료된 시점에 성립합니다.</li>"
+             "<li>이용자는 신청 시 정확한 정보를 기재하여야 합니다. 허위 정보로 인해 발생한 불이익은 이용자가 부담합니다.</li>"
+             "<li>신청 이메일은 이수 평가 시스템의 로그인 계정으로 사용되므로, 결제 시에도 동일한 이메일을 입력하여야 합니다. "
+             "이메일 불일치로 계정이 생성되지 않은 경우 이용자는 위원회에 정정을 요청하여야 합니다.</li>"
+             "<li>위원회는 다음 각 호의 경우 신청을 승낙하지 않거나 사후에 계약을 해지할 수 있습니다."
+             "<ul><li>타인의 명의를 도용하거나 허위 정보를 기재한 경우</li>"
+             "<li>이 약관을 위반하여 과거에 이용이 제한된 사실이 있는 경우</li>"
+             "<li>서비스의 정상적인 운영을 방해할 우려가 명백한 경우</li></ul></li></ol>"),
+            ("제6조 (교육비의 결제)",
+             f"<ol><li>교육비 결제와 그에 따른 전자결제 업무는 위원회의 교육 운영사인 {PAY_AGENT}"
+             f"(<a href=\"{PAY_AGENT_URL}\" target=\"_blank\" rel=\"noopener\">{PAY_AGENT_URL}</a>)가 수행합니다. "
+             "결제 수단, 영수증 발행, 통신판매업 신고 사항 등 판매자 정보는 해당 사이트에서 확인하실 수 있습니다.</li>"
+             "<li>공지된 교육비는 학습자료 제공, 이수 평가 응시와 재응시, 이수증 발급, 이수자 등록에 드는 비용을 모두 포함합니다. "
+             "위원회는 이 밖의 명목으로 추가 비용을 청구하지 않습니다.</li>"
+             "<li>기수별 특별가 등 한시적으로 적용되는 금액은 공지된 기간에만 적용되며, 기간 종료 후 신청분에는 적용되지 않습니다.</li></ol>"),
+            ("제7조 (학습자료의 제공)",
+             "<ol><li>위원회는 결제 확인 후 이용자가 신청 시 기재한 이메일로 학습자료(PDF)를 발송합니다.</li>"
+             "<li>학습자료는 전자문서로만 제공되며 인쇄물 형태로는 제공하지 않습니다.</li>"
+             "<li>이용자의 이메일 오기재, 수신 거부 설정, 메일함 용량 초과 등 이용자 측 사유로 수신되지 않은 경우에도 "
+             "위원회가 발송을 완료한 때에 제공이 개시된 것으로 봅니다. 이 경우 이용자의 요청이 있으면 위원회는 재발송합니다.</li></ol>"),
+            ("제8조 (이수 평가)",
+             "<ol><li>이수 평가는 결제일부터 공지된 응시 기간 안에 온라인으로 응시할 수 있습니다.</li>"
+             "<li>응시 기간 안에서는 이수 기준에 도달할 때까지 횟수 제한 없이 다시 응시할 수 있으며, 재응시에 드는 추가 비용은 없습니다.</li>"
+             "<li>이용자의 통신 환경, 기기 성능, 브라우저 설정 등 이용자 측 사유로 응시가 중단된 경우 위원회는 "
+             "확인 가능한 범위에서 응시 기회를 복구할 수 있으나, 그로 인한 시간 손실에 대한 보상 의무는 지지 않습니다.</li>"
+             "<li>다음 각 호에 해당하면 해당 응시를 무효로 처리합니다."
+             "<ul><li>본인이 아닌 사람이 응시한 경우</li>"
+             "<li>계정을 타인과 공유하거나 양도한 경우</li>"
+             "<li>문항이나 답안을 촬영·복제·유출한 경우</li>"
+             "<li>그 밖에 평가의 공정성을 현저히 해친 경우</li></ul></li></ol>"),
+            ("제9조 (이수증 발급과 이수자 등록)",
+             "<ol><li>이수 기준을 충족한 수강자에게는 이수번호가 부여된 이수증(PDF)이 발급되고, 위원회 이수자 명부에 등록됩니다.</li>"
+             "<li>발급은 결과 확인 후 통상 7일 이내에 이루어지며, 공휴일·시스템 점검·확인 지연 등의 사정이 있는 경우 소요 기간이 달라질 수 있습니다.</li>"
+             "<li>심화과정 이수자는 별도의 등록 신청 절차를 거쳐 위원회 전문위원으로 등록될 수 있습니다. 전문위원 등록은 "
+             "위원회의 심사를 거치며, 이수 사실만으로 당연히 등록되는 것은 아닙니다.</li>"
+             "<li>이수자는 이수 사실을 이력서, 포트폴리오 등에 기재할 수 있습니다. 다만 위원회가 부여하지 않은 명칭이나 "
+             "등급을 임의로 덧붙여 표기해서는 안 됩니다.</li></ol>"),
+            ("제10조 (이수증의 성격)",
+             "<p>이수증은 위원회가 자체적으로 운영하는 교육과정의 이수 사실을 확인하는 문서이며, "
+             "<strong>국가가 신설하거나 공인한 제도가 아니며, 「자격기본법」이 정한 검정 절차를 거치지 않습니다.</strong> 위원회는 서비스 어디에서도 "
+             "이수증을 면허나 인증으로 표기하지 않으며, 이용자 또한 제도상의 자격을 얻은 것으로 표기해서는 안 됩니다. "
+             "이수 사실은 특정한 취업, 승진, 채용, 수주 등의 결과를 보장하지 않습니다.</p>"),
+            ("제11조 (지식재산권)",
+             "<ol><li>학습자료, 평가 문항, 해설, 홈페이지에 게시된 글·이미지·디자인 등 서비스와 관련된 저작물의 권리는 "
+             "위원회 또는 정당한 권리자에게 있습니다.</li>"
+             "<li>이용자는 학습자료와 평가 문항을 개인의 학습 목적으로만 사용할 수 있으며, 위원회의 사전 서면 동의 없이 "
+             "다음 행위를 해서는 안 됩니다."
+             "<ul><li>복제, 전송, 배포, 출판, 판매, 대여, 공유 링크 게시</li>"
+             "<li>강의·교재 등 2차적 저작물 작성 및 영리적 이용</li>"
+             "<li>파일의 워터마크·표기 제거 또는 변경</li></ul></li>"
+             "<li>위원회가 무료로 공개한 자료는 출처를 밝히는 조건으로 누구나 인용·활용할 수 있습니다. "
+             "다만 원문을 변형하여 위원회의 견해인 것처럼 표시해서는 안 됩니다.</li>"
+             "<li>제2항을 위반한 경우 위원회는 서비스 이용을 제한하고 이수를 취소할 수 있으며, 그로 인한 손해의 배상을 청구할 수 있습니다.</li></ol>"),
+            ("제12조 (이용자의 의무)",
+             "<p>이용자는 다음 행위를 해서는 안 됩니다.</p>"
+             "<ol><li>타인의 명의·이메일·연락처를 도용하는 행위</li>"
+             "<li>계정을 타인에게 대여·양도·공유하는 행위</li>"
+             "<li>학습자료 또는 평가 문항을 무단으로 복제·유출하는 행위</li>"
+             "<li>자동화 프로그램 등으로 서비스에 비정상적인 부하를 발생시키는 행위</li>"
+             "<li>위원회 또는 제3자의 명예를 훼손하거나 권리를 침해하는 행위</li>"
+             "<li>위원회의 명칭, 로고, 이수증 서식을 무단으로 사용하거나 위원회와의 관계를 사실과 다르게 표시하는 행위</li></ol>"),
+            ("제13조 (이수 취소 및 이용 제한)",
+             "<ol><li>위원회는 제8조 제4항, 제11조 제2항, 제12조를 위반한 사실이 확인되면 사전 통지 후 이수를 취소하고 "
+             "이수자 명부에서 말소할 수 있습니다. 긴급한 경우에는 先조치 후 통지할 수 있습니다.</li>"
+             "<li>제1항에 따라 이수가 취소된 경우 이미 납부한 교육비는 환급되지 않습니다.</li>"
+             "<li>이용자는 취소 통지를 받은 날부터 14일 이내에 위원회에 이의를 제기할 수 있으며, 위원회는 접수일부터 "
+             "14일 이내에 검토 결과를 회신합니다.</li></ol>"),
+            ("제14조 (청약철회와 환불)",
+             "<p>청약철회와 환불에 관한 사항은 <a href=\"refund.html\">환불 · 청약철회 안내</a>에서 정한 바에 따릅니다. "
+             "해당 문서는 이 약관의 일부를 구성합니다.</p>"),
+            ("제15조 (서비스의 변경과 중단)",
+             "<ol><li>위원회는 교육과정의 구성, 학습자료의 내용, 평가 문항, 운영 일정을 개선 목적으로 변경할 수 있습니다. "
+             "이미 결제한 수강자에게 불리한 변경이 있는 경우 사전에 통지합니다.</li>"
+             "<li>시스템 점검, 설비 교체, 통신 장애, 천재지변 등 부득이한 사유가 있는 경우 서비스의 전부 또는 일부를 "
+             "일시 중단할 수 있으며, 이 경우 사전에 공지합니다. 예측할 수 없는 사유인 경우에는 사후에 공지합니다.</li>"
+             "<li>제2항에 따른 중단으로 응시 기간이 실질적으로 줄어든 경우 위원회는 그에 상응하는 기간을 연장합니다.</li></ol>"),
+            ("제16조 (면책)",
+             "<ol><li>위원회는 천재지변, 전시·사변, 정전, 기간통신사업자의 서비스 중단 등 불가항력으로 서비스를 제공할 수 "
+             "없는 경우 책임을 지지 않습니다.</li>"
+             "<li>위원회는 이용자의 귀책사유로 발생한 서비스 이용 장애에 대하여 책임을 지지 않습니다.</li>"
+             "<li>위원회가 제공하는 교육·자료·자문은 일반적인 정보 제공을 목적으로 하며, 개별 사안에 대한 법률 자문이나 "
+             "법적 판단을 대체하지 않습니다. 구체적인 사안은 변호사 등 전문가의 확인을 받으시기 바랍니다.</li>"
+             "<li>위원회는 이수 사실이 이용자의 취업, 이직, 승진, 수주 등 특정한 결과로 이어질 것을 보장하지 않습니다.</li>"
+             "<li>그 밖의 표기·인용·협력 관계에 관한 안내는 <a href=\"disclaimer.html\">면책 · 표기 안내</a>를 참고하시기 바랍니다.</li></ol>"),
+            ("제17조 (준거법과 분쟁의 해결)",
+             "<ol><li>이 약관과 서비스 이용에 관하여는 대한민국 법령을 적용합니다.</li>"
+             "<li>서비스 이용과 관련하여 분쟁이 발생한 경우 위원회와 이용자는 성실히 협의하여 해결하도록 노력합니다.</li>"
+             "<li>협의로 해결되지 않는 경우 「민사소송법」에 따른 관할 법원에 소를 제기할 수 있습니다.</li></ol>"
+             f"<p class=\"lg-note\">부칙 · 이 약관은 {LEGAL_DATE}부터 시행합니다.</p>"),
+        ],
+        "한국AI윤리위원회 kaiec.kr 이용약관. AI윤리전문가 양성과정 신청과 결제, 학습자료 제공, 이수 평가, 이수증 발급과 "
+        "이수자 등록, 지식재산권, 이수 취소, 면책과 분쟁 해결에 관한 조건을 안내합니다.")
+
+    # ------------------------------------------------------- 환불 · 청약철회 안내
+    legal_page(
+        "refund.html", "환불 · 청약철회 안내", "환불 · 청약철회 안내",
+        "AI윤리전문가 양성과정은 결제 후 학습자료(PDF)가 발송되는 전자문서 상품입니다. "
+        "<strong>학습자료 발송이 시작되면 청약철회가 제한됩니다.</strong> 신청 전에 아래 내용을 반드시 확인해 주시기 바랍니다.",
+        [
+            ("한눈에 보기",
+             "<table class=\"lg-table\"><tbody>"
+             "<tr><th>학습자료 발송 전</th><td>결제일부터 7일 이내 청약철회 가능 · 전액 환불</td></tr>"
+             "<tr><th>학습자료 발송 개시 후</th><td><strong>청약철회 제한</strong> (「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항 제5호)</td></tr>"
+             "<tr><th>이수 평가 응시 후</th><td>청약철회 불가</td></tr>"
+             "<tr><th>미이수 · 미응시 · 기간 경과</th><td>환불 사유에 해당하지 않음</td></tr>"
+             "</tbody></table>"),
+            ("1. 청약철회가 가능한 경우",
+             "<p>결제를 완료했으나 <strong>아직 학습자료가 발송되지 않은 상태</strong>라면, 결제일부터 7일 이내에 청약철회를 "
+             "요청하실 수 있습니다. 이 경우 결제 수단과 동일한 방법으로 전액 환불해 드립니다.</p>"
+             "<p>학습자료는 결제 확인 후 순차적으로 발송되므로, 철회를 원하시면 가능한 한 빨리 요청해 주시기 바랍니다.</p>"),
+            ("2. 청약철회가 제한되는 경우",
+             "<p>AI윤리전문가 양성과정의 학습자료는 「콘텐츠산업 진흥법」상 디지털콘텐츠에 해당합니다. "
+             "「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항 제5호는 <strong>디지털콘텐츠의 제공이 개시된 경우</strong> "
+             "청약철회를 제한할 수 있도록 정하고 있습니다.</p>"
+             "<p>따라서 다음의 경우에는 청약철회와 환불이 제한됩니다.</p>"
+             "<ol><li>신청 시 기재한 이메일로 학습자료(PDF)가 발송된 경우</li>"
+             "<li>이수 평가 시스템에 로그인하여 응시를 시작한 경우</li>"
+             "<li>학습자료의 전부 또는 일부를 내려받은 경우</li></ol>"
+             "<p class=\"lg-note\">위원회는 신청 화면과 결제 안내 화면, 이 문서에 청약철회 제한 사실을 사전에 명확히 "
+             "고지하고 있으며, 표준교재의 구성과 쪽수, 실제 평가와 같은 형식의 샘플 문항을 결제 전에 공개하고 있습니다.</p>"),
+            ("3. 법령으로 보장되는 예외",
+             "<p>청약철회가 제한되는 경우에도, 다음에 해당하면 법령에 따라 청약철회를 요청하실 수 있습니다.</p>"
+             "<ol><li>제공된 학습자료가 표시·광고 내용과 다르거나 계약 내용과 다르게 이행된 경우: 그 사실을 안 날 또는 "
+             "알 수 있었던 날부터 30일 이내, 공급받은 날부터 3개월 이내</li>"
+             "<li>위원회의 귀책사유로 학습자료가 제공되지 않거나 이수 평가를 응시할 수 없게 된 경우</li></ol>"
+             "<p>이 경우 위원회는 사실관계를 확인한 뒤 전액 또는 이행되지 않은 부분에 해당하는 금액을 환불합니다.</p>"),
+            ("4. 환불 사유에 해당하지 않는 경우",
+             "<p>다음은 환불 사유에 해당하지 않습니다.</p>"
+             "<ol><li>이수 평가에서 이수 기준에 도달하지 못한 경우. 응시 기간 안에서는 추가 비용 없이 다시 응시하실 수 있습니다.</li>"
+             "<li>응시 기간 안에 응시하지 않아 기간이 지난 경우</li>"
+             "<li>학습자료를 수령한 뒤의 단순 변심, 개인 일정 변경, 학습 시간 부족</li>"
+             "<li>학습자료의 내용이 기대와 다르다는 주관적 판단. 다만 제3항 제1호에 해당하는 경우는 예외입니다.</li>"
+             "<li>이용자의 이메일 오기재로 학습자료를 받지 못한 경우. 이 경우 위원회는 정정된 주소로 재발송해 드립니다.</li>"
+             "<li>이용약관 위반으로 이수가 취소되거나 이용이 제한된 경우</li></ol>"),
+            ("5. 신청과 처리 절차",
+             f"<ol><li>청약철회를 원하시는 분은 위원회 공식 메일(<a href=\"mailto:{EMAIL}\">{EMAIL}</a>)로 "
+             "성명, 결제에 사용한 이메일, 결제일, 요청 사유를 보내 주시기 바랍니다.</li>"
+             "<li>위원회는 접수일부터 3영업일 이내에 처리 가능 여부를 회신합니다.</li>"
+             f"<li>환불이 확정된 경우 결제는 {PAY_AGENT}를 통해 이루어졌으므로, 위원회의 확인 통보 후 "
+             "해당 결제 수단으로 환급됩니다. 카드 결제의 경우 카드사 정산 일정에 따라 대금 청구가 취소되기까지 "
+             "영업일 기준 3~5일이 더 걸릴 수 있습니다.</li></ol>"),
+            ("6. 결제와 판매자 정보",
+             f"<p>교육비 결제와 환급 처리는 위원회의 교육 운영사인 {PAY_AGENT}"
+             f"(<a href=\"{PAY_AGENT_URL}\" target=\"_blank\" rel=\"noopener\">{PAY_AGENT_URL}</a>)가 수행합니다. "
+             "통신판매업 신고 번호를 포함한 판매자 정보와 결제 수단별 약관은 해당 사이트 하단에서 확인하실 수 있습니다. "
+             "교육과정의 운영, 이수 평가, 이수증 발급과 이수자 등록은 위원회가 직접 수행합니다.</p>"),
+            ("7. 분쟁의 해결",
+             "<p>환불과 관련하여 위원회와 이용자 사이에 분쟁이 발생한 경우, 양측은 성실히 협의하여 해결하도록 노력합니다. "
+             "협의가 이루어지지 않는 경우 이용자는 공정거래위원회 또는 시·도지사에게 피해구제를 신청하거나 "
+             "한국소비자원 소비자상담센터(국번 없이 1372)의 도움을 받으실 수 있습니다.</p>"
+             f"<p class=\"lg-note\">이 안내는 {LEGAL_DATE}부터 적용되며, 이용약관의 일부를 구성합니다.</p>"),
+        ],
+        "한국AI윤리위원회 AI윤리전문가 양성과정의 환불 및 청약철회 안내. 학습자료(PDF) 발송 전에는 7일 이내 전액 환불이 "
+        "가능하며, 발송이 개시되면 전자상거래법 제17조 제2항 제5호에 따라 청약철회가 제한됩니다.")
+
+    # ------------------------------------------------------- 개인정보처리방침
+    legal_page(
+        "privacy.html", "개인정보처리방침", "개인정보처리방침",
+        "한국AI윤리위원회는 「개인정보 보호법」을 준수하며, 이용자의 개인정보를 어떤 목적으로 어떻게 처리하고 "
+        "얼마나 보관하는지 아래와 같이 안내합니다.",
+        [
+            ("1. 수집하는 개인정보의 항목과 방법",
+             "<table class=\"lg-table\"><thead><tr><th>구분</th><th>수집 항목</th></tr></thead><tbody>"
+             "<tr><th>양성과정 신청</th><td>성명, 이메일, 직업·활동 분야, 신청 과정, 활용 목적</td></tr>"
+             "<tr><th>이수 평가 응시</th><td>성명, 이메일(로그인 아이디), 휴대전화 번호 뒤 4자리(초기 비밀번호), 응시 기록, 답안, 점수</td></tr>"
+             "<tr><th>KAIEC 참여 신청</th><td>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 지원 동기, 자기소개</td></tr>"
+             "<tr><th>사회공헌 · 협력 문의</th><td>기관·단체명, 담당자 성명, 연락처, 문의 내용</td></tr>"
+             "<tr><th>출강 문의</th><td>기관명, 담당자 성명, 연락처, 교육 희망 내용</td></tr>"
+             "<tr><th>자동 생성 정보</th><td>접속 일시, 서비스 이용 기록(이수 평가 시스템 이용 시)</td></tr>"
+             "</tbody></table>"
+             "<p>개인정보는 홈페이지의 신청·문의 양식을 통해 이용자가 직접 입력하는 방법으로만 수집합니다. "
+             "위원회는 사상, 신념, 노동조합 가입, 정치적 견해, 건강, 성생활에 관한 정보 등 민감정보와 "
+             "주민등록번호를 수집하지 않습니다.</p>"),
+            ("2. 개인정보의 처리 목적",
+             "<ol><li>양성과정 신청자 확인, 학습자료 발송, 교육 운영에 관한 안내</li>"
+             "<li>이수 평가 계정 생성과 본인 확인, 응시 관리, 채점과 결과 안내</li>"
+             "<li>이수증 발급, 이수자 명부 등록, 기관의 요청이 있을 때 이수 사실 확인 회신</li>"
+             "<li>전문위원 등록 심사와 홈페이지 프로필 공개(이용자가 희망한 경우에 한함)</li>"
+             "<li>참여 신청 검토, 위촉과 활동 안내</li>"
+             "<li>협력·출강 문의에 대한 회신과 협의</li>"
+             "<li>민원 처리와 분쟁 대응</li></ol>"),
+            ("3. 개인정보의 보유 및 이용 기간",
+             "<table class=\"lg-table\"><thead><tr><th>구분</th><th>보유 기간</th></tr></thead><tbody>"
+             "<tr><th>양성과정 신청 정보</th><td>수집일부터 3년</td></tr>"
+             "<tr><th>이수자 명부(성명, 이메일, 과정, 이수번호, 이수일)</th><td>이수 사실 확인 업무를 위해 보관. 이용자가 삭제를 요청하면 즉시 파기</td></tr>"
+             "<tr><th>이수 평가 응시 기록과 답안</th><td>수집일부터 3년</td></tr>"
+             "<tr><th>참여 신청 정보</th><td>수집일부터 3년. 활동 종료 또는 삭제 요청 시 즉시 파기</td></tr>"
+             "<tr><th>협력 · 출강 문의</th><td>회신 완료일부터 1년</td></tr>"
+             "</tbody></table>"
+             "<p>다만 관계 법령에 따라 보존할 필요가 있는 경우에는 해당 법령이 정한 기간 동안 보관합니다. "
+             "이수자가 이수 사실 확인을 원하지 않아 명부에서 삭제를 요청하는 경우, 삭제 이후에는 위원회가 "
+             "제3자의 확인 요청에 회신할 수 없습니다.</p>"),
+            ("4. 개인정보의 제3자 제공",
+             "<p>위원회는 이용자의 개인정보를 제3자에게 제공하지 않습니다. 다만 다음의 경우는 예외로 합니다.</p>"
+             "<ol><li>이용자가 사전에 동의한 경우</li>"
+             "<li>기관·기업이 이수 사실의 진위 확인을 요청하고 이용자가 이를 동의한 경우. 이 경우 제공되는 정보는 "
+             "성명, 이수 과정, 이수번호, 이수일로 한정합니다.</li>"
+             "<li>법령에 특별한 규정이 있거나 수사기관이 법령이 정한 절차와 방법에 따라 요구한 경우</li></ol>"),
+            ("5. 개인정보 처리의 위탁과 국외 이전",
+             "<p>위원회는 서비스 운영을 위해 아래와 같이 개인정보 처리 업무를 위탁하고 있으며, 위탁 업무의 내용과 "
+             "수탁자가 변경되는 경우 이 방침을 통해 공개합니다.</p>"
+             "<table class=\"lg-table\"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가 · 시점 · 방법</th></tr></thead><tbody>"
+             "<tr><th>Google LLC</th><td>신청·문의 내용의 저장(Google 스프레드시트), 자동 알림 메일 발송(Google Apps Script), "
+             "이수 평가 시스템의 데이터 저장</td><td>미국 · 이용자가 양식을 제출하는 시점에 네트워크를 통해 전송</td></tr>"
+             f"<tr><th>{PAY_AGENT}</th><td>교육비 결제와 환급 처리</td><td>국내</td></tr>"
+             "</tbody></table>"
+             "<p>Google LLC 로 이전되는 항목은 제1항에서 정한 수집 항목과 같으며, 보유 기간은 제3항과 같습니다. "
+             "이용자는 개인정보의 국외 이전을 거부할 수 있으나, 이 경우 온라인 신청과 이수 평가 응시가 제한될 수 있습니다. "
+             "거부를 원하시는 분은 위원회 공식 메일로 연락해 주시면 대체 방법을 안내해 드립니다.</p>"),
+            ("6. 개인정보의 파기",
+             "<ol><li>보유 기간이 지나거나 처리 목적이 달성된 개인정보는 지체 없이 파기합니다.</li>"
+             "<li>전자적 파일은 복구할 수 없는 방법으로 영구 삭제하고, 출력물은 분쇄하거나 소각합니다.</li></ol>"),
+            ("7. 정보주체의 권리와 행사 방법",
+             "<ol><li>이용자는 언제든지 자신의 개인정보에 대한 열람, 정정, 삭제, 처리 정지를 요구할 수 있습니다.</li>"
+             f"<li>권리 행사는 위원회 공식 메일(<a href=\"mailto:{EMAIL}\">{EMAIL}</a>)로 요청하실 수 있으며, "
+             "위원회는 접수일부터 10일 이내에 조치하고 결과를 회신합니다.</li>"
+             "<li>이용자는 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다. 다만 필수 항목의 동의를 거부하는 "
+             "경우 양성과정 신청, 이수 평가 응시 등 해당 서비스의 이용이 제한됩니다.</li>"
+             "<li>만 14세 미만 아동의 개인정보는 수집하지 않습니다.</li></ol>"),
+            ("8. 개인정보의 안전성 확보 조치",
+             "<ol><li>개인정보 처리 담당자를 최소한으로 지정하고 접근 권한을 관리합니다.</li>"
+             "<li>이수 평가 시스템의 비밀번호는 이용자가 직접 변경할 수 있으며, 초기 비밀번호를 계속 사용하지 않도록 안내합니다.</li>"
+             "<li>개인정보가 저장된 문서와 파일에 대한 접근을 통제하고, 전송 구간은 암호화(HTTPS)합니다.</li>"
+             "<li>개인정보 처리 시스템의 접속 기록을 보관합니다.</li></ol>"),
+            ("9. 자동 수집 장치의 운영",
+             "<p>위원회 홈페이지는 광고 목적의 추적 기술을 사용하지 않습니다. 이수 평가 시스템은 응시 상태 유지를 위해 "
+             "이용자의 브라우저 저장 공간(sessionStorage, localStorage)에 로그인 토큰과 임시 답안을 보관하며, "
+             "이 정보는 이용자의 기기에만 저장되고 브라우저를 닫거나 로그아웃하면 삭제됩니다. "
+             "추후 방문 분석 도구를 도입하는 경우 이 방침을 개정하여 사전에 공개합니다.</p>"),
+            ("10. 개인정보 보호책임자",
+             f"<table class=\"lg-table\"><tbody>"
+             f"<tr><th>개인정보 보호책임자</th><td>{PRIVACY_OFFICER}</td></tr>"
+             f"<tr><th>연락처</th><td><a href=\"mailto:{EMAIL}\">{EMAIL}</a></td></tr>"
+             "</tbody></table>"
+             "<p>개인정보 처리와 관련한 문의, 불만 처리, 피해 구제는 위 연락처로 요청해 주시기 바랍니다.</p>"),
+            ("11. 권익침해 구제 방법",
+             "<p>개인정보 침해로 상담이나 분쟁 조정이 필요한 경우 아래 기관에 도움을 요청하실 수 있습니다.</p>"
+             "<ol><li>개인정보 침해신고센터 (국번 없이 118, privacy.kisa.or.kr)</li>"
+             "<li>개인정보 분쟁조정위원회 (1833-6972, kopico.go.kr)</li>"
+             "<li>대검찰청 사이버수사과 (국번 없이 1301)</li>"
+             "<li>경찰청 사이버수사국 (국번 없이 182)</li></ol>"),
+            ("12. 방침의 변경",
+             f"<p>이 개인정보처리방침은 {LEGAL_DATE}부터 적용됩니다. 법령이나 서비스의 변경에 따라 내용이 바뀌는 경우 "
+             "변경 사항을 시행 7일 전부터 홈페이지에 공지합니다. 이용자에게 중대한 영향을 미치는 변경의 경우에는 "
+             "30일 전부터 공지합니다.</p>"),
+        ],
+        "한국AI윤리위원회 개인정보처리방침. 수집 항목과 처리 목적, 보유 기간, 제3자 제공, Google LLC 위탁과 국외 이전, "
+        "정보주체의 권리 행사 방법과 개인정보 보호책임자를 안내합니다.")
+
+    # ------------------------------------------------------- 면책 · 표기 안내
+    legal_page(
+        "disclaimer.html", "면책 · 표기 안내", "면책 · 표기 안내",
+        "홈페이지에 사용된 표현과 표기가 어떤 의미인지, 그리고 어디까지를 보장하고 어디부터는 보장하지 않는지 "
+        "오해가 없도록 정리한 문서입니다.",
+        [
+            ("1. 위원회의 법적 지위",
+             "<p>한국AI윤리위원회는 AI 윤리 분야의 교육·연구·캠페인 활동을 수행하는 전문기관입니다. "
+             "<strong>정부기관이나 공공기관이 아니며, 정부로부터 위탁받은 인증·검정 업무를 수행하지 않습니다.</strong> "
+             "홈페이지에서 사용하는 “공식”이라는 표현은 위원회 자체가 발급·운영·인정한다는 뜻이며, "
+             "국가나 공공기관의 인정을 의미하지 않습니다.</p>"),
+            ("2. 이수증과 등록의 성격",
+             "<ol><li>이수증은 위원회가 운영하는 교육과정을 이수했다는 사실을 확인하는 문서이며, "
+             "국가가 신설하거나 공인한 제도가 아닙니다.</li>"
+             "<li>이수자 명부 등록과 전문위원 등록은 위원회 내부의 등록 절차이며, 법령에 근거한 등록·신고·면허가 아닙니다.</li>"
+             "<li>이수 사실은 교육 이력으로 활용할 수 있으나, 특정한 취업·이직·승진·채용·수주 등의 결과를 보장하지 않습니다. "
+             "홈페이지의 커리어 관련 설명은 일반적인 시장 동향에 대한 견해이며 개인의 성과를 약속하는 것이 아닙니다.</li></ol>"),
+            ("3. 인용한 통계와 전망치",
+             "<p>홈페이지에 인용된 시장 규모, 성장률, 제도 시행 일정 등은 해당 자료를 발표한 기관의 공개 자료를 인용한 "
+             "것이며, 위원회가 독자적으로 조사하거나 그 정확성을 보증하는 수치가 아닙니다. 출처는 해당 문장 옆에 "
+             "표기하고 있습니다. 시장 전망치는 예측이며 실제와 다를 수 있고, 법령과 제도의 시행 일정은 이후 개정으로 "
+             "변경될 수 있으므로 의사결정에 활용하실 때에는 원문과 최신 개정 사항을 직접 확인해 주시기 바랍니다.</p>"),
+            ("4. 소재지 표기에 관한 안내",
+             "<p>홈페이지 하단에 표기된 연구실 주소는 위원회의 연구·행정 공간이 위치한 장소를 나타내는 소재지 표기입니다. "
+             "<strong>해당 건물이 소재한 대학과의 제휴, 후원, 인증, 공동 운영 관계를 의미하지 않으며, "
+             "해당 대학이 위원회의 교육과정이나 이수증을 인정한다는 뜻도 아닙니다.</strong></p>"),
+            ("5. 협력 기관과 제휴 서비스 표기",
+             "<ol><li>홈페이지에 표기된 협력 기관·회원기관은 위원회의 활동에 협력하거나 회원으로 참여하는 기관을 뜻하며, "
+             "해당 기관이 위원회의 교육과정, 이수증, 평가를 인증하거나 보증한다는 의미가 아닙니다.</li>"
+             f"<li>{PAY_AGENT}는 위원회의 교육 운영과 결제를 담당하는 협력사입니다. 교육비 결제, 영수증 발행, "
+             "환급 처리는 해당 사에서 이루어집니다.</li>"
+             "<li>카피클린(CopyClean)은 위원회의 제휴 서비스이며 위원회의 소속 조직이나 자체 서비스가 아닙니다. "
+             "해당 서비스의 이용 조건, 검사 결과, 요금은 서비스 제공자가 정하며 위원회는 그 정확성이나 결과에 대하여 "
+             "책임을 지지 않습니다.</li>"
+             "<li>기관명, 로고, 사업명은 각 권리자에게 귀속되며, 위원회는 사실 관계를 안내하기 위한 범위에서만 표기합니다. "
+             "표기와 관련하여 정정이 필요하다고 판단되는 기관은 위원회 공식 메일로 알려 주시면 확인 후 신속히 조치하겠습니다.</li></ol>"),
+            ("6. 사회공헌 활동과 무료 교육",
+             "<p>어르신 AI 활용 교육, 초등학생 AI 윤리 교육 등 위원회의 무료 교육은 위원들이 보수를 받지 않고 참여하는 "
+             "재능기부로 운영됩니다. 따라서 신청하신다고 해서 반드시 배정되는 것은 아니며, 위원의 일정, 강사 배정 가능 "
+             "여부, 지역, 신청 순서에 따라 일정이 조정되거나 진행이 어려울 수 있습니다. 위원회는 신청을 접수한 뒤 "
+             "가능 여부를 개별적으로 회신합니다.</p>"),
+            ("7. 교육과 자문 내용의 성격",
+             "<p>위원회가 제공하는 교육, 자료, 자문, 체크리스트, 진단 결과는 AI 윤리에 대한 일반적인 정보 제공과 "
+             "교육을 목적으로 합니다. <strong>개별 사안에 대한 법률 자문, 법적 판단, 규제 준수 여부에 대한 확인을 "
+             "대체하지 않습니다.</strong> 구체적인 사안은 변호사 등 해당 분야 전문가의 확인을 받으시기 바랍니다. "
+             "위원회는 이용자가 제공된 정보를 근거로 내린 판단과 그 결과에 대하여 책임을 지지 않습니다.</p>"),
+            ("8. 자가진단과 공개 자료",
+             "<p>홈페이지에서 제공하는 자가진단은 학습 동기를 돕기 위한 참고용 도구이며, 개인의 역량이나 적성을 "
+             "평가하는 검사 도구가 아닙니다. 결과는 어떠한 공식적인 효력도 갖지 않습니다. 무료로 공개한 자료는 "
+             "출처를 밝히는 조건으로 누구나 활용하실 수 있으나, 활용 결과에 대해서는 위원회가 책임을 지지 않습니다.</p>"),
+            ("9. 외부 링크",
+             "<p>홈페이지에는 외부 사이트로 연결되는 링크가 포함될 수 있습니다. 위원회는 연결된 사이트의 내용, "
+             "서비스, 개인정보 처리에 대하여 관리 권한이 없으며 책임을 지지 않습니다.</p>"),
+            ("10. 게시 정보의 변경",
+             "<p>교육과정의 구성, 금액, 모집 일정, 제공 자료, 평가 기준 등 홈페이지에 게시된 정보는 운영 사정에 따라 "
+             "변경될 수 있습니다. 이미 결제를 완료한 수강자에게 불리한 변경이 있는 경우에는 사전에 개별 통지합니다. "
+             "게시된 정보와 실제 운영이 다른 부분을 발견하신 경우 위원회 공식 메일로 알려 주시면 확인 후 정정하겠습니다.</p>"
+             f"<p class=\"lg-note\">이 안내는 {LEGAL_DATE}부터 적용되며, 이용약관의 일부를 구성합니다.</p>"),
+        ],
+        "한국AI윤리위원회 면책 및 표기 안내. 위원회의 법적 지위, 이수증과 등록의 성격, 인용 통계, 소재지 표기, "
+        "협력 기관과 제휴 서비스 표기, 무료 교육 운영 방식, 교육 내용의 성격에 관한 안내입니다.")
+
+
 # --------------------------------------------------------- sitemap.xml / rss
 def build_sitemap(posts):
     today = datetime.date.today().strftime("%Y-%m-%d")
@@ -2084,7 +2483,9 @@ def build_sitemap(posts):
             ("expert.html", "0.9", "monthly"), ("expert-apply.html", "0.8", "monthly"),
             ("experts.html", "0.9", "monthly"), ("join.html", "0.9", "monthly"), ("quiz.html", "0.7", "monthly"), ("exam.html", "0.7", "monthly"),
             ("partner.html", "0.9", "monthly"), ("copyclean.html", "0.8", "monthly"),
-            ("news.html", "0.8", "daily"), ("mou.html", "0.8", "monthly"), ("apply.html", "0.9", "monthly")]
+            ("news.html", "0.8", "daily"), ("mou.html", "0.8", "monthly"), ("apply.html", "0.9", "monthly"),
+            ("terms.html", "0.3", "yearly"), ("refund.html", "0.4", "yearly"),
+            ("privacy.html", "0.3", "yearly"), ("disclaimer.html", "0.3", "yearly")]
     urls = []
     for path, pri, freq in core:
         loc = f"{SITE_URL}{url_for(path)}" if path else f"{SITE_URL}/"
@@ -2542,7 +2943,7 @@ def build_lecture():
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; 강의 신청</p>
-        <span class="hl-pill"><i data-lucide="badge-check"></i>S대 AI공학 박사 필수 참석 · 전문인력 2인 공동 출강</span>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>위원회 소속 전문 인력 2인 공동 출강 · 대상별 맞춤 설계</span>
         <h1>AI 윤리교육 · 전문 출강</h1>
         <p style="font-size:17.5px;max-width:700px">AI 윤리부터 컴플라이언스, 정보보안, 연구윤리까지<br>
            기관의 목적과 대상에 맞춘 전문 AI 교육을 제공합니다.</p>
@@ -2557,8 +2958,8 @@ def build_lecture():
     <section class="section section--tight">
       <div class="wrap">
         <div class="stats reveal">
-          <div class="stat"><div class="stat-num" style="font-size:clamp(19px,2.2vw,24px);line-height:1.4">S대 AI공학 박사</div><div class="stat-label">필수 참석</div></div>
-          <div class="stat"><div class="stat-num">2인</div><div class="stat-label">위원회 직속 석·박사 공동 출강</div></div>
+          <div class="stat"><div class="stat-num">2인</div><div class="stat-label">공동 출강</div><div class="stat-sub">강의와 실습을 나누어 진행</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(19px,2.2vw,24px);line-height:1.4">2026 기준</div><div class="stat-label">AI기본법 반영 교안</div><div class="stat-sub">제도와 사례를 최신으로 갱신</div></div>
           <div class="stat"><div class="stat-num">1~4시간</div><div class="stat-label">교육시간 자유 선택</div></div>
           <div class="stat"><div class="stat-num">6개 분야</div><div class="stat-label">자유 조합 커리큘럼</div></div>
         </div>
@@ -2569,43 +2970,44 @@ def build_lecture():
       <div class="wrap">
         <div class="split">
           <div class="reveal">
-            <span class="eyebrow">Instructors</span>
-            <h2 class="h-sec">전문 출강진</h2>
-            <p class="lead" style="margin-bottom:22px">모든 교육은 <strong>AI 분야 전문인력 총 2인</strong>이 공동 출강합니다.</p>
+            <span class="eyebrow">How We Teach</span>
+            <h2 class="h-sec">듣고 끝나지 않는 AI 윤리 강의</h2>
+            <p class="lead" style="margin-bottom:22px">원칙을 나열하는 강의가 아니라, <strong>내일 당장 마주칠 장면</strong>으로 시작합니다.
+               위원회 소속 전문 인력 2인이 강의와 실습을 나누어 진행합니다.</p>
             <ul style="display:grid;gap:12px;margin-bottom:8px">
-              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>외주 인력이 아닌, 한국AI윤리위원회 단독 직속 소속 전문 인력</strong></span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>S대 AI공학 박사 1인 필수 참석</strong></span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span>공학석사 1인 참석</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span>총 2인 공동 출강</span></li>
-              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span>교육 대상과 목적에 따라 강의 · 사례 · 실습을 맞춤 구성</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>실제 장면에서 출발합니다.</strong> 보고서 초안을 AI로 쓴 경우, 회의 녹취를 외부 AI에 넣은 경우처럼
+                 조직에서 이미 벌어지고 있는 상황을 먼저 꺼내 놓고 기준을 함께 세웁니다</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>위원회 표준교재와 같은 기준으로 가르칩니다.</strong> 강사가 바뀌어도 전달되는 원칙이 달라지지 않습니다</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>2026년 제도를 반영합니다.</strong> AI기본법 시행과 해외 규제 동향을 교안에 계속 갱신해 반영합니다</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>대상에 맞춰 다시 짭니다.</strong> 청소년, 대학생, 임직원, 연구자에게 같은 슬라이드를 쓰지 않습니다</span></li>
+              <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>가져갈 것을 남깁니다.</strong> 교육이 끝나면 조직에서 바로 쓸 수 있는 AI 활용 체크리스트를 드립니다</span></li>
             </ul>
           </div>
           <div class="reveal" style="display:grid;gap:14px">
             <div class="inst-card">
-              <div class="inst-avatar"><i data-lucide="graduation-cap"></i></div>
+              <div class="inst-avatar"><i data-lucide="book-open"></i></div>
               <div>
-                <div class="inst-deg">강사 1 · <strong>필수 참석</strong></div>
-                <div class="inst-name">S대 AI공학 박사</div>
-                <div class="inst-field">이론 · 기술 원리 · 사례 분석 강의</div>
+                <div class="inst-deg">강사 1 · 메인 강의</div>
+                <div class="inst-name">원칙과 사례</div>
+                <div class="inst-field">AI 활용 원칙, 국내외 제도, 실제로 문제가 된 사례 분석</div>
               </div>
-              <span class="badge" style="margin-left:auto">PhD</span>
             </div>
             <div class="inst-card">
               <div class="inst-avatar inst-avatar--teal"><i data-lucide="user-check"></i></div>
               <div>
-                <div class="inst-deg">강사 2 · 공동 출강</div>
-                <div class="inst-name">공학석사</div>
-                <div class="inst-field">실습 진행 · 질의응답 · 현장 지원</div>
+                <div class="inst-deg">강사 2 · 실습 · 질의</div>
+                <div class="inst-name">우리 조직의 기준</div>
+                <div class="inst-field">참여자의 실제 업무 상황을 받아 함께 판단해 보는 실습과 질의응답</div>
               </div>
-              <span class="badge badge--teal" style="margin-left:auto">MS</span>
             </div>
             <div class="notice" style="font-size:13.5px">
-              <strong>위원회 직속 전문 인력:</strong> 출강 인력은 외주·파견 강사가 아닌,
-              <strong>한국AI윤리위원회에만 단독 직속 소속된 석·박사 이상 전문 인력</strong>입니다.
-              위원회의 윤리 기준과 커리큘럼을 일관되게 전달하며, 교육 품질을 위원회가 직접 책임집니다.
+              <strong>위원회가 직접 책임집니다.</strong> 출강 인력은 외주·파견 강사가 아니라 한국AI윤리위원회에 소속된
+              AI 윤리 전문 인력입니다. 위원회의 윤리 기준과 표준교재를 그대로 전달하므로, 어느 기관에서 들으셔도
+              같은 원칙을 같은 깊이로 배우시게 됩니다.
             </div>
             <div class="notice notice--teal" style="font-size:13.5px">
-              두 강사가 강의와 실습을 나누어 진행하므로 대규모 인원 교육과 실습형 워크숍도 안정적으로 운영됩니다.
+              <strong>참여자가 말을 하게 만듭니다.</strong> 두 강사가 강의와 실습을 나누어 진행하기 때문에,
+              대규모 인원 교육에서도 질문이 끊기지 않고 실습형 워크숍이 안정적으로 돌아갑니다.
             </div>
           </div>
         </div>
@@ -2837,7 +3239,7 @@ def build_lecture():
 """.replace('__LEMAIL__', L_EMAIL)
 
     page("lecture.html", "AI 윤리교육 · 전문 출강",
-         "한국AI윤리위원회 직속 석·박사 전문인력이 학교·기업·공공기관에 직접 출강하는 AI 윤리교육. AI 윤리, 기업 AI 컴플라이언스, 개인정보·보안, 생성형 AI 저작권, 청소년 AI 윤리를 1~4시간 맞춤 과정으로 제공합니다.",
+         "한국AI윤리위원회 소속 전문 인력 2인이 학교·기업·공공기관에 직접 출강하는 AI 윤리교육. AI 윤리, 기업 AI 컴플라이언스, 개인정보·보안, 생성형 AI 저작권, 청소년 AI 윤리를 1~4시간 맞춤 과정으로 제공합니다.",
          body, extra_script=script,
          keywords=["AI 윤리교육", "AI 교육 출강", "생성형 AI 교육", "AI 컴플라이언스 교육", "AI 연구윤리 교육",
                    "딥페이크 예방 교육", "청소년 AI 교육", "기업 AI 교육", "AI 정보보안 교육", "찾아가는 AI 교육"])
@@ -3531,6 +3933,23 @@ def build_expert_apply():
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
             <p class="err-msg">개인정보 수집·이용 동의에 체크해 주세요.</p>
+            <p class="field-hint" style="margin-top:14px">자세한 내용은 <a href="privacy.html" style="color:var(--blue);font-weight:700">개인정보처리방침</a>을 확인해 주세요.</p>
+          </div>
+
+          <div class="gform-card" id="secRefund">
+            <div class="gform-sec">SECTION 6</div>
+            <h2>청약철회 제한 사항 확인 <span class="req">*</span></h2>
+            <p class="gform-desc">본 과정은 결제 후 학습자료(PDF)가 발송되는 전자문서 상품입니다. 신청 전에 아래 내용을 확인해 주세요.</p>
+            <div class="gform-privacy">
+              <div><span>발송 전</span>결제일부터 7일 이내 청약철회 가능 · 전액 환불</div>
+              <div><span>발송 후</span>학습자료 발송이 시작되면 청약철회가 제한됩니다(전자상거래법 제17조 제2항 제5호)</div>
+              <div><span>제외 사항</span>미이수·미응시·응시 기간 경과는 환불 사유에 해당하지 않습니다(재응시는 기간 안에서 추가 비용 없이 가능)</div>
+            </div>
+            <label class="agree"><input type="checkbox" name="refundok"><span class="agree-box"></span>
+              <span>학습자료 발송 개시 후에는 청약철회가 제한된다는 점을 확인했습니다. <span class="req">*</span></span></label>
+            <p class="err-msg">청약철회 제한 사항 확인에 체크해 주세요.</p>
+            <p class="field-hint" style="margin-top:14px">전문은 <a href="refund.html" style="color:var(--blue);font-weight:700">환불 · 청약철회 안내</a>와
+              <a href="terms.html" style="color:var(--blue);font-weight:700">이용약관</a>에서 확인하실 수 있습니다.</p>
           </div>
 
           <div class="gform-card gform-submit">
@@ -3619,6 +4038,7 @@ def build_expert_apply():
       bad('fJob',!job);
       bad('secFlow',!form.querySelector('[name=flowok]').checked);
       bad('secPriv',!form.querySelector('[name=privok]').checked);
+      bad('secRefund',!form.querySelector('[name=refundok]').checked);
       var first=document.querySelector('.is-invalid');
       document.getElementById('topErr').style.display=first?'block':'none';
       if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}
@@ -3955,7 +4375,7 @@ def build_join():
          "위원회 사업과 행사를 함께 기획하고 운영하고 싶은 분",
          "사업 기획, 프로그램 운영, 활동 관리"),
         ("monitor-play", "전문위원", "심화과정 이수자",
-         "AI윤리전문가 양성과정 심화과정을 이수한 AI·윤리·법·교육 분야 전문가 (석·박사, 현직 전문가, 강사)",
+         "AI윤리전문가 양성과정 심화과정을 이수하고 AI 윤리 교육·자문 활동에 참여하고자 하는 분 (전공·학위 제한 없음)",
          "AI 윤리 교육·전문강사 활동, 자문"),
         ("map-pin", "지역 운영위원", "양성과정 이수자",
          "AI윤리전문가 양성과정(기본과정 이상)을 이수하고 거주 지역에서 위원회 활동과 네트워크를 이끌고 싶은 분",
@@ -4154,6 +4574,7 @@ def build_join():
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
               <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
             <p class="err-msg">개인정보 수집·이용 동의에 체크해 주세요.</p>
+            <p class="field-hint" style="margin-top:14px">자세한 내용은 <a href="privacy.html" style="color:var(--blue);font-weight:700">개인정보처리방침</a>을 확인해 주세요.</p>
           </div>
 
           <div class="gform-card gform-submit gform-submit--why">
@@ -4952,6 +5373,7 @@ if __name__ == "__main__":
     build_news(posts)
     build_mou()
     build_apply()
+    build_legal()
     for p in posts:
         build_post(p, posts)
     build_sitemap(posts)

@@ -1488,3 +1488,48 @@ table.tbl tr:hover td{background:#FCFDFF}
   .vol h3{font-size:19px}
   .vol-free{top:17px;right:18px;font-size:11px;padding:4px 10px}
 }
+
+/* 약관·환불·개인정보·면책 문서 (2026.09.17) */
+.lg-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--gray-500);
+  padding-bottom:16px;margin-bottom:26px;border-bottom:1px solid var(--gray-200)}
+.lg-meta .fsep{color:var(--gray-300)}
+.legal{font-size:15px;line-height:1.85;color:var(--gray-700)}
+.lg-sec{margin-bottom:34px}
+.lg-sec:last-child{margin-bottom:0}
+.legal h2{font-size:18px;font-weight:800;letter-spacing:-.03em;color:var(--ink);margin:0 0 12px;
+  padding-left:13px;border-left:3px solid var(--blue)}
+.legal p{margin:0 0 12px}
+.legal p:last-child{margin-bottom:0}
+.legal strong{font-weight:800;color:var(--ink)}
+.legal a{color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.legal ol,.legal ul{margin:0 0 12px;padding-left:20px;display:grid;gap:7px}
+.legal ol{list-style:decimal}
+.legal ul{list-style:disc}
+.legal li{padding-left:2px}
+.legal li ul{margin:7px 0 0}
+.lg-note{margin-top:14px!important;padding:13px 15px;background:var(--gray-050);border-left:3px solid var(--gray-300);
+  border-radius:0 8px 8px 0;font-size:13.5px;color:var(--gray-600);line-height:1.75}
+.lg-table{width:100%;border-collapse:collapse;margin:0 0 12px;font-size:14px}
+.lg-table th,.lg-table td{border:1px solid var(--gray-200);padding:11px 13px;text-align:left;vertical-align:top;line-height:1.7}
+.lg-table thead th{background:var(--blue-050);color:var(--ink);font-weight:800;font-size:13.5px}
+.lg-table tbody th{background:var(--gray-050);color:var(--ink);font-weight:700;white-space:nowrap;width:1%}
+.lg-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:44px;padding-top:24px;border-top:1px solid var(--gray-200)}
+.lg-links a{font-size:13.5px;font-weight:700;padding:9px 16px;border-radius:999px;border:1px solid var(--gray-200);
+  color:var(--gray-600);background:#fff;transition:border-color .2s,color .2s}
+.lg-links a:hover{border-color:var(--blue);color:var(--blue)}
+.footer-info--sub{font-size:12px!important;color:#6F87A8!important;line-height:1.7}
+.footer-legal{display:flex;flex-wrap:wrap;gap:6px 20px;padding:14px 0 0;margin-top:2px}
+.footer-legal a{font-size:13px;font-weight:600;color:#9FB6D4}
+.footer-legal a:hover{color:#fff}
+.footer-legal a strong{font-weight:800;color:#C7DCF2}
+.footer-legal a:hover strong{color:#fff}
+@media (max-width:700px){
+  .legal{font-size:14.5px}
+  .legal h2{font-size:16.5px}
+  .lg-table{font-size:13px;display:block;overflow-x:auto;white-space:normal}
+  .lg-table th,.lg-table td{padding:9px 10px}
+  .lg-table tbody th{white-space:normal;width:34%}
+  .lg-links{gap:6px}
+  .lg-links a{font-size:12.5px;padding:8px 13px}
+  .footer-legal{gap:6px 14px}
+}
