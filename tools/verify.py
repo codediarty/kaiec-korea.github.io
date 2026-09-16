@@ -268,6 +268,13 @@ if not os.path.isfile(".nojekyll"):
     probs.append(".nojekyll 없음")
 if not os.path.isfile(".gitignore") or "__pycache__" not in read(".gitignore"):
     probs.append(".gitignore 에 __pycache__ 없음")
+# 2026.09.16: Claude 데스크톱 앱이 내려받은 파일(평가 정답이 든 Code.gs 등)이 저장소 폴더의 'Claude outputs/'에 생기므로 반드시 제외
+if os.path.isfile(".gitignore") and "Claude outputs/" not in read(".gitignore"):
+    probs.append(".gitignore 에 'Claude outputs/' 없음(관리자 자료 유출 방지)")
+if os.path.isdir("Claude outputs"):
+    tracked = os.popen('git ls-files -- "Claude outputs"').read().strip()
+    if tracked:
+        probs.append("'Claude outputs/' 안의 파일이 git에 올라가 있음: " + tracked.replace("\n", ", "))
 for f in ("assets/css/style.css", "assets/js/main.js", "assets/img/og-image.png", "assets/img/favicon.svg"):
     if not os.path.isfile(f):
         probs.append(f"필수 자산 없음: {f}")

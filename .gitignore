@@ -4,3 +4,5 @@ __pycache__/
 Thumbs.db
 desktop.ini
 _qa/
+# Claude 데스크톱 앱이 대화 파일을 내려받는 폴더(평가 정답 등 관리자 자료가 들어올 수 있으니 절대 커밋하지 않음)
+Claude outputs/

@@ -65,7 +65,7 @@ EXAM_WINDOW_DAYS = 30                     # 응시 가능 기간: 결제일부�
 MATERIALS = "『핵심이론』 교재, 실전 모의고사 2회와 별책 정답 및 해설, 『실무 도구집』"   # 모두 PDF로 제공
 # 이수 평가 시스템(/exam/) 백엔드: '평가 운영 시트'에 연결된 앱스 스크립트 웹 앱 주소(/exec). 접수용 SHEET_WEBHOOK과는 별개 프로젝트입니다.
 # 비어 있으면 로그인 카드에 '평가 시스템 연결 준비 중'을 표시하고 체험 모드(브라우저 안 모의 평가)만 동작합니다.
-EXAM_API = ""
+EXAM_API = "https://script.google.com/macros/s/AKfycbzgPS8uXz2Xqjfy4PxtFOIbBV31GqHwxYc4ZT12F8zrQkFKQAG0v96UGy8Yg2U2b4MYsQ/exec"
 LECTURES = 8                              # 온라인 강의 수
 TOTAL_TIME = "약 2시간 12분"               # 8강 합계 132분 35초 (강의별 표시 시간의 합과 맞춰 12분으로 표기)
 TOTAL_ISO = "PT2H12M"                     # 구조화 데이터용
