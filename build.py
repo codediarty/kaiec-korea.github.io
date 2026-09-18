@@ -267,7 +267,7 @@ NAV = [
     ("join.html", "KAIEC 참여"),
     ("copyclean.html", "카피클린"),
     ("news.html", "커뮤니티"),
-    ("mou.html", "사회공헌·협력"),
+    ("mou.html", "사회공헌"),
 ]
 
 LOGO_SVG = """<svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -331,7 +331,7 @@ def header():
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
           <a href="exam.html" style="color:#6FE3D8">평가응시</a><span class="tsep">|</span>
-          <a href="mou.html#inquiry">사회공헌·협력</a>
+          <a href="mou.html#inquiry">사회공헌</a>
         </span>
       </div>
     </div>
@@ -377,7 +377,7 @@ def footer():
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
             <li><a href="join.html">KAIEC 참여하기</a></li>
-            <li><a href="mou.html#inquiry">사회공헌·협력</a></li>
+            <li><a href="mou.html#inquiry">사회공헌</a></li>
           </ul>
         </div>
       </div>
@@ -1908,7 +1908,7 @@ def build_copyclean():
 
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("사회공헌·협력 문의", "mou.html#inquiry")}
+        {cert_band_inner("사회공헌 활동 문의", "mou.html#inquiry")}
       </div>
     </section>"""
 
@@ -2334,7 +2334,7 @@ def build_legal():
              "<tr><th>양성과정 신청</th><td>성명, 이메일, 직업·활동 분야, 신청 과정, 활용 목적</td></tr>"
              "<tr><th>이수 평가 응시</th><td>성명, 이메일(로그인 아이디), 휴대전화 번호 뒤 4자리(초기 비밀번호), 응시 기록, 답안, 점수</td></tr>"
              "<tr><th>KAIEC 참여 신청</th><td>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 지원 동기, 자기소개</td></tr>"
-             "<tr><th>사회공헌 · 협력 문의</th><td>기관·단체명, 담당자 성명, 연락처, 문의 내용</td></tr>"
+             "<tr><th>사회공헌 활동 문의</th><td>기관·단체명, 담당자 성명, 연락처, 문의 내용</td></tr>"
              "<tr><th>출강 문의</th><td>기관명, 담당자 성명, 연락처, 교육 희망 내용</td></tr>"
              "<tr><th>자동 생성 정보</th><td>접속 일시, 서비스 이용 기록(이수 평가 시스템 이용 시)</td></tr>"
              "</tbody></table>"
@@ -2725,7 +2725,7 @@ def build_mou():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Apply</span>
-          <h2 class="h-sec">신청 · 협력 문의</h2>
+          <h2 class="h-sec">사회공헌 신청 · 문의</h2>
           <p class="h-sub" style="margin:0 auto">찾아가는 무료 교육 신청과 기관 협력 제안, 회원기관 가입 문의를 한 양식에서 받습니다.
              원하시는 항목을 고른 뒤 연락처만 남겨 주시면 담당자가 확인 후 회신드립니다.</p>
         </div>
@@ -2825,7 +2825,7 @@ def build_mou():
         if(box)window.scrollTo({top:box.getBoundingClientRect().top+window.pageYOffset-100,behavior:'smooth'});
         return;
       }
-      var subject='[사회공헌·협력] '+sel.value+' · '+v('기관명');
+      var subject='[사회공헌] '+sel.value+' · '+v('기관명');
       var lines=[
         '■ 신청 항목   : '+sel.value,
         '■ 기관·단체명 : '+v('기관명'),
@@ -2836,14 +2836,14 @@ def build_mou():
         '■ 남기실 말씀',
         v('문의내용'),
         '',
-        '--- 한국AI윤리위원회 홈페이지 사회공헌·협력 신청 양식에서 작성됨 ---'
+        '--- 한국AI윤리위원회 홈페이지 사회공헌 신청 양식에서 작성됨 ---'
       ];
       location.href='mailto:__EMAIL__?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(lines.join('\\n'));
     });
   })();
   </script>
 """.replace('__EMAIL__', EMAIL)
-    page("mou.html", "사회공헌·협력",
+    page("mou.html", "사회공헌",
          "한국AI윤리위원회 전문위원과 전국 지역 AI 윤리위원이 직접 찾아가는 무료 교육 안내. 어르신 AI 활용 교육과 초등학생 AI 윤리 교육을 "
          "기관 재능기부로 지원하고, AI 윤리 캠페인·공익 콘텐츠·교육기부·기관 협력·업무협약(MOU)·사회공헌 파트너십·회원기관 가입 신청을 한 양식에서 받습니다.",
          body + cert_band("사회공헌 활동 신청하기", "#inquiry"), extra_script=script)
