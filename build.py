@@ -2593,10 +2593,10 @@ def build_mou():
                 </span>
               </label>""" for val, badge, title, desc in PICKS)
 
-    body = hero_sub("사회공헌·협력",
+    body = hero_sub("사회공헌",
                     "한국AI윤리위원회 전문위원과 AI 윤리위원이 직접 현장으로 갑니다. "
                     "어르신과 어린이를 위한 AI 교육을 대가 없이 열고, 캠페인과 공익 자료도 모두 무료로 공개합니다.",
-                    "사회공헌·협력") + f"""
+                    "사회공헌") + f"""
 
     <section class="section">
       <div class="wrap">
@@ -2679,14 +2679,20 @@ def build_mou():
 
     <section class="section">
       <div class="wrap">
-        <div class="center" style="margin-bottom:40px">
+        <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Partners</span>
           <h2 class="h-sec">함께하는 기관</h2>
-          <p class="h-sub">위원회와 함께하는 기관입니다.</p>
+          <p class="h-sub">교육 운영과 공동 사업을 함께하는 기관입니다. 각 기관이 맡는 역할을 함께 적었습니다.</p>
         </div>
-        <div class="logo-grid" id="partnerLogos"></div>
-        <p class="h-sub center" style="margin:26px auto 0;max-width:640px">함께하실 기관은 아래 양식으로 연락 주시면
-          담당자가 협력 범위를 함께 정리해 드립니다.</p>
+        <div class="pt-cards" id="partnerLogos"></div>
+        <a class="pt-join reveal" href="#inquiry">
+          <span class="pt-join-ic"><i data-lucide="handshake"></i></span>
+          <span class="pt-join-body">
+            <strong>함께하실 기관을 찾고 있습니다</strong>
+            <span>대학 · 학교 · 기업 · 공공기관 · 비영리단체 모두 좋습니다. 연락 주시면 담당자가 협력 범위를 함께 정리해 드립니다.</span>
+          </span>
+          <span class="pt-join-go">협력 문의하기 <i data-lucide="arrow-right"></i></span>
+        </a>
       </div>
     </section>
 
@@ -2767,10 +2773,14 @@ def build_mou():
       box.outerHTML='<p style="text-align:center;color:var(--gray-500);padding:40px 0">함께하실 기관을 기다리고 있습니다.</p>';return;
     }
     box.innerHTML=window.KAIEC_PARTNERS.map(function(p){
-      var inner=p.logo?'<img src="assets/img/'+p.logo+'" alt="'+p.name+' 로고" loading="lazy">'
-                      :'<span class="logo-fallback">'+p.name+'</span>';
-      var body='<div class="logo-item">'+inner+'</div>';
-      return p.url?'<a href="'+p.url+'" target="_blank" rel="noopener">'+body+'</a>':body;
+      var mark=p.logo
+        ?'<span class="pt-mark pt-mark--img"><img src="assets/img/'+p.logo+'" alt="'+p.name+' 로고" loading="lazy"></span>'
+        :'<span class="pt-mark">'+p.name.trim().charAt(0)+'</span>';
+      var role=p.role?'<span class="pt-role">'+p.role+'</span>':'';
+      var go=p.url?'<span class="pt-go">홈페이지 보기 <i data-lucide="arrow-right"></i></span>':'';
+      var body='<article class="pt-card reveal">'+mark
+        +'<span class="pt-name">'+p.name+'</span>'+role+go+'</article>';
+      return p.url?'<a class="pt-link" href="'+p.url+'" target="_blank" rel="noopener">'+body+'</a>':body;
     }).join('');
   })();
   /* 무료 교육 카드의 신청 버튼: 아래 양식에서 해당 항목을 자동 선택하고 이동 */
@@ -2826,12 +2836,12 @@ def build_mou():
     page("mou.html", "사회공헌·협력",
          "한국AI윤리위원회 전문위원과 전국 지역 AI 윤리위원이 직접 찾아가는 무료 교육 안내. 어르신 AI 활용 교육과 초등학생 AI 윤리 교육을 "
          "기관 재능기부로 지원하고, AI 윤리 캠페인·공익 콘텐츠·교육기부·기관 협력·업무협약(MOU)·사회공헌 파트너십·회원기관 가입 신청을 한 양식에서 받습니다.",
-         body + cert_band("사회공헌·협력 신청하기", "#inquiry"), extra_script=script)
+         body + cert_band("사회공헌 활동 신청하기", "#inquiry"), extra_script=script)
 
 
 # -------------------------------------------------------------- lecture.html
 def build_lecture():
-    L_EMAIL = "metropoly@naver.com"     # 출강 문의 전용 메일
+    L_EMAIL = EMAIL                     # 출강 문의도 위원회 공식 메일로 통일 (2026.09.18)
     L_TEL = "010-9913-7771"             # 출강 문의 전화
 
     # ── 6개 교육 분야 (번호, 제목, 아이콘, 대상 태그, 세부 항목) ──
