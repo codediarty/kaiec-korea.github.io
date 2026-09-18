@@ -424,7 +424,17 @@ def clean_links(html):
     """생성된 HTML 안의 상대 링크(x.html)와 자산 경로(assets/…)를 루트 기준 깔끔한 주소로 변환"""
     html = _LINK_RE.sub(lambda m: f'{m.group(1)}="{url_for(m.group(2))}{m.group(3)}"', html)
     html = re.sub(r'(["\'])assets/', r'\1/assets/', html)
+    html = _bust_assets(html)
     return html
+
+
+# 캐시 버전이 안 붙은 자산(주로 *-data.js)에 ?v= 를 자동으로 붙입니다.
+# 이게 없으면 연혁·명단·제휴 기관 데이터를 고쳐도 방문자 브라우저가 옛 파일을 계속 씁니다(2026.09.18).
+_BUST_RE = re.compile(r'(src|href)="(/assets/(?:js|css)/[A-Za-z0-9._-]+\.(?:js|css))"')
+
+
+def _bust_assets(html):
+    return _BUST_RE.sub(lambda m: f'{m.group(1)}="{m.group(2)}?v={BUILD_V}"', html)
 
 
 def _strip_tags(h):
