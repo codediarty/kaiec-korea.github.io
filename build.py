@@ -315,7 +315,7 @@ def brand(reuse=False):
     wm = WORDMARK_USE if reuse else WORDMARK_SVG
     return f"""<a class="brand" href="index.html" aria-label="{SITE_NAME} 홈">
         <span class="brand-badge">{BADGE_SVG}</span>
-        <span class="brand-text">{wm}<span class="sr-only">KAIEC {SITE_NAME} {SITE_EN}</span></span>
+        <span class="brand-text">{wm}<span class="sr-only">{SITE_NAME} (KAIEC) {SITE_EN}</span></span>
       </a>"""
 
 
@@ -951,7 +951,7 @@ def build_index(posts):
       "@id": "{SITE_URL}/#website",
       "url": "{SITE_URL}/",
       "name": "한국AI윤리위원회",
-      "alternateName": ["KAIEC", "한국 AI 윤리위원회", "AI윤리위원회", "Korea AI Ethics Committee", "kaiec.kr"],
+      "alternateName": "KAIEC",
       "inLanguage": "ko-KR",
       "publisher": {{ "@id": "{SITE_URL}/#organization" }}
     }},
