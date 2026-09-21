@@ -119,11 +119,11 @@ button{font-family:inherit}
 .btn-sm{padding:9px 18px;font-size:13.5px}
 
 /* ---------- Top utility bar ---------- */
-.topbar{background:var(--ink);color:#8FA6C4;font-size:12.5px}
-.topbar-inner{max-width:var(--wrap);margin:0 auto;padding:8px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.topbar{background:var(--ink);color:#9DB3D0;font-size:14px}   /* 2026.09.21 12.5 → 14px (가독성) */
+.topbar-inner{max-width:var(--wrap);margin:0 auto;padding:9px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px}
 .topbar-left{letter-spacing:.08em;font-weight:600;color:#7E96B8}
 .topbar-right{display:flex;align-items:center}
-.topbar a{color:#AFC2DE;font-weight:600;transition:color .15s}
+.topbar a{color:#C9D8EE;font-weight:600;transition:color .15s}
 .topbar a:hover{color:#fff}
 .topbar .tsep{opacity:.3;margin:0 10px}
 @media (max-width:860px){.topbar{display:none}}
@@ -164,7 +164,7 @@ button{font-family:inherit}
 
 .nav{display:flex;align-items:center;gap:0}
 .nav > a{
-  padding:8px 5px;border-radius:9px;font-size:13px;font-weight:600;color:var(--gray-700);
+  padding:8px 6px;border-radius:9px;font-size:14px;font-weight:600;color:var(--gray-700);   /* 2026.09.21 13 → 14px */
   transition:color .16s,background .16s;white-space:nowrap;
 }
 .nav > a:hover{color:var(--blue);background:var(--blue-050)}

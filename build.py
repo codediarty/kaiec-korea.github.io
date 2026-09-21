@@ -355,8 +355,7 @@ def header():
         <span class="topbar-right">
           <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
           <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
-          <a href="exam.html" style="color:#6FE3D8">평가응시</a><span class="tsep">|</span>
-          <a href="mou.html#inquiry">사회공헌</a>
+          <a href="exam.html" style="color:#6FE3D8">평가응시</a>
         </span>
       </div>
     </div>
@@ -402,7 +401,7 @@ def footer():
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
             <li><a href="join.html">KAIEC 참여하기</a></li>
-            <li><a href="mou.html#inquiry">사회공헌</a></li>
+            <li><a href="mou.html">사회공헌</a></li>
           </ul>
         </div>
       </div>
@@ -763,7 +762,7 @@ def build_index(posts):
             <div class="fc-visual fc-v1"><img src="assets/img/cards/card-cert.jpg" alt="AI윤리전문가 양성과정 이수증" loading="lazy"></div>
             <div class="fc-body">
               <h3>AI윤리전문가 양성과정</h3>
-              <p>위원회 표준교재 + 온라인 이수 평가<br>공식 이수증 · 홈페이지 공식 등록</p>
+              <p>100% 온라인으로 완성하는 AI 전문 이력<br>공식 이수증 발급<br>AI윤리전문가 공식 등록</p>
               <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
             </div>
           </a>
