@@ -3428,21 +3428,21 @@ def build_expert():
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가 양성과정</p>
         <span class="hl-pill" data-deadline="{DEADLINE_ISO}"><i data-lucide="badge-check"></i>한국AI윤리위원회 주관 · 1기 접수 마감 {DEADLINE} <b class="dday" data-dday></b> · 1기 특별가 {PRICE_SHORT}</span>
         <h1>AI윤리전문가 양성과정 <span class="hot-tag">HOT</span></h1>
-        <p class="ph-lead">2026년, 기업이 가장 먼저 찾는 스펙.<br>
-           취업준비생과 대학생, 실무자가 지금 가장 먼저 더하는 <b class="t">AI윤리전문가</b>.</p>
-        <p class="ph-body">AI기본법 시행으로 조직마다 AI 기준을 세울 사람이 필요해졌습니다.
-           위원회 표준교재로 공부하고 온라인 이수 평가 하나면 끝. <strong>공식 이수증, 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드</strong>까지 한 번에.<br>
-           <b>1기 특별가 {won(PRICE)} · {HOOK_ZERO} · {HOOK_START} · 접수 마감 {DEADLINE}</b></p>
+        <p class="ph-lead" style="max-width:900px">2026년, 이력서에 새롭게 더할 AI 전문 이력.<br>
+           취업준비생부터 대학생, 실무자까지 지금 시작하는 <b class="t">AI윤리전문가</b>.</p>
+        <p class="ph-body" style="max-width:900px!important">전공이나 경력에 관계없이 온라인으로 시작할 수 있습니다.<br>
+           <strong>학습자료부터 평가, 공식 이수증 발급, 한국AI윤리위원회 홈페이지 전문가 등록</strong>까지 한 번에.<br>
+           <b>1기 특별가 {won(PRICE)} · 결제 후 바로 시작 · 접수 마감 {DEADLINE}</b></p>
         <div class="hero-hooks">
           <span><i data-lucide="check"></i>전공 · 경력 제한 없음</span>
-          <span><i data-lucide="check"></i>전 과정 온라인</span>
-          <span><i data-lucide="check"></i>이수 기준 {EXAM[1]}점</span>
-          <span><i data-lucide="check"></i>기준에 이를 때까지 재응시</span>
-          <span><i data-lucide="check"></i>이수 즉시 홈페이지 공식 등록</span>
+          <span><i data-lucide="check"></i>100% 온라인</span>
+          <span><i data-lucide="check"></i>학습자료 제공</span>
+          <span><i data-lucide="check"></i>공식 이수증 발급</span>
+          <span><i data-lucide="check"></i>AI윤리전문가 공식 등록</span>
         </div>
         <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:26px">
-          <a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-light" href="#benefits">{PRICE_SHORT}에 포함된 것 보기</a>
+          <a class="btn btn-primary" href="{CERT_HREF}">AI윤리전문가 1기 신청하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-light" href="#benefits">이수 후 달라지는 것 보기 <i data-lucide="arrow-right"></i></a>
         </div>
       </div>
     </section>
