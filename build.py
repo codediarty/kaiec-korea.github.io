@@ -748,7 +748,7 @@ def build_index(posts):
           <a class="hero-promo" href="expert.html">
             <div>
               <strong>AI윤리전문가 양성과정 1기 모집 중 <span class="promo-new">NEW</span></strong>
-              <p>접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)} · {HOOK_ZERO} · {HOOK_REG}</p>
+              <p>접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)}<br>AI윤리전문가 공식 등록 · KAIEC 홈페이지 등재</p>
             </div>
             <span class="promo-go"><i data-lucide="arrow-right"></i></span>
           </a>
@@ -4184,14 +4184,45 @@ def build_experts():
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
         <span class="hl-pill"><i data-lucide="badge-check"></i>기업·기관이 원하는 스펙 · 한국AI윤리위원회 공식 등록</span>
         <h1>KAIEC 공식 AI윤리전문가</h1>
-        <p class="ph-lead">올해 이력서에 새로 채울 한 줄, <b class="t">AI윤리전문가</b>.<br>
-           AI를 쓰는 사람은 많지만, 증명한 사람은 아직 소수입니다.</p>
-        <p class="ph-body">위원회 표준교재로 공부하고 온라인 이수 평가를 통과하면 끝. 한국AI윤리위원회 공식 이수증을 받고,
-           <strong>홈페이지에 AI윤리전문가로 공식 등록</strong>됩니다.<br>
-           <b>1기 특별가 {won(PRICE)} · {HOOK_ZERO} · 접수 마감 {DEADLINE}</b></p>
+        <p class="ph-lead" style="max-width:900px">올해 이력서에 새로 채울 한 줄, <b class="t">AI윤리전문가</b>.<br>
+           AI가 기본이 된 시대, 차이는 ‘전문가’라는 이력에서 시작됩니다.</p>
+        <p class="ph-body">한국AI윤리위원회 표준교재로 공부하고 온라인 이수 평가를 통과하면 끝. AI윤리전문가 공식 이수증을 받고,<br>
+           <strong>홈페이지에 AI윤리전문가로 공식 등록</strong>됩니다.</p>
         <div class="btns" style="margin-top:22px">
           <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
-          <a class="btn btn-light" href="#list">공식 등록 혜택 보기</a>
+          <a class="btn btn-light" href="#what">AI윤리전문가란?</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="what">
+      <div class="wrap">
+        <div class="split" style="align-items:start">
+          <div class="story reveal">
+            <span class="eyebrow">What Is It</span>
+            <h2 class="h-sec" style="text-align:left;margin-bottom:14px">AI윤리전문가란?</h2>
+            <p class="lead" style="margin-bottom:16px">AI를 <strong>어디까지, 어떻게</strong> 써야 하는지 판단하고,
+               조직과 사람에게 그 기준을 설명할 수 있는 사람입니다.</p>
+            <p>AI를 쓰는 일은 이제 누구나 합니다. 하지만 저작권, 개인정보, 환각, 편향 같은 문제 앞에서
+               "이건 되고, 이건 안 된다"를 근거 있게 말할 수 있는 사람은 아직 소수입니다. 기업과 기관, 학교는 지금 그 사람을 찾고 있습니다.</p>
+            <p>그 소수가 되는 데 필요한 것은 위원회 표준교재 한 권과 온라인 이수 평가 하나입니다.
+               이수하면 한국AI윤리위원회가 AI윤리전문가로 공식 등록하고, 이력서의 한 줄을 위원회가 뒷받침합니다.</p>
+            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
+          </div>
+          <div class="worth-list reveal" style="margin-top:0">
+            <div class="worth"><span class="worth-no">01</span><div class="worth-ic"><i data-lucide="briefcase"></i></div>
+              <div class="worth-b"><strong>무엇을 하는가</strong>
+                <p>사내 AI 활용 기준을 세우고, 저작권·개인정보·환각 위험을 점검하고, 임직원과 학생에게 AI를 바르게 쓰는 법을 가르칩니다.</p>
+                <div class="chips"><span class="chip">AI 활용 기준</span><span class="chip">위험 점검</span><span class="chip">AI 교육</span></div></div></div>
+            <div class="worth"><span class="worth-no">02</span><div class="worth-ic"><i data-lucide="scale"></i></div>
+              <div class="worth-b"><strong>왜 지금인가</strong>
+                <p>2026년 AI기본법 시행, EU AI Act 적용. AI를 만드는 기업만이 아니라 쓰는 조직도 기준을 세울 사람이 필요해졌습니다.</p>
+                <div class="chips"><span class="chip">AI기본법 시행</span><span class="chip">EU AI Act</span><span class="chip">수요 급증</span></div></div></div>
+            <div class="worth"><span class="worth-no">03</span><div class="worth-ic"><i data-lucide="award"></i></div>
+              <div class="worth-b"><strong>어떻게 되는가</strong>
+                <p>한국AI윤리위원회 양성과정 이수 → AI윤리전문가 공식 이수증 → KAIEC 홈페이지 공식 등록. 전공·경력 제한 없이 전 과정 온라인입니다.</p>
+                <div class="chips"><span class="chip">표준교재</span><span class="chip">온라인 이수 평가</span><span class="chip">공식 등록</span></div></div></div>
+          </div>
         </div>
       </div>
     </section>
