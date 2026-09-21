@@ -269,6 +269,17 @@ for fname, html in ((f, read(p)) for f, p in pages.items()):
     body_only = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.S)
     if "기본과정" in body_only or "심화과정" in body_only:
         probs.append(f"{fname}: 통합 이후 '기본과정/심화과정' 표기가 남아 있음")
+    # 2026.09.21: '연 100명 한정' 식 정원 표기는 과정이 작아 보여 사이트 전체에서 뺐음 (재유입 방지)
+    if re.search(r"\d+\s*명\s*한정", body_only):
+        probs.append(f"{fname}: '○○명 한정' 정원 표기가 다시 들어옴")
+# 2026.09.21: 출강 페이지에는 교육시간별 가격(40/70/100/130만원)을 적지 않음. 비용은 문의 시 견적으로만 안내
+lecture_body = re.sub(r"<script[^>]*>.*?</script>", "", read(pages["lecture.html"]), flags=re.S)
+if re.search(r"\d+\s*만\s*원", lecture_body) or "만원" in lecture_body:
+    probs.append("출강 페이지에 교육시간별 가격 표기가 다시 들어옴 (비용은 견적으로만 안내)")
+if build.PRICE_SHORT not in expert_html:
+    probs.append(f"양성과정 페이지에 짧은 가격 표기 {build.PRICE_SHORT} 미반영")
+if abs(build.PRICE / 10000 - float(build.PRICE_SHORT.replace("만원", ""))) > 1e-6:
+    probs.append(f"PRICE_SHORT({build.PRICE_SHORT})가 PRICE({build.PRICE:,}원)와 다름")
 if build.DEADLINE not in expert_html:
     probs.append(f"마감 {build.DEADLINE} 미반영")
 if build.COPYCLEAN_URL not in read(pages["copyclean.html"]):

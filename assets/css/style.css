@@ -1643,3 +1643,19 @@ table.tbl tr:hover td{background:#FCFDFF}
 .reg-search-n{font-size:13px;font-weight:700;color:var(--gray-500);white-space:nowrap}
 .expert-no{font-size:12.5px;font-weight:700;color:var(--gray-500);margin:-2px 0 6px;letter-spacing:.02em}
 @media (max-width:560px){.reg-search{flex-wrap:wrap}.reg-search input{flex-basis:100%}}
+
+/* ---------- 출강 페이지 교육시간 구성 카드 (2026.09.21: 시간별 가격 표기를 없애고 구성·예시·적합 대상으로) ---------- */
+.fmt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fmt-card{position:relative;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:26px 22px 22px;
+  display:flex;flex-direction:column;gap:10px;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease)}
+.fmt-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:#C9D8F5}
+.fmt-type{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--blue)}
+.fmt-hours{font-size:clamp(30px,3.2vw,38px);font-weight:900;color:var(--ink);letter-spacing:-.04em;line-height:1.05}
+.fmt-hours small{font-size:15px;font-weight:800;color:var(--gray-500);margin-left:3px;letter-spacing:0}
+.fmt-card h3{font-size:16px;letter-spacing:-.03em;line-height:1.45;margin:0}
+.fmt-ex{display:block;font-size:13px;font-weight:700;color:var(--blue-600);background:var(--blue-050);padding:9px 12px;border-radius:9px;line-height:1.6;letter-spacing:-.01em}
+.fmt-fit{font-size:12.5px;color:var(--gray-500);line-height:1.6;margin:auto 0 0;padding-top:10px;border-top:1px solid var(--gray-100)}
+.fmt-fit b{display:block;font-size:11.5px;letter-spacing:.06em;color:var(--gray-400);margin-bottom:2px}
+@media (max-width:900px){.fmt-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.fmt-grid{grid-template-columns:1fr}}
+.reg-search[hidden],.member-grid[hidden]{display:none!important}   /* 등록 검색 상자는 등록자가 있을 때만 (display:flex가 hidden을 덮지 않도록) */
