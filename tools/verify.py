@@ -243,24 +243,32 @@ if hook:
         probs.append("접수 페이지의 웹훅 주소가 build.py 상수와 다름")
 else:
     probs.append("SHEET_WEBHOOK 비어 있음 (메일 폴백으로 동작)")
-for name, url in (("PAY_URL_L2", build.PAY_URL_L2), ("PAY_URL_L1", build.PAY_URL_L1)):
-    # 결제 링크는 접수 완료 화면(자동 이동)에만 있으면 됨. expert 페이지의 직접 결제 버튼은 2026.09.13 제거
-    if url and url not in apply_html:
-        probs.append(f"{name} 미반영 ({url})")
-# 2026.09.16 평가응시 2차 개편: 로그인 화면에 기본·심화 결제 버튼(새 창), 설정에 시험 시간·결제 링크·EXAM_API 주입
+# 2026.09.21 통합: 결제 링크는 PAY_URL 하나. 접수 완료 화면(자동 이동)과 /exam/ 로그인 화면에 있어야 함
+if build.PAY_URL and build.PAY_URL not in apply_html:
+    probs.append(f"PAY_URL 미반영 ({build.PAY_URL})")
+if "?course=" in apply_html or "?course=" in expert_html or "?course=" in index_html:
+    probs.append("통합 이후 남은 ?course= 링크가 있음 (과정 선택은 없어졌습니다)")
 exam_html = read(pages["exam.html"])
-for name, url in (("PAY_URL_L2", build.PAY_URL_L2), ("PAY_URL_L1", build.PAY_URL_L1)):
-    if url and f'href="{url}" target="_blank" rel="noopener"' not in exam_html:
-        probs.append(f"/exam/ 로그인 화면에 {name} 결제 버튼(새 창) 없음 ({url})")
+if build.PAY_URL and f'href="{build.PAY_URL}" target="_blank" rel="noopener"' not in exam_html:
+    probs.append(f"/exam/ 로그인 화면에 PAY_URL 결제 버튼(새 창) 없음 ({build.PAY_URL})")
+if exam_html.count('class="ex-paybtn"') != 1:
+    probs.append("/exam/ 로그인 화면 결제 버튼은 1개여야 함 (통합 과정)")
 if f'api:{json.dumps(build.EXAM_API)}' not in exam_html:
     probs.append("/exam/ 설정(window.KAIEC_EXAM)에 EXAM_API 미반영")
-for course, (total, _pass), minutes in (("기본과정", build.EXAM_BASIC, build.EXAM_MIN_BASIC), ("심화과정", build.EXAM_ADV, build.EXAM_MIN_ADV)):
+if "unified:true" not in exam_html:
+    probs.append("/exam/ 설정에 unified:true 없음 (다른 과정 결제 안내가 다시 나올 수 있음)")
+for course, (total, _pass), minutes in (("기본과정", build.EXAM, build.EXAM_MIN), ("심화과정", build.EXAM_LEGACY_ADV, build.EXAM_MIN_LEGACY_ADV)):
     if f'"{course}":{{total:{total},minutes:{minutes},' not in exam_html:
-        probs.append(f"/exam/ 설정에 {course} 문항 수·시험 시간({total}문항·{minutes}분) 미반영")
+        probs.append(f"/exam/ 설정에 {course} 문항 수·시험 시간({total}문항·{minutes}분) 미반영 (백엔드 호환용)")
 if 'id="exLoginForm"' not in exam_html or 'id="exDemoBtn"' in exam_html:
     probs.append("/exam/ 로그인 화면 구성 이상 (로그인 폼 없음 또는 체험 버튼이 다시 들어감)")
-if build.won(build.PRICE_L2) not in expert_html or build.won(build.PRICE_L2) not in index_html:
-    probs.append(f"기본과정 특별가 {build.won(build.PRICE_L2)} 미반영")
+if build.won(build.PRICE) not in expert_html or build.won(build.PRICE) not in index_html:
+    probs.append(f"1기 특별가 {build.won(build.PRICE)} 미반영")
+# 통합 이후 사이트 어디에도 두 과정 표기가 남지 않아야 함 (백엔드 호환용 /exam/ 설정 스크립트만 예외)
+for fname, html in ((f, read(p)) for f, p in pages.items()):
+    body_only = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.S)
+    if "기본과정" in body_only or "심화과정" in body_only:
+        probs.append(f"{fname}: 통합 이후 '기본과정/심화과정' 표기가 남아 있음")
 if build.DEADLINE not in expert_html:
     probs.append(f"마감 {build.DEADLINE} 미반영")
 if build.COPYCLEAN_URL not in read(pages["copyclean.html"]):

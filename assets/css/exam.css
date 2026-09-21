@@ -153,6 +153,10 @@ html:not(.js) .ex-boot{display:none}
 .ex-lbox-pay{padding:18px 32px 20px;border-top:1px solid var(--ex-line-2);background:#FAFBFD}
 .ex-lbox-q{margin:0;font-size:13px;font-weight:700;color:var(--ex-text);text-align:center;letter-spacing:-.02em}
 .ex-paybtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:11px}
+.ex-paybtns:has(> .ex-paybtn:only-child){grid-template-columns:1fr}
+.ex-paybtn:only-child{flex-direction:row;justify-content:center;gap:12px;padding:13px 12px}
+.ex-paybtn:only-child .ex-paybtn-t{font-size:14.5px}
+.ex-paybtn:only-child .ex-paybtn-p{font-size:16px}
 .ex-paybtn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 8px 10px;border:1px solid var(--ex-navy-line);
   border-radius:8px;background:#fff;transition:border-color .16s,box-shadow .16s,transform .16s}
 .ex-paybtn:hover{border-color:var(--ex-navy);box-shadow:0 8px 20px rgba(11,42,74,.14);transform:translateY(-1px)}

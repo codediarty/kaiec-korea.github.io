@@ -886,7 +886,7 @@
   }
 
   function upsellBox(list) {
-    if (list.length !== 1) return '';
+    if (CFG.unified || list.length !== 1) return '';   // 2026.09.21 통합: 다른 과정 결제 안내 없음
     var has = list[0].course, b = courseCfg('기본과정'), a = courseCfg('심화과정'), o;
     if (has === '기본과정' && CFG.payAdv) {
       o = { t: '심화과정도 함께 준비하시나요?', d: '심화과정은 ' + (a.total || 50) + '문항 심화 범위 이수 평가이며, 이수하면 위원회 전문위원으로 등록됩니다.', b: '심화과정 결제하기', h: CFG.payAdv };
@@ -921,13 +921,18 @@
   }
 
   function guidePanel() {
-    var b = courseCfg('기본과정'), a = courseCfg('심화과정');
-    var bm = b.minutes || 60, am = a.minutes || 75;
-    var time = bm === am ? '시험 시간은 모두 ' + bm + '분입니다' : '시험 시간은 기본과정 ' + bm + '분, 심화과정 ' + am + '분입니다';
+    // 2026.09.21 통합: 이 계정에 등록된 과정 기준으로 안내합니다(과정이 둘이면 각각 표기)
+    var mine = courses().map(function (c) { return c.course; });
+    if (!mine.length) mine = ['기본과정'];
+    var comp = mine.map(function (name) {
+      var c = courseCfg(name);
+      return (mine.length > 1 ? esc(name) + ' ' : '') + (c.total || 40) + '문항 · ' + (c.minutes || 60) + '분';
+    }).join(' / ');
+    var passTxt = passOf(courseCfg(mine[0]));
     return panel('평가 안내', kv([
       ['응시 기간', '<b>결제일부터 ' + (CFG.windowDays || 30) + '일</b><span class="ex-sub-line">재응시를 포함한 모든 응시를 이 기간 안에 마칩니다.</span>'],
-      ['평가 구성', '<b>기본과정 ' + (b.total || 40) + '문항 · 심화과정 ' + (a.total || 50) + '문항</b><span class="ex-sub-line">4지선다형 100점 만점, ' + time + '.</span>'],
-      ['이수 기준', '<b>두 과정 모두 ' + passOf(b) + '점 이상</b><span class="ex-sub-line">이수하지 못하면 응시 기간 안에서 이수할 때까지 추가 비용 없이 재응시합니다(A형·B형 번갈아 출제). 이수증은 결과 확인 후 7일 이내 PDF로 발급합니다.</span>'],
+      ['평가 구성', '<b>' + comp + '</b><span class="ex-sub-line">4지선다형 100점 만점, 시험 시간은 [시험 시작]을 누른 때부터 흐릅니다.</span>'],
+      ['이수 기준', '<b>' + passTxt + '점 이상</b><span class="ex-sub-line">이수하지 못하면 응시 기간 안에서 이수할 때까지 추가 비용 없이 재응시합니다(A형·B형 번갈아 출제). 이수증은 결과 확인 후 7일 이내 PDF로 발급합니다.</span>'],
       ['응시 환경', '<b>PC·태블릿 권장</b><span class="ex-sub-line">최신 크롬·엣지·사파리에서 응시해 주십시오. 다른 창이나 탭으로 이동하면 화면 이탈로 기록됩니다.</span>']
     ]), { cls: 'ex-guide' });
   }
