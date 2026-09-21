@@ -32,8 +32,11 @@
     session: 'kaiecExamSession', demoSession: 'kaiecExamDemoSession', demoDb: 'kaiecExamDemoDb',
     backup: 'kaiecExamBackup', cur: 'kaiecExamCur', fs: 'kaiecExamFontScale'
   };
-  var COURSE_KEY = { '기본과정': 'basic', '심화과정': 'adv' };
-  var KEY_COURSE = { basic: '기본과정', adv: '심화과정' };
+  // 2026.09.21 통합: 과정은 「AI윤리전문가 양성과정」 하나. 백엔드 1.4.x(기본과정·심화과정 표기)와도 호환
+  var MAIN_COURSE = 'AI윤리전문가 양성과정';
+  var COURSE_KEY = { 'AI윤리전문가 양성과정': 'main', '기본과정': 'basic', '심화과정': 'adv' };
+  var KEY_COURSE = { main: 'AI윤리전문가 양성과정', basic: '기본과정', adv: '심화과정' };
+  function courseKey(name) { return COURSE_KEY[name] || 'main'; }
   var FORM_LABEL = { A: '1차 A형', B: '재응시 B형' };
   // 응시 이름: 이 과정의 첫 응시(A형)는 '1차 A형', 그다음부터는 '재응시 A형/B형' (무제한 재응시, A형·B형 번갈아)
   function formName(c, form) {
@@ -92,7 +95,7 @@
   }
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
-  function courseCfg(name) { return (CFG.courses && CFG.courses[name]) || {}; }
+  function courseCfg(name) { var cs = CFG.courses || {}; return cs[name] || cs[MAIN_COURSE] || {}; }
 
   // 응시자 성명: 백엔드 cleanName_ 과 같은 규칙 (앞뒤 공백 제거, 연속 공백은 하나로, 2~30자,
   // 한글·영문(악센트 포함)·띄어쓰기·가운뎃점·마침표·하이픈·작은따옴표, 첫 글자는 한글·영문, 끝 글자는 한글·영문·마침표)
@@ -270,7 +273,7 @@
       }
       else next = { action: 'none', form: null, note: '지금 응시할 수 있는 평가지가 없습니다.' };
       return {
-        course: '기본과정',
+        course: MAIN_COURSE,
         exam: { total: total(), minutes: DEMO.minutes, point: point(), passScore: PASS, passCount: Math.ceil(PASS / point() - 1e-9), retakes: -1 },
         window: { start: db.start, end: db.end, daysLeft: Math.max(0, Math.round((dayStart(db.end) - dayStart(ymd(t))) / DAY)), state: open ? 'open' : 'expired' },
         forms: [{ form: 'A', label: 'A형', status: db.forms.A }, { form: 'B', label: 'B형', status: db.forms.B }],
@@ -279,7 +282,7 @@
     }
     function publicAttempt(a) {
       return {
-        id: a.id, name: a.name || '', course: '기본과정', form: a.form, label: a.label || FORM_LABEL[a.form], startedAt: a.startedAt, deadline: a.deadline,
+        id: a.id, name: a.name || '', course: MAIN_COURSE, form: a.form, label: a.label || FORM_LABEL[a.form], startedAt: a.startedAt, deadline: a.deadline,
         serverNow: Date.now(), minutes: DEMO.minutes, total: total(), point: point(), passScore: PASS
       };
     }
@@ -304,7 +307,7 @@
         retake = { available: true, form: other }; msg = MSG.fail.replace('{form}', other);
       }
       var r = {
-        attemptId: a.id, name: a.name || '', course: '기본과정', form: a.form, label: a.label || FORM_LABEL[a.form], submittedAt: t, startedAt: a.startedAt,
+        attemptId: a.id, name: a.name || '', course: MAIN_COURSE, form: a.form, label: a.label || FORM_LABEL[a.form], submittedAt: t, startedAt: a.startedAt,
         durationMin: Math.max(1, Math.round((Math.min(t, a.deadline) - a.startedAt) / 60000)),
         total: total(), answered: answered, correct: correct, score: score, passScore: PASS, passed: passed,
         areas: areas, submitType: type, retake: retake, message: msg
@@ -783,7 +786,7 @@
 
   function liveAlerts(list) {
     return list.filter(isLive).map(function (c) {
-      var key = COURSE_KEY[c.course] || 'basic', f = c.next.form;
+      var key = courseKey(c.course), f = c.next.form;
       return '<div class="ex-alert ex-alert--live" data-live-box="' + key + '">' + ico('timer') +
         '<div class="ex-alert-txt"><strong class="ex-live-title">진행 중인 시험이 있습니다</strong>' +
           '<span>' + esc(c.course) + ' · ' + esc(f ? formName(c, f) : '') + ' · 남은 시간 <b class="ex-num ex-left" data-left="' + key + '">확인 중</b></span>' +
@@ -806,7 +809,7 @@
   function flowPanel() {
     var list = courses();
     var done = list.length > 0 && list.every(function (c) { return c.completed; });
-    var cur = done ? 5 : 4, pass = passOf(courseCfg('기본과정'));
+    var cur = done ? 5 : 4, pass = passOf(courseCfg(MAIN_COURSE));
     var FLOW = [
       ['양성과정 신청', '수강 신청·교육비 결제'],
       ['학습자료 확인', '강의·학습자료 수령'],
@@ -825,7 +828,7 @@
   }
 
   function coursePanel(c, wide) {
-    var key = COURSE_KEY[c.course] || 'basic', ex = c.exam || {}, w = c.window || {}, n = c.next || {}, rs = c.results || [];
+    var key = courseKey(c.course), ex = c.exam || {}, w = c.window || {}, n = c.next || {}, rs = c.results || [];
     var st = courseStatus(c), t = now();
     var point = ex.point || (ex.total ? 100 / ex.total : 0);
     var startMs = w.start ? dayStart(w.start) : 0, endMs = w.end ? dayStart(w.end) + DAY : 0;
@@ -923,7 +926,7 @@
   function guidePanel() {
     // 2026.09.21 통합: 이 계정에 등록된 과정 기준으로 안내합니다(과정이 둘이면 각각 표기)
     var mine = courses().map(function (c) { return c.course; });
-    if (!mine.length) mine = ['기본과정'];
+    if (!mine.length) mine = [MAIN_COURSE];
     var comp = mine.map(function (name) {
       var c = courseCfg(name);
       return (mine.length > 1 ? esc(name) + ' ' : '') + (c.total || 40) + '문항 · ' + (c.minutes || 60) + '분';
@@ -947,7 +950,7 @@
     if (!S.session) return showLogin();
     if (!S.data) return restore();
     var list = courses(), keep = {};
-    list.forEach(function (c) { if (isLive(c)) keep[COURSE_KEY[c.course]] = true; });
+    list.forEach(function (c) { if (isLive(c)) keep[courseKey(c.course)] = true; });
     Object.keys(S.live).forEach(function (k) { if (!keep[k]) delete S.live[k]; });
     var wide = list.length === 1;
     var html = liveAlerts(list) + candPanel() + flowPanel() +
@@ -963,14 +966,14 @@
 
   // 진행 중인 응시의 남은 시간: start(진행 중이면 새 응시를 만들지 않고 그대로 돌려줌)로 확인해 1초마다 표시
   function startLive(list) {
-    var keys = list.filter(isLive).map(function (c) { return COURSE_KEY[c.course]; });
+    var keys = list.filter(isLive).map(function (c) { return courseKey(c.course); });
     if (!keys.length) return;
     keys.forEach(function (k) { if (!S.live[k]) fetchLive(k); });
     paintLive();
     S.viewTimer = setInterval(paintLive, 1000);
   }
   function rememberLive(j) {
-    var a = (j && j.attempt) || {}, k = COURSE_KEY[a.course];
+    var a = (j && j.attempt) || {}, k = a.course ? courseKey(a.course) : '';
     if (k && a.deadline) S.live[k] = { id: a.id, deadline: a.deadline, startedAt: a.startedAt, at: Date.now() };
   }
   function fetchLive(k) {
@@ -1086,7 +1089,7 @@
   function showPledge(courseName) {
     var c = courseBy(courseName);
     if (!c || !c.next || c.next.action !== 'start') return showDashboard();
-    var key = COURSE_KEY[c.course] || 'basic', ex = c.exam || {}, form = c.next.form || 'A';
+    var key = courseKey(c.course), ex = c.exam || {}, form = c.next.form || 'A';
     var d = S.data || {}, s = S.session || {};
     var point = ex.point || 100 / (ex.total || 1);
     var nameVal = S.nameDraft != null ? S.nameDraft : (d.name || '');
@@ -1382,7 +1385,7 @@
     };
     E.span = (E.deadline - E.startedAt) || E.minutes * 60000;
     E.th = thresholds(E.minutes);
-    delete S.live[COURSE_KEY[E.course]];
+    delete S.live[courseKey(E.course)];
     var cur = sget(KEY.cur);
     if (cur && cur.id === E.id && qs[cur.cur]) E.cur = cur.cur;
     else if (j.resumed) {
@@ -1395,7 +1398,7 @@
     E.timers.tick = setInterval(tick, 250);
     E.timers.beat = setInterval(doSave, 30000);   // 30초마다 자동 저장
     tick();
-    setHash('exam/' + (COURSE_KEY[E.course] || 'basic'));
+    setHash('exam/' + courseKey(E.course));
     setSave('idle');
     var left = Math.min(E.deadline - now(), E.span), over = left <= 0;   // over: 시간이 이미 끝나 곧바로 제출되므로 안내 알림 생략
     if (over) { /* 제출 결과 알림만 표시 */ }
@@ -1864,7 +1867,7 @@
   function showResult(r) {
     if (!r) return showDashboard();
     var d = S.data || {}, s = S.session || {};
-    var key = COURSE_KEY[r.course] || 'basic', pass = r.passScore || 70;
+    var key = courseKey(r.course), pass = r.passScore || 70;
     var name = r.name || d.name || s.name || '', email = d.email || s.email || '';
     var facts = [
       ['정답 수', r.correct + '<small> / ' + r.total + '</small>'],
@@ -1883,9 +1886,9 @@
     var next;
     if (r.passed) {
       next = nextBox('pass', '이수증 발급 안내', [
-        '위원회가 응시 기록을 확인한 뒤 7일 이내에 「AI윤리전문가 이수증」(PDF)을 이메일로 보내 드립니다.',
-        '이수번호가 부여되어 한국AI윤리위원회 이수자 명부에 공식 등록됩니다.',
-        r.course === '심화과정' ? '심화과정 이수자에게는 전문위원 등록 안내가 함께 발송됩니다.' : '이수 사실은 위원회를 통해 확인할 수 있습니다.',
+        '위원회가 응시 기록을 확인한 뒤 7일 이내에 「AI윤리전문가 양성과정 이수증」(PDF)을 이메일로 보내 드립니다.',
+        '이수번호가 부여되어 한국AI윤리위원회 홈페이지에 AI윤리전문가로 공식 등록·검색됩니다.',
+        '이수자는 위원회 전문위원 등록을 신청할 수 있으며, 이수 사실은 위원회를 통해 확인할 수 있습니다.',
         demoNote
       ], S.demo ? '<button type="button" class="ex-btn ex-btn--secondary" data-act="demo-restart">' + ico('rotate-ccw') + '체험 처음부터 다시 하기</button>' : '');
     } else if (r.retake && r.retake.available) {
@@ -1972,7 +1975,7 @@
     var c = courseBy(r.course), lim = c && c.exam ? c.exam.retakes : -1;
     var rf = r.retake && r.retake.available ? (r.retake.form || 'B') : '';
     var sub = pass
-      ? '「AI윤리전문가 이수증」이 이메일로 발급되고<br>한국AI윤리위원회 이수자 명부에 공식 등록됩니다'
+      ? '「AI윤리전문가 양성과정 이수증」이 이메일로 발급되고<br>한국AI윤리위원회 홈페이지에 AI윤리전문가로 공식 등록됩니다'
       : (!rf ? '이후 절차는 결과 화면의<br>안내를 확인해 주십시오'
         : (lim == null || lim < 0 ? '응시 기간 안에는 횟수 제한 없이<br>다시 응시할 수 있습니다'
           : '재응시 ' + rf + '형이 열렸습니다<br>추가 비용 없이 다시 응시할 수 있습니다'));
@@ -2189,7 +2192,7 @@
 
   window.addEventListener('hashchange', function () {
     if (E) {
-      setHash('exam/' + (COURSE_KEY[E.course] || 'basic'));
+      setHash('exam/' + courseKey(E.course));
       toast('시험 중에는 다른 화면으로 이동할 수 없습니다. 답안을 제출한 뒤 이동해 주십시오.', 'warn');
       return;
     }

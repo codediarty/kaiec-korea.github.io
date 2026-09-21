@@ -63,7 +63,8 @@ def rel(path):
 def text_files():
     out = []
     for root, dirs, files in os.walk(BASE):
-        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__", "node_modules")]
+        # 'Claude outputs'·_qa 는 .gitignore 대상(관리자 자료·검토 사본)이라 배포되지 않으므로 검사하지 않음 (2026.09.21)
+        dirs[:] = [d for d in dirs if d not in (".git", "__pycache__", "node_modules", "Claude outputs", "_qa")]
         for f in files:
             if f.lower().endswith((".html", ".py", ".md", ".js", ".css", ".txt", ".xml", ".json", ".svg")):
                 out.append(os.path.join(root, f))
@@ -257,7 +258,7 @@ if f'api:{json.dumps(build.EXAM_API)}' not in exam_html:
     probs.append("/exam/ 설정(window.KAIEC_EXAM)에 EXAM_API 미반영")
 if "unified:true" not in exam_html:
     probs.append("/exam/ 설정에 unified:true 없음 (다른 과정 결제 안내가 다시 나올 수 있음)")
-for course, (total, _pass), minutes in (("기본과정", build.EXAM, build.EXAM_MIN), ("심화과정", build.EXAM_LEGACY_ADV, build.EXAM_MIN_LEGACY_ADV)):
+for course, (total, _pass), minutes in ((build.PROG, build.EXAM, build.EXAM_MIN), ("기본과정", build.EXAM, build.EXAM_MIN), ("심화과정", build.EXAM_LEGACY_ADV, build.EXAM_MIN_LEGACY_ADV)):
     if f'"{course}":{{total:{total},minutes:{minutes},' not in exam_html:
         probs.append(f"/exam/ 설정에 {course} 문항 수·시험 시간({total}문항·{minutes}분) 미반영 (백엔드 호환용)")
 if 'id="exLoginForm"' not in exam_html or 'id="exDemoBtn"' in exam_html:
