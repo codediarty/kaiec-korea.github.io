@@ -115,15 +115,15 @@ MATERIAL_ITEMS = [
      "출제 기준표와 영역별 문항 비중, 응시 절차, 유의사항, 재응시와 이수증 발급, 자주 묻는 질문을 정리한 안내서입니다. 무엇이 어디에서 몇 문항 나오는지 미리 알고 공부할 수 있습니다.",
      ["출제 기준표", "영역별 문항 비중", "응시 절차 안내"]),
 ]
-# 학습자료 다시 내려받기(/exam/ 로그인 후 보조 패널, 2026.09.22 백엔드 Code 1.5.6 materials): 학습자료 5종은 안내 메일에 첨부되어 나가고,
+# 학습자료 다시 내려받기(/exam/ 로그인 후 보조 패널, 2026.09.22 백엔드 Code 1.5.6 materials): 학습자료 5종은 안내 메일의 내려받기 링크로 나가고,
 # 이 패널은 메일을 잃어버린 수강생용입니다. 드라이브 파일 이름 앞 번호(00~04)로 짝을 맞춰 제목·분량·아이콘을 붙이고, 번호가 없는 파일은
 # 파일 이름 그대로 보여 줌. mb 는 체험 모드 표시용 대략값(실제 화면은 서버가 준 용량)
 MATERIAL_FILES = [
     ("00", "이수 평가 응시 안내", "13쪽 · 출제 기준표 · 7일 학습 플랜", "clipboard-list", 0.2),
-    ("01", "『핵심이론』 표준교재", f"{TEXTBOOK_PAGES}쪽 · {TEXTBOOK_CH}개 장 · 부록 4종", "book-open", 4),
-    ("02", "실전 모의고사 2회분", "31쪽 · 2회 × 40문항 · OMR 답안지", "pen-line", 3.1),
-    ("03", "정답 및 해설 별책", "20쪽 · 80문항 해설 · 근거 절 표시", "file-check", 2.3),
-    ("04", "『실무 도구집』", "76쪽 · 실무 양식 13종", "file-text", 5),
+    ("01", "『핵심이론』 표준교재", f"{TEXTBOOK_PAGES}쪽 · {TEXTBOOK_CH}개 장 · 부록 4종", "book-open", 82),
+    ("02", "실전 모의고사 2회분", "31쪽 · 2회 × 40문항 · OMR 답안지", "pen-line", 7.5),
+    ("03", "정답 및 해설 별책", "20쪽 · 80문항 해설 · 근거 절 표시", "file-check", 5.6),
+    ("04", "『실무 도구집』", "76쪽 · 실무 양식 13종", "file-text", 12.6),
 ]
 # 이수자에게 주는 것 (2026.09.21 통합 과정의 핵심 혜택. expert·experts·신청 폼에서 함께 씀): (아이콘, 제목, 설명)
 BENEFITS = [
@@ -2242,7 +2242,7 @@ def build_legal():
              "위원회는 이 밖의 명목으로 추가 비용을 청구하지 않습니다.</li>"
              "<li>기수별 특별가 등 한시적으로 적용되는 금액은 공지된 기간에만 적용되며, 기간 종료 후 신청분에는 적용되지 않습니다.</li></ol>"),
             ("제7조 (학습자료의 제공)",
-             "<ol><li>위원회는 결제 확인 후 이용자가 신청 시 기재한 이메일로 학습자료(PDF)를 발송합니다.</li>"
+             "<ol><li>위원회는 결제 확인 후 이용자가 신청 시 기재한 이메일로 학습자료(PDF) 내려받기 링크를 발송합니다.</li>"
              "<li>학습자료는 전자문서로만 제공되며 인쇄물 형태로는 제공하지 않습니다.</li>"
              "<li>이용자의 이메일 오기재, 수신 거부 설정, 메일함 용량 초과 등 이용자 측 사유로 수신되지 않은 경우에도 "
              "위원회가 발송을 완료한 때에 제공이 개시된 것으로 봅니다. 이 경우 이용자의 요청이 있으면 위원회는 재발송합니다.</li></ol>"),
@@ -2331,7 +2331,7 @@ def build_legal():
              "「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항 제5호는 <strong>디지털콘텐츠의 제공이 개시된 경우</strong> "
              "청약철회를 제한할 수 있도록 정하고 있습니다.</p>"
              "<p>따라서 다음의 경우에는 청약철회와 환불이 제한됩니다.</p>"
-             "<ol><li>신청 시 기재한 이메일로 학습자료(PDF)가 발송된 경우</li>"
+             "<ol><li>신청 시 기재한 이메일로 학습자료(PDF) 내려받기 링크가 발송된 경우</li>"
              "<li>이수 평가 시스템에 로그인하여 응시를 시작한 경우</li>"
              "<li>학습자료의 전부 또는 일부를 내려받은 경우</li></ol>"
              "<p class=\"lg-note\">위원회는 결제 안내 화면과 이 문서에 청약철회 제한 사실을 사전에 명확히 "
@@ -3583,7 +3583,7 @@ def build_expert():
           <aside class="one-course-side">
             <span class="one-course-side-t">이 금액에 모두 포함</span>
             <ul class="incl-list">{incl_html}</ul>
-            <p class="one-course-side-n">결제 완료 후 학습자료 5종이 이메일로 발송되고, 같은 이메일이 [평가응시] 로그인 아이디가 됩니다.</p>
+            <p class="one-course-side-n">결제 완료 후 학습자료 5종 내려받기 링크가 이메일로 발송되고, 같은 이메일이 [평가응시] 로그인 아이디가 됩니다.</p>
           </aside>
         </div>
 
@@ -3605,7 +3605,7 @@ def build_expert():
               <span>100점 만점에 <b>{EXAM[1]}점 이상</b>이면 이수 · 4지선다형 · 문항은 제공된 학습자료 범위에서만 출제 · 응시 기간 안 {RETAKE}</span>
             </div>
           </div>
-          <p class="field-hint" style="margin-top:12px">학습자료 구성은 운영 상황에 따라 일부 조정될 수 있으며, 학습자료(PDF 5종)는 결제 완료 후 이메일로 발송됩니다.
+          <p class="field-hint" style="margin-top:12px">학습자료 구성은 운영 상황에 따라 일부 조정될 수 있으며, 학습자료(PDF 5종)는 결제 완료 후 이메일로 발송되는 내려받기 링크로 받습니다.
              이수 평가는 학습 후 홈페이지 상단 <a href="exam.html" style="color:var(--blue);font-weight:700">[평가응시]</a>에서 로그인(아이디: 결제 이메일, 비밀번호: 휴대전화 번호 뒤 4자리)해 결제 후 {EXAM_WINDOW_DAYS}일 이내에 응시합니다.</p>
         </div>
         <div class="notice" style="margin-top:24px">
@@ -3677,7 +3677,7 @@ def build_expert():
         </div>
         <div class="grid grid-3">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">양성과정 신청</h3><p style="font-size:14px">온라인 신청 후 안전결제로 교육비 납부</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">학습자료 수령</h3><p style="font-size:14px">이메일로 학습자료(PDF 5종) 수령</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">학습자료 수령</h3><p style="font-size:14px">이메일의 링크로 학습자료(PDF 5종) 내려받기</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자율학습</h3><p style="font-size:14px">표준교재 · 실전 모의고사와 해설 별책</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">평가응시</h3><p style="font-size:14px">상단 <a href="exam.html" style="color:var(--blue);font-weight:700">[평가응시]</a>에서 로그인 · 결제 후 {EXAM_WINDOW_DAYS}일 이내</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 05</span><h3 style="font-size:16px">이수 기준 충족</h3><p style="font-size:14px">{EXAM[1]}점 이상<br>기준에 이를 때까지 재응시</p></div>
@@ -3961,7 +3961,7 @@ def build_expert_apply():
               <li>이수 기준 충족 ({EXAM[1]}점 이상)</li>
               <li class="is-final">이수증 발급 · 홈페이지 공식 등록 · 활용 가이드 발송</li>
             </ol>
-            <p class="gform-body">결제가 끝나면 학습자료(PDF 5종)가 이메일로 발송되고, 같은 이메일이 <b>[평가응시] 아이디</b>가 됩니다(비밀번호는 휴대전화 번호 뒤 4자리).</p>
+            <p class="gform-body">결제가 끝나면 학습자료(PDF 5종) 내려받기 링크가 이메일로 발송되고, 같은 이메일이 <b>[평가응시] 아이디</b>가 됩니다(비밀번호는 휴대전화 번호 뒤 4자리).</p>
             <div class="exam-info">
               <div><span>평가 구성</span>{EXAM[0]}문항 · 4지선다형 · 시험 시간 {EXAM_MIN}분</div>
               <div><span>이수 기준</span><b>100점 만점에 {EXAM[1]}점 이상</b></div>
@@ -5185,7 +5185,7 @@ def build_exam():
           </div>
           <div class="ex-lbox-body">
             <div class="ex-ready" id="exReady" hidden>{_ic("hourglass")}<p><strong>평가 시스템 연결 준비 중</strong>연결이 끝나면 이 화면에서 로그인할 수 있습니다.</p></div>
-            <div class="ex-lbox-go" id="exLoginGo" hidden>{_ic("download")}<p><strong>학습자료 다시 내려받기</strong>안내 메일의 아이디와 비밀번호로 로그인하면 메일에 첨부된 학습자료 5종(PDF)을 다시 내려받을 수 있습니다.</p></div>
+            <div class="ex-lbox-go" id="exLoginGo" hidden>{_ic("download")}<p><strong>학습자료 다시 내려받기</strong>안내 메일의 아이디와 비밀번호로 로그인하면 학습자료 5종(PDF)을 다시 내려받을 수 있습니다.</p></div>
             <form class="ex-form" id="exLoginForm" novalidate>
               <div class="ex-field">
                 <label class="ex-label" for="exEmail">이메일(아이디)</label>
