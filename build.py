@@ -758,8 +758,14 @@ def build_index(posts):
         <p>AI 윤리 교육, 연구, 캠페인, AI윤리전문가 양성 및 국내외 협력 활동을 추진합니다.</p>
 
         <div class="ai-visual">
-            <img src="assets/img/hero-ai.jpg" alt="Responsible AI, Better Tomorrow. 한국AI윤리위원회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
+            <img src="assets/img/hero-ai.jpg" alt="AI를 손 위에 올린 모습. 한국AI윤리위원회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
           </div>
+          <ul class="ai-values" aria-label="AI 윤리 핵심가치">
+            <li><i data-lucide="shield-check"></i><span><small>Responsibility</small><b>책임성</b></span></li>
+            <li><i data-lucide="file-search"></i><span><small>Transparency</small><b>투명성</b></span></li>
+            <li><i data-lucide="scale"></i><span><small>Fairness</small><b>공정성</b></span></li>
+            <li><i data-lucide="users"></i><span><small>Human-Centric</small><b>사람 중심</b></span></li>
+          </ul>
 
           <div class="hero-bottom">
           <div class="hero-ctas">
@@ -769,13 +775,6 @@ def build_index(posts):
             <a class="btn btn-light" href="copyclean.html">카피클린 문서검사 <i data-lucide="arrow-right"></i></a>
           </div>
 
-          <a class="hero-promo" href="expert.html">
-            <div>
-              <strong>AI윤리전문가 양성과정 1기 모집 중 <span class="promo-new">NEW</span></strong>
-              <p>접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)}<br>AI윤리전문가 공식 등록 · KAIEC 홈페이지 인물 등재</p>
-            </div>
-            <span class="promo-go"><i data-lucide="arrow-right"></i></span>
-          </a>
         </div>
       </div>
     </section>
@@ -3450,13 +3449,12 @@ def build_expert():
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가 양성과정</p>
-        <span class="hl-pill" data-deadline="{DEADLINE_ISO}"><i data-lucide="badge-check"></i>한국AI윤리위원회 주관 · 1기 접수 마감 {DEADLINE} <b class="dday" data-dday></b> · 1기 특별가 {PRICE_SHORT}</span>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>한국AI윤리위원회 주관 · 이력에 더하는 AI 전문역량</span>
         <h1>AI윤리전문가 양성과정 <span class="hot-tag">HOT</span></h1>
         <p class="ph-lead" style="max-width:900px">2026년, 이력서에 새롭게 더할 AI 전문 이력.<br>
            취업준비생부터 대학생, 실무자까지 지금 시작하는 <b class="t">AI윤리전문가</b>.</p>
         <p class="ph-body" style="max-width:900px!important">전공이나 경력에 관계없이 온라인으로 시작할 수 있습니다.<br>
-           <strong>학습자료부터 평가, 공식 이수증 발급, 한국AI윤리위원회 홈페이지 전문가 등록</strong>까지 한 번에.<br>
-           <b>1기 특별가 {won(PRICE)} · 결제 후 바로 시작 · 접수 마감 {DEADLINE}</b></p>
+           <strong>학습자료부터 평가, 공식 이수증 발급, 한국AI윤리위원회 홈페이지 전문가 등록</strong>까지 한 번에.</p>
         <div class="hero-hooks">
           <span><i data-lucide="check"></i>전공 · 경력 제한 없음</span>
           <span><i data-lucide="check"></i>100% 온라인</span>
