@@ -1670,3 +1670,11 @@ table.tbl tr:hover td{background:#FCFDFF}
 .stat-band .sb-body span strong{display:inline;font-size:inherit;margin:0;color:#fff}
 .stat-band .sb-body small.src{display:block;margin-top:9px;font-size:12px;color:#8FA6CC}
 @media (max-width:640px){.stat-band{flex-direction:column;align-items:flex-start;gap:12px;padding:22px 20px}}
+
+/* 학습자료 5종 표지 이미지 (2026.09.22): /expert/ Study Materials 위, 신청 폼 SECTION 1 아래 */
+.mat-figure{margin:0 auto 26px;max-width:960px}
+.mat-figure img{display:block;width:100%;height:auto;border-radius:14px;box-shadow:0 10px 30px rgba(10,22,40,.10)}
+.mat-figure figcaption{margin-top:10px;text-align:center;font-size:12.5px;color:var(--gray-500)}
+.mat-figure--sm{margin:14px 0 0;max-width:none}
+.mat-figure--sm img{border-radius:10px;box-shadow:0 6px 18px rgba(10,22,40,.08)}
+.mat-figure--sm figcaption{font-size:12px;margin-top:8px}

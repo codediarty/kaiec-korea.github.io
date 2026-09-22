@@ -3580,6 +3580,10 @@ def build_expert():
             <h2 class="h-sec">위원회가 직접 집필한 학습자료 5종</h2>
             <p class="h-sub" style="margin:0 auto">영상 진도율을 채우는 과정이 아닙니다. 결제 즉시 PDF 5종을 받아 원하는 속도로 공부하고, 준비되면 바로 응시합니다.</p>
           </div>
+          <figure class="mat-figure reveal">
+            <img src="assets/img/materials-5set.jpg" alt="AI윤리전문가 양성과정 학습자료 5종 표지: 00 이수 평가 응시 안내, 01 핵심이론, 02 실전 모의고사, 03 정답 및 해설, 04 실무 도구집" loading="lazy" width="1543" height="430">
+            <figcaption>2026년판 학습자료 5종(PDF · {MATERIAL_PAGES}쪽) · 결제 확인 즉시 이메일로 발송</figcaption>
+          </figure>
           <ol class="lec-list">{mat_html}
           </ol>
           <div class="exam-grid exam-grid--one reveal">
@@ -3896,6 +3900,10 @@ def build_expert_apply():
                 </span>
               </div>
             </div>
+            <figure class="mat-figure mat-figure--sm">
+              <img src="assets/img/materials-5set.jpg" alt="결제 즉시 받는 학습자료 5종 표지: 이수 평가 응시 안내, 핵심이론, 실전 모의고사, 정답 및 해설, 실무 도구집" loading="lazy" width="1543" height="430">
+              <figcaption>결제 확인 즉시 이메일로 받는 학습자료 5종 (PDF · {MATERIAL_PAGES}쪽)</figcaption>
+            </figure>
           </div>
 
           <div class="gform-card" id="secPurpose">
