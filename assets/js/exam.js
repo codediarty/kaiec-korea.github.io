@@ -3,8 +3,10 @@
          → 응시 전 확인(성명 입력·시험 안내·서약·환경 점검) → 시험 시작 확인 창 → 시험(전체 화면 레이어, 시험 시간 타이머: 기본 60분·심화 75분)
          → 제출 확인 → 결과
    진행 중인 시험은 자동으로 열지 않고, 대시보드의 [이어서 응시] → 확인 창(서버 기준 남은 시간)을 거쳐 들어갑니다.
-   API: POST text/plain JSON {action: login | status | start | save | submit}, GET ?action=ping
+   API: POST text/plain JSON {action: login | status | start | save | submit | materials}, GET ?action=ping
         (이수 평가 API 계약서 + 1.1.0 추가 사항: start 요청의 name, attempt.name, Result.name)
+   자료실(2026.09.22, 백엔드 Code 1.5.6): 대시보드의 '학습자료 내려받기' 패널이 materials 로 드라이브 파일 목록(이름 · 크기 · 내려받기 주소)을 받아
+        파일별 [내려받기] 버튼으로 그립니다. 안내 메일의 버튼은 /exam/?go=materials 로 들어오며, 로그인 뒤 그 패널로 바로 이동합니다.
    체험 모드: /exam/?demo=1 로만 진입 (브라우저 안 모의 API, 기록이 남지 않음)
    외부 라이브러리 없이 동작하며, 아이콘은 페이지 안 SVG 스프라이트(#exi-이름)를 씁니다. */
 (function () {
@@ -136,7 +138,8 @@
   /* ---------------------------------------------------------------- 2. 상태·서버 시각 */
   // live: 진행 중인 응시의 남은 시간(대시보드 표시용, start 응답으로 확인), nameDraft: 응시 전 확인에서 입력 중인 성명
   var S = { demo: false, session: null, data: null, loadedAt: 0, offset: 0, view: '', exam: null,
-            live: {}, nameDraft: null, viewTimer: null, lastPing: 0 };
+            live: {}, nameDraft: null, viewTimer: null, lastPing: 0,
+            materials: null, matErr: '', matBusy: false, go: '' };   // materials: 자료실 목록(materials 응답), go: 'materials' 면 로그인 뒤 자료실로 이동
   var E = null;   // 진행 중인 응시
 
   function now() { return Date.now() + S.offset; }
@@ -346,6 +349,11 @@
         case 'status':
           save(db);
           return ok({ name: db.name, email: db.email, courses: [courseState(db)] });
+        case 'materials': {   // 체험 모드: 목록만 보여 주고 내려받기는 막음
+          var mats = (CFG.materials || []).map(function (x) { return { name: x.no + '_' + x.title + '.pdf', mb: x.mb || 0, size: 0, id: '', url: '', dl: '' }; });
+          var sum = mats.reduce(function (acc, x) { return acc + (+x.mb || 0); }, 0);
+          return ok({ course: MAIN_COURSE, files: mats, count: mats.length, mb: Math.round(sum * 10) / 10, folderUrl: '' });
+        }
         case 'start':
           // 백엔드와 같은 순서: 진행 중이면 이어서(성명·서약 불필요) → 평가지 → 서약 → 성명
           if (a) return ok({ attempt: publicAttempt(a), questions: DEMO.questions, answers: a.answers, flags: a.flags, blurCount: a.blurCount, resumed: true });
@@ -568,6 +576,8 @@
     S.data = null;
     S.live = {};
     S.nameDraft = null;
+    S.materials = null;
+    S.matErr = '';
   }
 
   function sessionExpired(msg) {
@@ -596,6 +606,8 @@
     el.login.classList.add('is-on');
     var ready = !!CFG.api;
     el.ready.hidden = ready;
+    var goBox = $('exLoginGo');
+    if (goBox) goBox.hidden = !(ready && S.go === 'materials');
     [el.email, el.pin, el.pinToggle, el.loginBtn].forEach(function (x) { if (x) x.disabled = !ready; });
     errBox(el.err, msg || '');
     setHash('');
@@ -681,6 +693,8 @@
     S.data = null;
     S.live = {};
     S.nameDraft = null;
+    S.materials = null;
+    S.matErr = '';
     exitDemoUrl();
     var real = sget(KEY.session);
     if (real && real.token && CFG.api) { S.session = real; checkSys(); restore(); }
@@ -696,6 +710,8 @@
     S.data = null;
     S.live = {};
     S.nameDraft = null;
+    S.materials = null;
+    S.matErr = '';
     enterDemo();
   }
 
@@ -812,7 +828,7 @@
     var cur = done ? 5 : 4, pass = passOf(courseCfg(MAIN_COURSE));
     var FLOW = [
       ['양성과정 신청', '수강 신청·교육비 결제'],
-      ['학습자료 확인', '메일로 자료 5종 수령'],
+      ['학습자료 내려받기', '아래 자료실에서 PDF 5종'],
       ['자율학습', '표준교재 · 모의고사 학습'],
       ['평가응시', '온라인 이수 평가 응시'],
       ['이수 기준 충족', pass + '점 이상'],
@@ -825,6 +841,83 @@
         '<span class="ex-step-t">' + f[0] + '</span><span class="ex-step-d">' + f[1] + '</span>' +
         (k === cur ? '<em class="ex-step-now">현재 단계</em>' : '') + '</li>';
     }).join('') + '</ol>', { cls: 'ex-flow' });
+  }
+
+  /* 학습자료 자료실 (2026.09.22): 백엔드 materials 응답(files: name · mb · url · dl)을 CFG.materials(번호별 제목 · 분량 · 아이콘)와 짝지어 그림 */
+  var MAT_ICON_DEFAULT = 'file-text';
+  function matInfo(name) {
+    var m = /^(\d{2})[_\-\s]/.exec(String(name || ''));
+    var no = m ? m[1] : '', list = CFG.materials || [];
+    for (var i = 0; i < list.length; i++) if (list[i].no === no) return { no: no, title: list[i].title, meta: list[i].meta || '', icon: list[i].icon || MAT_ICON_DEFAULT };
+    return { no: no || 'PDF', title: String(name || '').replace(/\.pdf$/i, '').replace(/_/g, ' '), meta: '', icon: MAT_ICON_DEFAULT };
+  }
+  function fmtMB(mb) { mb = +mb || 0; return (mb >= 10 ? Math.round(mb) : Math.round(mb * 10) / 10) + 'MB'; }
+  function matCard(f) {
+    var info = matInfo(f.name), dl = f.dl || '';
+    return '<li class="ex-mat">' +
+      '<div class="ex-mat-top"><span class="ex-mat-no">' + esc(info.no) + '</span>' + ico(info.icon, 'ex-mat-ico') + '</div>' +
+      '<h3 class="ex-mat-t">' + esc(info.title) + '</h3>' +
+      (info.meta ? '<p class="ex-mat-m">' + esc(info.meta) + '</p>' : '') +
+      '<p class="ex-mat-s">PDF · ' + fmtMB(f.mb) + '</p>' +
+      (dl
+        ? '<a class="ex-btn ex-btn--primary ex-btn--block" href="' + esc(dl) + '" target="_blank" rel="noopener">' + ico('download') + '내려받기</a>' +
+          (f.url ? '<a class="ex-mat-view" href="' + esc(f.url) + '" target="_blank" rel="noopener">브라우저에서 미리보기' + ico('external-link') + '<span class="sr-only">(새 창)</span></a>' : '')
+        : '<span class="ex-btn ex-btn--secondary ex-btn--block is-disabled" aria-disabled="true">' + ico('download') + '체험 모드에서는 받을 수 없음</span>') +
+      '</li>';
+  }
+  function materialsPanel() {
+    var m = S.materials, body, aside = '';
+    if (S.matErr) {
+      body = '<div class="ex-mat-err">' + ico('alert-triangle') + '<span>' + esc(S.matErr) + '</span>' +
+        '<button type="button" class="ex-btn ex-btn--secondary" data-act="mat-retry">' + ico('refresh-cw') + '다시 불러오기</button></div>';
+    } else if (!m) {
+      body = '<div class="ex-mat-loading"><span class="ex-spin ex-spin--sm" aria-hidden="true"></span>학습자료 목록을 불러오는 중입니다</div>';
+    } else {
+      var files = m.files || [];
+      var big = files.filter(function (f) { return (+f.mb || 0) >= 50; }).map(function (f) { return matInfo(f.name).title + '(' + fmtMB(f.mb) + ')'; });
+      body = (files.length ? '<ul class="ex-mat-grid">' + files.map(matCard).join('') + '</ul>' : '<p class="ex-empty">등록된 학습자료가 없습니다. ' + esc(CFG.email || '') + ' 로 문의해 주십시오.</p>') +
+        '<div class="ex-mat-foot">' +
+          '<p class="ex-note ex-mat-note">' + ico('info') + '<span>PDF ' + files.length + '종 · 합계 ' + fmtMB(m.mb) + '. 응시 기간 동안 언제든 다시 내려받을 수 있습니다.' +
+            (big.length ? ' ' + esc(big.join(', ')) + '처럼 큰 파일은 와이파이 환경에서 받으시길 권합니다.' : '') + '</span></p>' +
+          (m.folderUrl ? '<a class="ex-btn ex-btn--secondary" href="' + esc(m.folderUrl) + '" target="_blank" rel="noopener">' + ico('folder') + '드라이브 폴더에서 한 번에 받기' + ico('external-link') + '<span class="sr-only">(새 창)</span></a>' : '') +
+        '</div>';
+      aside = '<small class="ex-panel-note">수강생 전용 · 외부 공유와 재배포 금지</small>';
+    }
+    return '<section class="ex-panel ex-mats" id="exMats" aria-labelledby="exMatsTitle"><header class="ex-panel-head"><h2 class="ex-h" id="exMatsTitle">' + ico('book-open') + '학습자료 내려받기</h2>' + aside + '</header>' + body + '</section>';
+  }
+  function repaintMats() {
+    var node = $('exMats');
+    if (!node || S.view !== 'dashboard') return;
+    var tmp = document.createElement('div');
+    tmp.innerHTML = materialsPanel();
+    node.parentNode.replaceChild(tmp.firstChild, node);
+    focusMats();
+  }
+  // 안내 메일의 [학습자료 내려받기] 버튼(?go=materials)으로 들어왔으면 자료실 패널로 이동해 잠시 강조
+  function focusMats() {
+    if (S.go !== 'materials' || !S.materials) return;
+    S.go = '';
+    var node = $('exMats');
+    if (!node) return;
+    node.classList.add('is-focus');
+    try { node.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' }); } catch (e) { node.scrollIntoView(); }
+    setTimeout(function () { node.classList.remove('is-focus'); }, 2600);
+  }
+  function loadMaterials(force) {
+    if (S.matBusy) return;
+    if (S.materials && !force) { focusMats(); return; }
+    S.matBusy = true;
+    S.matErr = '';
+    call('materials').then(function (j) {
+      S.matBusy = false;
+      S.materials = j;
+      repaintMats();
+    }, function (e) {
+      S.matBusy = false;
+      if (e.code === 'SESSION') return;
+      S.matErr = e.message || NET_MSG;
+      repaintMats();
+    });
   }
 
   function coursePanel(c, wide) {
@@ -953,7 +1046,7 @@
     list.forEach(function (c) { if (isLive(c)) keep[courseKey(c.course)] = true; });
     Object.keys(S.live).forEach(function (k) { if (!keep[k]) delete S.live[k]; });
     var wide = list.length === 1;
-    var html = liveAlerts(list) + candPanel() + flowPanel() +
+    var html = liveAlerts(list) + candPanel() + flowPanel() + materialsPanel() +
       (list.length
         ? '<div class="ex-courses' + (wide ? ' is-single' : '') + '">' + list.map(function (c) { return coursePanel(c, wide); }).join('') + '</div>'
         : panel('신청 과정', '<p class="ex-empty">응시할 수 있는 과정이 없습니다. ' + esc(CFG.email || '') + ' 로 문의해 주십시오.</p>')) +
@@ -962,6 +1055,7 @@
     setView(html, 'dashboard', { refresh: true });
     setHash('dashboard');
     startLive(list);
+    if (S.materials) focusMats(); else loadMaterials();
   }
 
   // 진행 중인 응시의 남은 시간: start(진행 중이면 새 응시를 만들지 않고 그대로 돌려줌)로 확인해 1초마다 표시
@@ -2032,6 +2126,7 @@
           function (e) { setBtnBusy(t, false); if (e.code !== 'SESSION') toast(e.message, 'danger'); });
         break;
       case 'dashboard': showDashboard(); break;
+      case 'mat-retry': S.materials = null; S.matErr = ''; repaintMats(); loadMaterials(true); break;
       case 'pledge': showPledge(course); break;
       case 'resume': resumeConfirm(course); break;
       case 'resume-go':
@@ -2203,6 +2298,7 @@
   function init() {
     bindLogin();
     startClock();
+    if (/[?&]go=materials(&|$)/.test(location.search) || location.hash === '#materials') S.go = 'materials';
     if (/[?&]demo=1(&|$)/.test(location.search) || CFG.demo === true) return enterDemo();
     var sess = sget(KEY.session);
     if (sess && sess.token && CFG.api) {

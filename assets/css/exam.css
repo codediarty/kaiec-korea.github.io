@@ -149,6 +149,11 @@ html:not(.js) .ex-boot{display:none}
   background:var(--ex-warn-050);font-size:13.5px;color:#6B3F08;line-height:1.55}
 .ex-ready>.ex-ico{width:17px;height:17px;margin-top:2px;color:var(--ex-warn)}
 .ex-ready strong{display:block;font-size:14px}
+.ex-lbox-go{display:flex;gap:10px;align-items:flex-start;margin:0 0 16px;padding:11px 13px;border:1px solid var(--ex-navy-line);border-radius:var(--ex-r);
+  background:var(--ex-navy-050);font-size:13.5px;color:var(--ex-text);line-height:1.55}
+.ex-lbox-go>.ex-ico{width:18px;height:18px;margin-top:2px;color:var(--ex-navy)}
+.ex-lbox-go p{margin:0}
+.ex-lbox-go strong{display:block;font-size:14px;color:var(--ex-navy)}
 /* 응시 자격 · 과정 등록 */
 .ex-lbox-pay{padding:18px 32px 20px;border-top:1px solid var(--ex-line-2);background:#FAFBFD}
 .ex-lbox-q{margin:0;font-size:13px;font-weight:700;color:var(--ex-text);text-align:center;letter-spacing:-.02em}
@@ -329,6 +334,30 @@ html:not(.js) .ex-boot{display:none}
   font-size:13px;color:var(--ex-sub);line-height:1.55}
 .ex-contact .ex-ico{width:15px;height:15px;margin-top:2px;color:var(--ex-mute)}
 .ex-contact a{color:var(--ex-link);font-weight:600;word-break:break-all}
+
+/* 학습자료 자료실 (2026.09.22): 파일별 카드 5장 + [내려받기]. 안내 메일의 버튼(?go=materials)으로 들어오면 잠시 강조 */
+.ex-mats{scroll-margin-top:132px}
+.ex-mats.is-focus{border-color:var(--ex-navy);box-shadow:0 0 0 3px var(--ex-navy-100),var(--ex-shadow)}
+.ex-mat-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;padding:16px 20px 4px;list-style:none}
+.ex-mat{display:flex;flex-direction:column;min-width:0;padding:14px 14px 12px;border:1px solid var(--ex-line);border-radius:var(--ex-r-lg);background:#fff;
+  transition:border-color .15s ease,box-shadow .15s ease}
+.ex-mat:hover{border-color:var(--ex-navy-line);box-shadow:0 6px 16px rgba(11,42,74,.08)}
+.ex-mat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ex-mat-no{display:inline-flex;align-items:center;height:22px;padding:0 7px;border-radius:3px;background:var(--ex-navy);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.ex-mat-ico{width:22px;height:22px;color:var(--ex-navy-line)}
+.ex-mat-t{margin:0;font-size:15px;font-weight:700;line-height:1.4;letter-spacing:-.02em;color:var(--ex-ink);word-break:keep-all}
+.ex-mat-m{margin:4px 0 0;font-size:12.5px;line-height:1.5;color:var(--ex-sub);word-break:keep-all}
+.ex-mat-s{margin:auto 0 0;padding-top:10px;font-size:12.5px;color:var(--ex-mute);font-variant-numeric:tabular-nums}
+.ex-mat .ex-btn{margin-top:8px;height:40px;font-size:14px}
+.ex-mat .ex-btn.is-disabled{opacity:.55;cursor:not-allowed;font-size:12.5px;padding:0 8px}
+.ex-mat-view{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12.5px;color:var(--ex-link);text-decoration:none}
+.ex-mat-view:hover{text-decoration:underline}
+.ex-mat-view .ex-ico{width:12px;height:12px}
+.ex-mat-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 16px;padding:12px 20px 16px}
+.ex-mat-note{flex:1 1 320px;margin:0;font-size:13.5px}
+.ex-mat-loading,.ex-mat-err{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 12px;padding:26px 20px;color:var(--ex-sub);font-size:14.5px}
+.ex-mat-err>.ex-ico{width:20px;height:20px;color:var(--ex-warn)}
 
 .ex-fail{max-width:560px;margin:24px auto 0;padding:36px 28px;text-align:center}
 .ex-fail>.ex-ico{width:34px;height:34px;margin-bottom:10px;color:var(--ex-warn)}
@@ -657,6 +686,7 @@ body.ex-lock{overflow:hidden}
   .ex-main{padding:22px 22px 36px}
 }
 @media (max-width:1080px){
+  .ex-mat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .ex-top-cand{display:none}
   .ex-timer{margin-left:auto}
   .ex-top-prog{display:none}
@@ -725,6 +755,11 @@ body.ex-lock{overflow:hidden}
   .ex-mbtn .ex-ico{width:17px;height:17px}
 }
 @media (max-width:640px){
+  .ex-mats{scroll-margin-top:84px}
+  .ex-mat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px 14px 4px}
+  .ex-mat{padding:12px 12px 10px}
+  .ex-mat-foot{padding:10px 14px 14px}
+  .ex-mat-foot .ex-btn{width:100%}
   .ex-shell{font-size:14.5px}
   .ex-phead-in,.ex-view,.ex-demo-bar{padding-left:16px;padding-right:16px}
   .ex-phead-in{padding-top:14px;padding-bottom:12px;gap:10px}
@@ -812,6 +847,7 @@ body.ex-lock{overflow:hidden}
   .ex-bigtime strong{font-size:36px}
 }
 @media (max-width:420px){
+  .ex-mat-grid{grid-template-columns:minmax(0,1fr)}
   .ex-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
   .ex-mbar{gap:6px;padding-left:10px;padding-right:10px}
   .ex-mbtn{gap:4px;font-size:14.5px}
