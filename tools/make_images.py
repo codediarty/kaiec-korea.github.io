@@ -9,6 +9,7 @@ CAT_COLOR={"공지":"#5B8DEF","칼럼":"#6FE3D8","연구·정책":"#9FB7FF","캠
 
 # slug → (대표 문구, 부제)
 LABELS={
+ "2026-09-22-seoul-ai-ethics-governance-forum":("서울 AI 윤리·거버넌스 포럼 (10.7 코엑스)","Designing Trust: Seoul's AI Future · 위원회 추천 행사"),
  "2024-03-15-founding":("한국AI윤리위원회 출범","설립 취지와 초대 임원진 안내"),
  "2025-03-14-first-anniversary":("설립 1년, 걸어온 길","한국AI윤리위원회 1주년"),
  "2025-05-20-company-checklist":("기업 AI 윤리 체크리스트 7가지","생성형 AI 도입 전 점검"),

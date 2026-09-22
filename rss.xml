@@ -6,6 +6,14 @@
     <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
+      <title>한국AI윤리위원회 추천 행사 | 서울 AI 윤리·거버넌스 포럼 「Designing Trust: Seoul&#x27;s AI Future」 (10.7 코엑스)</title>
+      <link>https://kaiec.kr/news/2026-09-22-seoul-ai-ethics-governance-forum/</link>
+      <guid>https://kaiec.kr/news/2026-09-22-seoul-ai-ethics-governance-forum/</guid>
+      <pubDate>Tue, 22 Sep 2026 09:00:00 +0900</pubDate>
+      <category>공지</category>
+      <description>서울AI재단과 전자신문이 10월 7일(수) 코엑스에서 여는 「서울 AI 윤리·거버넌스 포럼」을 한국AI윤리위원회가 회원과 수강생 여러분께 공식 추천합니다. 주한 EU 대표부, 인공지능안전연구소, 케임브리지대학교, 유네스코한국위원회의 연사가 AI 윤리와 안전, 책임 있는 AI 설계, 글로벌 거버넌스를 논의합니다.</description>
+    </item>
+    <item>
       <title>AI윤리전문가란 누구인가: AI 시대가 찾는 전문 역량</title>
       <link>https://kaiec.kr/news/2026-09-11-ai-ethics-expert-intro/</link>
       <guid>https://kaiec.kr/news/2026-09-11-ai-ethics-expert-intro/</guid>
@@ -156,14 +164,6 @@
       <pubDate>Sat, 01 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
       <description>학술지들이 투고 논문의 AI 활용 정책을 강화하고 있습니다. 게재 후 철회로 이어지는 대표적인 실수 3가지와 투고 전 점검 체크리스트를 연구자 관점에서 정리했습니다.</description>
-    </item>
-    <item>
-      <title>AI가 쓴 글의 특징 10가지, 전문가는 어떻게 구별하는가</title>
-      <link>https://kaiec.kr/news/2026-07-30-ai-writing-traits/</link>
-      <guid>https://kaiec.kr/news/2026-07-30-ai-writing-traits/</guid>
-      <pubDate>Thu, 30 Jul 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>검사기 없이도 AI 글은 티가 납니다. 심사자·교수·인사담당자가 실제로 포착하는 AI 문체의 특징 10가지를 정리했습니다. 내 글을 점검하는 체크리스트로도 활용할 수 있습니다.</description>
     </item>
   </channel>
 </rss>
