@@ -4254,7 +4254,7 @@ def build_experts():
           <span class="eyebrow">What Is It</span>
           <h2 class="h-sec">AI윤리전문가란, 누구나 갖고 싶은 AI 역량 이력입니다</h2>
           <p class="h-sub" style="margin:0 auto">AI를 잘 쓰는 사람은 많습니다. 기업이 찾는 사람은 AI의 결과를 검증하고 <strong>책임 있게 쓸 줄 아는 사람</strong>입니다.
-             그 역량을 한국AI윤리위원회가 확인해 준 이력이 AI윤리전문가입니다.</p>
+             그 역량을 한국AI윤리위원회가 확인해 준 이력이 AI윤리전문가입니다. 전공·경력 제한 없이, 전 과정 100% 온라인으로 시작합니다.</p>
         </div>
         <div class="why-row">{stat_html}</div>
         <div class="split" style="align-items:start;margin-top:34px">
@@ -4279,8 +4279,8 @@ def build_experts():
                 <div class="chips"><span class="chip">결과 검증</span><span class="chip">위험 판단</span><span class="chip">책임 있는 활용</span></div></div></div>
             <div class="worth"><span class="worth-no">03</span><div class="worth-ic"><i data-lucide="award"></i></div>
               <div class="worth-b"><strong>어떻게 남는가</strong>
-                <p>공식 이수증(이수번호)과 KAIEC 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드. 이력서와 면접, 사내 AI 기준 수립에 바로 씁니다.</p>
-                <div class="chips"><span class="chip">공식 이수증</span><span class="chip">홈페이지 공식 등록</span><span class="chip">활용 가이드</span></div></div></div>
+                <p>학습자료부터 이수 평가까지 전 과정 100% 온라인. 이수하면 공식 이수증(이수번호)과 KAIEC 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드가 남고, 이력서와 면접, 사내 AI 기준 수립에 바로 씁니다.</p>
+                <div class="chips"><span class="chip">100% 온라인</span><span class="chip">공식 이수증</span><span class="chip">홈페이지 공식 등록</span><span class="chip">활용 가이드</span></div></div></div>
           </div>
         </div>
       </div>
