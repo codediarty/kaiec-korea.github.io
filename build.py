@@ -73,7 +73,9 @@ POSTS_LASTMOD = "2026-09-14"            # 게시글 전체 틀이 바뀐 마지�
 PROG = "AI윤리전문가 양성과정"
 DOC = "이수증"
 DOC_FULL = f"{PROG} {DOC}"                # 「AI윤리전문가 양성과정 이수증」
-PROG_EN = "KAIEC AI Ethics Professional"  # 이력서 영문 표기 (이수 시 부여)
+PROG_EN = "AI Ethics Professional, Korea AI Ethics Committee"  # 이력서 영문 표기 (2026.09.22: 약어 KAIEC 대신 기관명을 풀어 씀. 이수번호 KAIEC-E-연도-일련번호가 약어를 대신함)
+RESUME_KO = "AI윤리전문가 · 한국AI윤리위원회 이수"          # 이력서 국문 한 줄 (뒤에 이수번호 No. KAIEC-E-2026-0001 을 붙임)
+RESUME_NO = "No. KAIEC-E-2026-0001"                    # 이력서 예시용 이수번호 형식
 EXAM = (40, 70)                           # 이수 평가: 문항 수, 이수 기준 점수 (통합 과정. 백엔드 Code 1.5.0의 「AI윤리전문가 양성과정」 평가와 같음)
 EXAM_MIN = 60                             # 시험 시간(분): 응시자가 [시험 시작]을 누른 때부터
 # 평가 백엔드가 1.4.4 이하로 돌고 있으면 계정의 과정이 '기본과정'·'심화과정'으로 올 수 있으므로 /exam/ 설정에는 옛 값도 함께 넣어 둡니다 (호환용, 사이트에는 표시하지 않음)
@@ -121,8 +123,8 @@ BENEFITS = [
      "이수 즉시 위원회 홈페이지에 AI윤리전문가로 등록. 이름과 이수번호로 누구나 검색할 수 있습니다."),
     ("pen-line", "이력서 · 자기소개서 활용 가이드",
      "이력서 어느 칸에 어떻게 쓰는지, 자기소개서 문장 예시와 면접 답변 포인트까지. 이수자 전용 가이드."),
-    ("id-card", "이력서에는 이렇게 씁니다",
-     f"국문: 한국AI윤리위원회 {PROG} 이수 / 영문: {PROG_EN}. 이대로 적으면 됩니다."),
+    ("id-card", "이력서 가이드",
+     f"국문: {RESUME_KO} ({RESUME_NO}) / 영문: {PROG_EN} ({RESUME_NO}). 이대로 적으면 됩니다."),
     ("briefcase", "『실무 도구집』 양식 13종",
      "사내 AI 사용 기준, AI 활용 고지문, 위험도 점검표 등. 고쳐 쓰는 실무 양식, 이수 뒤에도 계속 씁니다."),
     ("user-check", "위원회 전문위원 지원 자격",
@@ -587,15 +589,16 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
 def resume_box(note_basic=True):
     """이력서 기재 예시 (2026.09.21 통합): 이수 직후 쓰는 두 줄과, 전문위원 등록 뒤에 더해지는 한 줄"""
     return f"""        <div class="resume-line reveal">
-          <span class="resume-label">이력서에는 이렇게 씁니다</span>
+          <span class="resume-label">이력서 가이드</span>
           <div class="resume-rows">
             <div class="rrow">
               <span class="resume-tag">이수 직후</span>
               <div class="rlines">
-                <p><b>교육 · 연수</b><code>한국AI윤리위원회 {PROG} 이수 (이수번호 기재)</code></p>
-                <p><b>전문이력</b><code>{PROG_EN} 과정 이수</code></p>
-                <small>국문 이력서에는 첫 줄을, 영문 이력서와 링크드인에는 <strong>{PROG_EN}</strong>을 그대로 적으면 됩니다.
-                  어느 칸에 어떻게 쓰는지는 이수자 전용 <strong>이력서·자기소개서 활용 가이드</strong>로 함께 드립니다.</small>
+                <p><b>국문 이력서</b><code>{RESUME_KO} ({RESUME_NO})</code></p>
+                <p><b>영문 이력서</b><code>{PROG_EN} ({RESUME_NO})</code></p>
+                <small>교육·연수 칸에 한 줄이면 됩니다. 이수번호는 이름과 함께 홈페이지에서 검색되므로, 칸이 좁으면 번호를 빼고 <strong>{PROG_EN}</strong>까지만 적어도 됩니다.
+                  링크드인은 Name에 AI Ethics Professional, Issuing organization에 Korea AI Ethics Committee, Credential ID에 이수번호, URL에 kaiec.kr/experts/ 를 넣습니다.
+                  자기소개서 문장 예시와 면접 답변 포인트는 이수자 전용 <strong>이력서·자기소개서 활용 가이드</strong>로 함께 드립니다.</small>
               </div>
             </div>
             <div class="rrow">
@@ -3709,7 +3712,7 @@ def build_expert():
           <summary>이수증은 어떤 문서이고 어떻게 활용할 수 있나요?</summary>
           <div class="acc-body">한국AI윤리위원회가 주관하는 전문 교육과정을 수강하고 이수 평가를 통과했음을 증명하는 위원회의 공식 문서로, 이수번호가 부여되어 위원회 홈페이지에 공식 등록됩니다.
             국가가 인정하는 자격 제도와는 별개의 교육 이력으로, 이력서·포트폴리오의 교육·연수 항목에
-            "한국AI윤리위원회 주관 AI윤리전문가 양성과정 이수"로, 영문 이력서에는 "{PROG_EN} 과정 이수"로 기재하실 수 있습니다.
+            "{RESUME_KO} ({RESUME_NO})"로, 영문 이력서에는 "{PROG_EN} ({RESUME_NO})"로 기재하실 수 있습니다.
             이수 후 전문위원 등록을 신청해 등록되면 홈페이지 프로필 주소를 함께 제시할 수 있고, 전문강사·자문, Fellowship·캠페인 등 실제 활동 기회와 연계됩니다.</div>
         </details>
         <details class="acc">
