@@ -1659,3 +1659,14 @@ table.tbl tr:hover td{background:#FCFDFF}
 @media (max-width:900px){.fmt-grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:480px){.fmt-grid{grid-template-columns:1fr}}
 .reg-search[hidden],.member-grid[hidden]{display:none!important}   /* 등록 검색 상자는 등록자가 있을 때만 (display:flex가 hidden을 덮지 않도록) */
+
+/* 채용 통계 띠 (2026.09.22, /expert/ Career Value): 큰 숫자 + 한 줄 주장 + 출처. STAT_71 상수와 함께 씀 */
+.stat-band{display:flex;align-items:center;gap:26px;margin:0 0 28px;padding:26px 30px;border-radius:18px;color:#fff;
+  background:linear-gradient(120deg,#0A1628 0%,#12336F 62%,#1F5FE0 100%);box-shadow:0 14px 34px rgba(10,22,40,.18)}
+.stat-band .sb-num{flex:none;font-size:clamp(46px,6vw,68px);font-weight:900;line-height:.95;letter-spacing:-.04em;color:#6FE3D8}
+.stat-band .sb-body{min-width:0}
+.stat-band .sb-body strong{display:block;font-size:clamp(17px,1.8vw,21px);line-height:1.45;letter-spacing:-.03em;margin-bottom:8px;color:#fff}
+.stat-band .sb-body span{display:block;font-size:14.5px;line-height:1.75;color:#C9D8F5}
+.stat-band .sb-body span strong{display:inline;font-size:inherit;margin:0;color:#fff}
+.stat-band .sb-body small.src{display:block;margin-top:9px;font-size:12px;color:#8FA6CC}
+@media (max-width:640px){.stat-band{flex-direction:column;align-items:flex-start;gap:12px;padding:22px 20px}}
