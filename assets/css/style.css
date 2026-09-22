@@ -486,36 +486,38 @@ table.tbl tr:hover td{background:#FCFDFF}
 .greeting-sign .gs-name small{font-size:14px;font-weight:600;letter-spacing:.04em;color:var(--gray-600);margin-right:12px}
 @media (max-width:600px){.greeting{padding:34px 24px}}
 
-/* 넓은 인사말 (2026.09.23 새 문안): 사진 왼쪽 고정, 본문 오른쪽. 첫 인사 두 줄은 크게, 마지막 다짐 문장은 인용 상자 */
-.greeting--wide{padding:58px 62px 50px;overflow:visible}   /* overflow:hidden 이면 사진 고정(sticky)이 안 됨 */
-.greeting--wide::before{left:auto;right:40px;top:2px;color:var(--gray-100)}
-.greeting--wide .greeting-inner{grid-template-columns:264px 1fr;gap:60px}
-.greeting--wide .greeting-side{position:sticky;top:calc(var(--header-h) + 28px)}
-.greeting--wide .greeting-photo{border-radius:18px}
-.greeting--wide .greeting-cap{margin-top:16px}
+/* 넓은 인사말 (2026.09.23 새 문안): 첫 인사 두 줄을 제목처럼 전체 폭으로, 그 아래 사진은 오른쪽에 고정 배치(float)하고 본문이 사진 아래로 이어짐.
+   사진을 스크롤에 따라오게(sticky) 했더니 "권위가 없고 장난 같다"는 지적 → 예전처럼 제자리에 두는 고전적 배치 */
+.greeting--wide{max-width:1000px;margin:0 auto;padding:54px 62px 46px}
+.greeting--wide .greeting-open{margin-top:6px}
+.greeting-flow{position:relative;z-index:1}
+.greeting-flow::after{content:"";display:block;clear:both}
+.greeting--wide .greeting-side{float:right;width:250px;margin:4px 0 20px 46px}
+.greeting--wide .greeting-photo{border-radius:16px}
+.greeting--wide .greeting-cap{margin-top:14px}
 .greeting--wide .greeting-cap .gc-role{font-size:12.5px}
 .greeting--wide .greeting-cap .gc-name{font-size:21px}
-.greeting--wide .greeting-body p{font-size:16.5px;line-height:2.05;margin-bottom:20px;word-break:keep-all}
+.greeting--wide p{font-size:16.5px;line-height:2.05;color:var(--gray-700);margin-bottom:20px;word-break:keep-all}
+.greeting--wide p strong{color:var(--navy)}
 .greeting-open{
-  font-size:24px !important;line-height:1.6 !important;font-weight:700;color:var(--ink) !important;letter-spacing:-.02em;
-  margin-bottom:28px !important;padding-bottom:24px;border-bottom:1px solid var(--gray-200);
+  position:relative;z-index:1;font-size:24px !important;line-height:1.6 !important;font-weight:700;color:var(--ink) !important;letter-spacing:-.02em;
+  margin-bottom:26px !important;padding-bottom:22px;border-bottom:1px solid var(--gray-200);
 }
 .greeting-quote{
-  margin:30px 0 28px;padding:24px 28px;border-left:3px solid var(--teal);background:var(--teal-050);
+  clear:both;margin:30px 0 28px;padding:24px 28px;border-left:3px solid var(--teal);background:var(--teal-050);
   border-radius:0 14px 14px 0;font-size:18.5px;line-height:1.85;color:var(--navy);word-break:keep-all;
 }
 .greeting-quote strong{color:#00675F}
 .greeting--wide .greeting-sign{flex-direction:column;align-items:flex-end;gap:4px;margin-top:30px;padding-top:24px}
 .greeting--wide .greeting-sign .gs-org{font-size:14.5px}
 .greeting--wide .greeting-sign .gs-name{font-size:24px}
-@media (max-width:1100px){.greeting--wide{padding:48px 44px 42px}.greeting--wide .greeting-inner{grid-template-columns:230px 1fr;gap:44px}}
+@media (max-width:1100px){.greeting--wide{padding:46px 44px 40px}.greeting--wide .greeting-side{width:220px;margin-left:36px}}
 @media (max-width:860px){
-  .greeting--wide .greeting-inner{grid-template-columns:1fr;gap:28px}
-  .greeting--wide .greeting-side{position:static;max-width:230px;margin:0 auto 6px}
+  .greeting--wide .greeting-side{float:none;width:auto;max-width:230px;margin:0 auto 24px}
   .greeting-open{font-size:21px !important}
   .greeting-quote{font-size:17px;padding:20px 22px}
 }
-@media (max-width:600px){.greeting--wide{padding:34px 22px 30px}.greeting--wide .greeting-sign{align-items:flex-end}}
+@media (max-width:600px){.greeting--wide{padding:34px 22px 30px}}
 
 /* ---------- 조직도 (Org Chart) ---------- */
 .org-chart{max-width:980px;margin:0 auto}

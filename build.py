@@ -658,7 +658,8 @@ CERT_HREF = "expert-apply.html"                   # 2026.09.21 통합: 과정 �
 def cert_band_inner(sec_label="KAIEC 참여하기", sec_href="join.html", title=None, text=None):
     """전 페이지 공통 하단 전환 배너의 안쪽(.cta-band): 1순위는 항상 양성과정 신청, 2순위만 페이지 성격에 맞게"""
     title = title or "AI 시대에 가장 먼저 필요한 전문가, 지금 준비하세요"
-    text = text or (f"AI윤리전문가 양성과정 1기 모집 중 · 접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)} (정가 {won(LIST_PRICE)}) · {HOOK_ZERO}. "
+    # 2026.09.23 사용자 지시로 '1기 모집 중 · 접수 마감 · 1기 특별가 (정가)' 홍보 문구 삭제(절제된 기관 톤). 가격·마감은 /expert/ 와 신청 페이지에서만 안내
+    text = text or (f"AI윤리전문가 양성과정은 {HOOK_ZERO}으로 진행됩니다. "
                     f"위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 이수 즉시 홈페이지에 공식 등록되세요.")
     return f"""<div class="cta-band reveal">
           <div><h2>{title} <span class="promo-new" style="vertical-align:middle">NEW</span></h2>
@@ -1185,18 +1186,17 @@ def build_about():
           <h2 class="h-sec serif">위원장 인사말</h2>
         </div>
         <div class="greeting greeting--wide serif">
-          <div class="greeting-inner">
-          <aside class="greeting-side">
-            <div class="greeting-photo">
-              <img src="assets/img/chairman.jpg" alt="한국AI윤리위원회 위원장 {chair}">
-            </div>
-            <div class="greeting-cap">
-              <span class="gc-role">한국AI윤리위원회 위원장</span>
-              <span class="gc-name">{chair}</span>
-            </div>
-          </aside>
-          <div class="greeting-body">
-            <p class="greeting-open">안녕하십니까.<br>한국AI윤리위원회 위원장 {chair}입니다.</p>
+          <p class="greeting-open">안녕하십니까.<br>한국AI윤리위원회 위원장 {chair}입니다.</p>
+          <div class="greeting-flow">
+            <aside class="greeting-side">
+              <div class="greeting-photo">
+                <img src="assets/img/chairman.jpg" alt="한국AI윤리위원회 위원장 {chair}">
+              </div>
+              <div class="greeting-cap">
+                <span class="gc-role">한국AI윤리위원회 위원장</span>
+                <span class="gc-name">{chair}</span>
+              </div>
+            </aside>
             <p>한국AI윤리위원회 홈페이지를 찾아주신 여러분께 진심으로 감사드립니다.</p>
             <p>생성형 인공지능을 비롯한 AI 기술은 빠른 속도로 발전하며 우리의 학습과 연구, 산업과 업무 전반에 새로운 변화를
             만들어가고 있습니다. 이제 AI를 활용하는 능력은 개인과 조직의 중요한 역량으로 자리 잡고 있으며, 앞으로 그 활용 범위는
@@ -1228,7 +1228,6 @@ def build_about():
               <span class="gs-org">한국AI윤리위원회</span>
               <span class="gs-name"><small>위원장</small>{chair}</span>
             </div>
-          </div>
           </div>
         </div>
       </div>
