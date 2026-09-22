@@ -3581,7 +3581,7 @@ def build_expert():
             <p class="h-sub" style="margin:0 auto">영상 진도율을 채우는 과정이 아닙니다. 결제 즉시 PDF 5종을 받아 원하는 속도로 공부하고, 준비되면 바로 응시합니다.</p>
           </div>
           <figure class="mat-figure reveal">
-            <img src="assets/img/materials-5set.jpg" alt="AI윤리전문가 양성과정 학습자료 5종 표지: 00 이수 평가 응시 안내, 01 핵심이론, 02 실전 모의고사, 03 정답 및 해설, 04 실무 도구집" loading="lazy" width="3972" height="1136">
+            <img src="assets/img/materials-5set.jpg" alt="AI윤리전문가 양성과정 학습자료 5종 표지: 00 이수 평가 응시 안내, 01 핵심이론, 02 실전 모의고사, 03 정답 및 해설, 04 실무 도구집" loading="lazy" width="3200" height="861">
           </figure>
           <ol class="lec-list">{mat_html}
           </ol>
@@ -3900,7 +3900,7 @@ def build_expert_apply():
               </div>
             </div>
             <figure class="mat-figure mat-figure--sm">
-              <img src="assets/img/materials-5set.jpg" alt="결제 즉시 받는 학습자료 5종 표지: 이수 평가 응시 안내, 핵심이론, 실전 모의고사, 정답 및 해설, 실무 도구집" loading="lazy" width="3972" height="1136">
+              <img src="assets/img/materials-5set.jpg" alt="결제 즉시 받는 학습자료 5종 표지: 이수 평가 응시 안내, 핵심이론, 실전 모의고사, 정답 및 해설, 실무 도구집" loading="lazy" width="3200" height="861">
             </figure>
           </div>
 
