@@ -5,8 +5,9 @@
    진행 중인 시험은 자동으로 열지 않고, 대시보드의 [이어서 응시] → 확인 창(서버 기준 남은 시간)을 거쳐 들어갑니다.
    API: POST text/plain JSON {action: login | status | start | save | submit | materials}, GET ?action=ping
         (이수 평가 API 계약서 + 1.1.0 추가 사항: start 요청의 name, attempt.name, Result.name)
-   자료실(2026.09.22, 백엔드 Code 1.5.6): 대시보드의 '학습자료 내려받기' 패널이 materials 로 드라이브 파일 목록(이름 · 크기 · 내려받기 주소)을 받아
-        파일별 [내려받기] 버튼으로 그립니다. 안내 메일의 버튼은 /exam/?go=materials 로 들어오며, 로그인 뒤 그 패널로 바로 이동합니다.
+   학습자료 다시 내려받기(2026.09.22, 백엔드 Code 1.5.6): 학습자료 5종은 안내 메일에 첨부되어 나가고, 대시보드의 '학습자료 다시 내려받기' 패널은
+        메일을 잃어버린 수강생용 보조 창구입니다. materials 로 드라이브 파일 목록(이름 · 크기 · 내려받기 주소)을 받아 파일별 [내려받기] 버튼으로 그리며,
+        백엔드가 지원하지 않으면(1.5.5 이하) 패널을 아예 그리지 않습니다. /exam/?go=materials 로 들어오면 로그인 뒤 그 패널로 바로 이동합니다.
    체험 모드: /exam/?demo=1 로만 진입 (브라우저 안 모의 API, 기록이 남지 않음)
    외부 라이브러리 없이 동작하며, 아이콘은 페이지 안 SVG 스프라이트(#exi-이름)를 씁니다. */
 (function () {
@@ -828,7 +829,7 @@
     var cur = done ? 5 : 4, pass = passOf(courseCfg(MAIN_COURSE));
     var FLOW = [
       ['양성과정 신청', '수강 신청·교육비 결제'],
-      ['학습자료 내려받기', '아래 자료실에서 PDF 5종'],
+      ['학습자료 확인', '메일로 자료 5종 수령'],
       ['자율학습', '표준교재 · 모의고사 학습'],
       ['평가응시', '온라인 이수 평가 응시'],
       ['이수 기준 충족', pass + '점 이상'],
@@ -867,30 +868,33 @@
   }
   function materialsPanel() {
     var m = S.materials, body, aside = '';
+    var want = S.go === 'materials';   // 안내 메일의 버튼으로 들어온 경우에만 불러오는 중 · 오류 화면을 보여 줌
     if (S.matErr) {
+      if (!want) return '';
       body = '<div class="ex-mat-err">' + ico('alert-triangle') + '<span>' + esc(S.matErr) + '</span>' +
         '<button type="button" class="ex-btn ex-btn--secondary" data-act="mat-retry">' + ico('refresh-cw') + '다시 불러오기</button></div>';
     } else if (!m) {
+      if (!want) return '';
       body = '<div class="ex-mat-loading"><span class="ex-spin ex-spin--sm" aria-hidden="true"></span>학습자료 목록을 불러오는 중입니다</div>';
     } else {
       var files = m.files || [];
       var big = files.filter(function (f) { return (+f.mb || 0) >= 50; }).map(function (f) { return matInfo(f.name).title + '(' + fmtMB(f.mb) + ')'; });
       body = (files.length ? '<ul class="ex-mat-grid">' + files.map(matCard).join('') + '</ul>' : '<p class="ex-empty">등록된 학습자료가 없습니다. ' + esc(CFG.email || '') + ' 로 문의해 주십시오.</p>') +
         '<div class="ex-mat-foot">' +
-          '<p class="ex-note ex-mat-note">' + ico('info') + '<span>PDF ' + files.length + '종 · 합계 ' + fmtMB(m.mb) + '. 응시 기간 동안 언제든 다시 내려받을 수 있습니다.' +
+          '<p class="ex-note ex-mat-note">' + ico('info') + '<span>안내 메일에 첨부된 것과 같은 파일입니다. PDF ' + files.length + '종 · 합계 ' + fmtMB(m.mb) + '. 응시 기간 동안 언제든 다시 내려받을 수 있습니다.' +
             (big.length ? ' ' + esc(big.join(', ')) + '처럼 큰 파일은 와이파이 환경에서 받으시길 권합니다.' : '') + '</span></p>' +
           (m.folderUrl ? '<a class="ex-btn ex-btn--secondary" href="' + esc(m.folderUrl) + '" target="_blank" rel="noopener">' + ico('folder') + '드라이브 폴더에서 한 번에 받기' + ico('external-link') + '<span class="sr-only">(새 창)</span></a>' : '') +
         '</div>';
       aside = '<small class="ex-panel-note">수강생 전용 · 외부 공유와 재배포 금지</small>';
     }
-    return '<section class="ex-panel ex-mats" id="exMats" aria-labelledby="exMatsTitle"><header class="ex-panel-head"><h2 class="ex-h" id="exMatsTitle">' + ico('book-open') + '학습자료 내려받기</h2>' + aside + '</header>' + body + '</section>';
+    return '<section class="ex-panel ex-mats" id="exMats" aria-labelledby="exMatsTitle"><header class="ex-panel-head"><h2 class="ex-h" id="exMatsTitle">' + ico('book-open') + '학습자료 다시 내려받기</h2>' + aside + '</header>' + body + '</section>';
   }
+  // 패널 자리(빈 칸이면 CSS 로 감춤). 목록이 오면 여기에 패널을 그려 넣는다
+  function materialsSlot() { return '<div class="ex-mats-slot" id="exMatsSlot">' + materialsPanel() + '</div>'; }
   function repaintMats() {
-    var node = $('exMats');
-    if (!node || S.view !== 'dashboard') return;
-    var tmp = document.createElement('div');
-    tmp.innerHTML = materialsPanel();
-    node.parentNode.replaceChild(tmp.firstChild, node);
+    var slot = $('exMatsSlot');
+    if (!slot || S.view !== 'dashboard') return;
+    slot.innerHTML = materialsPanel();
     focusMats();
   }
   // 안내 메일의 [학습자료 내려받기] 버튼(?go=materials)으로 들어왔으면 자료실 패널로 이동해 잠시 강조
@@ -1046,11 +1050,11 @@
     list.forEach(function (c) { if (isLive(c)) keep[courseKey(c.course)] = true; });
     Object.keys(S.live).forEach(function (k) { if (!keep[k]) delete S.live[k]; });
     var wide = list.length === 1;
-    var html = liveAlerts(list) + candPanel() + flowPanel() + materialsPanel() +
+    var html = liveAlerts(list) + candPanel() + flowPanel() +
       (list.length
         ? '<div class="ex-courses' + (wide ? ' is-single' : '') + '">' + list.map(function (c) { return coursePanel(c, wide); }).join('') + '</div>'
         : panel('신청 과정', '<p class="ex-empty">응시할 수 있는 과정이 없습니다. ' + esc(CFG.email || '') + ' 로 문의해 주십시오.</p>')) +
-      upsellBox(list) + historyPanel() +
+      upsellBox(list) + materialsSlot() + historyPanel() +
       '<div class="ex-cols">' + guidePanel() + notesPanel() + '</div>';
     setView(html, 'dashboard', { refresh: true });
     setHash('dashboard');

@@ -336,6 +336,7 @@ html:not(.js) .ex-boot{display:none}
 .ex-contact a{color:var(--ex-link);font-weight:600;word-break:break-all}
 
 /* 학습자료 자료실 (2026.09.22): 파일별 카드 5장 + [내려받기]. 안내 메일의 버튼(?go=materials)으로 들어오면 잠시 강조 */
+.ex-mats-slot:empty{display:none}
 .ex-mats{scroll-margin-top:132px}
 .ex-mats.is-focus{border-color:var(--ex-navy);box-shadow:0 0 0 3px var(--ex-navy-100),var(--ex-shadow)}
 .ex-mat-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;padding:16px 20px 4px;list-style:none}
