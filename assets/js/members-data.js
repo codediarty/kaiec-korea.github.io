@@ -4,7 +4,7 @@
    ▶ 위원을 추가하려면 아래 배열에 { } 한 줄을 복사해서 추가하세요.
      - group : 아래 9가지 중 하나 (이 순서대로 화면에 구분되어 표시됩니다)
        '위원장' | '부위원장' | '감사' | '고문·자문위원' | '사무국' | '전문위원'
-       | '지역 운영위원' | '캠퍼스 위원장' | 'AI 윤리 앰버서더'
+       | '지역 운영위원' | '캠퍼스 위원장' | 'AI 윤리 홍보대사'
      - name을 '공석'으로 쓰면 회색 공석 카드로 표시됩니다.
      - role  : 화면에 파랗게 표시되는 직책
      - name  : 성명
@@ -27,8 +27,8 @@ window.KAIEC_MEMBERS = [
   { group: '감사', role: '감사', name: '윤미정', field: '운영 · 회계 감사' },
 
   // ── 고문·자문위원 ─────────────────────────────────────────
-  { group: '고문·자문위원', role: '학계 자문', name: '임형택', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
-  { group: '고문·자문위원', role: '법률 자문', name: '한수연', field: 'IT법 · 개인정보 법제 · 저작권' },
+  { group: '고문·자문위원', role: '학술고문', name: '임형택', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
+  { group: '고문·자문위원', role: '법률고문', name: '한수연', field: 'IT법 · 개인정보 법제 · 저작권' },
 
   // ── 사무국 ───────────────────────────────────────────────
   { group: '사무국', role: '사무총장', name: '오준호', field: '사업 기획 · 위원회 운영 총괄', photo: 'oh-junho.jpg' },
@@ -36,9 +36,9 @@ window.KAIEC_MEMBERS = [
   { group: '사무국', role: '대외협력팀장', name: '공석', field: '위촉 예정' },
   { group: '사무국', role: '콘텐츠·홍보팀장', name: '공석', field: '위촉 예정' },
 
-  // ── 전문위원 (AI 윤리 전문 교육 강사) ─────────────────────
-  { group: '전문위원', role: 'AI 윤리 전문 교육 강사', name: '김동섭', field: '성균관대 공학 박사', photo: 'kim-dongseop.jpg' },
-  { group: '전문위원', role: 'AI 윤리 전문 교육 강사', name: '이재이', field: '이화여대 이학 석사', photo: 'lee-jaei.jpg' },
+  // ── 전문위원 (교육·리터러시 분과 · AI 윤리 교육 담당) ────────
+  { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '김동섭', field: 'AI 윤리 교육 · 성균관대 공학 박사', photo: 'kim-dongseop.jpg' },
+  { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '이재이', field: 'AI 윤리 교육 · 이화여대 이학 석사', photo: 'lee-jaei.jpg' },
 
   // ── 지역 운영위원 (이름 '공석' → 회색 공석 카드로 표시, 위촉 시 실명으로 교체) ──
   { group: '지역 운영위원', role: '수도권', name: '공석', field: '위촉 예정' },
@@ -50,11 +50,11 @@ window.KAIEC_MEMBERS = [
   { group: '캠퍼스 위원장', role: '캠퍼스 1기', name: '공석', field: '위촉 예정' },
   { group: '캠퍼스 위원장', role: '캠퍼스 1기', name: '공석', field: '위촉 예정' },
 
-  // ── AI 윤리 앰버서더 (캠페인위원 위에 표시 · 위촉 시 실명으로 교체) ──
-  { group: 'AI 윤리 앰버서더', role: '앰버서더', name: '공석', field: '위촉 예정' },
-  { group: 'AI 윤리 앰버서더', role: '앰버서더', name: '공석', field: '위촉 예정' },
-  { group: 'AI 윤리 앰버서더', role: '앰버서더', name: '공석', field: '위촉 예정' },
-  { group: 'AI 윤리 앰버서더', role: '앰버서더', name: '공석', field: '위촉 예정' },
+  // ── AI 윤리 홍보대사 (캠페인위원 위에 표시 · 위촉 시 실명으로 교체) ──
+  { group: 'AI 윤리 홍보대사', role: '홍보대사', name: '공석', field: '위촉 예정' },
+  { group: 'AI 윤리 홍보대사', role: '홍보대사', name: '공석', field: '위촉 예정' },
+  { group: 'AI 윤리 홍보대사', role: '홍보대사', name: '공석', field: '위촉 예정' },
+  { group: 'AI 윤리 홍보대사', role: '홍보대사', name: '공석', field: '위촉 예정' },
 
   // ↓ 여기에 계속 추가하세요.
 
@@ -70,7 +70,7 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
 ];
 
 /* ── 공식 파트너 ────────────────────────────────────────────
-   조직·위원 페이지 맨 아래 '공식 파트너'에 표시됩니다. 계속 추가 가능.
+   위원 명단 페이지 맨 아래 '공식 파트너'에 표시됩니다. 계속 추가 가능.
    logo: assets/img/ 폴더의 로고 파일명 (없으면 기관명 텍스트로 표시) */
 window.KAIEC_OFFICIAL_PARTNERS = [
   { name: '성균관대학교 RISE사업단', logo: 'partner-rise.jpg', url: '' },

@@ -311,7 +311,7 @@ def board_card(p):
 NAV = [
     ("about.html", "위원회 소개"),
     ("business.html", "주요사업"),
-    ("members.html", "조직·위원"),
+    ("members.html", "위원 명단"),
     ("lecture.html", "강의 신청"),
     ("copyclean.html", "카피클린"),
     ("news.html", "커뮤니티"),
@@ -1054,7 +1054,115 @@ def build_index(posts):
 
 
 # ---------------------------------------------------------------- about.html
+def _chair_name():
+    """members-data.js 의 위원장 항목에서 성함을 읽음 (인사말 본문·서명에 빌드 시 직접 넣어 검색엔진에도 보이게)."""
+    js = io.open(os.path.join(BASE, "assets", "js", "members-data.js"), encoding="utf-8").read()
+    m = re.search(r"group:\s*'위원장'.*?name:\s*'([^']+)'", js)
+    return m.group(1) if m else "위원장"
+
+
+def org_chart():
+    """조직도 (2026.09.23 '조직·위원' 페이지에서 '위원회 소개' 페이지로 이동). 직책은 위원회 체계에 맞춤:
+    위원장 → (감사 · 고문·자문위원단 독립) → 부위원장 · 사무총장 → 사무국 3팀 / 전문위원회 6개 분과 / AI 윤리 캠페인위원 → 지역 운영위원회 · 캠퍼스 위원회"""
+    return """        <div class="org-chart">
+          <!-- 위원장 -->
+          <div class="oc-node oc-lv1">
+            <div class="oc-tag">CHAIRPERSON</div>
+            <div class="oc-title">위원장</div>
+            <div class="oc-desc">위원회 대표 · 전체 활동 총괄</div>
+          </div>
+
+          <!-- 감사 / 고문·자문위원단 (독립 기구) -->
+          <div class="oc-siderow">
+            <div class="oc-node oc-side">
+              <div class="oc-tag" style="color:var(--gray-500)">AUDITOR</div>
+              <div class="oc-title" style="font-size:15.5px">감사</div>
+              <div class="oc-desc">운영 · 회계 독립 감사</div>
+            </div>
+            <div class="oc-dash"></div>
+            <div class="oc-spine"></div>
+            <div class="oc-dash"></div>
+            <div class="oc-node oc-side">
+              <div class="oc-tag" style="color:var(--gray-500)">ADVISORY BOARD</div>
+              <div class="oc-title" style="font-size:15.5px">고문 · 자문위원단</div>
+              <div class="oc-desc">학술고문 · 법률고문 · 분야별 자문</div>
+            </div>
+          </div>
+
+          <!-- 부위원장 · 사무총장 -->
+          <div class="oc-node oc-lv2">
+            <div class="oc-tag">VICE CHAIRPERSON · SECRETARY GENERAL</div>
+            <div class="oc-title">부위원장 · 사무총장</div>
+            <div class="oc-desc">위원장 보좌 · 위원회 운영 총괄</div>
+          </div>
+
+          <div class="oc-vline"></div>
+          <div class="oc-hline"></div>
+
+          <!-- 3대 축: 사무국 / 전문위원회 / AI 윤리 캠페인위원 -->
+          <div class="oc-branches">
+            <div class="oc-branch">
+              <div class="oc-stub"></div>
+              <div class="oc-node oc-pillar">
+                <div class="oc-tag">SECRETARIAT</div>
+                <div class="oc-title">사무국</div>
+                <div class="oc-desc">행정 · 운영 실무 총괄</div>
+              </div>
+              <div class="oc-childs">
+                <div class="oc-child">기획운영팀 <small>사업 기획 · 총무 · 회의 운영</small></div>
+                <div class="oc-child">대외협력팀 <small>공동 캠페인 · 기관 협력 · 국제 교류</small></div>
+                <div class="oc-child">콘텐츠·홍보팀 <small>캠페인 · 콘텐츠 · 채널 운영</small></div>
+              </div>
+            </div>
+            <div class="oc-branch">
+              <div class="oc-stub"></div>
+              <div class="oc-node oc-pillar oc-pillar--teal">
+                <div class="oc-tag" style="color:#00857A">EXPERT COMMITTEES</div>
+                <div class="oc-title">전문위원회</div>
+                <div class="oc-desc">6개 분과 · 분야별 자문과 기준 검토</div>
+              </div>
+              <div class="oc-childs">
+                <div class="oc-child">AI·기술 분과 <small>생성형 AI 기술 동향 · 판별 기술</small></div>
+                <div class="oc-child">법·정책 분과 <small>AI 관련 법제 · 정책 동향</small></div>
+                <div class="oc-child">교육·리터러시 분과 <small>AI 윤리 교육 · 교안 개발 · 전문가 양성</small></div>
+                <div class="oc-child">연구·출판윤리 분과 <small>논문·연구물 AI 활용 기준</small></div>
+                <div class="oc-child">데이터·개인정보 분과 <small>데이터 윤리 · 프라이버시</small></div>
+                <div class="oc-child">미디어·콘텐츠 분과 <small>허위정보 · 콘텐츠 윤리</small></div>
+              </div>
+            </div>
+            <div class="oc-branch">
+              <div class="oc-stub"></div>
+              <div class="oc-node oc-pillar oc-pillar--teal" style="border-top-color:var(--teal)">
+                <div class="oc-tag" style="color:#00857A">CAMPAIGN COMMITTEE</div>
+                <div class="oc-title">AI 윤리 캠페인위원</div>
+                <div class="oc-desc">온라인 전국 활동 · 상시 모집</div>
+              </div>
+              <div class="oc-childs">
+                <div class="oc-child">캠페인 참여 <small>온라인 캠페인 · 확산 활동</small></div>
+                <div class="oc-child">콘텐츠 활동 <small>카드뉴스 · 영상 · 홍보</small></div>
+                <div class="oc-child">현장 소통 <small>대학 · 커뮤니티 알림</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="oc-vline"></div>
+
+          <!-- 지역 · 캠퍼스 조직 -->
+          <div class="oc-band">
+            <span class="badge">전국 조직</span>
+            <div>
+              <div class="oc-title">지역 운영위원회 · 캠퍼스 위원회</div>
+              <div class="oc-desc">권역별 지역 운영위원과 대학별 캠퍼스 위원장을 중심으로 한 현장 확산 조직</div>
+            </div>
+          </div>
+
+        </div>"""
+
+
 def build_about():
+    """위원회 소개 (2026.09.23 재구성): 위원장 인사말(새 문안) → 미션 · 비전 → 4대 핵심가치 → 조직도 → AI 윤리 실천 헌장 → 주요 연혁 · 위원회 개요.
+    설립 취지 절은 인사말이 그 내용을 담고 있어 삭제. 인사말 문안은 사용자가 확정한 원문 그대로(굵은 글씨 위치 포함)."""
+    chair = _chair_name()
     val_rows = "\n".join(f"""        <article class="card reveal">
           <div class="card-icon"><i data-lucide="{ic}"></i></div>
           <h3>{t}</h3>
@@ -1067,70 +1175,62 @@ def build_about():
           </li>""" for i, c in enumerate(CHARTER))
 
     body = hero_sub("위원회 소개",
-                    "생성형 AI 시대에 필요한 것은 더 빠른 기술이 아니라, 그 기술을 다루는 사람의 기준입니다.",
+                    "AI를 책임 있게 활용하는 사회를 만드는 AI 윤리 전문 기구, 한국AI윤리위원회입니다.",
                     "위원회 소개") + f"""
 
     <section class="section">
-      <div class="wrap-narrow">
+      <div class="wrap">
         <div class="center" style="margin-bottom:36px">
           <span class="eyebrow">Message</span>
           <h2 class="h-sec serif">위원장 인사말</h2>
         </div>
-        <div class="greeting serif">
+        <div class="greeting greeting--wide serif">
           <div class="greeting-inner">
-          <div class="greeting-body">
-            <p><strong>안녕하십니까.</strong><br>
-            한국AI윤리위원회 홈페이지를 찾아주신 여러분께 깊은 감사의 말씀을 드립니다.</p>
-            <p>생성형 인공지능은 어느새 우리의 학습과 연구, 그리고 일하는 방식 깊숙이 들어와 있습니다.
-            그러나 기술이 일상이 된 속도에 비해, 그 기술을 <strong>어떻게 사용하는 것이 바람직한가</strong>에 대한
-            사회적 기준은 아직 충분히 자리 잡지 못했습니다. 기준의 공백은 두 가지 그림자를 남깁니다.
-            AI를 활용하고도 떳떳하게 밝히지 못하는 문화, 그리고 막연한 불안 속에 정당한 활용마저
-            주저하게 되는 위축이 그것입니다.</p>
-            <p>한국AI윤리위원회는 이 공백을 메우고자 뜻을 모은 <strong>AI 윤리 전문 기구</strong>입니다.
-            우리는 규제와 처벌이 아니라, AI를 활용하는 누구나 스스로 지킬 수 있는
-            기준과 문화의 힘을 믿습니다. 제출 전에 한 번 더 점검하고, 활용했다면 숨기지 않고 밝히며,
-            결과에 책임지는 태도. 그 작은 실천들이 모여 신뢰할 수 있는 AI 시대를 만든다고 확신합니다.</p>
-            <p>위원회는 교육과 연구, 캠페인과 사회공헌 활동을 통해 이 실천을 넓혀가고자 합니다.
-            대학과 기업, 연구 현장의 목소리에 귀 기울이고, 전문위원과 지역·캠퍼스 조직, 그리고 전국의
-            AI 윤리위원과 함께 걸어가겠습니다.</p>
-            <p>여러분의 관심과 참여가 건강한 AI 문화를 만드는 가장 큰 힘입니다.<br>감사합니다.</p>
-          </div>
-          <div class="greeting-side">
+          <aside class="greeting-side">
             <div class="greeting-photo">
-              <img src="assets/img/chairman.jpg" alt="한국AI윤리위원회 위원장">
+              <img src="assets/img/chairman.jpg" alt="한국AI윤리위원회 위원장 {chair}">
             </div>
             <div class="greeting-cap">
               <span class="gc-role">한국AI윤리위원회 위원장</span>
-              <span class="gc-name" id="chairPhotoName">&nbsp;</span>
+              <span class="gc-name">{chair}</span>
+            </div>
+          </aside>
+          <div class="greeting-body">
+            <p class="greeting-open">안녕하십니까.<br>한국AI윤리위원회 위원장 {chair}입니다.</p>
+            <p>한국AI윤리위원회 홈페이지를 찾아주신 여러분께 진심으로 감사드립니다.</p>
+            <p>생성형 인공지능을 비롯한 AI 기술은 빠른 속도로 발전하며 우리의 학습과 연구, 산업과 업무 전반에 새로운 변화를
+            만들어가고 있습니다. 이제 AI를 활용하는 능력은 개인과 조직의 중요한 역량으로 자리 잡고 있으며, 앞으로 그 활용 범위는
+            더욱 넓어질 것입니다.</p>
+            <p>그러나 기술의 발전과 활용이 빠르게 확산되는 만큼, <strong>AI를 어디까지, 그리고 어떻게 활용하는 것이 바람직한가에
+            대한 사회적 기준과 책임 있는 활용 문화</strong> 역시 함께 마련되어야 합니다.</p>
+            <p>AI를 활용했다는 이유만으로 그 가치를 부정해서도 안 되며, 반대로 AI가 만들어낸 결과를 아무런 검토와 책임 없이
+            받아들여서도 안 됩니다. 중요한 것은 기술의 사용 여부가 아니라, <strong>어떤 원칙과 책임 아래 AI를 활용하느냐</strong>에
+            있다고 생각합니다.</p>
+            <p>한국AI윤리위원회는 이러한 시대적 변화 속에서 <strong>AI의 책임 있는 활용 기준을 연구하고, 올바른 AI 활용 문화를
+            사회 전반에 확산하기 위해 설립된 AI 윤리 전문 기구</strong>입니다.</p>
+            <p>위원회는 AI 윤리가 선언적인 원칙에 머무르지 않고 교육·연구·산업 현장에서 실제로 실천될 수 있도록 다양한 활동을
+            추진하고 있습니다. AI 윤리 및 책임 있는 활용에 관한 <strong>교육과 전문인력 양성</strong>, 관련 <strong>연구 및 기준
+            마련</strong>, 올바른 AI 활용을 위한 <strong>캠페인과 인식 확산</strong>, 대학·기업·기관과의 <strong>협력 및 사회공헌
+            활동</strong> 등을 통해 건강한 AI 생태계를 만들어가고자 합니다.</p>
+            <p>특히 AI를 활용하는 과정에서 스스로 한 번 더 점검하고, 필요한 경우 그 활용 사실을 투명하게 밝히며, 최종 결과에
+            대해서는 사람이 책임지는 문화를 중요하게 생각합니다. 이러한 작은 실천들이 쌓일 때 AI는 불신의 대상이 아니라 우리 사회가
+            신뢰하고 활용할 수 있는 기술로 자리 잡을 수 있을 것입니다.</p>
+            <p>앞으로도 한국AI윤리위원회는 전문가와 현장의 다양한 목소리에 귀 기울이며, 전문위원과 지역·캠퍼스 조직, 그리고 전국의
+            AI 윤리위원들과 함께 <strong>기술의 발전과 사회적 책임이 조화를 이루는 AI 문화</strong>를 만들어가겠습니다.</p>
+            <blockquote class="greeting-quote">
+              AI 기술을 잘 활용하는 사회를 넘어,<br>
+              <strong>AI를 책임 있게 활용하는 사회</strong>를 만드는 것.<br>
+              그 길에 한국AI윤리위원회가 함께하겠습니다.
+            </blockquote>
+            <p>여러분의 지속적인 관심과 참여를 부탁드립니다.</p>
+            <p>감사합니다.</p>
+            <div class="greeting-sign">
+              <span class="gs-org">한국AI윤리위원회</span>
+              <span class="gs-name"><small>위원장</small>{chair}</span>
             </div>
           </div>
           </div>
-          <div class="greeting-sign">
-            <span class="gs-org">한국AI윤리위원회 위원장</span>
-            <span class="gs-name" id="chairName">&nbsp;</span>
-          </div>
         </div>
-      </div>
-    </section>
-
-    <section class="section section--gray">
-      <div class="wrap-narrow">
-        <span class="eyebrow">Foundation</span>
-        <h2 class="h-sec">설립 취지</h2>
-        <p class="lead" style="margin-bottom:20px">
-          생성형 AI는 몇 년 사이 학습, 연구, 업무의 기본 도구가 되었습니다. 그러나 기술이 퍼지는 속도에 비해
-          <strong>“어디까지 활용해도 되는가”</strong>에 대한 사회적 합의는 아직 충분히 마련되지 않았습니다.
-        </p>
-        <p class="lead" style="margin-bottom:20px">
-          그 결과 현장에서는 두 가지 문제가 동시에 발생합니다. 하나는 AI를 활용하고도 이를 밝히지 못해 생기는
-          불필요한 오해와 분쟁이고, 다른 하나는 막연한 불안 때문에 정당한 활용마저 위축되는 상황입니다.
-          두 문제 모두 <strong>명확한 기준의 부재</strong>에서 비롯됩니다.
-        </p>
-        <p class="lead">
-          한국AI윤리위원회는 이 공백을 메우기 위해 출발했습니다. 규제하거나 처벌하는 기구가 아니라,
-          AI를 활용하는 사람들이 <strong>스스로 지킬 수 있는 기준</strong>을 정리하고 알리며,
-          함께 실천할 사람들을 모으는 위원회입니다.
-        </p>
       </div>
     </section>
 
@@ -1169,14 +1269,26 @@ def build_about():
       </div>
     </section>
 
-    <section class="section section--gray">
+    <section class="section section--gray" id="org">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:46px">
+          <span class="eyebrow">Organization</span>
+          <h2 class="h-sec">조직도</h2>
+          <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, AI 윤리 캠페인위원을 두고,
+             전국 단위의 지역 운영위원회·캠퍼스 위원회로 확장되는 구조입니다. 직책별 구성원은 <a href="members.html" style="color:var(--blue);font-weight:600">위원 명단 페이지</a>에서 확인하실 수 있습니다.</p>
+        </div>
+{org_chart()}
+      </div>
+    </section>
+
+    <section class="section">
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Charter</span>
           <h2 class="h-sec">AI 윤리 실천 헌장</h2>
           <p class="h-sub">위원회와 위원이 함께 공유하는 7개 실천 조항입니다.</p>
         </div>
-        <div style="background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:14px 32px">
+        <div style="background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:14px 32px;box-shadow:var(--shadow-sm)">
           <ul>
 {charter}
           </ul>
@@ -1188,7 +1300,7 @@ def build_about():
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--gray">
       <div class="wrap">
         <div class="grid grid-2" style="gap:52px;align-items:start">
           <div>
@@ -1200,15 +1312,18 @@ def build_about():
           <div>
             <span class="eyebrow">Overview</span>
             <h2 class="h-sec">위원회 개요</h2>
-            <p class="h-sub" style="margin-bottom:26px">기본 정보입니다.</p>
+            <p class="h-sub" style="margin-bottom:26px">기본 정보와 운영 원칙입니다.</p>
             <div class="table-wrap">
               <table class="tbl" style="min-width:auto">
                 <tbody>
                   <tr><th style="width:34%">명칭</th><td>한국AI윤리위원회<br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
-                  <tr><th>설립</th><td>2024년 3월</td></tr>
+                  <tr><th>설립</th><td>2024년 3월 (제1기 2024. 03 ~ )</td></tr>
                   <tr><th>성격</th><td>AI 윤리 전문기관</td></tr>
                   <tr><th>목적</th><td>책임 있는 생성형 AI 활용 및 AI 윤리 문화 확산</td></tr>
                   <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 사회공헌 · AI 윤리위원 운영</td></tr>
+                  <tr><th>조직</th><td>사무국 3팀 · 전문위원회 6개 분과 · AI 윤리 캠페인위원 · 지역 운영위원회 · 캠퍼스 위원회</td></tr>
+                  <tr><th>임원 · 위원 임기</th><td>2년 (연임 가능)</td></tr>
+                  <tr><th>회의 · 의결</th><td>정기회의 분기 1회, 임시회의 수시 (온라인 병행)<br><span style="color:var(--gray-500);font-size:13.5px">재적위원 과반수 출석과 출석위원 과반수 찬성</span></td></tr>
                   <tr><th>운영 방식</th><td>온라인 기반 (위원 활동 재택 가능)</td></tr>
                   <tr><th>대표 문의</th><td><a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a></td></tr>
                 </tbody>
@@ -1229,7 +1344,6 @@ def build_about():
     </section>"""
 
     script = """  <script src="assets/js/history-data.js"></script>
-  <script src="assets/js/members-data.js"></script>
   <script>
   (function(){
     var box=document.getElementById('historyList');
@@ -1240,21 +1354,11 @@ def build_about():
           +(h.desc?'<div class="tl-desc">'+h.desc+'</div>':'')+'</div>';
       }).join('');
     }
-    /* 위원장 성함은 members-data.js의 위원장 항목에서 자동으로 가져옵니다 */
-    if(window.KAIEC_MEMBERS){
-      var chair=window.KAIEC_MEMBERS.filter(function(m){return m.group==='위원장'})[0];
-      if(chair){
-        var sign=document.getElementById('chairName');
-        if(sign)sign.textContent=chair.name;
-        var cap=document.getElementById('chairPhotoName');
-        if(cap)cap.textContent=chair.name;
-      }
-    }
   })();
   </script>
 """
     page("about.html", "위원회 소개",
-         "한국AI윤리위원회 위원장 인사말, 설립 취지, 미션과 비전, 4대 핵심가치, AI 윤리 실천 헌장 7개 조항과 위원회 개요를 안내합니다.",
+         f"한국AI윤리위원회 위원장 {chair} 인사말, 미션과 비전, 4대 핵심가치, 조직도, AI 윤리 실천 헌장 7개 조항과 위원회 개요를 안내합니다.",
          body, extra_script=script)
 
 
@@ -1331,173 +1435,25 @@ def build_business():
 
 # -------------------------------------------------------------- members.html
 def build_members():
-    body = hero_sub("조직 · 위원",
-                    "임원진과 사무국, 전문위원, AI 윤리 캠페인위원이 각자의 전문성을 바탕으로 위원회 활동을 함께 만들어갑니다.",
-                    "조직 · 위원") + f"""
+    """위원 명단 (2026.09.23: 옛 '조직 · 위원' 페이지. 조직도 · 6개 전문분과 · 운영 개요는 '위원회 소개'(about) 로 옮기고
+    이 페이지는 위원 명단과 공식 파트너만 둠. 명단 데이터는 assets/js/members-data.js)"""
+    body = hero_sub("위원 명단",
+                    "위원장과 임원진, 고문·자문위원, 사무국, 전문위원, 지역·캠퍼스 조직, AI 윤리 캠페인위원까지 한국AI윤리위원회와 함께하는 분들입니다.",
+                    "위원 명단") + f"""
 
     <section class="section">
-      <div class="wrap">
-        <div class="center" style="margin-bottom:46px">
-          <span class="eyebrow">Organization Chart</span>
-          <h2 class="h-sec">조직도</h2>
-          <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, AI 윤리 캠페인위원을 두고,
-             전국 단위의 지역 운영위원회·캠퍼스 위원회로 확장되는 구조입니다.</p>
-        </div>
-
-        <div class="org-chart">
-          <!-- 위원장 -->
-          <div class="oc-node oc-lv1">
-            <div class="oc-tag">CHAIRPERSON</div>
-            <div class="oc-title">위원장</div>
-            <div class="oc-desc">위원회 대표 · 전체 활동 총괄</div>
-          </div>
-
-          <!-- 감사 / 고문·자문위원단 (독립 기구) -->
-          <div class="oc-siderow">
-            <div class="oc-node oc-side">
-              <div class="oc-tag" style="color:var(--gray-500)">AUDIT</div>
-              <div class="oc-title" style="font-size:15.5px">감사</div>
-              <div class="oc-desc">운영·회계 독립 감사</div>
-            </div>
-            <div class="oc-dash"></div>
-            <div class="oc-spine"></div>
-            <div class="oc-dash"></div>
-            <div class="oc-node oc-side">
-              <div class="oc-tag" style="color:var(--gray-500)">ADVISORY BOARD</div>
-              <div class="oc-title" style="font-size:15.5px">고문 · 자문위원단</div>
-              <div class="oc-desc">학계·산업계·법조계 자문</div>
-            </div>
-          </div>
-
-          <!-- 부위원장 · 사무총장 -->
-          <div class="oc-node oc-lv2">
-            <div class="oc-tag">VICE CHAIRPERSON · SECRETARY GENERAL</div>
-            <div class="oc-title">부위원장 · 사무총장</div>
-            <div class="oc-desc">위원장 보좌 · 위원회 운영 총괄</div>
-          </div>
-
-          <div class="oc-vline"></div>
-          <div class="oc-hline"></div>
-
-          <!-- 3대 축: 사무국 / 전문위원회 / AI 윤리위원 -->
-          <div class="oc-branches">
-            <div class="oc-branch">
-              <div class="oc-stub"></div>
-              <div class="oc-node oc-pillar">
-                <div class="oc-tag">SECRETARIAT</div>
-                <div class="oc-title">사무국</div>
-                <div class="oc-desc">행정 · 운영 실무 총괄</div>
-              </div>
-              <div class="oc-childs">
-                <div class="oc-child">기획운영팀 <small>사업 기획 · 총무 · 회의 운영</small></div>
-                <div class="oc-child">대외협력팀 <small>공동 캠페인 · 기관 협력 · 국제 교류</small></div>
-                <div class="oc-child">콘텐츠·홍보팀 <small>캠페인 · 콘텐츠 · 채널 운영</small></div>
-              </div>
-            </div>
-            <div class="oc-branch">
-              <div class="oc-stub"></div>
-              <div class="oc-node oc-pillar oc-pillar--teal">
-                <div class="oc-tag" style="color:#00857A">EXPERT COMMITTEES</div>
-                <div class="oc-title">전문위원회</div>
-                <div class="oc-desc">6개 분과 · 분야별 자문과 기준 검토</div>
-              </div>
-              <div class="oc-childs">
-                <div class="oc-child">AI·기술 분과 <small>생성형 AI 기술 동향 · 판별 기술</small></div>
-                <div class="oc-child">법·정책 분과 <small>AI 관련 법제 · 정책 동향</small></div>
-                <div class="oc-child">교육·리터러시 분과 <small>AI 윤리 교육 · 교안 개발</small></div>
-                <div class="oc-child">연구·출판윤리 분과 <small>논문·연구물 AI 활용 기준</small></div>
-                <div class="oc-child">데이터·개인정보 분과 <small>데이터 윤리 · 프라이버시</small></div>
-                <div class="oc-child">미디어·콘텐츠 분과 <small>허위정보 · 콘텐츠 윤리</small></div>
-              </div>
-            </div>
-            <div class="oc-branch">
-              <div class="oc-stub"></div>
-              <div class="oc-node oc-pillar oc-pillar--teal" style="border-top-color:var(--teal)">
-                <div class="oc-tag" style="color:#00857A">CAMPAIGN COMMITTEE</div>
-                <div class="oc-title">AI 윤리 캠페인위원</div>
-                <div class="oc-desc">온라인 전국 활동 · 상시 모집</div>
-              </div>
-              <div class="oc-childs">
-                <div class="oc-child">캠페인 참여 <small>온라인 캠페인 · 확산 활동</small></div>
-                <div class="oc-child">콘텐츠 활동 <small>카드뉴스 · 영상 · 홍보</small></div>
-                <div class="oc-child">현장 소통 <small>대학 · 커뮤니티 알림</small></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="oc-vline"></div>
-
-          <!-- 지역 · 캠퍼스 조직 -->
-          <div class="oc-band">
-            <span class="badge">전국 조직</span>
-            <div>
-              <div class="oc-title">지역 운영위원회 · 캠퍼스 위원회</div>
-              <div class="oc-desc">권역별 지역 운영위원과 대학별 캠퍼스 위원장을 중심으로 한 현장 확산 조직</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--gray">
-      <div class="wrap">
-        <div class="center" style="margin-bottom:40px">
-          <span class="eyebrow">Expert Committees</span>
-          <h2 class="h-sec">6개 전문분과</h2>
-          <p class="h-sub">각 분과는 해당 분야의 전문위원으로 구성되며, 위원회가 발표하는 기준과 콘텐츠를 검토·자문합니다.</p>
-        </div>
-        <div class="grid grid-3">
-          <article class="card reveal"><div class="card-icon"><i data-lucide="cpu"></i></div>
-            <h3>AI·기술 분과</h3><p>생성형 AI 기술 동향 분석, AI 생성물 판별 기술 검토, 기술적 쟁점 자문을 담당합니다.</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="scale"></i></div>
-            <h3>법·정책 분과</h3><p>AI 관련 국내외 법제와 정책 동향을 검토하고, 위원회 기준의 법적 정합성을 자문합니다.</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="graduation-cap"></i></div>
-            <h3>교육·리터러시 분과</h3><p>AI 윤리 교육 프로그램과 교안을 개발하고, 세대별 눈높이에 맞는 교육 방식을 연구합니다.</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="book-open-check"></i></div>
-            <h3>연구·출판윤리 분과</h3><p>논문·과제·연구물에서의 AI 활용 표기 기준과 사전점검 가이드라인을 검토합니다.</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="database"></i></div>
-            <h3>데이터·개인정보 분과</h3><p>AI 학습·활용 과정의 데이터 윤리와 개인정보 보호 쟁점을 다룹니다.</p></article>
-          <article class="card reveal"><div class="card-icon"><i data-lucide="monitor-play"></i></div>
-            <h3>미디어·콘텐츠 분과</h3><p>AI 생성 콘텐츠와 허위정보 문제, 미디어 환경에서의 책임 있는 활용을 다룹니다.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="wrap-narrow">
-        <div class="center" style="margin-bottom:34px">
-          <span class="eyebrow">Operation</span>
-          <h2 class="h-sec">운영 개요</h2>
-        </div>
-        <div class="table-wrap">
-          <table class="tbl" style="min-width:auto">
-            <tbody>
-              <tr><th style="width:30%">기수</th><td>제1기 (2024. 03 ~ )</td></tr>
-              <tr><th>임원·위원 임기</th><td>2년 (연임 가능)</td></tr>
-              <tr><th>회의</th><td>정기회의 분기 1회 · 임시회의 수시 (온라인 병행)</td></tr>
-              <tr><th>의결</th><td>재적위원 과반수 출석과 출석위원 과반수 찬성</td></tr>
-              <tr><th>분과</th><td>6개 전문분과 (AI·기술, 법·정책, 교육·리터러시, 연구·출판윤리, 데이터·개인정보, 미디어·콘텐츠)</td></tr>
-              <tr><th>전국 조직</th><td>지역 운영위원회 · 캠퍼스 위원회 · AI 윤리 캠페인위원</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--gray">
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Members</span>
-          <h2 class="h-sec">위원 명단</h2>
-          <p class="h-sub">직책과 전문분야를 기준으로 구분해 안내합니다.</p>
+          <h2 class="h-sec">직책별 명단</h2>
+          <p class="h-sub">직책과 전문분야를 기준으로 안내합니다. 조직 구성은 <a href="about.html#org" style="color:var(--blue);font-weight:600">조직도</a>를 참고해 주세요.</p>
         </div>
         <div id="memberSections"></div>
 
       </div>
     </section>
 
-    <section class="section">
+    <section class="section section--gray">
       <div class="wrap">
         <div class="center" style="margin-bottom:36px">
           <span class="eyebrow">Official Partners</span>
@@ -1571,7 +1527,7 @@ def build_members():
       var l=secHTML(pair[0],true), r=secHTML(pair[1],true);
       if(l||r) html+='<div class="pair-row">'+l+r+'</div>';
     });
-    ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 앰버서더'].forEach(function(g){
+    ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 홍보대사'].forEach(function(g){
       html+=secHTML(g,false);
     });
     /* AI 윤리 캠페인위원: 총원만큼 카드 표시, 이름 없으면 공석 */
@@ -1605,8 +1561,8 @@ def build_members():
   })();
   </script>
 """
-    page("members.html", "조직 · 위원",
-         "한국AI윤리위원회의 조직 구성과 임원진·사무국·전문위원 명단, AI 윤리 캠페인위원 현황, 공식 파트너를 안내합니다.",
+    page("members.html", "위원 명단",
+         "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, 지역 운영위원·캠퍼스 위원장, AI 윤리 캠페인위원 명단과 공식 파트너를 안내합니다.",
          body, extra_script=script)
 
 
@@ -3264,7 +3220,7 @@ def build_lecture():
 
     script = """  <script src="assets/js/members-data.js"></script>
   <script>
-  /* 자문 위원단: 조직·위원 데이터의 '전문위원'을 자동으로 표시합니다 */
+  /* 자문 위원단: 위원 명단 데이터의 '전문위원'을 자동으로 표시합니다 */
   (function(){
     var box=document.getElementById('lecturerGrid');
     if(!box||!window.KAIEC_MEMBERS)return;
@@ -4486,7 +4442,7 @@ def build_join():
         f'<span class="check-box"></span><span>{m}</span></label>' for m in MOTIVES)
     BENEFITS = [
         ("award", "공식 위촉장 · 활동증명서", "위촉 시 위원회 명의의 위촉장을 발급하고, 활동 실적에 따라 활동증명서를 발급합니다. 이력서와 포트폴리오에 바로 활용할 수 있습니다."),
-        ("id-card", "위원회 직함과 명단 등재", "한국AI윤리위원회 위원 직함을 명함과 프로필에 표기하고, 위원회 조직·위원 명단에 이름을 올립니다."),
+        ("id-card", "위원회 직함과 명단 등재", "한국AI윤리위원회 위원 직함을 명함과 프로필에 표기하고, 위원회 위원 명단에 이름을 올립니다."),
         ("monitor-play", "온라인·재택 활동", "대부분의 활동이 온라인으로 진행되어 학업·직장과 병행할 수 있습니다."),
         ("trending-up", "커리어가 되는 활동", "AI기본법 시행 이후 기업·기관·학교가 요구하는 AI 윤리 이력을 실제 활동으로 만듭니다."),
         ("users", "전문가 네트워크", "AI 윤리·교육·기업 실무 전문가, 회원기관과 교류하며 활동 영역을 넓힙니다."),

@@ -483,7 +483,39 @@ table.tbl tr:hover td{background:#FCFDFF}
 }
 .greeting-sign .gs-org{font-size:14px;color:var(--gray-500);font-weight:600}
 .greeting-sign .gs-name{font-size:22px;font-weight:800;letter-spacing:.14em;color:var(--ink)}
+.greeting-sign .gs-name small{font-size:14px;font-weight:600;letter-spacing:.04em;color:var(--gray-600);margin-right:12px}
 @media (max-width:600px){.greeting{padding:34px 24px}}
+
+/* 넓은 인사말 (2026.09.23 새 문안): 사진 왼쪽 고정, 본문 오른쪽. 첫 인사 두 줄은 크게, 마지막 다짐 문장은 인용 상자 */
+.greeting--wide{padding:58px 62px 50px;overflow:visible}   /* overflow:hidden 이면 사진 고정(sticky)이 안 됨 */
+.greeting--wide::before{left:auto;right:40px;top:2px;color:var(--gray-100)}
+.greeting--wide .greeting-inner{grid-template-columns:264px 1fr;gap:60px}
+.greeting--wide .greeting-side{position:sticky;top:calc(var(--header-h) + 28px)}
+.greeting--wide .greeting-photo{border-radius:18px}
+.greeting--wide .greeting-cap{margin-top:16px}
+.greeting--wide .greeting-cap .gc-role{font-size:12.5px}
+.greeting--wide .greeting-cap .gc-name{font-size:21px}
+.greeting--wide .greeting-body p{font-size:16.5px;line-height:2.05;margin-bottom:20px;word-break:keep-all}
+.greeting-open{
+  font-size:24px !important;line-height:1.6 !important;font-weight:700;color:var(--ink) !important;letter-spacing:-.02em;
+  margin-bottom:28px !important;padding-bottom:24px;border-bottom:1px solid var(--gray-200);
+}
+.greeting-quote{
+  margin:30px 0 28px;padding:24px 28px;border-left:3px solid var(--teal);background:var(--teal-050);
+  border-radius:0 14px 14px 0;font-size:18.5px;line-height:1.85;color:var(--navy);word-break:keep-all;
+}
+.greeting-quote strong{color:#00675F}
+.greeting--wide .greeting-sign{flex-direction:column;align-items:flex-end;gap:4px;margin-top:30px;padding-top:24px}
+.greeting--wide .greeting-sign .gs-org{font-size:14.5px}
+.greeting--wide .greeting-sign .gs-name{font-size:24px}
+@media (max-width:1100px){.greeting--wide{padding:48px 44px 42px}.greeting--wide .greeting-inner{grid-template-columns:230px 1fr;gap:44px}}
+@media (max-width:860px){
+  .greeting--wide .greeting-inner{grid-template-columns:1fr;gap:28px}
+  .greeting--wide .greeting-side{position:static;max-width:230px;margin:0 auto 6px}
+  .greeting-open{font-size:21px !important}
+  .greeting-quote{font-size:17px;padding:20px 22px}
+}
+@media (max-width:600px){.greeting--wide{padding:34px 22px 30px}.greeting--wide .greeting-sign{align-items:flex-end}}
 
 /* ---------- 조직도 (Org Chart) ---------- */
 .org-chart{max-width:980px;margin:0 auto}
