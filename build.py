@@ -52,8 +52,8 @@ PRICE_SHORT = "9.9만원"                  # 제목·배지용 짧은 표기 (PR
 DEADLINE = "10월 30일"                  # 1기 접수 마감
 DEADLINE_ISO = "2026-10-30"             # 카운트다운(D-day)·구조화 데이터용
 # 2026.09.21: '연 100명 한정 양성'(QUOTA) 표기는 과정이 작아 보인다는 판단으로 사이트 전체에서 뺐습니다 (verify.py가 '명 한정' 재유입을 막음).
-# 대신 긴급성·이득이 바로 읽히는 표기만 씁니다: 접수 마감 D-day, 1기 특별가(마감 후 정가), 추가 비용 0원, 결제 당일 시작, 이수 즉시 공식 등재
-HOOK_ZERO = "추가 비용 0원"              # 재응시·이수증·명부 등재·가이드 모두 포함
+# 대신 긴급성·이득이 바로 읽히는 표기만 씁니다: 접수 마감 D-day, 1기 특별가(마감 후 정가), 전 과정 100% 온라인, 결제 당일 시작, 이수 즉시 공식 등재 (2026.09.22 '추가 비용' 표기는 사이트 전체에서 뺌)
+HOOK_ZERO = "전 과정 100% 온라인"        # 2026.09.22: 사이트 전체에서 '추가 비용' 표기를 빼기로 해 이 훅을 100% 온라인으로 교체(변수명은 유지)
 HOOK_START = "결제 당일 학습 시작"       # 결제 즉시 학습자료(PDF) 발송, 준비되면 바로 응시
 HOOK_REG = "이수 즉시 공식 등재"         # 이수와 동시에 홈페이지 공식 등록
 HOOK_AFTER = f"마감 후 정가 {LIST_PRICE:,}원"   # 1기 특별가는 접수 마감 전까지만
@@ -88,11 +88,11 @@ EXAM_API = "https://script.google.com/macros/s/AKfycbzgPS8uXz2Xqjfy4PxtFOIbBV31G
 # 학습 방식 (2026.09.16: 온라인 강의를 없애고 위원회 표준교재 자율학습 + 온라인 이수 평가로 전환)
 STUDY_MONTHS = 30                          # 2024년 3월 연구 착수 이후 산학 공동 연구·집필 기간(개월)
 TEXTBOOK_CH = 9                            # 표준교재 장 수 (PART I 기초 개념 제1~2장 · II AI 활용과 윤리 제3~4장 · III 주요 위험과 사례 제5~7장 · IV 실무 적용 제8~9장 · V 종합 정리, 부록 A~D)
-TEXTBOOK_PAGES = 153                       # 『핵심이론』 통합판 쪽수 (2026.09.21 통합 교재 완성. 자료 5종 합계 214쪽: 153+20+14+18+9)
-MATERIAL_PAGES = 214                       # 학습자료 5종 PDF 합계 쪽수
+TEXTBOOK_PAGES = 232                       # 『핵심이론』 개정 디자인판 쪽수 (2026.09.22 사용자 제공 개정 디자인 PDF 5종 기준. 합계 372쪽: 13+232+31+20+76. 이전 통합판은 153/214)
+MATERIAL_PAGES = 372                       # 학습자료 5종 PDF 합계 쪽수 (개정 디자인판)
 # 재응시 표기 (2026.09.16): '무제한'을 앞세우면 평가가 가벼워 보이므로, 기준은 그대로 두고 기회만 열어 둔다는 뜻으로 적습니다
 RETAKE = "기준에 이를 때까지 재응시"           # 응시 기간 안에서는 응시 횟수를 제한하지 않습니다
-RETAKE_LONG = "기준은 낮추지 않되, 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다(추가 비용 없음)."
+RETAKE_LONG = "기준은 낮추지 않되, 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다."
 # 제공 학습자료 5종: (제목, 분량 표기, 설명, 키워드 칩)  ※ 2026.09.21 통합 교재 완성판 기준(쪽수는 실제 PDF)
 MATERIAL_ITEMS = [
     ("『핵심이론』 표준교재", f"{TEXTBOOK_PAGES}쪽 · {TEXTBOOK_CH}개 장 · 부록 4종",
@@ -759,7 +759,7 @@ def build_index(posts):
           <a class="hero-promo" href="expert.html">
             <div>
               <strong>AI윤리전문가 양성과정 1기 모집 중 <span class="promo-new">NEW</span></strong>
-              <p>접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)}<br>AI윤리전문가 공식 등록 · KAIEC 홈페이지 등재</p>
+              <p>접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)}<br>AI윤리전문가 공식 등록 · KAIEC 홈페이지 인물 등재</p>
             </div>
             <span class="promo-go"><i data-lucide="arrow-right"></i></span>
           </a>
@@ -836,7 +836,7 @@ def build_index(posts):
             <ul class="offer-list">
               <li>전공·경력 제한 없이 누구나 수강, 전 과정 온라인</li>
               <li>공식 이수증 · 홈페이지 공식 등록 · 이력서·자기소개서 활용 가이드 모두 포함</li>
-              <li>이수 기준 {EXAM[1]}점, 응시 기간 안 {RETAKE} (추가 비용 없음)</li>
+              <li>이수 기준 {EXAM[1]}점, 응시 기간 안 {RETAKE}</li>
               <li>이수 후 전문위원 등록 신청 자격 (전문강사 · 자문 활동)</li>
             </ul>
             <div class="offer-btns">
@@ -3425,7 +3425,7 @@ def build_expert():
     INCLUDED = [
         ("book-open", "위원회 표준교재 등 학습자료 5종 (PDF)"),
         ("monitor-play", f"온라인 이수 평가 {EXAM[0]}문항 · {EXAM_MIN}분 (응시 기간 {EXAM_WINDOW_DAYS}일)"),
-        ("check-circle-2", "응시 기간 안 기준에 이를 때까지 재응시 · 추가 비용 없음"),
+        ("check-circle-2", "응시 기간 안 기준에 이를 때까지 재응시"),
         ("award", "한국AI윤리위원회 공식 이수증 (고유 이수번호)"),
         ("file-search", "홈페이지 공식 등록 · 검색"),
         ("pen-line", "이력서 · 자기소개서 활용 가이드 (이수자 전용)"),
@@ -3492,7 +3492,7 @@ def build_expert():
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">What You Get</span>
           <h2 class="h-sec" style="color:#fff">{PRICE_SHORT}에, 이 여덟 가지가 한 번에</h2>
-          <p class="h-sub" style="color:#9FB3D1">결제는 한 번, {won(PRICE)}. 이수증 발급부터 홈페이지 공식 등록, 재응시, 활용 가이드까지 추가 비용 0원.</p>
+          <p class="h-sub" style="color:#9FB3D1">결제는 한 번, {won(PRICE)}. 이수증 발급부터 홈페이지 공식 등록, 재응시, 활용 가이드까지 한 번에.</p>
         </div>
         <div class="bn-grid">{bn_html}
         </div>
@@ -3581,8 +3581,7 @@ def build_expert():
             <p class="h-sub" style="margin:0 auto">영상 진도율을 채우는 과정이 아닙니다. 결제 즉시 PDF 5종을 받아 원하는 속도로 공부하고, 준비되면 바로 응시합니다.</p>
           </div>
           <figure class="mat-figure reveal">
-            <img src="assets/img/materials-5set.jpg" alt="AI윤리전문가 양성과정 학습자료 5종 표지: 00 이수 평가 응시 안내, 01 핵심이론, 02 실전 모의고사, 03 정답 및 해설, 04 실무 도구집" loading="lazy" width="1543" height="430">
-            <figcaption>2026년판 학습자료 5종(PDF · {MATERIAL_PAGES}쪽) · 결제 확인 즉시 이메일로 발송</figcaption>
+            <img src="assets/img/materials-5set.jpg" alt="AI윤리전문가 양성과정 학습자료 5종 표지: 00 이수 평가 응시 안내, 01 핵심이론, 02 실전 모의고사, 03 정답 및 해설, 04 실무 도구집" loading="lazy" width="3972" height="1136">
           </figure>
           <ol class="lec-list">{mat_html}
           </ol>
@@ -3590,7 +3589,7 @@ def build_expert():
             <div class="exam-card">
               <span class="exam-tag">이수 평가</span>
               <strong>온라인 이수 평가 {EXAM[0]}문항 · {EXAM_MIN}분</strong>
-              <span>100점 만점에 <b>{EXAM[1]}점 이상</b>이면 이수 · 4지선다형 · 문항은 제공된 학습자료 범위에서만 출제 · 응시 기간 안 {RETAKE}(추가 비용 없음)</span>
+              <span>100점 만점에 <b>{EXAM[1]}점 이상</b>이면 이수 · 4지선다형 · 문항은 제공된 학습자료 범위에서만 출제 · 응시 기간 안 {RETAKE}</span>
             </div>
           </div>
           <p class="field-hint" style="margin-top:12px">학습자료 구성은 운영 상황에 따라 일부 조정될 수 있으며, 학습자료(PDF 5종)는 결제 완료 후 이메일로 발송됩니다.
@@ -3619,7 +3618,7 @@ def build_expert():
               <li><i data-lucide="award"></i><div><strong>한국AI윤리위원회 주관 · 공식 이수증 발급</strong><span>커리큘럼 구성, 이수 평가, 이수증 발급, 이수자 공식 등록까지 위원회가 직접 주관</span></div></li>
               <li><i data-lucide="badge-check"></i><div><strong>이수와 동시에 위원회 공식 등록</strong><span>이수번호가 부여된 이수증을 발급하고, 홈페이지에 공식 등록되어 검색됩니다</span></div></li>
               <li><i data-lucide="building-2"></i><div><strong>성균관대학교 RISE사업 공식 지원기업 성균관컨설팅 교육 운영</strong><span>접수·결제·수강 안내를 맡고, 교육비는 성균관컨설팅 안전결제로 처리</span></div></li>
-              <li><i data-lucide="scale"></i><div><strong>이수 기준은 {EXAM[1]}점, 기준은 낮추지 않습니다</strong><span>대신 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다. 재응시에 드는 비용은 없습니다</span></div></li>
+              <li><i data-lucide="scale"></i><div><strong>이수 기준은 {EXAM[1]}점, 기준은 낮추지 않습니다</strong><span>대신 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다</span></div></li>
             </ul>
           </div>
         </div>
@@ -3727,7 +3726,7 @@ def build_expert():
         <details class="acc">
           <summary>교육비와 접수 마감은 언제인가요?</summary>
           <div class="acc-body">1기 접수는 {DEADLINE}까지입니다. 교육비는 정가 {won(LIST_PRICE)}에서 1기 특별가 {won(PRICE)}이며, 특별가는 접수 마감 전까지만 적용됩니다.
-            비용에는 공식 학습자료(PDF) 5종, 온라인 이수 평가와 재응시, 이수증 발급, 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드가 모두 포함됩니다. 따로 내는 비용은 없습니다.</div>
+            비용에는 공식 학습자료(PDF) 5종, 온라인 이수 평가와 재응시, 이수증 발급, 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드가 모두 포함됩니다.</div>
         </details>
         <details class="acc">
           <summary>이수 평가는 어떻게 응시하나요?</summary>
@@ -3738,7 +3737,7 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>한 번에 통과하지 못하면 어떻게 되나요?</summary>
-          <div class="acc-body">이수 기준({EXAM[1]}점)은 누구에게도 낮춰 드리지 않습니다. 대신 <strong>응시 기간({EXAM_WINDOW_DAYS}일) 안에서는 기준에 이를 때까지 다시 응시</strong>하실 수 있고, 재응시에 드는 비용은 없습니다.
+          <div class="acc-body">이수 기준({EXAM[1]}점)은 누구에게도 낮춰 드리지 않습니다. 대신 <strong>응시 기간({EXAM_WINDOW_DAYS}일) 안에서는 기준에 이를 때까지 다시 응시</strong>하실 수 있습니다.
             한 번의 시험으로 사람을 가르는 것이 목적이 아니라, 기준에 이른 분에게만 위원회 이름으로 이수를 확인해 드리는 것이 목적이기 때문입니다.
             제출 즉시 영역별 점수가 표시되므로 부족한 부분만 다시 보신 뒤 이어서 응시하시면 됩니다.</div>
         </details>
@@ -3896,13 +3895,12 @@ def build_expert_apply():
                     <span class="ap-now">{won(PRICE)}</span>
                     <span class="ap-was">정가 {won(LIST_PRICE)}</span>
                   </span>
-                  <span class="choice-note">학습자료 5종 + 온라인 이수 평가 {EXAM[0]}문항(재응시 무료) + 공식 이수증 + 홈페이지 공식 등록 + 활용 가이드 · 추가 비용 없음</span>
+                  <span class="choice-note">학습자료 5종 + 온라인 이수 평가 {EXAM[0]}문항 + 공식 이수증 + 홈페이지 공식 등록 + 활용 가이드</span>
                 </span>
               </div>
             </div>
             <figure class="mat-figure mat-figure--sm">
-              <img src="assets/img/materials-5set.jpg" alt="결제 즉시 받는 학습자료 5종 표지: 이수 평가 응시 안내, 핵심이론, 실전 모의고사, 정답 및 해설, 실무 도구집" loading="lazy" width="1543" height="430">
-              <figcaption>결제 확인 즉시 이메일로 받는 학습자료 5종 (PDF · {MATERIAL_PAGES}쪽)</figcaption>
+              <img src="assets/img/materials-5set.jpg" alt="결제 즉시 받는 학습자료 5종 표지: 이수 평가 응시 안내, 핵심이론, 실전 모의고사, 정답 및 해설, 실무 도구집" loading="lazy" width="3972" height="1136">
             </figure>
           </div>
 
@@ -3954,7 +3952,7 @@ def build_expert_apply():
             <div class="exam-info">
               <div><span>평가 구성</span>{EXAM[0]}문항 · 4지선다형 · 시험 시간 {EXAM_MIN}분</div>
               <div><span>이수 기준</span><b>100점 만점에 {EXAM[1]}점 이상</b></div>
-              <div><span>재응시</span>응시 기간({EXAM_WINDOW_DAYS}일) 안에서 기준에 이를 때까지, 추가 비용 없음</div>
+              <div><span>재응시</span>응시 기간({EXAM_WINDOW_DAYS}일) 안에서 기준에 이를 때까지</div>
             </div>
 
             <div class="use-block">
@@ -4175,7 +4173,7 @@ def build_experts():
         ("경력이나 소속이 없어도 괜찮나요?",
          "네. 취업·이직 준비 중이어도 제한이 없습니다. 소속은 원할 때만 표기합니다."),
         ("이수 평가 기준에 못 미치면 어떻게 되나요?",
-         f"응시 기간 안에서는 이수 기준({EXAM[1]}점)에 이를 때까지 다시 응시할 수 있고, 추가 비용은 없습니다. 문항은 제공된 학습자료 범위에서만 출제됩니다."),
+         f"응시 기간 안에서는 이수 기준({EXAM[1]}점)에 이를 때까지 다시 응시할 수 있습니다. 문항은 제공된 학습자료 범위에서만 출제됩니다."),
     ]
     REG = [
         ("file-search", "홈페이지 공식 등록 · 검색", "이수 즉시 등록. 이름과 이수번호로 누구나 검색할 수 있습니다."),

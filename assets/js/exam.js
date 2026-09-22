@@ -46,8 +46,8 @@
   function retakeRule(ex) {
     var n = ex && ex.retakes;
     if (n === 0) return '재응시 없음';
-    if (n > 0) return '이수하지 못하면 재응시 ' + n + '회(추가 비용 없음)';
-    return '응시 기간 안에서는 이수할 때까지 재응시(추가 비용 없음, A형·B형 번갈아 출제)';
+    if (n > 0) return '이수하지 못하면 재응시 ' + n + '회';
+    return '응시 기간 안에서는 이수할 때까지 재응시(A형·B형 번갈아 출제)';
   }
   var ROMAN = { I: 'Ⅰ', II: 'Ⅱ', III: 'Ⅲ', IV: 'Ⅳ', V: 'Ⅴ', VI: 'Ⅵ', VII: 'Ⅶ', VIII: 'Ⅷ' };
   var FS_STEPS = [0.9, 1, 1.12, 1.25, 1.4];
@@ -242,7 +242,7 @@
     var PASS = 70;
     var MSG = {
       pass: '이수 기준을 충족했습니다. 실제 평가에서는 위원회 확인 후 7일 이내에 「AI윤리전문가 이수증」을 이메일(PDF)로 보내 드립니다.',
-      fail: '이번 평가는 이수 기준에 미치지 못했습니다. 재응시({form}형)가 열렸습니다. 응시 기간 안에서는 이수할 때까지 추가 비용 없이 다시 응시할 수 있습니다.'
+      fail: '이번 평가는 이수 기준에 미치지 못했습니다. 재응시({form}형)가 열렸습니다. 응시 기간 안에서는 이수할 때까지 다시 응시할 수 있습니다.'
     };
     function rand() { return Math.random().toString(36).slice(2, 10).toUpperCase(); }
     function load() { return sget(KEY.demoDb); }
@@ -935,7 +935,7 @@
     return panel('평가 안내', kv([
       ['응시 기간', '<b>결제일부터 ' + (CFG.windowDays || 30) + '일</b><span class="ex-sub-line">재응시를 포함한 모든 응시를 이 기간 안에 마칩니다.</span>'],
       ['평가 구성', '<b>' + comp + '</b><span class="ex-sub-line">4지선다형 100점 만점, 시험 시간은 [시험 시작]을 누른 때부터 흐릅니다.</span>'],
-      ['이수 기준', '<b>' + passTxt + '점 이상</b><span class="ex-sub-line">이수하지 못하면 응시 기간 안에서 이수할 때까지 추가 비용 없이 재응시합니다(A형·B형 번갈아 출제). 이수증은 결과 확인 후 7일 이내 PDF로 발급합니다.</span>'],
+      ['이수 기준', '<b>' + passTxt + '점 이상</b><span class="ex-sub-line">이수하지 못하면 응시 기간 안에서 이수할 때까지 재응시합니다(A형·B형 번갈아 출제). 이수증은 결과 확인 후 7일 이내 PDF로 발급합니다.</span>'],
       ['응시 환경', '<b>PC·태블릿 권장</b><span class="ex-sub-line">최신 크롬·엣지·사파리에서 응시해 주십시오. 다른 창이나 탭으로 이동하면 화면 이탈로 기록됩니다.</span>']
     ]), { cls: 'ex-guide' });
   }
@@ -1894,7 +1894,7 @@
     } else if (r.retake && r.retake.available) {
       var rf = r.retake.form || 'B';
       next = nextBox('retake', '재응시 ' + rf + '형이 열렸습니다', [
-        '응시 기간 안에서는 이수할 때까지 다시 응시할 수 있고, 추가 비용은 없습니다.',
+        '응시 기간 안에서는 이수할 때까지 다시 응시할 수 있습니다.',
         '재응시는 방금 응시한 평가지와 다른 문항(' + rf + '형)으로 출제됩니다.',
         '재응시에서도 이수 기준은 ' + pass + '점 이상입니다.',
         demoNote
@@ -1978,7 +1978,7 @@
       ? '「AI윤리전문가 양성과정 이수증」이 이메일로 발급되고<br>한국AI윤리위원회 홈페이지에 AI윤리전문가로 공식 등록됩니다'
       : (!rf ? '이후 절차는 결과 화면의<br>안내를 확인해 주십시오'
         : (lim == null || lim < 0 ? '응시 기간 안에는 횟수 제한 없이<br>다시 응시할 수 있습니다'
-          : '재응시 ' + rf + '형이 열렸습니다<br>추가 비용 없이 다시 응시할 수 있습니다'));
+          : '재응시 ' + rf + '형이 열렸습니다<br>이수할 때까지 다시 응시할 수 있습니다'));
     var spark = '';
     if (pass) for (var i = 0; i < 12; i++) spark += '<i style="--i:' + i + '"></i>';
     var box = document.createElement('div');
