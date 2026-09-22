@@ -30,7 +30,7 @@ SITE_URL = "https://kaiec.kr"                 # 실제 배포 주소 (커스텀 
 SITE_NAME = "한국AI윤리위원회"
 SITE_EN = "Korea AI Ethics Committee"         # 홈페이지·로고용 영문명 (KAIEC = Korea AI Ethics Committee)
 SITE_EN_FORMAL = "Korea AI Ethics Committee"  # 공식 영문 명칭 (위원회 소개 개요표 표기용, 브랜드명과 동일)
-EMAIL = "kaiec.korea@gmail.com"                # ← 대표 문의 메일
+EMAIL = "contact@kaiec.kr"                     # ← 대표 문의 메일 (2026.09.22 공식 도메인 메일로 전환. 수신은 ImprovMX → kaiec.korea@gmail.com 전달, 발신은 지메일 별칭)
 # (구) 위원 지원서 구글폼. 2026.09.13부터 위원·회원기관 신청은 자체 폼(join.html → 시트 웹훅)으로 받으므로 CTA에서는 사용하지 않음
 GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform"
 # 카피클린 문서검사 바로가기 (모든 카피클린 CTA가 이 주소로 연결됨)
