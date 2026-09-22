@@ -27,6 +27,7 @@
 
   /* Layout */
   --wrap:1180px;
+  --header-wrap:1220px;   /* 상단 바·헤더는 본문보다 살짝 넓게 (메뉴 여백 확보, 2026.09.22) */
   --wrap-narrow:860px;
   --radius:14px;
   --radius-lg:20px;
@@ -120,12 +121,15 @@ button{font-family:inherit}
 
 /* ---------- Top utility bar ---------- */
 .topbar{background:var(--ink);color:#9DB3D0;font-size:14px}   /* 2026.09.21 12.5 → 14px (가독성) */
-.topbar-inner{max-width:var(--wrap);margin:0 auto;padding:9px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px}
-.topbar-left{letter-spacing:.08em;font-weight:600;color:#7E96B8}
+.topbar-inner{max-width:var(--header-wrap);margin:0 auto;padding:9px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.topbar-left{letter-spacing:.11em;font-weight:600;font-size:12.5px;color:#7E96B8}
 .topbar-right{display:flex;align-items:center}
 .topbar a{color:#C9D8EE;font-weight:600;transition:color .15s}
 .topbar a:hover{color:#fff}
-.topbar .tsep{opacity:.3;margin:0 10px}
+.topbar a.tb-exam{color:#6FE3D8}
+.topbar a.tb-exam:hover{color:#A8F0EA}
+/* 구분선: 글자 '|' 대신 1px 세로선 (2026.09.22) */
+.topbar .tsep{display:inline-block;width:1px;height:13px;background:#C9D8EE;opacity:.28;margin:0 14px}
 @media (max-width:860px){.topbar{display:none}}
 
 /* ---------- Header ---------- */
@@ -135,8 +139,8 @@ button{font-family:inherit}
   border-bottom:1px solid var(--gray-200);
 }
 .header-inner{
-  height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:12px;
-  max-width:var(--wrap);margin:0 auto;padding:0 22px;
+  height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:24px;
+  max-width:var(--header-wrap);margin:0 auto;padding:0 22px;
 }
 .brand{display:flex;align-items:center;gap:13px;flex-shrink:0}
 .brand-badge{
@@ -162,18 +166,22 @@ button{font-family:inherit}
   .badge-wm{width:51px;height:9.2px}
 }
 
-.nav{display:flex;align-items:center;gap:0}
+/* 메뉴 (2026.09.22 정리): 항목 7개, 글자 사이 여백 넓힘(좌우 10px), 메뉴와 버튼 사이 세로 구분선 */
+.nav{display:flex;align-items:center;gap:2px}
 .nav > a{
-  padding:8px 6px;border-radius:9px;font-size:14px;font-weight:600;color:var(--gray-700);   /* 2026.09.21 13 → 14px */
-  transition:color .16s,background .16s;white-space:nowrap;
+  padding:9px 10px;border-radius:8px;font-size:14px;font-weight:600;color:var(--gray-700);   /* 2026.09.21 13 → 14px */
+  letter-spacing:-.01em;transition:color .16s,background .16s;white-space:nowrap;
 }
-.nav > a:hover{color:var(--blue);background:var(--blue-050)}
+.nav > a:hover{color:var(--ink);background:var(--gray-100)}
 .nav > a.is-active{color:var(--blue);background:var(--blue-050)}
-.header-cta{margin-left:5px;display:inline-flex;gap:6px}
+.nav-sep{width:1px;height:22px;background:var(--gray-200);margin:0 12px 0 10px;flex-shrink:0}
+.header-cta{display:inline-flex;align-items:center;gap:8px}
 .header-cta .btn{color:#fff}
 .header-cta .btn-ghost{color:var(--navy);border-color:var(--gray-300);background:#fff}
 .header-cta .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
-.header-cta .btn-sm{padding:8px 13px;font-size:12.5px}
+.header-cta .btn-sm{padding:9px 14px;font-size:13px}
+.header-cta .btn-primary{box-shadow:0 3px 10px rgba(31,95,224,.20)}
+.header-cta .btn-primary:hover{box-shadow:0 6px 16px rgba(31,95,224,.26)}
 
 .nav-toggle{
   display:none;background:none;border:1px solid var(--gray-300);border-radius:9px;
@@ -694,24 +702,21 @@ table.tbl tr:hover td{background:#FCFDFF}
   background:linear-gradient(90deg,rgba(8,17,36,.92) 6%,rgba(8,17,36,.62) 32%,rgba(9,20,42,.34) 48%,rgba(10,22,40,0) 64%),
              rgba(10,22,40,.10)}
 .hero-inner > *:not(.ai-visual){position:relative;z-index:1}
-/* AI 윤리 핵심가치 4종 칩 (2026.09.22): 이미지에 박혀 있던 흐린 칩 대신 HTML 로 그려 네 개가 같은 선명도로 보이게.
-   자리는 원래 이미지와 같게(왼쪽 위 책임성 · 왼쪽 아래 공정성 · 오른쪽 위 투명성 · 오른쪽 아래 사람 중심). .ai-visual 과 같은 틀 안에서 % 로 배치 */
+/* AI 윤리 핵심가치 칩 (2026.09.22): 오른쪽 두 칩(투명성 · 사람 중심)은 히어로 이미지에 원래 박힌 그대로 두고,
+   이미지 왼쪽에 있어 마스크·오버레이·제목에 가려 흐리던 책임성 · 공정성 두 칩만 이미지에서 지운 뒤 HTML 로 같은 자리에 다시 그림.
+   오른쪽 칩과 같은 크기 · 같은 투명도로 맞춤(렌더 화면 측정: 오른쪽 칩 글자 최고 밝기 115~135/255 → 흰 글자 50%대, 테두리 10%). .ai-visual 과 같은 틀 안에서 % 로 배치 */
 .hero-inner > .ai-values{position:absolute;top:0;bottom:0;right:calc(50% - 50vw);width:min(60vw,780px);margin:0;padding:0;list-style:none;z-index:1;pointer-events:none}
-/* 원래 이미지 칩처럼 은은하게: 옅은 유리, 얇은 테두리, 흰 글자 70~85%, 그림자 없음. 네 개가 같은 크기·같은 밝기 */
-.ai-values li{position:absolute;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 9px;border-radius:9px;
-  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.20);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+.ai-values li{position:absolute;display:flex;align-items:center;gap:6px;padding:4px 9px 4px 7px;border-radius:7px;
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
   color:#fff;white-space:nowrap}
 .ai-values .v-resp{left:13.5%;top:20%}
 .ai-values .v-fair{left:14.5%;top:61%}
-.ai-values .v-trans{right:10.5%;top:21%}
-.ai-values .v-human{right:9.5%;top:46%}
-.ai-values li svg{width:16px;height:16px;color:rgba(255,255,255,.72);flex-shrink:0}
+.ai-values li svg{width:15px;height:15px;color:rgba(255,255,255,.44);flex-shrink:0}
 .ai-values li span{display:flex;flex-direction:column;line-height:1.15}
-.ai-values li small{font-size:10px;font-weight:600;letter-spacing:.02em;color:rgba(255,255,255,.70)}
-.ai-values li b{font-size:12.5px;font-weight:700;letter-spacing:-.01em;color:rgba(255,255,255,.86);margin-top:1px}
-/* 1400px 아래에서는 왼쪽 두 칩이 제목 글줄과 겹치므로 오른쪽 두 개만 */
-@media (max-width:1400px){.ai-values .v-resp,.ai-values .v-fair{display:none}}
-@media (max-width:1150px){.hero-inner > .ai-values{display:none}}
+.ai-values li small{font-size:9px;font-weight:500;letter-spacing:.02em;color:rgba(255,255,255,.46)}
+.ai-values li b{font-size:11px;font-weight:600;letter-spacing:-.01em;color:rgba(255,255,255,.56);margin-top:1px}
+/* 1400px 아래에서는 왼쪽 칩이 제목 글줄과 겹치므로 숨김(오른쪽 두 칩은 이미지에 있어 그대로) */
+@media (max-width:1400px){.hero-inner > .ai-values{display:none}}
 .ai-net{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
 .ai-ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(159,196,255,.30);transform:translate(-50%,-50%)}
 .ai-ring-1{width:198px;height:198px;animation:aiSpin 36s linear infinite}
@@ -840,7 +845,8 @@ table.tbl tr:hover td{background:#FCFDFF}
   }
   .nav.is-open{display:flex}
   .nav > a{padding:14px 12px;border-radius:10px;font-size:15.5px}
-  .header-cta{margin:12px 0 0;flex-direction:column;gap:9px}
+  .nav-sep{display:none}
+  .header-cta{margin:12px 0 0;flex-direction:column;align-items:stretch;gap:9px}
   .header-cta .btn{width:100%}
   .nav-toggle{display:flex}
   .logo-grid{grid-template-columns:repeat(4,1fr)}

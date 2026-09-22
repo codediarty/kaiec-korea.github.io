@@ -313,7 +313,6 @@ NAV = [
     ("business.html", "주요사업"),
     ("members.html", "조직·위원"),
     ("lecture.html", "강의 신청"),
-    ("join.html", "KAIEC 참여"),
     ("copyclean.html", "카피클린"),
     ("news.html", "커뮤니티"),
     ("mou.html", "사회공헌"),
@@ -369,6 +368,8 @@ def brand(reuse=False):
 
 
 def header():
+    """공통 헤더. 2026.09.22: 메뉴의 'KAIEC 참여' 항목은 상단 바와 [KAIEC 참여하기] 버튼과 겹쳐 뺐고,
+    메뉴 글자 사이 여백을 넓히고 메뉴와 버튼 사이에 세로 구분선(.nav-sep)을 두어 덜 촘촘하게 정리."""
     links = "\n          ".join(
         f'<a href="{h}">{t}</a>' for h, t in NAV
     )
@@ -377,9 +378,9 @@ def header():
       <div class="topbar-inner">
         <span class="topbar-left">KOREA AI ETHICS COMMITTEE</span>
         <span class="topbar-right">
-          <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep">|</span>
-          <a href="join.html">KAIEC 참여</a><span class="tsep">|</span>
-          <a href="exam.html" style="color:#6FE3D8">평가응시</a>
+          <a href="mailto:{EMAIL}">{EMAIL}</a><span class="tsep" aria-hidden="true"></span>
+          <a href="join.html">KAIEC 참여</a><span class="tsep" aria-hidden="true"></span>
+          <a class="tb-exam" href="exam.html">평가응시</a>
         </span>
       </div>
     </div>
@@ -388,6 +389,7 @@ def header():
       <nav class="nav" id="nav">
           {links}
           <a class="nav-exam" href="exam.html"><i data-lucide="lock"></i>평가응시<span>수강생 로그인</span></a>
+          <span class="nav-sep" aria-hidden="true"></span>
           <span class="header-cta"><a class="btn btn-primary btn-sm" href="experts.html">AI윤리전문가 보기</a><a class="btn btn-ghost btn-sm" href="join.html">KAIEC 참여하기</a></span>
       </nav>
       <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
@@ -758,13 +760,11 @@ def build_index(posts):
         <p>AI 윤리 교육, 연구, 캠페인, AI윤리전문가 양성 및 국내외 협력 활동을 추진합니다.</p>
 
         <div class="ai-visual">
-            <img src="assets/img/hero-ai.jpg" alt="AI를 손 위에 올린 모습. 한국AI윤리위원회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
+            <img src="assets/img/hero-ai.jpg" alt="AI를 손 위에 올린 모습. 한국AI윤리위원회의 AI 윤리 핵심가치 (투명성 · 사람 중심, 왼쪽에 책임성 · 공정성)">
           </div>
-          <ul class="ai-values" aria-label="AI 윤리 핵심가치">
+          <ul class="ai-values" aria-label="AI 윤리 핵심가치 (책임성 · 공정성)">
             <li class="v-resp"><i data-lucide="shield-check"></i><span><small>Responsibility</small><b>책임성</b></span></li>
             <li class="v-fair"><i data-lucide="scale"></i><span><small>Fairness</small><b>공정성</b></span></li>
-            <li class="v-trans"><i data-lucide="file-search"></i><span><small>Transparency</small><b>투명성</b></span></li>
-            <li class="v-human"><i data-lucide="users"></i><span><small>Human-Centric</small><b>사람 중심</b></span></li>
           </ul>
 
           <div class="hero-bottom">
