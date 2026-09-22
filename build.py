@@ -4174,6 +4174,14 @@ def build_experts():
         ("award", "위원회 공식 이수증", f"이수번호가 기재된 「{DOC_FULL}」(PDF). 이력서에 그대로 씁니다."),
         ("shield-check", "위원회가 직접 확인", "기업·기관·학교가 문의하면 위원회가 등록 사실을 확인해 드립니다."),
     ]
+    # 2026.09.22 What Is It 통계 띠: 'AI 역량 이력'이 직무 불문 필수가 됐음을 보여 주는 수치(출처는 섹션 하단 field-hint)
+    STATS = [
+        ("70%↑", "AI 리터러시 요구 채용 공고", "1년 새 70% 넘게 증가. 직무를 가리지 않고 AI 역량을 요구합니다. <small class=\"src\">LinkedIn Skills on the Rise 2026</small>"),
+        ("46%", "국내 면접관의 2026 우선 과제", "면접관 열 명 중 다섯 명이 'AI 리터러시(이해·활용 능력) 검증'을 꼽았습니다. <small class=\"src\">한국바른채용인증원, 면접관 414명</small>"),
+        ("71%", "경력보다 AI 역량을 먼저 보는 리더", "AI 역량이 없는 경력자보다 AI 역량을 갖춘 저경력자를 뽑겠다는 리더가 71%. <small class=\"src\">Microsoft · LinkedIn 2024 Work Trend Index</small>"),
+    ]
+    stat_html = "".join(
+        f'<div><strong>{n}</strong><b>{t}</b><span>{d}</span></div>' for n, t, d in STATS)
     why_html = "".join(
         f'<div><strong>{n}</strong><b>{t}</b><span>{d}</span></div>' for n, t, d in WHY)
     moments_html = "".join(
@@ -4208,39 +4216,7 @@ def build_experts():
       </div>
     </section>
 
-    <section class="section" id="what">
-      <div class="wrap">
-        <div class="split" style="align-items:start">
-          <div class="story reveal">
-            <span class="eyebrow">What Is It</span>
-            <h2 class="h-sec" style="text-align:left;margin-bottom:14px">AI윤리전문가란?</h2>
-            <p class="lead" style="margin-bottom:16px">AI를 <strong>어디까지, 어떻게</strong> 써야 하는지 판단하고,
-               조직과 사람에게 그 기준을 설명할 수 있는 사람입니다.</p>
-            <p>AI를 쓰는 일은 이제 누구나 합니다. 하지만 저작권, 개인정보, 환각, 편향 같은 문제 앞에서
-               "이건 되고, 이건 안 된다"를 근거 있게 말할 수 있는 사람은 아직 소수입니다. 기업과 기관, 학교는 지금 그 사람을 찾고 있습니다.</p>
-            <p>그 소수가 되는 데 필요한 것은 위원회 표준교재 한 권과 온라인 이수 평가 하나입니다.
-               이수하면 한국AI윤리위원회가 AI윤리전문가로 공식 등록하고, 이력서의 한 줄을 위원회가 뒷받침합니다.</p>
-            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
-          </div>
-          <div class="worth-list reveal" style="margin-top:0">
-            <div class="worth"><span class="worth-no">01</span><div class="worth-ic"><i data-lucide="briefcase"></i></div>
-              <div class="worth-b"><strong>무엇을 하는가</strong>
-                <p>사내 AI 활용 기준을 세우고, 저작권·개인정보·환각 위험을 점검하고, 임직원과 학생에게 AI를 바르게 쓰는 법을 가르칩니다.</p>
-                <div class="chips"><span class="chip">AI 활용 기준</span><span class="chip">위험 점검</span><span class="chip">AI 교육</span></div></div></div>
-            <div class="worth"><span class="worth-no">02</span><div class="worth-ic"><i data-lucide="scale"></i></div>
-              <div class="worth-b"><strong>왜 지금인가</strong>
-                <p>2026년 AI기본법 시행, EU AI Act 적용. AI를 만드는 기업만이 아니라 쓰는 조직도 기준을 세울 사람이 필요해졌습니다.</p>
-                <div class="chips"><span class="chip">AI기본법 시행</span><span class="chip">EU AI Act</span><span class="chip">수요 급증</span></div></div></div>
-            <div class="worth"><span class="worth-no">03</span><div class="worth-ic"><i data-lucide="award"></i></div>
-              <div class="worth-b"><strong>어떻게 되는가</strong>
-                <p>한국AI윤리위원회 양성과정 이수 → AI윤리전문가 공식 이수증 → KAIEC 홈페이지 공식 등록. 전공·경력 제한 없이 전 과정 온라인입니다.</p>
-                <div class="chips"><span class="chip">표준교재</span><span class="chip">온라인 이수 평가</span><span class="chip">공식 등록</span></div></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--gray" id="why">
+    <section class="section" id="why">
       <div class="wrap">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Why Now</span>
@@ -4259,6 +4235,44 @@ def build_experts():
           <div class="moment-list">
             <div class="moment-title">이런 순간에 AI윤리전문가가 필요합니다</div>
             {moments_html}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--gray" id="what">
+      <div class="wrap">
+        <div class="center" style="margin-bottom:30px">
+          <span class="eyebrow">What Is It</span>
+          <h2 class="h-sec">AI윤리전문가란, 누구나 갖고 싶은 AI 역량 이력입니다</h2>
+          <p class="h-sub" style="margin:0 auto">AI를 잘 쓰는 사람은 많습니다. 기업이 찾는 사람은 AI의 결과를 검증하고 <strong>책임 있게 쓸 줄 아는 사람</strong>입니다.
+             그 역량을 한국AI윤리위원회가 확인해 준 이력이 AI윤리전문가입니다.</p>
+        </div>
+        <div class="why-row">{stat_html}</div>
+        <div class="split" style="align-items:start;margin-top:34px">
+          <div class="story reveal">
+            <h3>기업이 말하는 'AI 역량'은 프롬프트 실력이 아닙니다</h3>
+            <p>한국고용정보원은 2026년 직장인의 필수 역량으로 AI 리터러시를 꼽으면서, 그 뜻을 <strong>"AI의 결과를 이해하고 검증하며 책임 있게 활용하는 판단 역량"</strong>이라고 설명합니다.
+               링크드인이 집계한 채용 공고에서 AI 리터러시를 요구하는 자리는 1년 새 70% 넘게 늘었고, 국내 면접관 열 명 중 다섯 명은 2026년 채용의 우선 과제로 AI 리터러시 검증을 꼽았습니다.</p>
+            <p>저작권, 개인정보, 환각, 편향. AI를 쓰는 모든 자리에서 매일 마주치는 문제 앞에 "이건 되고, 이건 안 된다"를 근거 있게 말할 수 있는 판단력이 바로 그 역량이고, 그것이 AI 윤리입니다.
+               직무도, 전공도, 경력도 가리지 않습니다. AI를 쓰는 사람이면 누구에게나 필요한 이력입니다.</p>
+            <p>그 역량을 위원회 표준교재로 배우고 온라인 이수 평가로 확인하면, 한국AI윤리위원회가 AI윤리전문가로 공식 등록하고 이력서의 한 줄을 위원회가 뒷받침합니다.</p>
+            <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
+            <p class="field-hint" style="margin-top:14px">출처: 아시아경제 「2026년, 직장인은 무엇을 준비해야 하는가」(2026.1, 한국고용정보원 김동규 연구위원) · LinkedIn Skills on the Rise 2026 · 한국바른채용인증원 「2026 채용 트렌드」(면접관 414명, 2025.12) · Microsoft · LinkedIn 2024 Work Trend Index(31개국 31,000명)</p>
+          </div>
+          <div class="worth-list reveal" style="margin-top:0">
+            <div class="worth"><span class="worth-no">01</span><div class="worth-ic"><i data-lucide="users"></i></div>
+              <div class="worth-b"><strong>누구의 이력인가</strong>
+                <p>기획·마케팅·개발·영업·교육·공공·연구, 그리고 취업준비생과 대학생까지. AI를 업무나 학업에 쓰는 사람이면 누구나 갖는 AI 역량 이력입니다.</p>
+                <div class="chips"><span class="chip">직무 불문</span><span class="chip">전공 무관</span><span class="chip">경력 무관</span></div></div></div>
+            <div class="worth"><span class="worth-no">02</span><div class="worth-ic"><i data-lucide="shield-check"></i></div>
+              <div class="worth-b"><strong>무엇을 증명하는가</strong>
+                <p>AI 결과를 검증하고 저작권·개인정보·환각·편향 위험을 판단해 책임 있게 활용할 수 있다는 것. 위원회 표준교재와 온라인 이수 평가로 확인합니다.</p>
+                <div class="chips"><span class="chip">결과 검증</span><span class="chip">위험 판단</span><span class="chip">책임 있는 활용</span></div></div></div>
+            <div class="worth"><span class="worth-no">03</span><div class="worth-ic"><i data-lucide="award"></i></div>
+              <div class="worth-b"><strong>어떻게 남는가</strong>
+                <p>공식 이수증(이수번호)과 KAIEC 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드. 이력서와 면접, 사내 AI 기준 수립에 바로 씁니다.</p>
+                <div class="chips"><span class="chip">공식 이수증</span><span class="chip">홈페이지 공식 등록</span><span class="chip">활용 가이드</span></div></div></div>
           </div>
         </div>
       </div>
