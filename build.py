@@ -760,12 +760,8 @@ def build_index(posts):
         <p>AI 윤리 교육, 연구, 캠페인, AI윤리전문가 양성 및 국내외 협력 활동을 추진합니다.</p>
 
         <div class="ai-visual">
-            <img src="assets/img/hero-ai.jpg" alt="AI를 손 위에 올린 모습. 한국AI윤리위원회의 AI 윤리 핵심가치 (투명성 · 사람 중심, 왼쪽에 책임성 · 공정성)">
+            <img src="assets/img/hero-ai.jpg" alt="Responsible AI, Better Tomorrow. 한국AI윤리위원회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
           </div>
-          <ul class="ai-values" aria-label="AI 윤리 핵심가치 (책임성 · 공정성)">
-            <li class="v-resp"><i data-lucide="shield-check"></i><span><small>Responsibility</small><b>책임성</b></span></li>
-            <li class="v-fair"><i data-lucide="scale"></i><span><small>Fairness</small><b>공정성</b></span></li>
-          </ul>
 
           <div class="hero-bottom">
           <div class="hero-ctas">
