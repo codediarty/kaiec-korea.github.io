@@ -761,10 +761,10 @@ def build_index(posts):
             <img src="assets/img/hero-ai.jpg" alt="AI를 손 위에 올린 모습. 한국AI윤리위원회의 AI 윤리 핵심가치 (책임성 · 투명성 · 공정성 · 사람 중심)">
           </div>
           <ul class="ai-values" aria-label="AI 윤리 핵심가치">
-            <li><i data-lucide="shield-check"></i><span><small>Responsibility</small><b>책임성</b></span></li>
-            <li><i data-lucide="file-search"></i><span><small>Transparency</small><b>투명성</b></span></li>
-            <li><i data-lucide="scale"></i><span><small>Fairness</small><b>공정성</b></span></li>
-            <li><i data-lucide="users"></i><span><small>Human-Centric</small><b>사람 중심</b></span></li>
+            <li class="v-resp"><i data-lucide="shield-check"></i><span><small>Responsibility</small><b>책임성</b></span></li>
+            <li class="v-fair"><i data-lucide="scale"></i><span><small>Fairness</small><b>공정성</b></span></li>
+            <li class="v-trans"><i data-lucide="file-search"></i><span><small>Transparency</small><b>투명성</b></span></li>
+            <li class="v-human"><i data-lucide="users"></i><span><small>Human-Centric</small><b>사람 중심</b></span></li>
           </ul>
 
           <div class="hero-bottom">
@@ -835,11 +835,10 @@ def build_index(posts):
           </div>
           <div class="offer-card reveal">
             <div class="offer-top">
-              <span class="badge">1기 모집 중 · 마감 {DEADLINE}</span>
               <span class="offer-quota">{HOOK_ZERO} · {HOOK_REG}</span>
             </div>
             <h3>AI윤리전문가 양성과정</h3>
-            <p>위원회가 직접 집필한 학습자료 5종과 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 홈페이지 홈페이지에 공식 등록되는 하나의 과정입니다.</p>
+            <p>위원회가 직접 집필한 학습자료 5종과 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 홈페이지에 공식 등록되는 하나의 과정입니다.</p>
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_PRICE)}</span>
               <span class="price-now">{won(PRICE)}</span>
@@ -3555,7 +3554,6 @@ def build_expert():
         <div class="one-course reveal">
           <article class="one-course-main">
             <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
-              <span class="badge" style="background:#6FE3D8;color:#03302B">1기 모집 중 · 마감 {DEADLINE}</span>
               <span class="badge" style="background:rgba(255,255,255,.16);color:#fff">{HOOK_ZERO} · {HOOK_START}</span>
             </div>
             <h3>AI윤리전문가 양성과정</h3>
@@ -4346,7 +4344,6 @@ def build_experts():
         <div class="start-one">
           <div class="offer-card reveal">
             <div class="offer-top">
-              <span class="badge">1기 모집 중 · 마감 {DEADLINE}</span>
               <span class="offer-quota">{HOOK_ZERO} · {HOOK_REG}</span>
             </div>
             <h3>AI윤리전문가 양성과정</h3>
