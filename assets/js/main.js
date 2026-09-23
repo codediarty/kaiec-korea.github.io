@@ -76,14 +76,7 @@
     nums.forEach(function (n) { nio.observe(n); });
   }
 
-  /* 6. 접수 마감 D-day (data-deadline="YYYY-MM-DD" 요소 안의 [data-dday]에 표시, 마감 후엔 비움) ---- */
-  document.querySelectorAll('[data-deadline]').forEach(function (box) {
-    var out = box.querySelector('[data-dday]');
-    if (!out) return;
-    var end = new Date(box.getAttribute('data-deadline') + 'T23:59:59+09:00');
-    var days = Math.ceil((end - new Date()) / 86400000);
-    out.textContent = days > 0 ? 'D-' + days : (days === 0 ? 'D-DAY' : '');
-  });
+  /* 6. (2026.09.23 삭제) 접수 마감 D-day 표시: 기수·마감 표기를 사이트에서 쓰지 않기로 해 코드를 뺐습니다. */
 
   /* 7. 하단 고정 접수 바: 첫 화면을 지나면 나타나고, 배너·푸터가 보이면 숨김 ----------------- */
   var sticky = document.getElementById('stickyCta');

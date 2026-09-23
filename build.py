@@ -46,17 +46,16 @@ PAY_URL = "https://skkc.co.kr/shop_view?idx=26"      # AI윤리전문가 양성�
 # 수강 신청을 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
 # 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 신청 내용이 메일 앱으로 발송됩니다.
 SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec"
-# 양성과정 가격·모집 정보 (변경 시 여기만 수정 후 재실행: expert·신청 폼·메인 배너·게시글 배너에 일괄 반영)
-LIST_PRICE, PRICE = 300000, 99000      # 통합 과정 정가 / 1기 특별가 (2026.09.21 통합하며 149,000원 → 99,000원, 09.22 정가 290,000 → 300,000원. skkc.co.kr idx=26 상품 가격도 같이 맞출 것)
+# 양성과정 가격 정보 (변경 시 여기만 수정 후 재실행: expert·신청 폼·메인 배너·게시글 배너에 일괄 반영)
+LIST_PRICE, PRICE = 300000, 99000      # 통합 과정 정가 / 특별가 (2026.09.21 통합하며 149,000원 → 99,000원, 09.22 정가 290,000 → 300,000원. skkc.co.kr idx=26 상품 가격도 같이 맞출 것)
 PRICE_SHORT = "9.9만원"                  # 제목·배지용 짧은 표기 (PRICE를 바꾸면 이것도 함께)
-DEADLINE = "10월 30일"                  # 1기 접수 마감
-DEADLINE_ISO = "2026-10-30"             # 카운트다운(D-day)·구조화 데이터용
+# 2026.09.23: 기수(1기)·'모집 중'·접수 마감·D-day 표기는 '이제 막 시작한 곳'처럼 보인다는 판단으로 사이트 전체에서 뺐습니다.
+# DEADLINE·DEADLINE_ISO·HOOK_AFTER 상수도 삭제했고, verify.py 가 기수·마감 표기의 재유입을 막습니다.
 # 2026.09.21: '연 100명 한정 양성'(QUOTA) 표기는 과정이 작아 보인다는 판단으로 사이트 전체에서 뺐습니다 (verify.py가 '명 한정' 재유입을 막음).
-# 대신 긴급성·이득이 바로 읽히는 표기만 씁니다: 접수 마감 D-day, 1기 특별가(마감 후 정가), 전 과정 100% 온라인, 결제 당일 시작, 이수 즉시 공식 등재 (2026.09.22 '추가 비용' 표기는 사이트 전체에서 뺌)
+# 쓰는 표기: 특별가(정가 대비), 전 과정 100% 온라인, 결제 당일 시작, 이수 즉시 공식 등재 (2026.09.22 '추가 비용' 표기는 사이트 전체에서 뺌)
 HOOK_ZERO = "전 과정 100% 온라인"        # 2026.09.22: 사이트 전체에서 '추가 비용' 표기를 빼기로 해 이 훅을 100% 온라인으로 교체(변수명은 유지)
 HOOK_START = "결제 당일 학습 시작"       # 결제 즉시 학습자료(PDF) 발송, 준비되면 바로 응시
 HOOK_REG = "이수 즉시 공식 등재"         # 이수와 동시에 홈페이지 공식 등록
-HOOK_AFTER = f"마감 후 정가 {LIST_PRICE:,}원"   # 1기 특별가는 접수 마감 전까지만
 # 2026.09.22 채용 통계 (Microsoft · LinkedIn 2024 Work Trend Index, 31개국 31,000명): 리더 71%는 AI 역량 없는 경력자보다 AI 역량 있는 저경력자를 뽑겠다, 66%는 AI 역량 없으면 채용 안 한다.
 # /expert/ Career Value 띠와 신청 폼 머리글에 같은 문구를 씁니다 (수치·출처는 STAT_71로 한 곳에서 관리).
 STAT_71 = {
@@ -662,7 +661,7 @@ def cert_band_inner(sec_label="KAIEC 참여하기", sec_href="join.html", title=
     text = text or (f"AI윤리전문가 양성과정은 {HOOK_ZERO}으로 진행됩니다. "
                     f"위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 이수 즉시 홈페이지에 공식 등록되세요.")
     return f"""<div class="cta-band reveal">
-          <div><h2>{title} <span class="promo-new" style="vertical-align:middle">NEW</span></h2>
+          <div><h2>{title}</h2>
             <p>{text}</p></div>
           <div class="btns">
             <a class="btn btn-white" href="{CERT_HREF}">{CERT_CTA}</a>
@@ -685,11 +684,11 @@ def cert_band(sec_label="KAIEC 참여하기", sec_href="join.html", title=None, 
 def sticky_cta(mode="all"):
     """화면 하단 고정 접수 바 (스크롤 후 표시, 푸터·배너가 보이면 숨김). mode: all | mobile"""
     cls = " sticky-cta--mobile" if mode == "mobile" else ""
-    return f"""  <div class="sticky-cta{cls}" id="stickyCta" data-deadline="{DEADLINE_ISO}" aria-hidden="true">
+    return f"""  <div class="sticky-cta{cls}" id="stickyCta" aria-hidden="true">
     <div class="sticky-cta-inner">
       <div class="sticky-cta-text">
-        <strong>AI윤리전문가<em class="sticky-more"> 양성과정</em> 1기 특별가 {won(PRICE)}</strong>
-        <span>접수 마감 {DEADLINE} <b class="dday" data-dday></b><em class="sticky-more"> · {HOOK_ZERO} · {HOOK_REG}</em></span>
+        <strong>AI윤리전문가<em class="sticky-more"> 양성과정</em> 특별가 {won(PRICE)}</strong>
+        <span>{HOOK_ZERO}<em class="sticky-more"> · {HOOK_START} · {HOOK_REG}</em></span>
       </div>
       <a class="btn btn-primary btn-sm" href="{CERT_HREF}">양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
     </div>
@@ -839,7 +838,7 @@ def build_index(posts):
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_PRICE)}</span>
               <span class="price-now">{won(PRICE)}</span>
-              <span class="price-tag">1기 특별가</span>
+              <span class="price-tag">특별가</span>
             </div>
             <ul class="offer-list">
               <li>전공·경력 제한 없이 누구나 수강, 전 과정 온라인</li>
@@ -1316,7 +1315,7 @@ def build_about():
               <table class="tbl" style="min-width:auto">
                 <tbody>
                   <tr><th style="width:34%">명칭</th><td>한국AI윤리위원회<br><span style="color:var(--gray-500);font-size:13.5px">{SITE_EN_FORMAL} (KAIEC)</span></td></tr>
-                  <tr><th>설립</th><td>2024년 3월 (제1기 2024. 03 ~ )</td></tr>
+                  <tr><th>설립</th><td>2024년 3월</td></tr>
                   <tr><th>성격</th><td>AI 윤리 전문기관</td></tr>
                   <tr><th>목적</th><td>책임 있는 생성형 AI 활용 및 AI 윤리 문화 확산</td></tr>
                   <tr><th>주요 활동</th><td>교육 · 연구 · 캠페인 · 사회공헌 · AI 윤리위원 운영</td></tr>
@@ -1471,8 +1470,8 @@ def build_members():
         <div class="reg-empty" id="mExpertEmpty" hidden>
           <i data-lucide="award"></i>
           <div>
-            <strong>제1기 AI윤리전문가 등록을 준비하고 있습니다.</strong>
-            <p>이수 평가를 통과한 분부터 순서대로 이 명단에 오르며, 이수번호로 언제든 등록 사실을 확인할 수 있습니다.</p>
+            <strong>AI윤리전문가 등록 명단은 이수 확정 순서대로 게시됩니다.</strong>
+            <p>AI윤리전문가 양성과정 이수 평가를 통과하면 이수번호와 함께 이 명단에 공식 등록되며, 검색창에서 성명 또는 이수번호로 등록 사실을 확인할 수 있습니다.</p>
             <a href="expert.html">AI윤리전문가 양성과정 안내 →</a>
           </div>
         </div>
@@ -1600,7 +1599,7 @@ def build_members():
         cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
       });
       var remain=Math.max(0,total-named.length);
-      if(remain) cards+=recruitCard('제1기 AI 윤리 캠페인위원',remain,'전공·경력 무관 · 온라인 활동 · 위촉장 발급');
+      if(remain) cards+=recruitCard('AI 윤리 캠페인위원',remain,'전공·경력 무관 · 온라인 활동 · 위촉장 발급');
       html+='<div style="margin-bottom:10px">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
         +'<span style="width:4px;height:19px;background:var(--teal);border-radius:2px"></span>AI 윤리 캠페인위원'
@@ -2069,9 +2068,9 @@ def build_post(p, posts):
                     + "".join(f'<li><a href="#sec-{i}">{_strip_tags(h)}</a></li>' for i, h in enumerate(heads, 1))
                     + '</ol></nav>')
     mid_cta = f"""<aside class="post-cta">
-  <span class="post-cta-kicker">AI윤리전문가 양성과정 · 1기 모집 중</span>
+  <span class="post-cta-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</span>
   <strong>AI를 어디까지 어떻게 활용해야 하는지, 기준을 아는 사람이 조직의 리스크를 줄입니다.</strong>
-  <p>위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고 홈페이지에 공식 등록되세요. 1기 특별가 {won(PRICE)} (정가 {won(LIST_PRICE)}), 접수 마감 {DEADLINE}.</p>
+  <p>위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고 홈페이지에 공식 등록되세요. 특별가 {won(PRICE)}(정가 {won(LIST_PRICE)}) · {HOOK_ZERO}.</p>
   <span class="post-cta-links"><a class="btn btn-primary btn-sm" href="{CERT_HREF}">{CERT_CTA}</a><a class="btn btn-ghost btn-sm" href="quiz.html">AI 윤리 실무 진단</a></span>
 </aside>
 """
@@ -2121,7 +2120,7 @@ def build_post(p, posts):
 {rel_html}
     <section class="section section--tight">
       <div class="wrap">
-        {cert_band_inner("양성과정 안내", "expert.html", title="AI윤리전문가 양성과정 1기 모집 중")}
+        {cert_band_inner("양성과정 안내", "expert.html", title="한국AI윤리위원회 AI윤리전문가 양성과정")}
       </div>
     </section>"""
 
@@ -3385,8 +3384,8 @@ def build_expert():
          ["이력서 · 자기소개서", "사내 AI 기준 수립", "실무 양식 13종"]),
         ("trending-up", "규제가 만드는 수요, 지금이 가장 앞자리",
          "2026년 1월 AI기본법이 시행되고 8월 EU AI Act 투명성 의무가 발효되면서, AI를 활용하는 기업·기관까지 의무의 주체가 되었습니다. "
-         "AI 거버넌스 시장 규모는 연평균 45.3% 성장이 전망되는데 담당할 사람은 아직 적습니다. <strong>1기 이수자는 이 분야의 첫 경력자</strong>로 남습니다.",
-         ["2026 AI기본법 시행", "EU AI Act 적용", "1기 선점 효과"]),
+         "AI 거버넌스 시장 규모는 연평균 45.3% 성장이 전망되는데 담당할 사람은 아직 적습니다. <strong>먼저 이수한 사람이 이 분야의 경력자</strong>로 앞서 갑니다.",
+         ["2026 AI기본법 시행", "EU AI Act 적용", "AI 거버넌스 성장"]),
     ]
     worth_html = "".join(f"""
             <div class="worth reveal">
@@ -3475,7 +3474,7 @@ def build_expert():
           <span><i data-lucide="check"></i>AI윤리전문가 공식 등록</span>
         </div>
         <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:26px">
-          <a class="btn btn-primary" href="{CERT_HREF}">AI윤리전문가 1기 신청하기 <i data-lucide="arrow-right"></i></a>
+          <a class="btn btn-primary" href="{CERT_HREF}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#benefits">이수 후 달라지는 것 보기 <i data-lucide="arrow-right"></i></a>
         </div>
       </div>
@@ -3487,7 +3486,7 @@ def build_expert():
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 1</div><div class="stat-label">AI기본법 시행</div><div class="stat-sub">국내 AI 의무 규제 시대 개막</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">2026. 8</div><div class="stat-label">EU AI Act 투명성 의무</div><div class="stat-sub">고위험 의무는 2027년부터 단계 적용</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">{STUDY_MONTHS}개월+</div><div class="stat-label">산학 공동 연구 · 집필</div><div class="stat-sub">위원회 표준교재 + 온라인 이수 평가</div></div>
-          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">1기</div><div class="stat-label">지금 모집 중</div><div class="stat-sub">첫 번째 전문가 그룹</div></div>
+          <div class="stat"><div class="stat-num" style="font-size:clamp(21px,2.4vw,27px);line-height:1.3">100%</div><div class="stat-label">전 과정 온라인</div><div class="stat-sub">신청부터 이수증 발급까지</div></div>
         </div>
       </div>
     </section>
@@ -3582,7 +3581,7 @@ def build_expert():
             <div class="price-line">
               <span class="price-list">정가 {won(LIST_PRICE)}</span>
               <span class="price-now">{won(PRICE)}</span>
-              <span class="price-tag">1기 특별가</span>
+              <span class="price-tag">특별가</span>
             </div>
             <div style="margin-top:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
               <a class="btn btn-white" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
@@ -3693,7 +3692,7 @@ def build_expert():
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 06</span><h3 style="font-size:16px">이수증 · 공식 등록</h3><p style="font-size:14px">결과 확인 후 7일 이내 PDF 발급 · 홈페이지 공식 등록 · 활용 가이드 발송</p></div>
         </div>
         {pay_btns}
-        <p class="field-hint" style="margin-top:18px;text-align:center">1기 접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)}(정가 {won(LIST_PRICE)}, 특별가는 접수 마감 전까지만 적용) · {HOOK_ZERO}<br>
+        <p class="field-hint" style="margin-top:18px;text-align:center">특별가 {won(PRICE)}(정가 {won(LIST_PRICE)}) · {HOOK_ZERO} · {HOOK_START}<br>
            교육비 결제는 성균관대학교 RISE사업 공식 지원기업 성균관컨설팅(skkc.co.kr)의 안전결제로 처리되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.</p>
       </div>
     </section>
@@ -3746,8 +3745,8 @@ def build_expert():
             카드전표 등 결제 증빙은 결제 시 발급됩니다.</div>
         </details>
         <details class="acc">
-          <summary>교육비와 접수 마감은 언제인가요?</summary>
-          <div class="acc-body">1기 접수는 {DEADLINE}까지입니다. 교육비는 정가 {won(LIST_PRICE)}에서 1기 특별가 {won(PRICE)}이며, 특별가는 접수 마감 전까지만 적용됩니다.
+          <summary>교육비는 얼마이고, 무엇이 포함되나요?</summary>
+          <div class="acc-body">교육비는 정가 {won(LIST_PRICE)}에서 특별가 {won(PRICE)}입니다.
             비용에는 공식 학습자료(PDF) 5종, 온라인 이수 평가와 재응시, 이수증 발급, 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드가 모두 포함됩니다.</div>
         </details>
         <details class="acc">
@@ -3777,7 +3776,7 @@ def build_expert():
         <div class="cta-band reveal">
           <div>
             <h2>올해 안에, 이력서에 AI윤리전문가 한 줄을 더하세요</h2>
-            <p>위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록까지. 1기 특별가 {won(PRICE)}는 접수 마감 {DEADLINE}까지만 적용됩니다.</p>
+            <p>위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록까지. {HOOK_ZERO}으로, 결제 당일 바로 학습을 시작할 수 있습니다.</p>
           </div>
           <div class="btns">
             <a class="btn btn-white" href="{CERT_HREF}">{CERT_CTA}</a>
@@ -3802,7 +3801,6 @@ def build_expert():
     "price": "{price}",
     "priceCurrency": "KRW",
     "availability": "https://schema.org/InStock",
-    "validThrough": "{DEADLINE_ISO}",
     "url": "{url}"
   }},
   "hasCourseInstance": {{
@@ -3833,8 +3831,8 @@ def build_expert():
   })();
   </script>
 """
-    page("expert.html", "AI윤리전문가 양성과정 1기 모집",
-         f"한국AI윤리위원회 주관 AI윤리전문가 양성과정. 위원회 표준교재 등 학습자료 5종과 온라인 이수 평가로 공식 이수증을 받고 홈페이지에 공식 등록됩니다. 이력서·자기소개서 활용 가이드 제공. 1기 특별가 {won(PRICE)}, 모집 중.",
+    page("expert.html", "AI윤리전문가 양성과정",
+         f"한국AI윤리위원회 주관 AI윤리전문가 양성과정. 위원회 표준교재 등 학습자료 5종과 온라인 이수 평가로 공식 이수증을 받고 홈페이지에 공식 등록됩니다. 이력서·자기소개서 활용 가이드 제공. {HOOK_ZERO}.",
          body, extra_head=ld, extra_script=sq_js, sticky="all",
          keywords=["AI윤리전문가", "AI윤리전문가 양성과정", "AI 윤리 교육 이수증", "AI 윤리 전문가 과정", "AI 윤리 교육", "AI기본법",
                    "AI 컴플라이언스", "인공지능 윤리 전문가", "생성형 AI 교육", "AI 리터러시", "AI 거버넌스", "취업 스펙"])
@@ -3881,8 +3879,8 @@ def build_expert_apply():
       <div class="gform-wrap">
 
         <div class="gform-card gform-head">
-          <span class="gform-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정 1기</span>
-          <h1>AI윤리전문가 양성과정 1기 수강 신청</h1>
+          <span class="gform-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</span>
+          <h1>AI윤리전문가 양성과정 수강 신청</h1>
           <p class="gform-lead">2026년, 기업·기관의 AI 활용 확대와 함께 ‘AI 윤리 전문가’의 역할이 커지고 있습니다.</p>
           <p>생성형 AI가 기업·기관·학교의 실제 업무 전반으로 확산되면서 저작권, 개인정보, 정보보안,
              할루시네이션, 편향과 차별, 결과물의 신뢰성과 책임까지 AI 윤리는 중요한 전문 영역으로 자리 잡고 있습니다.</p>
@@ -3894,7 +3892,6 @@ def build_expert_apply():
             <div><strong>{STAT_71["head"]}</strong><br>
                  {STAT_71["body"]}
                  <small class="src">{STAT_71["src"]}</small></div></div>
-          <div class="gform-urgency"><i data-lucide="clock"></i> 1기 접수 마감 {DEADLINE} · 1기 특별가 {won(PRICE)} · {HOOK_AFTER}</div>
           <p class="gform-org-note">한국AI윤리위원회 주관 · 성균관컨설팅 교육 운영(접수·결제)</p>
         </div>
 
@@ -3908,12 +3905,12 @@ def build_expert_apply():
               <div class="choice is-fixed">
                 <span class="choice-radio is-on" aria-hidden="true"></span>
                 <span class="choice-body">
-                  <span class="choice-badge">1기 모집 중 · {HOOK_ZERO}</span>
+                  <span class="choice-badge">{HOOK_ZERO} · {HOOK_REG}</span>
                   <strong>AI윤리전문가 양성과정</strong>
                   <span>위원회 표준교재 등 학습자료 5종(PDF)으로 공부하고 온라인 이수 평가({EXAM[0]}문항, {EXAM[1]}점 이상)를 통과하면
                     한국AI윤리위원회 공식 이수증 발급, 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드까지 한 번에. 전공·경력 제한 없이 전 과정 온라인</span>
                   <span class="apply-price">
-                    <span class="ap-badge">1기 특별가</span>
+                    <span class="ap-badge">특별가</span>
                     <span class="ap-now">{won(PRICE)}</span>
                     <span class="ap-was">정가 {won(LIST_PRICE)}</span>
                   </span>
@@ -4010,14 +4007,14 @@ def build_expert_apply():
           </div>
 
           <div class="gform-card gform-submit">
-            <h2>AI윤리전문가 양성과정 1기 수강 신청</h2>
+            <h2>AI윤리전문가 양성과정 수강 신청</h2>
             <p>이력서에 한 줄, 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록 이력을 더하세요.</p>
             <div class="pay-summary pay-summary--one">
               <div class="pay-mini"><div class="lv">AI윤리전문가 양성과정 · 이수증 + 홈페이지 공식 등록 + 활용 가이드</div>
-                <div class="list">정가 {won(LIST_PRICE)}</div><div class="sale">1기 특별가 {won(PRICE)}</div></div>
+                <div class="list">정가 {won(LIST_PRICE)}</div><div class="sale">특별가 {won(PRICE)}</div></div>
             </div>
-            <p>신청서를 제출한 후 교육비 결제를 완료하면 1기 등록이 최종 확정됩니다.</p>
-            <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 양성과정 1기 신청하기 <i data-lucide="arrow-right"></i></button>
+            <p>신청서를 제출한 후 교육비 결제를 완료하면 수강 등록이 최종 확정됩니다.</p>
+            <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></button>
             <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
             <div class="trust-row">
               <div><i data-lucide="award"></i> 한국AI윤리위원회 공식 이수증</div>
@@ -4079,7 +4076,7 @@ def build_expert_apply():
 
       var pstr=pz.join(', ');
       var lines=[
-        '한국AI윤리위원회 AI윤리전문가 양성과정 1기 수강 신청','',
+        '한국AI윤리위원회 AI윤리전문가 양성과정 수강 신청','',
         '■ 신청 과정 : '+COURSE,
         '■ 성명 : '+v('name'),
         '■ 이메일 : '+v('email'),
@@ -4100,7 +4097,7 @@ def build_expert_apply():
         if(!ok){try{var im=new Image();im.src=url;}catch(e2){}}
         document.getElementById('mailBox').hidden=true;
       }else{
-        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 양성과정 1기 신청] '+v('name'))
+        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 양성과정 신청] '+v('name'))
                 +'&body='+encodeURIComponent(lines.join('\n'));
         setTimeout(function(){location.href=mail;},400);
       }
@@ -4140,8 +4137,8 @@ def build_expert_apply():
   </script>
 """.replace('__FEMAIL__', EMAIL).replace('__PAY__', PAY_URL).replace('__HOOK__', SHEET_WEBHOOK).replace('__COURSE__', PROG)
 
-    page("expert-apply.html", "AI윤리전문가 양성과정 1기 수강 신청",
-         "한국AI윤리위원회 주관 AI윤리전문가 양성과정 1기 수강 신청 페이지입니다. 수강자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
+    page("expert-apply.html", "AI윤리전문가 양성과정 수강 신청",
+         "한국AI윤리위원회 주관 AI윤리전문가 양성과정 수강 신청 페이지입니다. 수강자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
          body, extra_script=script,
          keywords=["AI윤리전문가 양성과정 신청", "AI윤리전문가 수강 신청", "AI 윤리 교육 신청", "AI 윤리 이수증", "한국AI윤리위원회"])
 
@@ -4347,7 +4344,7 @@ def build_experts():
               <input type="search" id="regQ" placeholder="성명 또는 이수번호 (예: KAIEC-E-2026-0001)" aria-label="AI윤리전문가 등록 조회" autocomplete="off">
               <button type="button" id="regBtn">조회</button>
             </form>
-            <div class="rl-meta"><span id="regN"></span><span id="regHint">제1기 이수자부터 등록됩니다 · 이수 즉시 이 화면에서 검색됩니다</span></div>
+            <div class="rl-meta"><span id="regN"></span><span id="regHint">이수 확정과 함께 등록되어 이 화면에서 바로 검색됩니다</span></div>
           </div>
           <div class="rl-sample" id="regSample">
             <span class="rl-sample-tag">등록 카드 예시</span>
@@ -4364,7 +4361,7 @@ def build_experts():
         </div>
         <div class="member-grid" id="expertGrid" hidden></div>
         <div class="grid grid-3" style="margin-top:34px">{reg_html}</div>
-        <p class="field-hint expert-adv-note" id="expertEmpty" hidden>1기 이수자부터 이 자리에 공개됩니다. 전문위원으로 등록되면 프로필이 함께 표시됩니다. (1기 진행 중)</p>
+        <p class="field-hint expert-adv-note" id="expertEmpty" hidden>이수자는 이수 확정과 함께 이 자리에 공개됩니다. 전문위원으로 등록되면 프로필이 함께 표시됩니다.</p>
       </div>
     </section>
 
@@ -4373,7 +4370,7 @@ def build_experts():
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">Get Started</span>
           <h2 class="h-sec">지금 시작하세요</h2>
-          <p class="h-sub" style="margin:0 auto">양성과정 이수가 KAIEC 공식 AI윤리전문가로 가는 첫걸음입니다. 1기 특별가는 접수 마감 전까지만.</p>
+          <p class="h-sub" style="margin:0 auto">양성과정 이수가 KAIEC 공식 AI윤리전문가로 가는 첫걸음입니다.</p>
         </div>
         <div class="start-one">
           <div class="offer-card reveal">
@@ -4385,7 +4382,7 @@ def build_experts():
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_PRICE)}</span>
               <span class="price-now">{won(PRICE)}</span>
-              <span class="price-tag">1기 특별가</span>
+              <span class="price-tag">특별가</span>
             </div>
             <ul class="offer-list">
               <li>학습자료 5종(PDF) + 온라인 이수 평가 · 전 과정 온라인</li>
@@ -4416,7 +4413,7 @@ def build_experts():
       <div class="wrap">
         <div class="cta-band">
           <div><h2>올해 안에, 이력서에 AI윤리전문가 한 줄을 더하세요</h2>
-            <p>표준교재와 온라인 이수 평가로 공식 이수증과 홈페이지 공식 등록까지. 1기 특별가 {won(PRICE)}, 접수 마감 {DEADLINE}.</p></div>
+            <p>표준교재와 온라인 이수 평가로 공식 이수증과 홈페이지 공식 등록까지. {HOOK_ZERO}으로 진행됩니다.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="{APPLY}">AI윤리전문가 양성과정 신청하기</a>
             <a class="btn btn-light" href="expert.html">양성과정 안내</a>
@@ -4434,9 +4431,9 @@ def build_experts():
     var lookup=document.getElementById('regLookup'),sample=document.getElementById('regSample'),hint=document.getElementById('regHint');
     function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
     if(!list.length){
-      /* 등록자가 아직 없음: 조회 패널과 예시 카드는 그대로, 검색어를 넣으면 '아직 등록 전' 안내 */
+      /* 게시된 등록자가 없을 때: 조회 패널과 예시 카드는 그대로, 검색어를 넣으면 '일치하는 등록자 없음' 안내 */
       empty.hidden=false;
-      function idle(){var t=q.value.trim(); nEl.textContent=t?'일치하는 등록자 없음':''; if(t){hint.textContent='아직 1기 등록 전입니다. 이수 확정 후 이 화면에서 검색됩니다.';}else{hint.textContent='제1기 이수자부터 등록됩니다 · 이수 즉시 이 화면에서 검색됩니다';}}
+      function idle(){var t=q.value.trim(); nEl.textContent=t?'일치하는 등록자 없음':''; if(t){hint.textContent='성명과 이수번호를 다시 확인해 주세요.';}else{hint.textContent='이수 확정과 함께 등록되어 이 화면에서 바로 검색됩니다';}}
       q.addEventListener('input',idle); btn.addEventListener('click',idle);
       return;
     }
@@ -4969,7 +4966,7 @@ def build_quiz():
           <div class="quiz-next">
             <strong>다음 단계</strong>
             <p>AI윤리전문가 양성과정: 위원회 표준교재 등 학습자료 5종 + 온라인 이수 평가, 한국AI윤리위원회 공식 이수증 · 홈페이지 공식 등록 · 이력서·자기소개서 활용 가이드.
-               1기 특별가 {won(PRICE)} (정가 {won(LIST_PRICE)}) · 접수 마감 {DEADLINE} · {HOOK_ZERO} · {HOOK_START}</p>
+               특별가 {won(PRICE)} (정가 {won(LIST_PRICE)}) · {HOOK_ZERO} · {HOOK_START}</p>
             <div class="btns">
               <a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
               <a class="btn btn-ghost" href="expert.html">양성과정 안내</a>

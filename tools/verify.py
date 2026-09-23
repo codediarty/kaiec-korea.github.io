@@ -264,7 +264,7 @@ for course, (total, _pass), minutes in ((build.PROG, build.EXAM, build.EXAM_MIN)
 if 'id="exLoginForm"' not in exam_html or 'id="exDemoBtn"' in exam_html:
     probs.append("/exam/ 로그인 화면 구성 이상 (로그인 폼 없음 또는 체험 버튼이 다시 들어감)")
 if build.won(build.PRICE) not in expert_html or build.won(build.PRICE) not in index_html:
-    probs.append(f"1기 특별가 {build.won(build.PRICE)} 미반영")
+    probs.append(f"특별가 {build.won(build.PRICE)} 미반영")
 # 통합 이후 사이트 어디에도 두 과정 표기가 남지 않아야 함 (백엔드 호환용 /exam/ 설정 스크립트만 예외)
 for fname, html in ((f, read(p)) for f, p in pages.items()):
     body_only = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.S)
@@ -281,15 +281,30 @@ if build.PRICE_SHORT not in expert_html:
     probs.append(f"양성과정 페이지에 짧은 가격 표기 {build.PRICE_SHORT} 미반영")
 if abs(build.PRICE / 10000 - float(build.PRICE_SHORT.replace("만원", ""))) > 1e-6:
     probs.append(f"PRICE_SHORT({build.PRICE_SHORT})가 PRICE({build.PRICE:,}원)와 다름")
-if build.DEADLINE not in expert_html:
-    probs.append(f"마감 {build.DEADLINE} 미반영")
 if build.COPYCLEAN_URL not in read(pages["copyclean.html"]):
     probs.append("COPYCLEAN_URL 미반영")
 if "/join/#apply" not in read(pages["apply.html"]):
     probs.append("apply 페이지가 통합 신청 폼(/join/#apply)으로 연결되지 않음")
 if 'id="joinForm"' not in read(pages["join.html"]) or build.SHEET_WEBHOOK not in read(pages["join.html"]):
     probs.append("join 페이지 신청 폼 또는 시트 웹훅 미반영")
-check("build.py 상수(웹훅·결제 링크·가격·마감·구글폼·평가응시 설정) 페이지 반영", probs)
+check("build.py 상수(웹훅·결제 링크·가격·구글폼·평가응시 설정) 페이지 반영", probs)
+
+# ---------------------------------------------------------------- 7-2. 기수·마감 표기 미사용 (2026.09.23)
+# '1기 모집 중 · 접수 마감 10월 30일 · D-38 · NEW' 같은 표기는 이제 막 시작한 곳처럼 보여 사이트 전체에서 뺐음 (재유입 방지).
+# 게시글을 포함한 모든 생성 페이지와 화면에 그려지는 데이터 파일(명단·연혁)을 검사합니다.
+COHORT_RE = re.compile(r'(?<![0-9])1기|제1기|모집 중|접수 마감|마감 후 정가|data-dday|data-deadline|class="promo-new"')
+probs = []
+for f, outp in pages.items():
+    found = sorted(set(COHORT_RE.findall(read(outp))))
+    if found:
+        probs.append(f"{outp}: {', '.join(found)}")
+for js in ("members-data.js", "experts-data.js", "history-data.js"):
+    jp = os.path.join(BASE, "assets", "js", js)
+    if os.path.exists(jp):
+        found = sorted(set(COHORT_RE.findall(read(jp))))
+        if found:
+            probs.append(f"assets/js/{js}: {', '.join(found)}")
+check("기수(1기)·모집 중·접수 마감·D-day·NEW 배지 표기 미사용", probs)
 
 # ---------------------------------------------------------------- 8. 배포 파일
 probs = []

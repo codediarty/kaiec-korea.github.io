@@ -38,7 +38,7 @@ LABELS={
  "2026-08-20-lower-ai-similarity":("AI 유사도 낮추기 전에","반드시 알아야 할 올바른 대응"),
  "2026-08-21-ai-similarity-check-guide":("AI 유사도 검사 가이드","제출 전 확인 절차"),
  "2026-08-22-new-members":("신규 회원사 안내","성균관대학교 RISE사업단 · 성균관컨설팅 · 카피클린"),
- "2026-09-10-fellowship-1st-recruit":("AI Ethics Fellowship 1기 모집","협력기관 모집 안내"),
+ "2026-09-10-fellowship-1st-recruit":("AI Ethics Fellowship 모집","협력기관 모집 안내"),
  "2026-09-11-ai-ethics-expert-intro":("AI윤리전문가란 누구인가","AI 시대가 찾는 전문 역량"),
 }
 
