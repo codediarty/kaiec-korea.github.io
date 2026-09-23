@@ -1437,14 +1437,14 @@ def build_members():
     """위원 명단 (2026.09.23: 옛 '조직 · 위원' 페이지. 조직도 · 6개 전문분과 · 운영 개요는 '위원회 소개'(about) 로 옮기고
     이 페이지는 위원 명단과 공식 파트너만 둠. 명단 데이터는 assets/js/members-data.js)"""
     body = hero_sub("위원 명단",
-                    "위원장과 임원진, 고문·자문위원, 사무국, 전문위원, 지역·캠퍼스 조직, AI 윤리 캠페인위원까지 한국AI윤리위원회와 함께하는 분들입니다.",
+                    "위원장과 임원진, 고문·자문위원, 사무국, 전문위원, 지역·캠퍼스 조직, AI 윤리 캠페인위원, 그리고 공식 등록된 AI윤리전문가까지 한국AI윤리위원회와 함께하는 분들입니다.",
                     "위원 명단") + f"""
 
     <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:40px">
           <span class="eyebrow">Members</span>
-          <h2 class="h-sec">직책별 명단</h2>
+          <h2 class="h-sec">위원회 구성</h2>
           <p class="h-sub">직책과 전문분야를 기준으로 안내합니다. 조직 구성은 <a href="about.html#org" style="color:var(--blue);font-weight:600">조직도</a>를 참고해 주세요.</p>
         </div>
         <div id="memberSections"></div>
@@ -1452,7 +1452,34 @@ def build_members():
       </div>
     </section>
 
-    <section class="section section--gray">
+    <section class="section section--gray" id="experts">
+      <div class="wrap">
+        <div class="sec-head sec-head--split">
+          <div>
+            <span class="eyebrow">AI Ethics Professionals</span>
+            <h2 class="h-sec">AI윤리전문가</h2>
+            <p class="h-sub" style="margin:0">AI윤리전문가 양성과정 이수 평가를 통과해 한국AI윤리위원회에 공식 등록된 분들입니다.
+               성명 또는 이수번호로 등록 사실을 확인하실 수 있습니다. <span id="mExpertCount"></span></p>
+          </div>
+          <form class="mini-search" role="search" onsubmit="return false">
+            <i data-lucide="search"></i>
+            <input type="search" id="mExpertQ" placeholder="성명 · 이수번호 검색" aria-label="AI윤리전문가 검색" autocomplete="off">
+            <span class="mini-search-n" id="mExpertN"></span>
+          </form>
+        </div>
+        <div class="member-grid" id="mExpertGrid" hidden></div>
+        <div class="reg-empty" id="mExpertEmpty" hidden>
+          <i data-lucide="award"></i>
+          <div>
+            <strong>제1기 AI윤리전문가 등록을 준비하고 있습니다.</strong>
+            <p>이수 평가를 통과한 분부터 순서대로 이 명단에 오르며, 이수번호로 언제든 등록 사실을 확인할 수 있습니다.</p>
+            <a href="expert.html">AI윤리전문가 양성과정 안내 →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
       <div class="wrap">
         <div class="center" style="margin-bottom:36px">
           <span class="eyebrow">Official Partners</span>
@@ -1470,7 +1497,42 @@ def build_members():
     </section>"""
 
     script = """  <script src="assets/js/members-data.js"></script>
+  <script src="assets/js/experts-data.js"></script>
   <script>
+  /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
+  (function(){
+    var list=window.KAIEC_EXPERTS||[];
+    var grid=document.getElementById('mExpertGrid'),empty=document.getElementById('mExpertEmpty'),cnt=document.getElementById('mExpertCount');
+    var q=document.getElementById('mExpertQ'),nEl=document.getElementById('mExpertN');
+    if(!grid)return;
+    function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    if(!list.length){
+      empty.hidden=false;
+      if(q)q.addEventListener('input',function(){nEl.textContent=q.value.trim()?'등록자 없음':'';});
+      return;
+    }
+    cnt.textContent='(등록 '+list.length+'명)';
+    function card(m){
+      var av=m.photo?'<div class="member-avatar member-avatar--photo"><img src="assets/img/experts/'+esc(m.photo)+'" alt="'+esc(m.name)+'" loading="lazy"></div>'
+        :'<div class="member-avatar">'+esc((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·')+'</div>';
+      var role=m.expert?'AI윤리전문가 · 전문위원':'AI윤리전문가';
+      return '<div class="member expert">'+av
+        +'<div class="member-role">'+role+'</div>'
+        +'<div class="member-name">'+esc(m.name)+'</div>'
+        +(m.no?'<div class="expert-no">이수번호 '+esc(m.no)+'</div>':'')
+        +'<div class="member-field">'+esc(m.field||'')+(m.org?'<br>'+esc(m.org):'')+'</div>'
+        +(m.since?'<div class="expert-since">'+esc(m.since)+' 등록</div>':'')
+        +'</div>';
+    }
+    function render(term){
+      var t=(term||'').replace(/\s+/g,'').toLowerCase();
+      var rows=t?list.filter(function(m){return ((m.name||'')+(m.no||'')).replace(/\s+/g,'').toLowerCase().indexOf(t)>=0;}):list;
+      grid.innerHTML=rows.length?rows.map(card).join(''):'<p class="ex-empty" style="grid-column:1/-1;text-align:center;color:var(--gray-500);padding:26px 0">일치하는 등록자가 없습니다.</p>';
+      nEl.textContent=t?rows.length+'명':'';
+    }
+    render(''); grid.hidden=false;
+    q.addEventListener('input',function(){render(q.value);});
+  })();
   (function(){
     var box=document.getElementById('memberSections');
     if(!box||!window.KAIEC_MEMBERS)return;
@@ -1526,7 +1588,7 @@ def build_members():
       var l=secHTML(pair[0],true), r=secHTML(pair[1],true);
       if(l||r) html+='<div class="pair-row">'+l+r+'</div>';
     });
-    ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 홍보대사'].forEach(function(g){
+    ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 앰버서더'].forEach(function(g){
       html+=secHTML(g,false);
     });
     /* AI 윤리 캠페인위원: 총원만큼 카드 표시, 이름 없으면 공석 */
@@ -1561,7 +1623,7 @@ def build_members():
   </script>
 """
     page("members.html", "위원 명단",
-         "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, 지역 운영위원·캠퍼스 위원장, AI 윤리 캠페인위원 명단과 공식 파트너를 안내합니다.",
+         "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, 지역 운영위원·캠퍼스 위원장, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
          body, extra_script=script)
 
 
