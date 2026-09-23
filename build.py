@@ -1287,7 +1287,7 @@ def build_about():
           <h2 class="h-sec">AI 윤리 실천 헌장</h2>
           <p class="h-sub">위원회와 위원이 함께 공유하는 7개 실천 조항입니다.</p>
         </div>
-        <div style="background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:14px 32px;box-shadow:var(--shadow-sm)">
+        <div class="charter-box">
           <ul>
 {charter}
           </ul>
