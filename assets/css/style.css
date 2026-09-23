@@ -1704,6 +1704,42 @@ table.tbl tr:hover td{background:#FCFDFF}
 @media (max-width:480px){.fmt-grid{grid-template-columns:1fr}}
 .reg-search[hidden],.member-grid[hidden]{display:none!important}   /* 등록 검색 상자는 등록자가 있을 때만 (display:flex가 hidden을 덮지 않도록) */
 
+/* AI윤리전문가 페이지 등록 조회 패널 (2026.09.23): 등록자가 없어도 항상 보이는 공식 조회 + 오른쪽 '등록 카드 예시' */
+.reg-lookup{
+  display:grid;grid-template-columns:1fr 272px;gap:40px;align-items:center;margin:6px 0 0;padding:34px 40px;border-radius:20px;color:#fff;
+  background:radial-gradient(720px 320px at 88% 0%,rgba(0,180,166,.22),transparent 60%),linear-gradient(135deg,#0A1628 0%,#0F2A5F 68%,#123A72 100%);
+  box-shadow:0 18px 44px rgba(10,22,40,.18);
+}
+.reg-lookup--single{grid-template-columns:1fr}
+.rl-kicker{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.16em;color:#6FE3D8}
+.reg-lookup h3{font-size:24px;letter-spacing:-.03em;margin:8px 0 8px;color:#fff}
+.reg-lookup .rl-main > p{color:#B8CBE8;font-size:15px;line-height:1.7;margin:0 0 18px;word-break:keep-all}
+.rl-form{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:6px 6px 6px 16px;box-shadow:0 8px 24px rgba(0,0,0,.20)}
+.rl-form svg{width:18px;height:18px;color:var(--gray-400);flex-shrink:0}
+.rl-form input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:15.5px;color:var(--ink);outline:none;padding:10px 0}
+.rl-form input::placeholder{color:var(--gray-400)}
+.rl-form input::-webkit-search-cancel-button{-webkit-appearance:none}
+.rl-form button{flex-shrink:0;border:0;border-radius:10px;background:var(--blue);color:#fff;font:inherit;font-weight:800;font-size:14.5px;padding:11px 22px;cursor:pointer;transition:background .15s}
+.rl-form button:hover{background:var(--blue-600)}
+.rl-meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:12px;font-size:13px;color:#9FB3D1}
+.rl-meta #regN{font-weight:800;color:#6FE3D8}
+.rl-meta #regN:empty{display:none}
+.rl-sample{position:relative;text-align:center}
+.rl-sample[hidden]{display:none!important}
+.rl-sample .member{background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.38);box-shadow:none;padding:26px 18px 22px}
+.rl-sample .member:hover{transform:none;box-shadow:none}
+.rl-sample .member-avatar{background:rgba(255,255,255,.14);color:#fff}
+.rl-sample .member-role{color:#8FD8CF}
+.rl-sample .member-name{color:#fff}
+.rl-sample .expert-no{color:#DCE6F5}
+.rl-sample .member-field{color:#B8CBE8}
+.rl-sample .expert-since{color:#6FE3D8}
+.rl-sample-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);z-index:1;background:#6FE3D8;color:#0A1628;font-size:11px;font-weight:800;letter-spacing:.06em;padding:4px 11px;border-radius:999px;white-space:nowrap}
+.rl-sample p{margin:12px 0 0;font-size:12.5px;color:#9FB3D1;line-height:1.6}
+#expertGrid{margin-top:22px}
+@media (max-width:860px){.reg-lookup{grid-template-columns:1fr;gap:28px;padding:26px 22px}.rl-sample{max-width:280px;margin:8px auto 0}.reg-lookup h3{font-size:21px}}
+@media (max-width:480px){.rl-form{flex-wrap:wrap;padding:10px}.rl-form input{flex-basis:calc(100% - 30px)}.rl-form button{width:100%}}
+
 /* 위원 명단 페이지 AI윤리전문가 절 (2026.09.23): 제목 왼쪽 + 작은 검색 오른쪽, 등록자 없으면 안내 카드 */
 .sec-head--split{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:34px}
 .sec-head--split > div{max-width:720px}

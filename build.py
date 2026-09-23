@@ -4336,13 +4336,34 @@ def build_experts():
           <h2 class="h-sec">한국AI윤리위원회 AI윤리전문가 등록</h2>
           <p class="h-sub" style="margin:0 auto">이수와 동시에 홈페이지에 공식 등록되고, 누구나 검색할 수 있습니다. <span id="expertCount"></span></p>
         </div>
-        <div class="grid grid-3">{reg_html}</div>
-        <div class="reg-search" id="regSearch" hidden>
-          <label for="regQ"><i data-lucide="file-search"></i> 등록 검색</label>
-          <input type="search" id="regQ" placeholder="성명 또는 이수번호로 검색">
-          <span class="reg-search-n" id="regN"></span>
+        <!-- 등록 조회 (2026.09.23): 등록자가 없어도 항상 보이는 공식 조회 패널. "따면 여기서 검색하면 나온다"가 바로 읽히도록 예시 카드를 같이 둠 -->
+        <div class="reg-lookup" id="regLookup">
+          <div class="rl-main">
+            <span class="rl-kicker">REGISTRY LOOKUP</span>
+            <h3>AI윤리전문가 등록 조회</h3>
+            <p>성명 또는 이수번호를 입력하면 한국AI윤리위원회 공식 등록 여부를 바로 확인할 수 있습니다.</p>
+            <form class="rl-form" role="search" onsubmit="return false">
+              <i data-lucide="search"></i>
+              <input type="search" id="regQ" placeholder="성명 또는 이수번호 (예: KAIEC-E-2026-0001)" aria-label="AI윤리전문가 등록 조회" autocomplete="off">
+              <button type="button" id="regBtn">조회</button>
+            </form>
+            <div class="rl-meta"><span id="regN"></span><span id="regHint">제1기 이수자부터 등록됩니다 · 이수 즉시 이 화면에서 검색됩니다</span></div>
+          </div>
+          <div class="rl-sample" id="regSample">
+            <span class="rl-sample-tag">등록 카드 예시</span>
+            <div class="member expert">
+              <div class="member-avatar">홍</div>
+              <div class="member-role">KAIEC 공식 AI윤리전문가</div>
+              <div class="member-name">홍길동</div>
+              <div class="expert-no">이수번호 KAIEC-E-2026-0001</div>
+              <div class="member-field">AI 윤리 · 실무 활용</div>
+              <div class="expert-since">이수 즉시 등록</div>
+            </div>
+            <p>이수 평가를 통과하면 이런 카드가 바로 만들어져 검색에 나타납니다.</p>
+          </div>
         </div>
         <div class="member-grid" id="expertGrid" hidden></div>
+        <div class="grid grid-3" style="margin-top:34px">{reg_html}</div>
         <p class="field-hint expert-adv-note" id="expertEmpty" hidden>1기 이수자부터 이 자리에 공개됩니다. 전문위원으로 등록되면 프로필이 함께 표시됩니다. (1기 진행 중)</p>
       </div>
     </section>
@@ -4409,10 +4430,18 @@ def build_experts():
   (function(){
     var list=window.KAIEC_EXPERTS||[];
     var grid=document.getElementById('expertGrid'),empty=document.getElementById('expertEmpty'),cnt=document.getElementById('expertCount');
-    var box=document.getElementById('regSearch'),q=document.getElementById('regQ'),nEl=document.getElementById('regN');
-    if(!list.length){empty.hidden=false;return;}
-    cnt.textContent='(등록 '+list.length+'명)';
+    var q=document.getElementById('regQ'),nEl=document.getElementById('regN'),btn=document.getElementById('regBtn');
+    var lookup=document.getElementById('regLookup'),sample=document.getElementById('regSample'),hint=document.getElementById('regHint');
     function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    if(!list.length){
+      /* 등록자가 아직 없음: 조회 패널과 예시 카드는 그대로, 검색어를 넣으면 '아직 등록 전' 안내 */
+      empty.hidden=false;
+      function idle(){var t=q.value.trim(); nEl.textContent=t?'일치하는 등록자 없음':''; if(t){hint.textContent='아직 1기 등록 전입니다. 이수 확정 후 이 화면에서 검색됩니다.';}else{hint.textContent='제1기 이수자부터 등록됩니다 · 이수 즉시 이 화면에서 검색됩니다';}}
+      q.addEventListener('input',idle); btn.addEventListener('click',idle);
+      return;
+    }
+    cnt.textContent='(등록 '+list.length+'명)';
+    sample.hidden=true; lookup.classList.add('reg-lookup--single'); hint.textContent='현재 '+list.length+'명 등록 · 이수 즉시 자동 등록';
     function card(m){
       var av=m.photo?'<div class="member-avatar member-avatar--photo"><img src="assets/img/experts/'+esc(m.photo)+'" alt="'+esc(m.name)+'" loading="lazy"></div>'
         :'<div class="member-avatar">'+esc((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·')+'</div>';
@@ -4434,8 +4463,9 @@ def build_experts():
       nEl.textContent=t?rows.length+'명':'';
     }
     render('');
-    box.hidden=false; grid.hidden=false;
+    grid.hidden=false;
     q.addEventListener('input',function(){render(q.value);});
+    btn.addEventListener('click',function(){render(q.value);});
   })();
   </script>
 """
