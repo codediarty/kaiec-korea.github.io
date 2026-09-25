@@ -72,8 +72,12 @@ POSTS_LASTMOD = "2026-09-14"            # 게시글 전체 틀이 바뀐 마지�
 PROG = "AI윤리전문가 양성과정"
 DOC = "이수증"
 DOC_FULL = f"{PROG} {DOC}"                # 「AI윤리전문가 양성과정 이수증」
-PROG_EN = "AI Ethics Professional, Korea AI Ethics Committee"  # 이력서 영문 표기 (2026.09.22: 약어 KAIEC 대신 기관명을 풀어 씀. 이수번호 KAIEC-E-연도-일련번호가 약어를 대신함)
-RESUME_KO = "AI윤리전문가 · 한국AI윤리위원회 이수"          # 이력서 국문 한 줄 (뒤에 이수번호 No. KAIEC-E-2026-0001 을 붙임)
+# 2026.09.25 AIEP 표기: 과정·이수자 칭호의 영문 약어. 본문 첫 언급·제목·카드처럼 깔끔하게 들어가는 곳에만 'AI윤리전문가(AIEP)'로 씀(모든 언급에 붙이지 않음)
+AIEP = "AIEP"
+AIEP_EN = "AI Ethics Professional"
+AIEP_H = '<span class="aiep">(AIEP)</span>'   # 큰 제목용: 괄호 부분을 조금 작고 가볍게
+PROG_EN = "AI Ethics Professional (AIEP), Korea AI Ethics Committee"  # 이력서 영문 표기 (2026.09.22: 약어 KAIEC 대신 기관명을 풀어 씀. 이수번호 KAIEC-E-연도-일련번호가 약어를 대신함)
+RESUME_KO = "AI윤리전문가(AIEP) · 한국AI윤리위원회 이수"          # 이력서 국문 한 줄 (뒤에 이수번호 No. KAIEC-E-2026-0001 을 붙임)
 RESUME_NO = "No. KAIEC-E-2026-0001"                    # 이력서 예시용 이수번호 형식
 EXAM = (40, 70)                           # 이수 평가: 문항 수, 이수 기준 점수 (통합 과정. 백엔드 Code 1.5.0의 「AI윤리전문가 양성과정」 평가와 같음)
 EXAM_MIN = 60                             # 시험 시간(분): 응시자가 [시험 시작]을 누른 때부터
@@ -608,7 +612,7 @@ def resume_box(note_basic=True):
                 <p><b>국문 이력서</b><code>{RESUME_KO} ({RESUME_NO})</code></p>
                 <p><b>영문 이력서</b><code>{PROG_EN} ({RESUME_NO})</code></p>
                 <small>교육·연수 칸에 한 줄이면 됩니다. 이수번호는 이름과 함께 홈페이지에서 검색되므로, 칸이 좁으면 번호를 빼고 <strong>{PROG_EN}</strong>까지만 적어도 됩니다.
-                  링크드인은 Name에 AI Ethics Professional, Issuing organization에 Korea AI Ethics Committee, Credential ID에 이수번호, URL에 kaiec.kr/experts/ 를 넣습니다.
+                  링크드인은 Name에 AI Ethics Professional (AIEP), Issuing organization에 Korea AI Ethics Committee, Credential ID에 이수번호, URL에 kaiec.kr/experts/ 를 넣습니다.
                   자기소개서 문장 예시와 면접 답변 포인트는 이수자 전용 <strong>이력서·자기소개서 활용 가이드</strong>로 함께 드립니다.</small>
               </div>
             </div>
@@ -658,7 +662,7 @@ def cert_band_inner(sec_label="위원 참여하기", sec_href="join.html", title
     """전 페이지 공통 하단 전환 배너의 안쪽(.cta-band): 1순위는 항상 양성과정 신청, 2순위만 페이지 성격에 맞게"""
     title = title or "AI 시대에 가장 먼저 필요한 전문가, 지금 준비하세요"
     # 2026.09.23 사용자 지시로 '1기 모집 중 · 접수 마감 · 1기 특별가 (정가)' 홍보 문구 삭제(절제된 기관 톤). 가격·마감은 /expert/ 와 신청 페이지에서만 안내
-    text = text or (f"AI윤리전문가 양성과정은 {HOOK_ZERO}으로 진행됩니다. "
+    text = text or (f"AI윤리전문가(AIEP) 양성과정은 {HOOK_ZERO}으로 진행됩니다. "
                     f"위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 이수 즉시 홈페이지에 공식 등록되세요.")
     return f"""<div class="cta-band reveal">
           <div><h2>{title}</h2>
@@ -687,10 +691,10 @@ def sticky_cta(mode="all"):
     return f"""  <div class="sticky-cta{cls}" id="stickyCta" aria-hidden="true">
     <div class="sticky-cta-inner">
       <div class="sticky-cta-text">
-        <strong>AI윤리전문가<em class="sticky-more"> 양성과정</em> 특별가 {won(PRICE)}</strong>
+        <strong>AI윤리전문가(AIEP)<em class="sticky-more"> 과정</em> 특별가 {won(PRICE)}</strong>
         <span>{HOOK_ZERO}<em class="sticky-more"> · {HOOK_START} · {HOOK_REG}</em></span>
       </div>
-      <a class="btn btn-primary btn-sm" href="{CERT_HREF}">양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
+      <a class="btn btn-primary btn-sm" href="{CERT_HREF}">AIEP 신청하기 <i data-lucide="arrow-right"></i></a>
     </div>
   </div>
 """
@@ -782,7 +786,7 @@ def build_index(posts):
             <div class="fc-visual fc-v1"><img src="assets/img/cards/card-cert.jpg" alt="AI윤리전문가 양성과정 이수증" loading="lazy"></div>
             <div class="fc-body">
               <h3>AI윤리전문가 양성과정</h3>
-              <p>100% 온라인으로 완성하는 AI 전문 이력<br>공식 이수증 발급<br>AI윤리전문가 공식 등록</p>
+              <p>100% 온라인으로 완성하는 AI 전문 이력<br>공식 이수증 발급<br>AI윤리전문가(AIEP) 공식 등록</p>
               <span class="fc-more">자세히 보기 <i data-lucide="arrow-right"></i></span>
             </div>
           </a>
@@ -818,7 +822,7 @@ def build_index(posts):
       <div class="wrap">
         <div class="offer-grid">
           <div class="offer-why reveal">
-            <span class="eyebrow">AI Ethics Expert Program</span>
+            <span class="eyebrow">AI Ethics Professional · AIEP</span>
             <h2 class="h-sec" style="text-align:left">한국AI윤리위원회<br>AI윤리전문가 양성과정</h2>
             <p class="h-sub" style="text-align:left;margin:0 0 22px">위원회 표준교재와 온라인 이수 평가로 <strong>위원회 공식 이수증과 공식 등록</strong>까지.
                2026년 AI기본법 시행으로 기업·기관·학교가 찾기 시작한 스펙을 지금 준비하세요.</p>
@@ -833,7 +837,7 @@ def build_index(posts):
             <div class="offer-top">
               <span class="offer-quota">{HOOK_ZERO} · {HOOK_REG}</span>
             </div>
-            <h3>AI윤리전문가 양성과정</h3>
+            <h3>AI윤리전문가{AIEP_H} 과정</h3>
             <p>위원회가 직접 집필한 학습자료 5종과 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 홈페이지에 공식 등록되는 하나의 과정입니다.</p>
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_PRICE)}</span>
@@ -847,8 +851,8 @@ def build_index(posts):
               <li>이수 후 전문위원 등록 신청 자격 (전문강사 · 자문 활동)</li>
             </ul>
             <div class="offer-btns">
-              <a class="btn btn-primary" href="{CERT_HREF}">양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
-              <a class="btn btn-ghost" href="expert.html">과정 자세히 보기</a>
+              <a class="btn btn-primary" href="{CERT_HREF}">AIEP 신청하기 <i data-lucide="arrow-right"></i></a>
+              <a class="btn btn-ghost" href="expert.html">과정 안내 보기</a>
             </div>
           </div>
         </div>
@@ -1456,7 +1460,7 @@ def build_members():
         <div class="sec-head sec-head--split">
           <div>
             <span class="eyebrow">AI Ethics Professionals</span>
-            <h2 class="h-sec">AI윤리전문가</h2>
+            <h2 class="h-sec">AI윤리전문가{AIEP_H}</h2>
             <p class="h-sub" style="margin:0">AI윤리전문가 양성과정 이수 평가를 통과해 한국AI윤리위원회에 공식 등록된 분들입니다.
                성명 또는 이수번호로 등록 사실을 확인하실 수 있습니다. <span id="mExpertCount"></span></p>
           </div>
@@ -1514,7 +1518,7 @@ def build_members():
     function card(m){
       var av=m.photo?'<div class="member-avatar member-avatar--photo"><img src="assets/img/experts/'+esc(m.photo)+'" alt="'+esc(m.name)+'" loading="lazy"></div>'
         :'<div class="member-avatar">'+esc((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·')+'</div>';
-      var role=m.expert?'AI윤리전문가 · 전문위원':'AI윤리전문가';
+      var role=m.expert?'AI윤리전문가(AIEP) · 전문위원':'AI윤리전문가(AIEP)';
       return '<div class="member expert">'+av
         +'<div class="member-role">'+role+'</div>'
         +'<div class="member-name">'+esc(m.name)+'</div>'
@@ -2068,7 +2072,7 @@ def build_post(p, posts):
                     + "".join(f'<li><a href="#sec-{i}">{_strip_tags(h)}</a></li>' for i, h in enumerate(heads, 1))
                     + '</ol></nav>')
     mid_cta = f"""<aside class="post-cta">
-  <span class="post-cta-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</span>
+  <span class="post-cta-kicker">한국AI윤리위원회 주관 · AI윤리전문가(AIEP) 양성과정</span>
   <strong>AI를 어디까지 어떻게 활용해야 하는지, 기준을 아는 사람이 조직의 리스크를 줄입니다.</strong>
   <p>위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고 홈페이지에 공식 등록되세요. 특별가 {won(PRICE)}(정가 {won(LIST_PRICE)}) · {HOOK_ZERO}.</p>
   <span class="post-cta-links"><a class="btn btn-primary btn-sm" href="{CERT_HREF}">{CERT_CTA}</a><a class="btn btn-ghost btn-sm" href="quiz.html">AI 윤리 실무 진단</a></span>
@@ -3459,9 +3463,9 @@ def build_expert():
 
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
-        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가 양성과정</p>
+        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가(AIEP) 양성과정</p>
         <span class="hl-pill"><i data-lucide="badge-check"></i>한국AI윤리위원회 주관 · 이력에 더하는 AI 전문역량</span>
-        <h1>AI윤리전문가 양성과정 <span class="hot-tag">HOT</span></h1>
+        <h1>AI윤리전문가{AIEP_H} 양성과정 <span class="hot-tag">HOT</span></h1>
         <p class="ph-lead" style="max-width:900px">2026년, 이력서에 새롭게 더할 AI 전문 이력.<br>
            취업준비생부터 대학생, 실무자까지 지금 시작하는 <b class="t">AI윤리전문가</b>.</p>
         <p class="ph-body" style="max-width:900px!important">전공이나 경력에 관계없이 온라인으로 시작할 수 있습니다.<br>
@@ -3559,7 +3563,7 @@ def build_expert():
       <div class="wrap">
         <div class="center" style="margin-bottom:44px">
           <span class="eyebrow">Program</span>
-          <h2 class="h-sec">지금 기업이 원하는 스펙, 앞으로 더 유망한 직업<br>AI윤리전문가</h2>
+          <h2 class="h-sec">지금 기업이 원하는 스펙, 앞으로 더 유망한 직업<br>AI윤리전문가{AIEP_H}</h2>
           <p class="h-sub">AI기본법 시행 이후 기업·기관은 'AI를 윤리적으로 다룰 줄 아는 사람'을 찾기 시작했습니다. 과정은 하나, 고를 것도 나중에 더 낼 것도 없습니다.
              위원회 표준교재로 공부하고 온라인 이수 평가를 통과하면 <strong>공식 이수증과 홈페이지 공식 등록, 활용 가이드까지</strong> 한 번에 받습니다.</p>
         </div>
@@ -3568,7 +3572,7 @@ def build_expert():
             <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
               <span class="badge" style="background:rgba(255,255,255,.16);color:#fff">{HOOK_ZERO} · {HOOK_START}</span>
             </div>
-            <h3>AI윤리전문가 양성과정</h3>
+            <h3>AI윤리전문가{AIEP_H} 과정</h3>
             <p>전공·경력 제한 없이, 전 과정 온라인. 표준교재 {TEXTBOOK_CH}개 장으로 기초부터 거버넌스·법제·사례까지 공부하고
                온라인 이수 평가({EXAM[0]}문항, {EXAM[1]}점 이상)를 통과하면, <strong>한국AI윤리위원회 공식 이수증</strong>을 받고
                홈페이지에 AI윤리전문가로 공식 등록됩니다.</p>
@@ -3792,6 +3796,7 @@ def build_expert():
   "@context": "https://schema.org",
   "@type": "Course",
   "name": "{name}",
+  "alternateName": ["{AIEP}", "{AIEP_EN}"],
   "description": "{desc}",
   "provider": {{"@type": "Organization", "name": "{SITE_NAME}", "url": "{SITE_URL}/"}},
   "inLanguage": "ko-KR",
@@ -3811,7 +3816,7 @@ def build_expert():
 </script>
 """
     ld = course_ld("AI윤리전문가 양성과정",
-                   f"한국AI윤리위원회가 주관하는 AI윤리전문가 양성과정. 위원회 표준교재 등 학습자료 5종(PDF)과 온라인 이수 평가({EXAM[0]}문항, {EXAM[1]}점 이상)로 위원회 공식 이수증을 발급하고 이수자를 홈페이지 홈페이지에 공식 등록합니다. 이력서·자기소개서 활용 가이드 제공.",
+                   f"한국AI윤리위원회가 주관하는 AI윤리전문가 양성과정. 위원회 표준교재 등 학습자료 5종(PDF)과 온라인 이수 평가({EXAM[0]}문항, {EXAM[1]}점 이상)로 위원회 공식 이수증을 발급하고 이수자를 홈페이지에 AI윤리전문가(AIEP)로 공식 등록합니다. 이력서·자기소개서 활용 가이드 제공.",
                    PRICE, f"{SITE_URL}{url_for('expert-apply.html')}")
     sq_js = """  <script>
   (function(){
@@ -3831,10 +3836,10 @@ def build_expert():
   })();
   </script>
 """
-    page("expert.html", "AI윤리전문가 양성과정",
-         f"한국AI윤리위원회 주관 AI윤리전문가 양성과정. 위원회 표준교재 등 학습자료 5종과 온라인 이수 평가로 공식 이수증을 받고 홈페이지에 공식 등록됩니다. 이력서·자기소개서 활용 가이드 제공. {HOOK_ZERO}.",
+    page("expert.html", "AI윤리전문가(AIEP) 양성과정",
+         f"한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정. 위원회 표준교재 등 학습자료 5종과 온라인 이수 평가로 공식 이수증을 받고 홈페이지에 공식 등록됩니다. 이력서·자기소개서 활용 가이드 제공. {HOOK_ZERO}.",
          body, extra_head=ld, extra_script=sq_js, sticky="all",
-         keywords=["AI윤리전문가", "AI윤리전문가 양성과정", "AI 윤리 교육 이수증", "AI 윤리 전문가 과정", "AI 윤리 교육", "AI기본법",
+         keywords=["AI윤리전문가", "AI윤리전문가 양성과정", "AIEP", "AI Ethics Professional", "AI 윤리 교육 이수증", "AI 윤리 전문가 과정", "AI 윤리 교육", "AI기본법",
                    "AI 컴플라이언스", "인공지능 윤리 전문가", "생성형 AI 교육", "AI 리터러시", "AI 거버넌스", "취업 스펙"])
 
 
@@ -3880,7 +3885,7 @@ def build_expert_apply():
 
         <div class="gform-card gform-head">
           <span class="gform-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</span>
-          <h1>AI윤리전문가 양성과정 수강 신청</h1>
+          <h1>AI윤리전문가{AIEP_H} 양성과정 수강 신청</h1>
           <p class="gform-lead">2026년, 기업·기관의 AI 활용 확대와 함께 ‘AI 윤리 전문가’의 역할이 커지고 있습니다.</p>
           <p>생성형 AI가 기업·기관·학교의 실제 업무 전반으로 확산되면서 저작권, 개인정보, 정보보안,
              할루시네이션, 편향과 차별, 결과물의 신뢰성과 책임까지 AI 윤리는 중요한 전문 영역으로 자리 잡고 있습니다.</p>
@@ -4137,10 +4142,10 @@ def build_expert_apply():
   </script>
 """.replace('__FEMAIL__', EMAIL).replace('__PAY__', PAY_URL).replace('__HOOK__', SHEET_WEBHOOK).replace('__COURSE__', PROG)
 
-    page("expert-apply.html", "AI윤리전문가 양성과정 수강 신청",
-         "한국AI윤리위원회 주관 AI윤리전문가 양성과정 수강 신청 페이지입니다. 수강자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
+    page("expert-apply.html", "AI윤리전문가(AIEP) 양성과정 수강 신청",
+         "한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정 수강 신청 페이지입니다. 수강자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
          body, extra_script=script,
-         keywords=["AI윤리전문가 양성과정 신청", "AI윤리전문가 수강 신청", "AI 윤리 교육 신청", "AI 윤리 이수증", "한국AI윤리위원회"])
+         keywords=["AI윤리전문가 양성과정 신청", "AIEP 신청", "AI윤리전문가 수강 신청", "AI 윤리 교육 신청", "AI 윤리 이수증", "한국AI윤리위원회"])
 
 
 # ---------------------------------------------------------------- experts.html
@@ -4227,13 +4232,13 @@ def build_experts():
 
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner">
-        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가</p>
+        <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; AI윤리전문가(AIEP)</p>
         <span class="hl-pill"><i data-lucide="badge-check"></i>기업·기관이 원하는 스펙 · 한국AI윤리위원회 공식 등록</span>
-        <h1>KAIEC 공식 AI윤리전문가</h1>
+        <h1>KAIEC 공식 AI윤리전문가{AIEP_H}</h1>
         <p class="ph-lead" style="max-width:900px">올해 이력서에 새로 채울 한 줄, <b class="t">AI윤리전문가</b>.<br>
            AI가 기본이 된 시대, 차이는 ‘전문가’라는 이력에서 시작됩니다.</p>
         <p class="ph-body">한국AI윤리위원회 표준교재로 공부하고 온라인 이수 평가를 통과하면 끝. AI윤리전문가 공식 이수증을 받고,<br>
-           <strong>홈페이지에 AI윤리전문가로 공식 등록</strong>됩니다.</p>
+           <strong>홈페이지에 AI윤리전문가(AI Ethics Professional)로 공식 등록</strong>됩니다.</p>
         <div class="btns" style="margin-top:22px">
           <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#what">AI윤리전문가란?</a>
@@ -4350,7 +4355,7 @@ def build_experts():
             <span class="rl-sample-tag">등록 카드 예시</span>
             <div class="member expert">
               <div class="member-avatar">홍</div>
-              <div class="member-role">KAIEC 공식 AI윤리전문가</div>
+              <div class="member-role">KAIEC 공식 AI윤리전문가(AIEP)</div>
               <div class="member-name">홍길동</div>
               <div class="expert-no">이수번호 KAIEC-E-2026-0001</div>
               <div class="member-field">AI 윤리 · 실무 활용</div>
@@ -4377,7 +4382,7 @@ def build_experts():
             <div class="offer-top">
               <span class="offer-quota">{HOOK_ZERO} · {HOOK_REG}</span>
             </div>
-            <h3>AI윤리전문가 양성과정</h3>
+            <h3>AI윤리전문가{AIEP_H} 과정</h3>
             <p>올해 이력서에 AI윤리전문가 한 줄을 더하는 가장 빠른 길. 표준교재와 온라인 이수 평가만으로 공식 이수증, 홈페이지 공식 등록, 활용 가이드까지 한 번에.</p>
             <div class="price-line price-line--light">
               <span class="price-list">정가 {won(LIST_PRICE)}</span>
@@ -4390,8 +4395,8 @@ def build_experts():
               <li>공식 이수증 + 홈페이지 공식 등록 + 이력서·자기소개서 활용 가이드</li>
             </ul>
             <div class="offer-btns">
-              <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
-              <a class="btn btn-ghost" href="expert.html">과정 자세히 보기</a>
+              <a class="btn btn-primary" href="{APPLY}">AIEP 신청하기 <i data-lucide="arrow-right"></i></a>
+              <a class="btn btn-ghost" href="expert.html">과정 안내 보기</a>
             </div>
             <small class="adv-note">이수 후 전문위원 등록을 신청하면 프로필 공개, 전문강사·자문 활동으로 이어집니다.</small>
           </div>
@@ -4443,7 +4448,7 @@ def build_experts():
       var av=m.photo?'<div class="member-avatar member-avatar--photo"><img src="assets/img/experts/'+esc(m.photo)+'" alt="'+esc(m.name)+'" loading="lazy"></div>'
         :'<div class="member-avatar">'+esc((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·')+'</div>';
       var tags=(m.tags||[]).map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join('');
-      var role=m.expert?'KAIEC 공식 AI윤리전문가 · 전문위원':'KAIEC 공식 AI윤리전문가';
+      var role=m.expert?'KAIEC 공식 AI윤리전문가(AIEP) · 전문위원':'KAIEC 공식 AI윤리전문가(AIEP)';
       return '<div class="member expert">'+av
         +'<div class="member-role">'+role+'</div>'
         +'<div class="member-name">'+esc(m.name)+'</div>'
@@ -4466,10 +4471,10 @@ def build_experts():
   })();
   </script>
 """
-    page("experts.html", "KAIEC 공식 AI윤리전문가",
-         f"올해 이력서에 더할 한 줄, AI윤리전문가. 위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고 홈페이지에 AI윤리전문가로 공식 등록되는 길을 안내합니다.",
+    page("experts.html", "KAIEC 공식 AI윤리전문가(AIEP)",
+         f"올해 이력서에 더할 한 줄, AI윤리전문가(AIEP). 위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고 홈페이지에 AI윤리전문가로 공식 등록되는 길을 안내합니다.",
          body, extra_script=script, sticky="all",
-         keywords=["AI윤리전문가", "AI 윤리 전문가 등록", "AI윤리전문가 양성과정", "AI 윤리 스펙", "AI 윤리 강사", "한국AI윤리위원회"])
+         keywords=["AI윤리전문가", "AIEP", "AI Ethics Professional", "AI 윤리 전문가 등록", "AI윤리전문가 양성과정", "AI 윤리 스펙", "AI 윤리 강사", "한국AI윤리위원회"])
 
 
 # ---------------------------------------------------------------- join.html
@@ -5009,7 +5014,7 @@ def build_quiz():
           </div>
           <div class="quiz-next">
             <strong>다음 단계</strong>
-            <p>AI윤리전문가 양성과정: 위원회 표준교재 등 학습자료 5종 + 온라인 이수 평가, 한국AI윤리위원회 공식 이수증 · 홈페이지 공식 등록 · 이력서·자기소개서 활용 가이드.
+            <p>AI윤리전문가(AIEP) 양성과정: 위원회 표준교재 등 학습자료 5종 + 온라인 이수 평가, 한국AI윤리위원회 공식 이수증 · 홈페이지 공식 등록 · 이력서·자기소개서 활용 가이드.
                특별가 {won(PRICE)} (정가 {won(LIST_PRICE)}) · {HOOK_ZERO} · {HOOK_START}</p>
             <div class="btns">
               <a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
@@ -5223,7 +5228,7 @@ def build_exam():
     # 로그인 상자 아래 결제 버튼 (성균관컨설팅 결제 페이지, 새 창). 링크가 비어 있으면 그 버튼은 만들지 않음
     # 아직 등록 전인 분을 위한 '응시 자격' 안내와 과정 등록 버튼(성균관컨설팅 결제 페이지, 새 창)
     pay_btns = (f'<a class="ex-paybtn" href="{PAY_URL}" target="_blank" rel="noopener">'
-                f'<span class="ex-paybtn-t">AI윤리전문가 양성과정 등록하기{_ic("external-link")}</span>'
+                f'<span class="ex-paybtn-t">AIEP 과정 등록하기{_ic("external-link")}</span>'
                 f'<span class="ex-paybtn-p">{won(PRICE)}</span>'
                 f'<span class="sr-only">(정가 {won(LIST_PRICE)}, 새 창)</span></a>') if PAY_URL else ""
     pay_html = f"""
@@ -5258,7 +5263,7 @@ def build_exam():
       <section class="ex-login" id="exLogin" aria-labelledby="exLoginTitle">
         <div class="ex-lbox">
           <div class="ex-lbox-head">
-            <p class="ex-lbox-prog">AI윤리전문가 양성과정</p>
+            <p class="ex-lbox-prog">AI윤리전문가(AIEP) 양성과정</p>
             <h1 class="ex-lbox-title" id="exLoginTitle">이수 평가 시스템</h1>
             <p class="ex-lbox-en">KAIEC ONLINE ASSESSMENT SYSTEM</p>
           </div>
@@ -5298,13 +5303,13 @@ def build_exam():
     {sprite}"""
 
     page("exam.html", "평가응시",
-         "한국AI윤리위원회 AI윤리전문가 양성과정 수강생 전용 온라인 이수 평가입니다. 결제 이메일과 휴대전화 번호 뒤 4자리로 로그인해 "
+         "한국AI윤리위원회 AI윤리전문가(AIEP) 양성과정 수강생 전용 온라인 이수 평가입니다. 결제 이메일과 휴대전화 번호 뒤 4자리로 로그인해 "
          f"{exam_text()} 평가에 응시하고 결과를 확인하세요.",
          body,
          extra_head=f'<link rel="stylesheet" href="assets/css/exam.css?v={BUILD_V}">\n',
          extra_script=(f"  {cfg}\n  {demo_js}\n"
                        f'  <script src="assets/js/exam.js?v={BUILD_V}"></script>\n'),
-         keywords=["AI윤리전문가 평가응시", "AI윤리전문가 이수 평가", "한국AI윤리위원회 이수 평가", "AI윤리전문가 양성과정",
+         keywords=["AI윤리전문가 평가응시", "AIEP 평가응시", "AI윤리전문가 이수 평가", "AIEP 이수 평가", "한국AI윤리위원회 이수 평가", "AI윤리전문가 양성과정",
                    "온라인 이수 평가", "AI윤리전문가 이수증", "한국AI윤리위원회"])
 
 

@@ -41,6 +41,8 @@
   var COURSE_KEY = { 'AI윤리전문가 양성과정': 'main', '기본과정': 'basic', '심화과정': 'adv' };
   var KEY_COURSE = { main: 'AI윤리전문가 양성과정', basic: '기본과정', adv: '심화과정' };
   function courseKey(name) { return COURSE_KEY[name] || 'main'; }
+  // 화면 표시용 과정명 (2026.09.25 AIEP 표기). 서버와 주고받는 값(과정 키 · 메일 제목)은 원래 이름 그대로 씀
+  function courseLabel(name) { return name === MAIN_COURSE ? 'AI윤리전문가(AIEP) 양성과정' : (name || ''); }
   var FORM_LABEL = { A: '1차 A형', B: '재응시 B형' };
   // 응시 이름: 이 과정의 첫 응시(A형)는 '1차 A형', 그다음부터는 '재응시 A형/B형' (무제한 재응시, A형·B형 번갈아)
   function formName(c, form) {
@@ -807,7 +809,7 @@
       var key = courseKey(c.course), f = c.next.form;
       return '<div class="ex-alert ex-alert--live" data-live-box="' + key + '">' + ico('timer') +
         '<div class="ex-alert-txt"><strong class="ex-live-title">진행 중인 시험이 있습니다</strong>' +
-          '<span>' + esc(c.course) + ' · ' + esc(f ? formName(c, f) : '') + ' · 남은 시간 <b class="ex-num ex-left" data-left="' + key + '">확인 중</b></span>' +
+          '<span>' + esc(courseLabel(c.course)) + ' · ' + esc(f ? formName(c, f) : '') + ' · 남은 시간 <b class="ex-num ex-left" data-left="' + key + '">확인 중</b></span>' +
           '<small class="ex-live-note">시험 시간은 서버 시각 기준으로 계속 흐르고 있습니다.</small></div>' +
         '<button type="button" class="ex-btn ex-btn--primary" data-act="resume" data-course="' + key + '">' + ico('rotate-ccw') + '<span class="ex-live-btn">이어서 응시</span></button></div>';
     }).join('');
@@ -819,7 +821,7 @@
     return panel('응시자 정보', kv([
       ['성명', name ? '<b>' + esc(name) + '</b>' : '<span class="ex-muted">응시 전 확인에서 입력</span>'],
       ['아이디(이메일)', '<span class="ex-break">' + esc(d.email || s.email || '-') + '</span>'],
-      ['신청 과정', list.length ? list.map(function (c) { return esc(c.course); }).join(' · ') : '-'],
+      ['신청 과정', list.length ? list.map(function (c) { return esc(courseLabel(c.course)); }).join(' · ') : '-'],
       ['조회 시각', '<span class="ex-num">' + fmtDT(S.loadedAt || now()) + '</span> (KST)']
     ], 'ex-kv--4'), { cls: 'ex-cand' });
   }
@@ -984,7 +986,7 @@
     }
     if (btns) act += '<div class="ex-actions">' + btns + '</div>';
     return '<section class="ex-panel ex-course' + (wide ? ' is-wide' : '') + '" data-course="' + key + '">' +
-      '<header class="ex-panel-head"><h2 class="ex-h">' + esc(c.course) + ' 이수 평가</h2>' + badge(st[1], st[0]) + '</header>' +
+      '<header class="ex-panel-head"><h2 class="ex-h">' + esc(courseLabel(c.course)) + ' 이수 평가</h2>' + badge(st[1], st[0]) + '</header>' +
       '<div class="ex-course-body">' + kv(rows, wide ? 'ex-kv--4' : '') + '<div class="ex-course-act">' + act + '</div></div></section>';
   }
 
@@ -1011,7 +1013,7 @@
         '<th scope="col" class="is-num">정답 수</th><th scope="col" class="is-num">점수</th><th scope="col">결과</th><th scope="col">제출 방식</th><th scope="col">상세</th></tr></thead><tbody>' +
         rows.map(function (r) {
           return '<tr><td data-th="제출 일시" class="ex-num">' + fmtDT(r.submittedAt) + '</td>' +
-            '<td data-th="과정">' + esc(r.course) + '</td>' +
+            '<td data-th="과정">' + esc(courseLabel(r.course)) + '</td>' +
             '<td data-th="평가지">' + esc(r.label || FORM_LABEL[r.form]) + '</td>' +
             '<td data-th="정답 수" class="is-num">' + r.correct + ' / ' + r.total + '</td>' +
             '<td data-th="점수" class="is-num"><b>' + fmtNum(r.score) + '</b>점</td>' +
@@ -1136,7 +1138,7 @@
     var span = (a.deadline - a.startedAt) || (a.minutes || courseCfg(a.course).minutes || 60) * 60000;
     var saved = Object.keys(j.answers || {}).length;
     return '<div class="ex-dialog-head"><h2 id="exDlgTitle">진행 중인 시험이 있습니다</h2>' +
-        '<p>' + esc(a.course) + ' · ' + esc(a.label || FORM_LABEL[a.form] || '') + '</p></div>' +
+        '<p>' + esc(courseLabel(a.course)) + ' · ' + esc(a.label || FORM_LABEL[a.form] || '') + '</p></div>' +
       '<div class="ex-dialog-body">' +
         '<div class="ex-bigtime"><span>남은 시간</span><strong class="ex-num" id="exResLeft">' + fmtLeft(Math.min(a.deadline - now(), span)) + '</strong>' +
           '<small>시험 시간 ' + Math.round(span / 60000) + '분</small></div>' +
@@ -1201,7 +1203,7 @@
         '<p class="ex-field-help" id="exNameHelp">이수증에 표기될 성명입니다. 실명을 정확히 입력해 주십시오.</p>' +
         '<p class="ex-field-err" id="exNameErr" role="alert" hidden></p>', 'ex-kv-field'],
       ['아이디(이메일)', '<span class="ex-break">' + esc(d.email || s.email || '-') + '</span>'],
-      ['과정', esc(c.course)],
+      ['과정', esc(courseLabel(c.course))],
       ['평가지', esc(formName(c, form))]
     ]);
     var rules = kv([
@@ -1222,7 +1224,7 @@
     var html = stepper(1) +
       '<div class="ex-pledge">' +
         '<div class="ex-pledge-main">' +
-          '<section class="ex-panel ex-pledge-intro"><header class="ex-panel-head"><h2 class="ex-h">응시 전 확인</h2>' + badge(c.course + ' · ' + formName(c, form), 'open') + '</header>' +
+          '<section class="ex-panel ex-pledge-intro"><header class="ex-panel-head"><h2 class="ex-h">응시 전 확인</h2>' + badge(courseLabel(c.course) + ' · ' + formName(c, form), 'open') + '</header>' +
             '<p class="ex-panel-lead">시험을 시작하기 전에 응시자 정보를 확인하고, 시험 안내를 읽은 뒤 응시 서약에 동의해 주십시오.</p></section>' +
           panel('<span class="ex-h-no">1</span>응시자 확인', cand) +
           panel('<span class="ex-h-no">2</span>시험 안내', rules) +
@@ -1312,7 +1314,7 @@
       '<div class="ex-dialog-body">' +
         kv([
           ['성명', '<b>' + esc(name) + '</b>'],
-          ['과정', esc(c.course)],
+          ['과정', esc(courseLabel(c.course))],
           ['평가지', esc(formName(c, form))],
           ['문항 수', ex.total + '문항'],
           ['시험 시간', '<b>' + ex.minutes + '분</b>']
@@ -1542,7 +1544,7 @@
       '<header class="ex-top">' +
         '<span class="ex-top-badge" role="img" aria-label="KAIEC"><svg viewBox="0 0 59.04 10.66" aria-hidden="true"><use href="#exi-kaiec"></use></svg></span>' +
         '<div class="ex-top-title"><span class="ex-top-prog">AI윤리전문가 양성과정</span>' +
-          '<strong><span class="ex-top-pre">이수 평가 · </span>' + esc(E.course) + ' · ' + esc(E.label) + '</strong>' +
+          '<strong><span class="ex-top-pre">이수 평가 · </span>' + esc(courseLabel(E.course)) + ' · ' + esc(E.label) + '</strong>' +
           '<span class="ex-top-who">' + who + ' · ' + esc(maskEmail(E.email)) + '</span></div>' +
         (S.demo ? '<span class="ex-top-demo">체험 모드</span>' : '') +
         '<div class="ex-top-cand"><span>응시자</span><strong>' + who + '</strong><em>' + esc(maskEmail(E.email)) + '</em></div>' +
@@ -2010,7 +2012,7 @@
         ? '<button type="button" class="ex-btn ex-btn--secondary" data-act="demo-restart">' + ico('rotate-ccw') + '체험 처음부터 다시 하기</button>'
         : '<a class="ex-btn ex-btn--secondary" href="mailto:' + esc(CFG.email || '') + '">' + ico('mail') + '위원회에 문의하기</a>');
     }
-    var meta = [name ? '응시자 ' + esc(name) : '', esc(r.course) + ' · ' + esc(r.label || FORM_LABEL[r.form]), '제출 ' + fmtDT(r.submittedAt)]
+    var meta = [name ? '응시자 ' + esc(name) : '', esc(courseLabel(r.course)) + ' · ' + esc(r.label || FORM_LABEL[r.form]), '제출 ' + fmtDT(r.submittedAt)]
       .filter(Boolean).map(function (t) { return '<span class="ex-meta-i">' + t + '</span>'; })
       .join('<span class="ex-dot-sep" aria-hidden="true">·</span>');
     var html = stepper(3) +
@@ -2023,7 +2025,7 @@
             '<div class="ex-gauge-val"><span>점수</span><strong>' + fmtNum(r.score) + '</strong><em>100점 만점</em></div></div>' +
           '<div class="ex-result-sum">' +
             '<span class="ex-verdict ex-verdict--' + (r.passed ? 'pass' : 'fail') + '">' + ico(r.passed ? 'badge-check' : 'circle-x') + (r.passed ? '이수' : '미이수') + '</span>' +
-            '<h3>' + (r.passed ? esc(r.course) + ' 이수 기준을 충족했습니다' : '이수 기준까지 ' + fmtNum(Math.max(0, pass - (+r.score || 0))) + '점이 부족합니다') + '</h3>' +
+            '<h3>' + (r.passed ? esc(courseLabel(r.course)) + ' 이수 기준을 충족했습니다' : '이수 기준까지 ' + fmtNum(Math.max(0, pass - (+r.score || 0))) + '점이 부족합니다') + '</h3>' +
             (r.message ? '<p class="ex-result-msg">' + esc(r.message) + '</p>' : '') +
             '<dl class="ex-facts">' + facts.map(function (f) { return '<div><dt>' + f[0] + '</dt><dd>' + f[1] + '</dd></div>'; }).join('') + '</dl>' +
           '</div></div>' +
@@ -2094,7 +2096,7 @@
           '<span class="ex-reveal-ic">' + ico(pass ? 'badge-check' : 'rotate-ccw') + '</span>' +
         '</div>' +
         '<strong class="ex-reveal-word">' + (pass ? '이 수' : '미 이 수') + '</strong>' +
-        '<span class="ex-reveal-meta">' + esc(r.course || '') + ' · ' + fmtNum(r.score) + '점</span>' +
+        '<span class="ex-reveal-meta">' + esc(courseLabel(r.course)) + ' · ' + fmtNum(r.score) + '점</span>' +
         '<span class="ex-reveal-sub">' + sub + '</span>' +
         (spark ? '<div class="ex-reveal-spark" aria-hidden="true">' + spark + '</div>' : '') +
       '</div>';

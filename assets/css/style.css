@@ -1905,3 +1905,5 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
 .do-num{font-size:34px;font-weight:800;letter-spacing:-.05em;line-height:1;color:#CBDAF0;font-variant-numeric:tabular-nums}
 .do-card:hover .do-num{color:#9FB9E4}
 @media (max-width:860px){.do-head{margin-bottom:14px}.do-num{font-size:28px}}
+/* 2026.09.25 AIEP 표기: 큰 제목 안의 (AIEP)는 조금 작고 가볍게 (본문에서는 일반 글자) */
+.aiep{font-size:.7em;font-weight:700;letter-spacing:.01em;opacity:.78;margin-left:.06em;white-space:nowrap}

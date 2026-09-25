@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=f270bf49a7">
+<link rel="stylesheet" href="/assets/css/style.css?v=91a33bccc5">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -100,7 +100,7 @@
         <div class="sec-head sec-head--split">
           <div>
             <span class="eyebrow">AI Ethics Professionals</span>
-            <h2 class="h-sec">AI윤리전문가</h2>
+            <h2 class="h-sec">AI윤리전문가<span class="aiep">(AIEP)</span></h2>
             <p class="h-sub" style="margin:0">AI윤리전문가 양성과정 이수 평가를 통과해 한국AI윤리위원회에 공식 등록된 분들입니다.
                성명 또는 이수번호로 등록 사실을 확인하실 수 있습니다. <span id="mExpertCount"></span></p>
           </div>
@@ -137,7 +137,7 @@
       <div class="wrap">
         <div class="cta-band reveal">
           <div><h2>AI 시대에 가장 먼저 필요한 전문가, 지금 준비하세요</h2>
-            <p>AI윤리전문가 양성과정은 전 과정 100% 온라인으로 진행됩니다. 위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 이수 즉시 홈페이지에 공식 등록되세요.</p></div>
+            <p>AI윤리전문가(AIEP) 양성과정은 전 과정 100% 온라인으로 진행됩니다. 위원회 표준교재와 온라인 이수 평가로 한국AI윤리위원회 공식 이수증을 받고, 이수 즉시 홈페이지에 공식 등록되세요.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="/expert-apply/">AI윤리전문가 양성과정 신청하기</a>
             <a class="btn btn-light" href="/join/#apply">위원으로 참여하기</a>
@@ -204,9 +204,9 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=f270bf49a7"></script>
-  <script src="/assets/js/members-data.js?v=f270bf49a7"></script>
-  <script src="/assets/js/experts-data.js?v=f270bf49a7"></script>
+  <script src="/assets/js/main.js?v=91a33bccc5"></script>
+  <script src="/assets/js/members-data.js?v=91a33bccc5"></script>
+  <script src="/assets/js/experts-data.js?v=91a33bccc5"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -224,7 +224,7 @@
     function card(m){
       var av=m.photo?'<div class="member-avatar member-avatar--photo"><img src="/assets/img/experts/'+esc(m.photo)+'" alt="'+esc(m.name)+'" loading="lazy"></div>'
         :'<div class="member-avatar">'+esc((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·')+'</div>';
-      var role=m.expert?'AI윤리전문가 · 전문위원':'AI윤리전문가';
+      var role=m.expert?'AI윤리전문가(AIEP) · 전문위원':'AI윤리전문가(AIEP)';
       return '<div class="member expert">'+av
         +'<div class="member-role">'+role+'</div>'
         +'<div class="member-name">'+esc(m.name)+'</div>'
