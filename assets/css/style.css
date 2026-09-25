@@ -1890,4 +1890,11 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
   .h-sec{font-size:23px}
   .cta-band h2{font-size:20px}
 }
-
+/* join 2026.09.25: 캠페인위원 강조 카드 · 다른 역할 3칸 */
+.choice--hot{border-color:#7FD9CF;background:#F2FBFA}
+.choice--hot .choice-badge{background:#00857A;color:#fff;border-color:#00857A}
+.choice--hot strong svg{color:#00857A}
+.join-grid--3{grid-template-columns:repeat(3,1fr)}
+.join-grid--3 .join-item{flex-direction:column;align-items:flex-start;gap:12px}
+.join-grid--3 .join-go{margin-top:2px}
+@media (max-width:860px){.join-grid--3{grid-template-columns:1fr}}
