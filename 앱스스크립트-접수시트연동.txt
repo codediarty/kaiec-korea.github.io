@@ -1,54 +1,150 @@
 ═══════════════════════════════════════════════════════════════
- KAIEC AI윤리전문가 응시 접수 → 구글 스프레드시트 자동 수집
- (4차 개정: GET·POST 모두 수신 + 상태 확인 페이지 + 중복 방지 + 오류 기록
-  + 시트 열 구성 자동 감지 + '자격 취득 목적' 열 자동 추가 + KAIEC 참여 신청 '위원 신청' 탭 분리, 2026.09.13)
+ KAIEC 접수 시트 연동 (6차 개정, 2026.09.25)
+ kaiec.kr 두 신청서 → 구글 스프레드시트 기록 + 메일
+   · /expert-apply/ (AI윤리전문가 양성과정 신청) → '접수' 탭 + 관리자 알림
+   · /join/ (위원 참여 신청)                     → '위원 신청' 탭 + 관리자 알림 + 지원자 자동 메일
+ 대상: 시트 "AI윤리전문가 1기 접수명단"(skkc.office@gmail.com)에 연결된 Apps Script 프로젝트
+ 사이트 쪽 주소: build.py 의 SHEET_WEBHOOK (배포 관리 > 새 버전으로 올리면 주소가 바뀌지 않음)
 
- ※ 이 코드로 한 번 다시 올리면(붙여넣기 → 저장 → 배포 관리 → 새 버전) 두 가지가 추가됩니다.
-   1) 응시 접수 폼의 '자격 취득 및 활용 목적' 답변이 '접수' 탭 마지막 열에 저장됩니다.
-   2) KAIEC 참여 신청(kaiec.kr/join/)이 시트 하단의 '위원 신청' 탭에 따로 쌓이고(탭은 첫 신청 때 자동 생성)
-      "[KAIEC 참여 신청]" 제목의 알림 메일이 옵니다. 열: 접수일시 · 참여 구분 · 성명 · 이메일 · 휴대전화 ·
-      직업/활동 분야 · 소속 · 기대하는 것 · 지원 사유·자기소개
-   다시 올리기 전에도 참여 신청은 '접수' 탭에 "[KAIEC 참여] 운영위원"처럼 구분 표시가 붙어 기록되고
-   알림 메일도 오므로 접수 자체는 누락되지 않습니다.
+ 6차에서 바뀐 것
+   1) 관리자 알림 제목 정리: 위원 참여 "[한국AI윤리위원회(KAIEC) ○○ 지원] 성명", 양성과정 "[AI윤리전문가 양성과정 신청] 성명"
+      (4차 이전 배포본의 "[AI윤리전문가 1기 응시] 성명 · [KAIEC 참여] ○○" 제목과 '새 응시 접수' 문구 삭제)
+   2) 알림 본문 HTML 표 + 다음 할 일 + 시트 탭 링크
+   3) 지원자 자동 메일: 캠페인위원은 사무총장 제안 메일(활동 안내서 PDF 첨부), 운영위원·전문위원·공식 파트너는 접수 확인 메일.
+      발신 한국AI윤리위원회 <contact@kaiec.kr>(실행 계정 지메일 별칭), 답장 contact@kaiec.kr. 양성과정 신청자에게는 보내지 않음
+   4) '위원 신청' 탭에 '지원자 메일' · '비고' 열 자동 추가, 같은 이메일에 제안 메일 1회만, 발송 한도 · 테스트 주소 · 실패 안전장치
+ 4차(2026.09.13)까지의 코드는 git 기록에 있습니다.
 ═══════════════════════════════════════════════════════════════
 
 [1] Apps Script 편집기(프로젝트 "AI윤리전문가 1기 접수명단")에서 Code.gs 내용을
-    전부 지우고 아래 코드를 통째로 붙여넣은 뒤 저장(Ctrl+S)합니다.
+    전부 지우고 아래 코드를 통째로 붙여넣은 뒤 저장(Ctrl+S)합니다. (설정값은 이미 맞게 들어 있음)
 
 ──────────────── 여기부터 복사 ────────────────
 
+/**
+ * KAIEC 접수 시트 연동 · 6차 개정 (2026.09.25)
+ * kaiec.kr 의 두 신청서를 받아 시트에 기록하고 메일을 보냅니다.
+ *
+ *  · /expert-apply/ (AI윤리전문가 양성과정 신청)  → '접수' 탭 기록 + 관리자 알림 메일
+ *  · /join/ (위원 참여 신청)                       → '위원 신청' 탭 기록 + 관리자 알림 메일 + 지원자 자동 메일
+ *       - AI 윤리 캠페인위원 : 「[공식 위원 참여 제안] 한국AI윤리위원회(KAIEC) AI윤리 캠페인위원으로 함께해 주세요」
+ *                             (오준호 사무총장 제안 메일, 「AI윤리 캠페인위원 활동 안내서」 PDF 첨부)
+ *       - 운영위원 · 전문위원 · 공식 파트너 : 접수 확인 메일(검토 일정과 다음 절차 안내)
+ *
+ *  6차에서 바뀐 것
+ *   1) 관리자 알림 제목 정리: 위원 참여는 "[한국AI윤리위원회(KAIEC) ○○ 지원] 성명", 양성과정은 "[AI윤리전문가 양성과정 신청] 성명"
+ *      (이전 "[AI윤리전문가 1기 응시]" 제목과 '응시 접수' 문구 삭제)
+ *   2) 알림 메일을 HTML 표로(글자만 있던 것을 정리)
+ *   3) 지원자에게 자동 메일(위 참조). 발신 '한국AI윤리위원회 <contact@kaiec.kr>'(실행 계정 지메일에 등록된 별칭), 답장 contact@kaiec.kr
+ *   4) '위원 신청' 탭에 '지원자 메일' · '비고' 열 추가(발송 결과 기록). 같은 이메일에는 제안 메일을 두 번 보내지 않음
+ *
+ *  설치: Code.gs 에 전체 붙여 넣기 → 저장 → checkSetup 실행(권한 허용) → previewMails 로 견본 3통 확인
+ *        → [배포 > 배포 관리 > 연필 > 새 버전 > 배포]  (주소는 그대로. '새 배포'는 누르지 않음)
+ *  준비물: 실행 계정(skkc.office@gmail.com)의 구글 드라이브에 활동 안내서 PDF(파일 이름에 '캠페인위원')를 올려 두기
+ */
+
+// ===================== 수정 가능한 설정 =====================
 var SHEET_ID = '1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs';   // 접수 스프레드시트 ID (스크립트가 연결된 시트가 있으면 그 시트를 우선 사용)
-var NOTIFY   = 'kaiec.korea@gmail.com, skkc.office@gmail.com';   // 접수 알림 메일 (쉼표로 추가 가능)
+var NOTIFY   = 'kaiec.korea@gmail.com, skkc.office@gmail.com';   // 접수 알림을 받을 관리자 메일 (쉼표로 추가 가능)
 
-function getSs_() {
-  var ss = null;
-  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) {}
-  return ss || SpreadsheetApp.openById(SHEET_ID);
-}
+var MAIL = {
+  APPLICANT_ON: true,            // false 면 지원자에게 자동 메일을 보내지 않습니다(관리자 알림만)
+  CAMPAIGN_PROPOSAL: true,       // false 면 캠페인위원 지원자에게도 제안 메일 대신 접수 확인 메일만 보냅니다
+  FROM: 'contact@kaiec.kr',      // 발신 주소(실행 계정 지메일의 '다른 주소에서 메일 보내기'에 등록된 별칭이어야 함)
+  FROM_FALLBACK: 'kaiec.korea@gmail.com',   // FROM 이 등록되어 있지 않을 때 쓸 예비 주소(이것도 없으면 실행 계정 주소)
+  SENDER_NAME: '한국AI윤리위원회',
+  REPLY_TO: 'contact@kaiec.kr',  // 지원자의 회신("참여 희망합니다")이 오는 주소
+  GUIDE_FILE_ID: '',             // 활동 안내서 PDF 의 드라이브 파일 ID(비워 두면 파일 이름으로 자동 검색)
+  GUIDE_KEYWORD: '캠페인위원',     // 자동 검색 때 파일 이름에 들어 있어야 하는 단어(PDF 만)
+  ATTACH_NAME: '한국AI윤리위원회(KAIEC) AI윤리 캠페인위원 활동 안내서.pdf',
+  SIGNER: '오준호 사무총장',
+  SIGNER_PHONE: '010-9913-7771',
+  CONTACT: 'contact@kaiec.kr',
+  HOME_URL: 'https://kaiec.kr/',
+  COURSE_URL: 'https://kaiec.kr/expert/',
+  JOIN_URL: 'https://kaiec.kr/join/',
+  SKIP_EMAIL: 'no-?reply|donotreply|example\\.(com|org|net)$|test@kaiec\\.kr',   // 이 주소에는 지원자 메일을 보내지 않음(테스트용)
+  QUOTA_RESERVE: 10,             // 오늘 남은 발송 가능 수가 이 값 이하면 지원자 메일을 보류(관리자 알림은 보냄)
+  FOOTER_NOTE: '본 메일은 한국AI윤리위원회 홈페이지(kaiec.kr)에서 위원 참여 신청서를 제출하신 분께 발송되었습니다. 더 이상 안내를 원하지 않으시면 이 메일에 회신으로 알려 주세요.'
+};
+var VERSION = '6.0';
+// ============== 설정 끝 (아래는 수정하지 마십시오) ==============
 
-function getSheet_() {
-  var ss = getSs_();
-  var sh = ss.getSheetByName('접수') || ss.insertSheet('접수');
-  if (sh.getLastRow() === 0) {
-    sh.appendRow(['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야', '자격 취득 목적']);
-    sh.setFrozenRows(1);
+var TZ = 'Asia/Seoul';
+var APPLY_SHEET = '접수';
+var APPLY_COLS  = ['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야', '활용 목적'];
+var JOIN_SHEET  = '위원 신청';
+var JOIN_COLS   = ['접수일시', '참여 구분', '성명', '이메일', '휴대전화', '직업/활동 분야', '소속', '기대하는 것', '지원 사유·자기소개', '지원자 메일', '비고'];
+var PROPOSAL_MARK = '제안 메일 발송';   // '지원자 메일' 칸에 이 글자로 시작하는 기록이 있으면 같은 이메일에 다시 보내지 않음
+
+/* ═════════════════════════ 웹 앱 진입점 ═════════════════════════ */
+
+// 사이트는 POST(폼 형식)로 보내고, 실패하면 GET(주소에 데이터)으로 다시 보냅니다. 파라미터가 없으면 상태 확인 문구만 보여줍니다.
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (p.name || p.email) {
+    try { return out_(handle_(p)); }
+    catch (err) { logError_(err, JSON.stringify(p)); return out_('error: ' + err); }
   }
-  return sh;
+  return out_('KAIEC 접수 수신 대기 중 (ok) · v' + VERSION);
 }
 
-// 1행 제목을 읽어 열 위치를 찾습니다 (예전 8열 시트든 6열 시트든 그대로 동작).
-// '자격 취득 목적' 열이 없으면 맨 뒤에 자동으로 추가합니다 (기존 시트도 그대로 사용 가능).
-function cols_(sh) {
-  var head = sh.getRange(1, 1, 1, Math.max(6, sh.getLastColumn())).getValues()[0];
-  var pi = head.indexOf('자격 취득 목적');
-  if (pi < 0) { pi = sh.getLastColumn(); sh.getRange(1, pi + 1).setValue('자격 취득 목적'); head.push('자격 취득 목적'); }
+function doPost(e) {
+  var raw = '';
+  try {
+    var d = {};
+    raw = e && e.postData ? String(e.postData.contents || '') : '';
+    try { d = JSON.parse(raw); } catch (err) { d = (e && e.parameter) || {}; }
+    if (!d || typeof d !== 'object') d = {};
+    return out_(handle_(d));
+  } catch (err2) {
+    logError_(err2, raw);
+    return out_('error: ' + err2);
+  }
+}
+
+function out_(s) { return ContentService.createTextOutput(String(s)); }
+
+function handle_(d) {
+  var isJoin = String(d.type || '') === 'join' || /^\[KAIEC 참여\]/.test(String(d.course || ''));
+  return isJoin ? saveJoin_(d) : saveApply_(d);
+}
+
+/* ═════════════════════════ 양성과정 신청 (/expert-apply/) ═════════════════════════ */
+
+function saveApply_(d) {
+  var ss = getSs_();
+  var sh = tab_(ss, APPLY_SHEET, APPLY_COLS);
+  var c = applyCols_(sh);
+  if (isDupApply_(sh, c, d)) return 'duplicate';
+  var row = [];
+  for (var i = 0; i < c.n; i++) row.push('');
+  var when = new Date();
+  row[c.date] = when; row[c.course] = str_(d.course); row[c.name] = str_(d.name);
+  row[c.phone] = str_(d.phone); row[c.email] = str_(d.email); row[c.job] = str_(d.job); row[c.purpose] = str_(d.purpose);
+  sh.appendRow(row);
+  var course = str_(d.course) || 'AI윤리전문가 양성과정';
+  var rows = [['과정', course], ['성명', str_(d.name)], ['이메일', str_(d.email)], ['휴대전화', str_(d.phone) || '(미기재)'],
+              ['직업 · 활동 분야', str_(d.job)], ['활용 목적', str_(d.purpose) || '(선택 안 함)'], ['접수 일시', stamp_(when)]];
+  var m = adminMail_(course + ' 신청이 접수되었습니다', rows,
+    '결제가 완료되면 평가 운영 시트가 결제 완료 메일을 읽어 응시자 계정을 자동으로 만들고 학습자료 안내 메일을 보냅니다. 이 접수 기록은 신청 이력 확인용입니다.',
+    [['접수 시트 열기', sheetUrl_(ss, sh)]]);
+  notifyAdmin_('[AI윤리전문가 양성과정 신청] ' + (str_(d.name) || '(성명 없음)'), m);
+  return 'ok';
+}
+
+function applyCols_(sh) {
+  var head = headRow_(sh);
+  var pi = head.indexOf('활용 목적');
+  if (pi < 0) pi = head.indexOf('자격 취득 목적');   // 4차 시트의 옛 열 제목도 그대로 사용
+  if (pi < 0) { pi = head.length; sh.getRange(1, pi + 1).setValue('활용 목적'); head.push('활용 목적'); }
   function idx(name, fallback) { var i = head.indexOf(name); return i >= 0 ? i : fallback; }
   return { n: head.length, date: idx('접수일시', 0), course: idx('응시 과정', 1), name: idx('성명', 2),
            phone: idx('휴대전화', 3), email: idx('이메일', 4), job: idx('직업/활동 분야', 5), purpose: pi };
 }
 
 // 같은 사람이 2분 안에 두 번 들어오면(새로고침 등) 한 번만 기록
-function isDuplicate_(sh, c, d) {
+function isDupApply_(sh, c, d) {
   var last = sh.getLastRow();
   if (last < 2) return false;
   var n = Math.min(20, last - 1);
@@ -56,261 +152,623 @@ function isDuplicate_(sh, c, d) {
   var now = new Date().getTime();
   for (var i = 0; i < rows.length; i++) {
     var t = rows[i][c.date] instanceof Date ? rows[i][c.date].getTime() : 0;
-    if (rows[i][c.name] === (d.name || '') && rows[i][c.email] === (d.email || '') && now - t < 120000) return true;
+    if (str_(rows[i][c.name]) === str_(d.name) && lower_(rows[i][c.email]) === lower_(d.email) && now - t < 120000) return true;
   }
   return false;
 }
 
-function saveAndNotify_(d) {
-  var sh = getSheet_();
-  var c = cols_(sh);
-  if (isDuplicate_(sh, c, d)) return 'duplicate';
-  var row = [];
-  for (var i = 0; i < c.n; i++) row.push('');
-  row[c.date] = new Date(); row[c.course] = d.course || ''; row[c.name] = d.name || '';
-  row[c.phone] = d.phone || ''; row[c.email] = d.email || ''; row[c.job] = d.job || '';
-  row[c.purpose] = d.purpose || '';
-  sh.appendRow(row);
-  MailApp.sendEmail(NOTIFY,
-    '[AI윤리전문가 1기 응시] ' + (d.name || '') + ' · ' + (d.course || ''),
-    '새 응시 접수가 등록되었습니다.\n\n' +
-    '응시 과정 : ' + (d.course || '') + '\n성명 : ' + (d.name || '') +
-    '\n휴대전화 : ' + (d.phone || '') + '\n이메일 : ' + (d.email || '') +
-    '\n직업/활동 분야 : ' + (d.job || '') +
-    '\n자격 취득 목적 : ' + (d.purpose || '') +
-    '\n\n스프레드시트: https://docs.google.com/spreadsheets/d/' + getSs_().getId());
-  return 'ok';
-}
-
-// KAIEC 참여 신청(kaiec.kr/join/)은 '위원 신청' 탭에 따로 기록하고 알림 메일을 보냅니다. (type=join 으로 들어옴)
-var JOIN_SHEET = '위원 신청';
-var JOIN_COLS  = ['접수일시', '참여 구분', '성명', '이메일', '휴대전화', '직업/활동 분야', '소속', '기대하는 것', '지원 사유·자기소개'];
+/* ═════════════════════════ 위원 참여 신청 (/join/) ═════════════════════════ */
 
 function saveJoin_(d) {
   var ss = getSs_();
-  var sh = ss.getSheetByName(JOIN_SHEET) || ss.insertSheet(JOIN_SHEET);
-  if (sh.getLastRow() === 0) {
-    sh.appendRow(JOIN_COLS);
-    sh.setFrozenRows(1);
-    sh.setColumnWidth(9, 420);
-  }
-  var kind = String(d.course || '').replace('[KAIEC 참여] ', '');
-  sh.appendRow([new Date(), kind, d.name || '', d.email || '', d.phone || '', d.job || '', d.org || '',
-                d.motive || '', d.purpose || '']);
-  MailApp.sendEmail(NOTIFY,
-    '[KAIEC 참여 신청] ' + (d.name || '') + ' · ' + kind,
-    '새 참여 신청이 접수되었습니다.\n\n' +
-    '참여 구분 : ' + kind + '\n성명 : ' + (d.name || '') + '\n이메일 : ' + (d.email || '') +
-    '\n휴대전화 : ' + (d.phone || '') + '\n직업/활동 분야 : ' + (d.job || '') + '\n소속 : ' + (d.org || '') +
-    '\n기대하는 것 : ' + (d.motive || '') +
-    '\n지원 사유·자기소개 :\n' + (d.purpose || '') +
-    '\n\n스프레드시트(위원 신청 탭): https://docs.google.com/spreadsheets/d/' + ss.getId());
+  var sh = tab_(ss, JOIN_SHEET, JOIN_COLS);
+  var c = joinCols_(sh);
+  var kind = str_(d.course).replace(/^\[KAIEC 참여\]\s*/, '') || '미지정';
+  var name = cleanName_(d.name);
+  var email = lower_(d.email);
+  if (isDupJoin_(sh, c, email, kind)) return 'duplicate';
+
+  // 1) 시트 기록
+  var when = new Date();
+  var row = [];
+  for (var i = 0; i < c.n; i++) row.push('');
+  row[c.date] = when; row[c.kind] = kind; row[c.name] = str_(d.name); row[c.email] = str_(d.email);
+  row[c.phone] = str_(d.phone); row[c.job] = str_(d.job); row[c.org] = str_(d.org);
+  row[c.motive] = str_(d.motive); row[c.purpose] = str_(d.purpose); row[c.mail] = ''; row[c.note] = '';
+  sh.appendRow(row);
+  var rowNo = sh.getLastRow();
+
+  // 2) 지원자에게 자동 메일 (실패해도 접수와 관리자 알림은 진행)
+  var mailResult = '';
+  try { mailResult = sendApplicant_(sh, c, d, kind, name, email); }
+  catch (err) { mailResult = '실패: ' + errText_(err); logError_(err, '지원자 메일 ' + email); }
+  try { sh.getRange(rowNo, c.mail + 1).setValue(mailResult); } catch (e2) { /* 무시 */ }
+
+  // 3) 관리자 알림
+  var rows = [['참여 구분', kind], ['성명', str_(d.name)], ['이메일', str_(d.email)], ['휴대전화', str_(d.phone) || '(미기재)'],
+              ['직업 · 활동 분야', str_(d.job)], ['소속', str_(d.org) || '(미기재)'], ['기대하는 것', str_(d.motive)],
+              ['자기소개', str_(d.purpose) || '(없음)'], ['접수 일시', stamp_(when)], ['지원자 메일', mailResult || '(보내지 않음)']];
+  var next = isCampaign_(kind)
+    ? "지원자가 제안 메일에 '참여 희망합니다'로 회신하면 공식 위원 등록과 활동코드 발급을 안내해 주십시오."
+    : '검토 후 3~5일 안에 지원자 메일로 결과와 활동 안내를 보내 주십시오(위촉 시 홈페이지 공식 위원 명단에 등록).';
+  var m = adminMail_('위원 참여 신청이 접수되었습니다', rows, next, [['위원 신청 탭 열기', sheetUrl_(ss, sh)]]);
+  notifyAdmin_('[한국AI윤리위원회(KAIEC) ' + kind + ' 지원] ' + (str_(d.name) || '(성명 없음)'), m);
   return 'ok';
 }
 
-function handle_(d) {
-  return (d.type === 'join') ? saveJoin_(d) : saveAndNotify_(d);
+function joinCols_(sh) {
+  var head = headRow_(sh);
+  // 옛 4차 탭(9열)이면 빠진 열 제목을 뒤에 붙임
+  JOIN_COLS.forEach(function (h) {
+    if (head.indexOf(h) < 0) { sh.getRange(1, head.length + 1).setValue(h); head.push(h); }
+  });
+  function idx(name) { return head.indexOf(name); }
+  return { n: head.length, date: idx('접수일시'), kind: idx('참여 구분'), name: idx('성명'), email: idx('이메일'), phone: idx('휴대전화'),
+           job: idx('직업/활동 분야'), org: idx('소속'), motive: idx('기대하는 것'), purpose: idx('지원 사유·자기소개'),
+           mail: idx('지원자 메일'), note: idx('비고') };
 }
 
-function logError_(err, raw) {
-  try {
-    var log = getSs_().getSheetByName('오류로그') || getSs_().insertSheet('오류로그');
-    log.appendRow([new Date(), String(err), raw || '']);
-  } catch (e2) {}
-}
-
-// 사이트는 GET(주소에 데이터)으로 보냅니다. 파라미터가 없으면 상태 확인 문구만 보여줍니다.
-function doGet(e) {
-  var p = (e && e.parameter) || {};
-  if (p.name || p.email) {
-    try { return ContentService.createTextOutput(handle_(p)); }
-    catch (err) { logError_(err, JSON.stringify(p)); return ContentService.createTextOutput('error: ' + err); }
+function isDupJoin_(sh, c, email, kind) {
+  var last = sh.getLastRow();
+  if (last < 2 || !email) return false;
+  var n = Math.min(20, last - 1);
+  var rows = sh.getRange(last - n + 1, 1, n, c.n).getValues();
+  var now = new Date().getTime();
+  for (var i = 0; i < rows.length; i++) {
+    var t = rows[i][c.date] instanceof Date ? rows[i][c.date].getTime() : 0;
+    if (lower_(rows[i][c.email]) === email && str_(rows[i][c.kind]) === kind && now - t < 120000) return true;
   }
-  return ContentService.createTextOutput('KAIEC 접수 수신 대기 중 (ok)');
+  return false;
 }
 
-// 예전 방식(POST)으로 들어오는 경우도 그대로 받습니다.
-function doPost(e) {
-  try {
-    var d = {};
-    try { d = JSON.parse(e.postData.contents); } catch (err) { d = (e && e.parameter) || {}; }
-    return ContentService.createTextOutput(handle_(d));
-  } catch (err) {
-    logError_(err, e && e.postData ? e.postData.contents : '');
-    return ContentService.createTextOutput('error: ' + err);
+function isCampaign_(kind) { return /캠페인/.test(String(kind || '')); }
+
+// 같은 이메일로 제안 메일을 이미 보냈으면 true
+function alreadyProposed_(sh, c, email) {
+  var last = sh.getLastRow();
+  if (last < 2 || !email) return false;
+  var rows = sh.getRange(2, 1, last - 1, c.n).getValues();
+  for (var i = 0; i < rows.length; i++) {
+    if (lower_(rows[i][c.email]) === email && String(rows[i][c.mail] || '').indexOf(PROPOSAL_MARK) === 0) return true;
+  }
+  return false;
+}
+
+// 지원자 자동 메일. 결과 문구를 돌려주고 '지원자 메일' 칸에 기록됩니다
+function sendApplicant_(sh, c, d, kind, name, email) {
+  if (!MAIL.APPLICANT_ON) return '꺼짐(MAIL.APPLICANT_ON)';
+  if (!email || email.indexOf('@') < 1 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return '건너뜀: 이메일 형식 오류';
+  if (MAIL.SKIP_EMAIL && new RegExp(MAIL.SKIP_EMAIL, 'i').test(email)) return '건너뜀: 테스트 · 내부 주소';
+  var quota = 0;
+  try { quota = MailApp.getRemainingDailyQuota(); } catch (e) { quota = 0; }
+  if (quota <= MAIL.QUOTA_RESERVE) return '보류: 오늘 발송 한도 부족(남은 ' + quota + '통). 내일 previewMails 확인 후 직접 발송';
+  if (isCampaign_(kind) && MAIL.CAMPAIGN_PROPOSAL) {
+    if (alreadyProposed_(sh, c, email)) return '건너뜀: 같은 이메일에 제안 메일을 이미 보냄';
+    var g = guideState_(false);
+    var m = campaignMail_(name);
+    var extra = {};
+    if (g.ok) extra.attachments = [g.file.getBlob().setName(MAIL.ATTACH_NAME)];
+    sendMail_(email, m.subject, m.text, m.html, extra);
+    return PROPOSAL_MARK + ' ' + stamp_(new Date()) + (g.ok ? ' · 안내서 첨부' : ' · 안내서 미첨부(' + g.msg + ')');
+  }
+  var a = ackMail_(name, kind);
+  sendMail_(email, a.subject, a.text, a.html, {});
+  return '접수 확인 메일 발송 ' + stamp_(new Date());
+}
+
+/* ═════════════════════════ 메일 문안 ═════════════════════════ */
+
+var FONT = "-apple-system,BlinkMacSystemFont,'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif";   // style 속성 안이라 작은따옴표
+
+// 관리자 알림(HTML 표 + 텍스트)
+function adminMail_(title, rows, next, links) {
+  var text = [title, ''];
+  rows.forEach(function (r) { text.push(r[0] + ' : ' + r[1]); });
+  if (next) text.push('', next);
+  (links || []).forEach(function (l) { text.push('', l[0] + ': ' + l[1]); });
+  var tr = rows.map(function (r, i) {
+    var b = i < rows.length - 1 ? 'border-bottom:1px solid #E6EAF0;' : '';
+    return '<tr><th align="left" style="' + b + 'padding:9px 12px;background:#F4F6FA;font-weight:600;color:#44546B;white-space:nowrap;vertical-align:top;width:110px">' + esc_(r[0]) + '</th>' +
+           '<td style="' + b + 'padding:9px 12px;color:#1F2937;vertical-align:top;word-break:break-all">' + esc_(r[1]).replace(/\n/g, '<br>') + '</td></tr>';
+  }).join('');
+  var html =
+    '<div style="font-family:' + FONT + ';font-size:14.5px;line-height:1.7;color:#1F2937;max-width:640px;margin:0 auto;padding:4px 2px;word-break:keep-all">' +
+      '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;margin:0 0 22px"><tr>' +
+        '<td style="border-top:3px solid #0B2A4A;border-bottom:1px solid #E6EAF0;padding:13px 0 11px;font-size:15px;font-weight:800;color:#0B2A4A;letter-spacing:-0.3px">한국AI윤리위원회</td>' +
+        '<td align="right" style="border-top:3px solid #0B2A4A;border-bottom:1px solid #E6EAF0;padding:13px 0 11px 12px;font-size:11px;font-weight:700;color:#8A94A6;letter-spacing:2.5px;white-space:nowrap">KAIEC · 접수 알림</td>' +
+      '</tr></table>' +
+      '<p style="margin:0 0 16px;font-size:18px;font-weight:800;color:#0B2A4A;letter-spacing:-0.3px">' + esc_(title) + '</p>' +
+      '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;border:1px solid #E6EAF0;font-size:14px;margin:0 0 16px">' + tr + '</table>' +
+      (next ? '<p style="margin:0 0 16px;padding:12px 14px;background:#F8FAFC;border-left:3px solid #0B2A4A;color:#374151">' + esc_(next) + '</p>' : '') +
+      (links || []).map(function (l) { return '<p style="margin:0 0 8px"><a href="' + esc_(l[1]) + '" style="color:#0B5CAB;font-weight:700">' + esc_(l[0]) + '</a></p>'; }).join('') +
+      '<p style="margin:18px 0 0;font-size:12px;color:#9AA3B2">kaiec.kr 접수 시트 연동 v' + VERSION + ' · 이 메일은 관리자에게만 발송됩니다.</p>' +
+    '</div>';
+  return { text: text.join('\n'), html: html };
+}
+
+// 캠페인위원 제안 메일(오준호 사무총장 원문. 캠페인위원 제안메일 자동 발송 v1.0.0 과 같은 문안)
+var BENEFITS = [
+  ['한국AI윤리위원회 공식 캠페인위원 등재', '위원회 홈페이지의 공식 위원 명단에 캠페인위원으로 등재됩니다.', []],
+  ['공식 활동 경력으로 기록', '실제 활동 기간과 내역에 따라 위원회 명의의 활동증명서를 발급받을 수 있습니다.', ['활동증명서']],
+  ['개인 위원 활동코드 제공', '본인만의 활동코드를 통해 캠페인 참여 실적을 확인할 수 있습니다.', []],
+  ['주변 분들에게 교육비 10% 혜택 제공', '활동코드를 통해 AI윤리전문가 양성과정 참여자에게 교육비 10% 할인 혜택을 제공할 수 있습니다.', ['교육비 10% 할인 혜택']],
+  ['활동 실적에 따른 지원금 지급', '개인 활동코드를 통한 정상 결제 중 지급요건을 충족한 실적 1건당 30,000원의 활동지원금을 지급하며, 매주 수요일 정산합니다.', ['1건당 30,000원', '매주 수요일']]
+];
+
+function campaignMail_(rawName) {
+  var name = cleanName_(rawName);
+  var nim = name ? name + '님' : '';
+  var S = {
+    hello: name ? name + '님, 안녕하세요.' : '안녕하세요.',
+    me: '한국AI윤리위원회(KAIEC) ' + MAIL.SIGNER + '입니다.',
+    a1: 'AI를 사용하는 사람은 빠르게 늘고 있지만,',
+    a2: 'AI를 책임 있게 사용하는 문화를 만드는 사람은 아직 많지 않습니다.',
+    b: '한국AI윤리위원회(KAIEC)는 책임 있는 AI 활용과 건전한 AI 윤리 문화 확산을 위해 교육·연구·캠페인·전문가 양성 및 대외협력 활동을 수행하는 AI 윤리 전문기관입니다.',
+    c: '저희는 이러한 문화를 더 많은 사람들에게 전하기 위해 ‘AI윤리 캠페인위원’을 함께할 분들을 모시고 있습니다.',
+    d1: '단순히 교육과정을 홍보하는 역할보다는,',
+    d2: 'AI 시대에 필요한 올바른 활용 문화를 알리고 사람들의 배움과 실천을 연결하는 공식 캠페인 활동이라고 생각해 주시면 좋습니다.',
+    e: '홈페이지 위원 참여 신청서를 통해 ' + (nim ? nim + '께서 ' : '') + '보내 주신 관심과 지원 동기가 이러한 취지와 잘 맞는다고 생각하여 직접 참여를 제안드리게 되었습니다.',
+    bh: '캠페인위원이 되시면',
+    eh: '활동은 어렵지 않습니다.',
+    f1: 'SNS, 블로그, 대학·직장 커뮤니티 등',
+    f2: '평소 본인이 활동하던 공간에서 AI 윤리의 필요성과 위원회의 교육·캠페인을 알리는 방식으로 참여할 수 있습니다.',
+    g: '정해진 형식에 맞추기보다 각자의 여건에 맞게 온라인을 중심으로 활동할 수 있도록 운영하고 있습니다.',
+    q1: '누군가에게는 하나의 정보가 될 수 있지만,',
+    q2: '그 정보가 한 사람의 책임 있는 AI 활용을 시작하게 할 수도 있습니다.',
+    h: '그 시작을 함께 만들어가는 한국AI윤리위원회 AI윤리 캠페인위원으로 ' + (nim ? nim + '과 ' : '') + '함께할 수 있기를 바랍니다.',
+    gd: '「AI윤리 캠페인위원 활동 안내서」',
+    i1: '자세한 내용은 함께 첨부드린 ',
+    i2: '에서 확인하실 수 있습니다.',
+    c1: '참여 의향이 있으시다면 복잡한 신청서 없이',
+    c2: '“참여 희망합니다”',
+    c3: '라고 간단히 회신해 주세요.',
+    c4: '확인 후 공식 위원 등록 및 개인 활동코드 발급 절차를 안내드리겠습니다.',
+    bye: '감사합니다.',
+    org: '한국AI윤리위원회(KAIEC)'
+  };
+  var subject = '[공식 위원 참여 제안] 한국AI윤리위원회(KAIEC) AI윤리 캠페인위원으로 함께해 주세요';
+  var homeText = MAIL.HOME_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  var courseText = MAIL.COURSE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+  var t = [S.hello, '', S.me, '', S.a1, S.a2, '', S.b, '', S.c, '', S.d1, S.d2, '', S.e, '', S.bh, ''];
+  BENEFITS.forEach(function (b) { t.push('✓ ' + b[0], b[1], ''); });
+  t = t.concat([S.eh, '', S.f1, S.f2, '', S.g, '', S.q1, S.q2, '', S.h, '', S.i1 + S.gd + S.i2, '',
+    S.c1, S.c2 + S.c3, '', S.c4, '', S.bye, '', S.org,
+    MAIL.SIGNER + ' | ' + MAIL.SIGNER_PHONE,
+    '이메일: ' + MAIL.CONTACT,
+    '공식 홈페이지: ' + MAIL.HOME_URL.replace(/\/$/, ''),
+    'AI윤리전문가 양성과정: ' + MAIL.COURSE_URL.replace(/\/$/, '')]);
+  if (MAIL.FOOTER_NOTE) t.push('', '※ ' + MAIL.FOOTER_NOTE);
+  var text = t.join('\n');
+
+  var P = function (html, extra) { return '<p style="margin:0 0 16px;color:#374151;' + (extra || '') + '">' + html + '</p>'; };
+  var head = function (s) {
+    return '<p style="margin:34px 0 14px;padding:0 0 9px;border-bottom:2px solid #0B2A4A;font-size:15.5px;font-weight:700;color:#0B2A4A;letter-spacing:-0.2px">' + esc_(s) + '</p>';
+  };
+  var who = function (s) {
+    if (!name) return s;
+    var rep = '<strong style="color:#1F2937">' + esc_(name) + '</strong>님';
+    return s.replace(esc_(nim), function () { return rep; });
+  };
+  var bold = function (s, words) {
+    var h = esc_(s);
+    (words || []).forEach(function (w) {
+      var rep = '<strong style="color:#0B2A4A">' + esc_(w) + '</strong>';
+      h = h.replace(esc_(w), function () { return rep; });
+    });
+    return h;
+  };
+  var rows = BENEFITS.map(function (b, i) {
+    var sep = i ? 'border-top:1px solid #E9EDF3;' : '';
+    return '<tr>' +
+      '<td width="46" valign="top" style="' + sep + 'padding:17px 0 15px 18px">' +
+        '<div style="width:22px;height:22px;border-radius:11px;background:#0B2A4A;color:#FFFFFF;font-size:12px;font-weight:700;line-height:22px;text-align:center">✓</div>' +
+      '</td>' +
+      '<td valign="top" style="' + sep + 'padding:15px 20px 15px 8px">' +
+        '<div style="font-size:15px;font-weight:700;color:#0B2A4A;line-height:1.6">' + esc_(b[0]) + '</div>' +
+        '<div style="font-size:14px;color:#4B5563;line-height:1.75;margin-top:3px">' + bold(b[1], b[2]) + '</div>' +
+      '</td></tr>';
+  }).join('');
+
+  var html =
+  '<div style="font-family:' + FONT + ';font-size:15px;line-height:1.8;color:#1F2937;max-width:600px;margin:0 auto;padding:4px 2px;word-break:keep-all">' +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;margin:0 0 28px"><tr>' +
+      '<td style="border-top:3px solid #0B2A4A;border-bottom:1px solid #E6EAF0;padding:15px 0 13px;font-size:15px;font-weight:800;color:#0B2A4A;letter-spacing:-0.3px">한국AI윤리위원회</td>' +
+      '<td align="right" style="border-top:3px solid #0B2A4A;border-bottom:1px solid #E6EAF0;padding:15px 0 13px 12px;font-size:11px;font-weight:700;color:#8A94A6;letter-spacing:2.5px;white-space:nowrap">KAIEC</td>' +
+    '</tr></table>' +
+    P(who(esc_(S.hello)), 'font-size:16px;color:#1F2937;margin-bottom:18px') +
+    P(esc_(S.me)) +
+    P(esc_(S.a1) + '<br>' + esc_(S.a2)) +
+    P(esc_(S.b)) +
+    P(esc_(S.c).replace(esc_('‘AI윤리 캠페인위원’'), '<strong style="color:#0B2A4A">‘AI윤리 캠페인위원’</strong>')) +
+    P(esc_(S.d1) + '<br>' + esc_(S.d2)) +
+    P(who(esc_(S.e))) +
+    head(S.bh) +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;border:1px solid #E3E8EF;border-radius:12px;background:#FAFBFD;margin:0 0 6px">' + rows + '</table>' +
+    head(S.eh) +
+    P(esc_(S.f1) + '<br>' + esc_(S.f2)) +
+    P(esc_(S.g)) +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;margin:28px 0 22px"><tr>' +
+      '<td style="border-left:3px solid #0B2A4A;padding:3px 0 3px 17px;font-size:15.5px;line-height:1.8;color:#0B2A4A;font-weight:600">' +
+        esc_(S.q1) + '<br>' + esc_(S.q2) +
+      '</td></tr></table>' +
+    P(who(esc_(S.h))) +
+    P(esc_(S.i1) + '<strong style="color:#0B2A4A">' + esc_(S.gd) + '</strong>' + esc_(S.i2)) +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;background:#F3F6FA;border:1px solid #DCE3EC;border-radius:12px;margin:26px 0 24px"><tr>' +
+      '<td align="center" style="padding:21px 22px 19px;text-align:center">' +
+        '<div style="font-size:14.5px;color:#4B5563;line-height:1.7">' + esc_(S.c1) + '</div>' +
+        '<div style="font-size:17px;color:#1F2937;line-height:1.7;margin-top:3px"><strong style="color:#0B2A4A">' + esc_(S.c2) + '</strong>' + esc_(S.c3) + '</div>' +
+        '<div style="font-size:13.5px;color:#6B7280;line-height:1.7;margin-top:12px;padding-top:11px;border-top:1px dashed #D3DAE4">' + esc_(S.c4) + '</div>' +
+      '</td></tr></table>' +
+    P(esc_(S.bye), 'margin-bottom:26px') +
+    signature_(homeText, courseText) +
+    (MAIL.FOOTER_NOTE ? '<p style="margin:30px 0 0;padding-top:14px;border-top:1px solid #F0F2F5;font-size:12px;line-height:1.7;color:#9AA3B2">' + esc_(MAIL.FOOTER_NOTE) + '</p>' : '') +
+  '</div>';
+  return { subject: subject, text: text, html: html };
+}
+
+// 운영위원 · 전문위원 · 공식 파트너 접수 확인 메일
+function ackMail_(rawName, kind) {
+  var name = cleanName_(rawName);
+  var partner = /파트너/.test(kind), expert = /전문위원/.test(kind);
+  var subject = '[한국AI윤리위원회] ' + kind + ' 참여 신청이 접수되었습니다';
+  var steps = partner
+    ? [['접수 확인', '담당자가 협력 내용을 검토합니다(보통 3~5일).'],
+       ['협의 연락', '이 메일 주소로 협력 방식과 일정을 안내드립니다.'],
+       ['공식 파트너 등재', '협력이 확정되면 홈페이지 공식 파트너 명단에 등록됩니다.']]
+    : [['위원회 검토', '신청 내용을 검토합니다(보통 3~5일).' + (expert ? ' 전문위원은 AI윤리전문가 양성과정 이수 정보를 함께 확인합니다.' : '')],
+       ['위촉 안내', '이 메일 주소로 위촉 결과와 활동 안내를 보내드립니다.'],
+       ['명단 등재 · 활동 시작', '위촉되면 홈페이지 공식 위원 명단에 성명이 등록되고, 온라인 안내에 따라 활동을 시작합니다. 활동 실적에 따라 활동증명서를 발급합니다.']];
+  var S = {
+    hello: name ? name + '님, 안녕하세요.' : '안녕하세요.',
+    me: '한국AI윤리위원회(KAIEC)입니다.',
+    a: '홈페이지(kaiec.kr)에서 제출하신 위원 참여 신청서(참여 구분: ' + kind + ')가 접수되었습니다.',
+    b: '앞으로의 절차는 아래와 같습니다.',
+    c: '신청 내용을 수정하거나 문의하실 것이 있으면 이 메일에 회신해 주세요.',
+    bye: '감사합니다.',
+    org: '한국AI윤리위원회(KAIEC) 사무국'
+  };
+  var t = [S.hello, '', S.me, S.a, '', S.b, ''];
+  steps.forEach(function (s, i) { t.push((i + 1) + '. ' + s[0] + ' : ' + s[1]); });
+  t = t.concat(['', S.c, '', S.bye, '', S.org, '이메일: ' + MAIL.CONTACT, '공식 홈페이지: ' + MAIL.HOME_URL.replace(/\/$/, '')]);
+  if (MAIL.FOOTER_NOTE) t.push('', '※ ' + MAIL.FOOTER_NOTE);
+  var P = function (html, extra) { return '<p style="margin:0 0 16px;color:#374151;' + (extra || '') + '">' + html + '</p>'; };
+  var rows = steps.map(function (s, i) {
+    var sep = i ? 'border-top:1px solid #E9EDF3;' : '';
+    return '<tr><td width="46" valign="top" style="' + sep + 'padding:15px 0 13px 18px">' +
+      '<div style="width:24px;height:24px;border-radius:12px;background:#0B2A4A;color:#fff;font-size:12px;font-weight:700;line-height:24px;text-align:center">' + (i + 1) + '</div></td>' +
+      '<td valign="top" style="' + sep + 'padding:14px 20px 13px 8px"><div style="font-size:15px;font-weight:700;color:#0B2A4A;line-height:1.6">' + esc_(s[0]) + '</div>' +
+      '<div style="font-size:14px;color:#4B5563;line-height:1.75;margin-top:3px">' + esc_(s[1]) + '</div></td></tr>';
+  }).join('');
+  var html =
+  '<div style="font-family:' + FONT + ';font-size:15px;line-height:1.8;color:#1F2937;max-width:600px;margin:0 auto;padding:4px 2px;word-break:keep-all">' +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;margin:0 0 28px"><tr>' +
+      '<td style="border-top:3px solid #0B2A4A;border-bottom:1px solid #E6EAF0;padding:15px 0 13px;font-size:15px;font-weight:800;color:#0B2A4A;letter-spacing:-0.3px">한국AI윤리위원회</td>' +
+      '<td align="right" style="border-top:3px solid #0B2A4A;border-bottom:1px solid #E6EAF0;padding:15px 0 13px 12px;font-size:11px;font-weight:700;color:#8A94A6;letter-spacing:2.5px;white-space:nowrap">KAIEC</td>' +
+    '</tr></table>' +
+    P((name ? '<strong style="color:#1F2937">' + esc_(name) + '</strong>님, 안녕하세요.' : '안녕하세요.'), 'font-size:16px;margin-bottom:18px') +
+    P(esc_(S.me) + '<br>' + esc_(S.a).replace(esc_(kind), '<strong style="color:#0B2A4A">' + esc_(kind) + '</strong>')) +
+    P(esc_(S.b), 'margin-bottom:10px') +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;border:1px solid #E3E8EF;border-radius:12px;background:#FAFBFD;margin:0 0 22px">' + rows + '</table>' +
+    P(esc_(S.c)) +
+    P(esc_(S.bye), 'margin-bottom:26px') +
+    '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr>' +
+      '<td style="border-top:1px solid #E6EAF0;padding:18px 0 0;font-size:14px;line-height:1.8;color:#4B5563">' +
+        '<div style="font-size:15px;font-weight:700;color:#0B2A4A">' + esc_(S.org) + '</div>' +
+        '<div><span style="color:#8A94A6">이메일:</span> <a href="mailto:' + esc_(MAIL.CONTACT) + '" style="color:#0B5CAB;text-decoration:none">' + esc_(MAIL.CONTACT) + '</a></div>' +
+        '<div><span style="color:#8A94A6">공식 홈페이지:</span> <a href="' + esc_(MAIL.HOME_URL) + '" style="color:#0B5CAB;text-decoration:none">' + esc_(MAIL.HOME_URL.replace(/^https?:\/\//, '').replace(/\/$/, '')) + '</a></div>' +
+      '</td></tr></table>' +
+    (MAIL.FOOTER_NOTE ? '<p style="margin:30px 0 0;padding-top:14px;border-top:1px solid #F0F2F5;font-size:12px;line-height:1.7;color:#9AA3B2">' + esc_(MAIL.FOOTER_NOTE) + '</p>' : '') +
+  '</div>';
+  return { subject: subject, text: t.join('\n'), html: html };
+}
+
+function signature_(homeText, courseText) {
+  return '<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse"><tr>' +
+      '<td style="border-top:1px solid #E6EAF0;padding:18px 0 0;font-size:14px;line-height:1.8;color:#4B5563">' +
+        '<div style="font-size:15px;font-weight:700;color:#0B2A4A">한국AI윤리위원회(KAIEC)</div>' +
+        '<div style="color:#1F2937;font-weight:600">' + esc_(MAIL.SIGNER) + ' <span style="color:#C3CAD5;font-weight:400">|</span> ' + esc_(MAIL.SIGNER_PHONE) + '</div>' +
+        '<div><span style="color:#8A94A6">이메일:</span> <a href="mailto:' + esc_(MAIL.CONTACT) + '" style="color:#0B5CAB;text-decoration:none">' + esc_(MAIL.CONTACT) + '</a></div>' +
+        '<div><span style="color:#8A94A6">공식 홈페이지:</span> <a href="' + esc_(MAIL.HOME_URL) + '" style="color:#0B5CAB;text-decoration:none">' + esc_(homeText) + '</a></div>' +
+        '<div><span style="color:#8A94A6">AI윤리전문가 양성과정:</span> <a href="' + esc_(MAIL.COURSE_URL) + '" style="color:#0B5CAB;text-decoration:none">' + esc_(courseText) + '</a></div>' +
+      '</td></tr></table>';
+}
+
+/* ═════════════════════════ 발송 ═════════════════════════ */
+
+var SENDER_PICK_ = null;
+// 발신 주소 선택: MAIL.FROM → MAIL.FROM_FALLBACK 순서로, 실행 계정 자신이거나 지메일 별칭으로 등록된 첫 주소
+function senderPick_() {
+  if (SENDER_PICK_) return SENDER_PICK_;
+  var me = '', aliases = [];
+  try { me = lower_(Session.getEffectiveUser().getEmail()); } catch (e) { me = ''; }
+  try { aliases = GmailApp.getAliases().map(function (a) { return lower_(a); }); } catch (e2) { aliases = []; }
+  var cands = [MAIL.FROM, MAIL.FROM_FALLBACK].map(lower_).filter(function (x) { return !!x; });
+  var pick = '';
+  for (var i = 0; i < cands.length; i++) { if (cands[i] === me || aliases.indexOf(cands[i]) >= 0) { pick = cands[i]; break; } }
+  var reply = lower_(MAIL.REPLY_TO) || pick || cands[cands.length - 1] || me;
+  SENDER_PICK_ = { from: pick, reply: reply, me: me, aliases: aliases, official: !!pick && pick === cands[0] };
+  return SENDER_PICK_;
+}
+
+function sendMail_(to, subject, text, html, extra) {
+  var p = senderPick_();
+  extra = extra || {};
+  if (p.from) {
+    var o = { name: MAIL.SENDER_NAME, htmlBody: html, from: p.from, replyTo: p.reply };
+    if (extra.attachments) o.attachments = extra.attachments;
+    GmailApp.sendEmail(to, subject, text, o);
+  } else {
+    var m = { to: to, subject: subject, body: text, htmlBody: html, name: MAIL.SENDER_NAME, replyTo: p.reply };
+    if (extra.attachments) m.attachments = extra.attachments;
+    MailApp.sendEmail(m);
   }
 }
 
-// 편집기에서 이 함수를 실행하면 테스트 줄 1개 + 알림 메일 (권한 승인용)
-function testWrite() {
-  saveAndNotify_({course: 'AI윤리전문가 2급', name: '연동 테스트', phone: '010-0000-0000',
-                  email: 'test@kaiec.kr', job: '테스트', purpose: '이력·커리어에 추가, 직무 활용'});
+function notifyAdmin_(subject, m) {
+  if (!NOTIFY) return;
+  try { MailApp.sendEmail({ to: NOTIFY, subject: subject, body: m.text, htmlBody: m.html, name: 'KAIEC 접수 알림' }); }
+  catch (e) { logError_(e, '관리자 알림 ' + subject); }
 }
 
-// 편집기에서 실행하면 '위원 신청' 탭에 테스트 줄 1개 (탭이 없으면 만들어짐)
+/* ═════════════════════════ 안내서 PDF ═════════════════════════ */
+
+// fresh = true 면 저장해 둔 파일 ID 를 쓰지 않고 드라이브를 다시 찾습니다(checkSetup)
+function guideState_(fresh) {
+  var props = PropertiesService.getScriptProperties();
+  var f = null;
+  if (MAIL.GUIDE_FILE_ID) {
+    f = openFile_(MAIL.GUIDE_FILE_ID);
+    if (!f) return { ok: false, msg: 'MAIL.GUIDE_FILE_ID(' + MAIL.GUIDE_FILE_ID + ') 파일을 열 수 없음' };
+  }
+  if (!f && !fresh) {
+    var saved = props.getProperty('GUIDE_ID');
+    if (saved) f = openFile_(saved);
+  }
+  if (!f) {
+    f = searchGuide_();
+    if (f) props.setProperty('GUIDE_ID', f.getId()); else props.deleteProperty('GUIDE_ID');
+  }
+  if (!f) return { ok: false, msg: "드라이브에 이름에 '" + MAIL.GUIDE_KEYWORD + "' 가 들어간 PDF 없음" };
+  var size = 0;
+  try { size = f.getSize(); } catch (e) { size = 0; }
+  if (size > 20 * 1024 * 1024) return { ok: false, msg: '안내서 PDF 가 20MB 초과(' + kb_(size) + ')' };
+  return { ok: true, file: f, name: f.getName(), size: size };
+}
+
+function openFile_(id) {
+  try { var f = DriveApp.getFileById(id); return f.isTrashed() ? null : f; } catch (e) { return null; }
+}
+
+function searchGuide_() {
+  var kw = String(MAIL.GUIDE_KEYWORD || '캠페인위원');
+  var q = kw.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  var best = null, bestScore = -1, seen = 0;
+  var consider = function (it, cap) {
+    while (it.hasNext() && seen < cap) {
+      var f = it.next(); seen++;
+      try {
+        if (f.isTrashed() || f.getMimeType() !== 'application/pdf') continue;
+        var nm = f.getName();
+        if (nm.indexOf(kw) < 0) continue;
+        var score = (nm.indexOf('안내서') >= 0 ? 4 : 0) + (nm.indexOf('활동') >= 0 ? 2 : 0) + (nm.indexOf('안내') >= 0 ? 1 : 0);
+        if (score > bestScore || (score === bestScore && f.getLastUpdated() > best.getLastUpdated())) { best = f; bestScore = score; }
+      } catch (e) { /* 읽을 수 없는 파일은 건너뜀 */ }
+    }
+  };
+  var queries = [
+    "title contains '" + q + "' and mimeType = 'application/pdf' and trashed = false",
+    "name contains '" + q + "' and mimeType = 'application/pdf' and trashed = false"
+  ];
+  for (var i = 0; i < queries.length && !best; i++) {
+    try { consider(DriveApp.searchFiles(queries[i]), 200); } catch (e) { /* 다음 문법으로 */ }
+  }
+  if (!best) { try { consider(DriveApp.getFilesByType('application/pdf'), 500); } catch (e2) { /* 무시 */ } }
+  return best;
+}
+
+/* ═════════════════════════ 직접 실행하는 함수 ═════════════════════════ */
+
+/** 준비 상태 점검: 시트 탭 · 발신 별칭 · 안내서 PDF · 발송 한도. 실행 로그로 결과를 봅니다(권한 허용용으로도 처음 한 번 실행) */
+function checkSetup() {
+  var out = ['KAIEC 접수 시트 연동 v' + VERSION + ' 점검'];
+  var ss = getSs_();
+  out.push('· 접수 시트: ' + ss.getName() + ' (' + ss.getId() + ')');
+  var a = tab_(ss, APPLY_SHEET, APPLY_COLS); applyCols_(a);
+  var j = tab_(ss, JOIN_SHEET, JOIN_COLS); joinCols_(j);
+  out.push("· '접수' 탭 " + Math.max(0, a.getLastRow() - 1) + '건, ' + "'위원 신청' 탭 " + Math.max(0, j.getLastRow() - 1) + '건 (열 제목 확인 · 빠진 열 추가)');
+  SENDER_PICK_ = null;
+  var p = senderPick_();
+  out.push('· 실행 계정: ' + (p.me || '(확인 불가)'));
+  out.push('· 지원자 메일 발신 주소: ' + (p.from ? p.from + (p.official ? ' (공식 메일 별칭 등록됨)' : ' (예비 주소. ' + MAIL.FROM + ' 별칭이 아직 없음)')
+    : '실행 계정 주소(' + MAIL.FROM + ' · ' + MAIL.FROM_FALLBACK + ' 별칭 없음)') + ' · 답장 ' + p.reply);
+  var g = guideState_(true);
+  out.push('· 활동 안내서 PDF: ' + (g.ok ? "정상 ('" + g.name + "', " + kb_(g.size) + ')' : '확인 필요 · ' + g.msg +
+    ' → ' + (p.me || '실행 계정') + " 드라이브에 파일 이름에 '" + MAIL.GUIDE_KEYWORD + "' 이 들어간 안내서 PDF 를 올린 뒤 다시 실행"));
+  var q = 0; try { q = MailApp.getRemainingDailyQuota(); } catch (e) { q = -1; }
+  out.push('· 오늘 남은 메일 발송 가능 수: ' + q + '통 (지원자 메일은 ' + MAIL.QUOTA_RESERVE + '통 이하로 남으면 보류)');
+  out.push('· 지원자 자동 메일: ' + (MAIL.APPLICANT_ON ? '켜짐' : '꺼짐') + ' · 캠페인위원 제안 메일: ' + (MAIL.CAMPAIGN_PROPOSAL ? '켜짐' : '꺼짐') + ' · 관리자 알림: ' + NOTIFY);
+  out.push('다음: previewMails 를 실행해 관리자 주소로 견본 메일 3통을 받아 보고, [배포 관리 > 새 버전 > 배포] 하십시오.');
+  Logger.log(out.join('\n'));
+  return out.join('\n');
+}
+
+/** 견본 메일 3통(제안 메일 · 접수 확인 메일 · 관리자 알림)을 관리자 주소(NOTIFY 의 첫 주소)로 보냅니다. 시트에는 쓰지 않습니다 */
+function previewMails() {
+  var to = String(NOTIFY).split(',')[0].trim();
+  if (!to) return 'NOTIFY 가 비어 있어 보낼 곳이 없습니다.';
+  var g = guideState_(true);
+  var m1 = campaignMail_('홍길동');
+  var ex = {};
+  if (g.ok) ex.attachments = [g.file.getBlob().setName(MAIL.ATTACH_NAME)];
+  sendMail_(to, '[견본] ' + m1.subject, m1.text, m1.html, ex);
+  var m2 = ackMail_('홍길동', '운영위원');
+  sendMail_(to, '[견본] ' + m2.subject, m2.text, m2.html, {});
+  var m3 = adminMail_('위원 참여 신청이 접수되었습니다', [['참여 구분', 'AI 윤리 캠페인위원'], ['성명', '홍길동'], ['이메일', 'hong@example.com'],
+    ['휴대전화', '010-1234-5678'], ['직업 · 활동 분야', '대학생·대학원생'], ['소속', '(미기재)'], ['기대하는 것', 'AI 윤리 활동을 온라인(SNS·블로그·커뮤니티)에 알리는 캠페인에 참여하고 싶습니다.'],
+    ['자기소개', 'AI 윤리 활동을 온라인에 알리고 싶습니다.'], ['접수 일시', stamp_(new Date())], ['지원자 메일', PROPOSAL_MARK + ' · 안내서 첨부']],
+    "지원자가 제안 메일에 '참여 희망합니다'로 회신하면 공식 위원 등록과 활동코드 발급을 안내해 주십시오.", [['위원 신청 탭 열기', 'https://docs.google.com/spreadsheets/d/' + getSs_().getId()]]);
+  MailApp.sendEmail({ to: to, subject: '[견본] [한국AI윤리위원회(KAIEC) AI 윤리 캠페인위원 지원] 홍길동', body: m3.text, htmlBody: m3.html, name: 'KAIEC 접수 알림' });
+  var msg = '견본 3통을 ' + to + ' 로 보냈습니다. 제안 메일 안내서: ' + (g.ok ? '첨부됨(' + g.name + ')' : '미첨부 · ' + g.msg);
+  Logger.log(msg);
+  return msg;
+}
+
+/** 위원 신청 흐름 테스트(시트에 테스트 줄 1개 + 관리자 알림. 지원자 메일은 test@kaiec.kr 이라 보내지 않음). 확인 뒤 줄을 지우십시오 */
 function testJoin() {
-  saveJoin_({type: 'join', course: '[KAIEC 참여] AI 윤리 캠페인위원', name: '연동 테스트', email: 'test@kaiec.kr',
-             phone: '010-0000-0000', job: '테스트', org: '', motive: '취업·이직 경쟁력', purpose: '테스트 자기소개'});
+  var r = saveJoin_({ type: 'join', course: '[KAIEC 참여] AI 윤리 캠페인위원', name: '연동 테스트', email: 'test@kaiec.kr',
+    phone: '010-0000-0000', job: '테스트', org: '', motive: '테스트', purpose: '테스트 자기소개' });
+  if (r === 'duplicate') r = 'duplicate (2분 안에 같은 테스트를 다시 실행한 것이라 기록하지 않음. 정상)';
+  Logger.log('testJoin: ' + r);
+  return r;
 }
 
-──────────────── 여기까지 복사 ────────────────
+/** 양성과정 신청 흐름 테스트(시트에 테스트 줄 1개 + 관리자 알림). 확인 뒤 줄을 지우십시오 */
+function testApply() {
+  var r = saveApply_({ course: 'AI윤리전문가 양성과정', name: '연동 테스트', phone: '010-0000-0000', email: 'test@kaiec.kr', job: '테스트', purpose: '이력·커리어에 추가' });
+  if (r === 'duplicate') r = 'duplicate (2분 안에 같은 테스트를 다시 실행한 것이라 기록하지 않음. 정상)';
+  Logger.log('testApply: ' + r);
+  return r;
+}
 
-[2] 편집기 상단의 함수 선택 칸(doPost라고 보이는 곳)에서 testWrite 를 고르고 [실행]을 누릅니다.
-    권한 창이 뜨면 계정 선택 → 고급 → "...(안전하지 않음)으로 이동" → 허용.
-    실행 로그에 오류가 없고 시트 '접수' 탭에 "연동 테스트" 줄이 생기면 됩니다.
-    (doPost 나 doGet 을 직접 실행하면 "Cannot read properties of undefined (reading 'parameter')"
-     오류가 나는데, 이건 사이트에서 보내는 데이터 없이 실행해서 나는 정상 오류입니다.)
-
-[3] [배포] → [배포 관리] → 활성 배포(현재 사이트가 쓰는 주소: AKfycbzgaRE… 로 시작) 오른쪽 연필(수정)
-    → 버전 칸에서 "새 버전" 선택 → [배포]   ← 이게 꼭 필요합니다 (주소는 그대로 유지)
-    "새 배포"를 만들면 주소가 바뀌어 사이트(build.py의 SHEET_WEBHOOK)도 고쳐야 하니 쓰지 마세요.
-
-[4] 확인 방법: 브라우저 주소창에 /exec 주소를 열었을 때
-    "KAIEC 접수 수신 대기 중 (ok)" 라고 나오면 새 코드가 배포된 것입니다.
-    ("Script function not found: doGet" 이 나오면 아직 옛 버전입니다 → 3번 다시)
-
-[5] 사이트(kaiec.kr/expert-apply/)에서 테스트 접수 → 시트 '접수' 탭 + 알림 메일 확인.
-    kaiec.kr/join/ 에서 참여 신청 테스트 → 시트 하단 '위원 신청' 탭(자동 생성) + 알림 메일 확인.
-
-※ 실제 접수가 쌓이는 파일: "AI윤리전문가 1기 접수명단 (실제 접수, 스크립트 연결)"
-   https://docs.google.com/spreadsheets/d/1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs/
-   (스크립트 프로젝트가 이 파일에 연결되어 있음. 첫 탭이 아니라 '접수' 탭을 볼 것.
-    같은 이름이던 1oahWRau… 파일은 테스트 기록만 있어 '(구)'로 이름을 바꿔 둠)
-
-═══════════════════════════════════════════════════════════════
- (선택) 기록 파일을 1oahWRau… 시트로 바꾸고 싶을 때: 5차 코드
-   지정한 시트(SHEET_ID)에만 기록하고, migrateOld 로 예전 시트 기록을 옮깁니다.
-   적용 순서: Code.gs 전체 교체 → 저장 → migrateOld 1회 실행 → 배포 관리 → 새 버전
-═══════════════════════════════════════════════════════════════
-
-──────────────── 여기부터 복사 (5차) ────────────────
-
-var SHEET_ID = '1oahWRauDAMnUkySjrl1MBhJQDR1ThOYpAXBFOldrUSA';   // 접수가 기록되는 스프레드시트 (이 파일에만 기록)
-var OLD_ID   = '1H-R2a6Q1fmoetA7hFo6KrF2NkzSWC9ugiFSUoKkdHcs';   // 예전에 기록되던 시트 (migrateOld 로 옮길 때만 사용)
-var NOTIFY   = 'kaiec.korea@gmail.com, skkc.office@gmail.com';   // 접수 알림 메일 (쉼표로 추가 가능)
-var COLS     = ['접수일시', '응시 과정', '성명', '휴대전화', '이메일', '직업/활동 분야'];
+/* ═════════════════════════ 시트 · 공통 ═════════════════════════ */
 
 function getSs_() {
-  return SpreadsheetApp.openById(SHEET_ID);
+  var ss = null;
+  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) { ss = null; }
+  return ss || SpreadsheetApp.openById(SHEET_ID);
 }
 
-function getSheet_() {
-  var ss = getSs_();
-  var sh = ss.getSheetByName('접수') || ss.insertSheet('접수');
+function tab_(ss, name, cols) {
+  var sh = ss.getSheetByName(name) || ss.insertSheet(name);
   if (sh.getLastRow() === 0) {
-    sh.appendRow(COLS);
+    sh.appendRow(cols);
     sh.setFrozenRows(1);
+    if (name === JOIN_SHEET) { try { sh.setColumnWidth(9, 420); sh.setColumnWidth(10, 260); } catch (e) { /* 무시 */ } }
   }
   return sh;
 }
 
-// 1행 제목을 읽어 열 위치를 찾습니다 (열 순서가 달라도 그대로 동작)
-function cols_(sh) {
-  var head = sh.getRange(1, 1, 1, Math.max(6, sh.getLastColumn())).getValues()[0];
-  function idx(name, fallback) { var i = head.indexOf(name); return i >= 0 ? i : fallback; }
-  return { n: head.length, date: idx('접수일시', 0), course: idx('응시 과정', 1), name: idx('성명', 2),
-           phone: idx('휴대전화', 3), email: idx('이메일', 4), job: idx('직업/활동 분야', 5) };
+function headRow_(sh) {
+  var w = Math.max(1, sh.getLastColumn());
+  return sh.getRange(1, 1, 1, w).getValues()[0].map(function (v) { return String(v == null ? '' : v).trim(); }).filter(function (v, i, arr) {
+    // 뒤쪽의 빈 제목은 버림(가운데 빈 칸은 자리 유지)
+    for (var j = i; j < arr.length; j++) if (arr[j]) return true;
+    return false;
+  });
 }
 
-// 같은 사람이 2분 안에 두 번 들어오면(새로고침 등) 한 번만 기록
-function isDuplicate_(sh, c, d) {
-  var last = sh.getLastRow();
-  if (last < 2) return false;
-  var n = Math.min(20, last - 1);
-  var rows = sh.getRange(last - n + 1, 1, n, c.n).getValues();
-  var now = new Date().getTime();
-  for (var i = 0; i < rows.length; i++) {
-    var t = rows[i][c.date] instanceof Date ? rows[i][c.date].getTime() : 0;
-    if (rows[i][c.name] === (d.name || '') && rows[i][c.email] === (d.email || '') && now - t < 120000) return true;
-  }
-  return false;
-}
-
-function appendRow_(sh, c, when, d) {
-  var row = [];
-  for (var i = 0; i < c.n; i++) row.push('');
-  row[c.date] = when; row[c.course] = d.course || ''; row[c.name] = d.name || '';
-  row[c.phone] = d.phone || ''; row[c.email] = d.email || ''; row[c.job] = d.job || '';
-  sh.appendRow(row);
-}
-
-function saveAndNotify_(d) {
-  var sh = getSheet_();
-  var c = cols_(sh);
-  if (isDuplicate_(sh, c, d)) return 'duplicate';
-  appendRow_(sh, c, new Date(), d);
-  MailApp.sendEmail(NOTIFY,
-    '[AI윤리전문가 1기 응시] ' + (d.name || '') + ' · ' + (d.course || ''),
-    '새 응시 접수가 등록되었습니다.\n\n' +
-    '응시 과정 : ' + (d.course || '') + '\n성명 : ' + (d.name || '') +
-    '\n휴대전화 : ' + (d.phone || '') + '\n이메일 : ' + (d.email || '') +
-    '\n직업/활동 분야 : ' + (d.job || '') +
-    '\n\n접수 명단 시트:\nhttps://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit\n');
-  return 'ok';
+function sheetUrl_(ss, sh) {
+  var gid = 0;
+  try { gid = sh.getSheetId(); } catch (e) { gid = 0; }
+  return 'https://docs.google.com/spreadsheets/d/' + ss.getId() + '/edit#gid=' + gid;
 }
 
 function logError_(err, raw) {
   try {
     var ss = getSs_();
     var log = ss.getSheetByName('오류로그') || ss.insertSheet('오류로그');
-    log.appendRow([new Date(), String(err), raw || '']);
-  } catch (e2) {}
+    log.appendRow([new Date(), String(err && err.message ? err.message : err), String(raw || '').slice(0, 1500)]);
+  } catch (e2) { /* 무시 */ }
 }
 
-// 사이트는 GET(주소에 데이터)으로 보냅니다. 파라미터가 없으면 상태 확인 문구만 보여줍니다.
-function doGet(e) {
-  var p = (e && e.parameter) || {};
-  if (p.name || p.email) {
-    try { return ContentService.createTextOutput(saveAndNotify_(p)); }
-    catch (err) { logError_(err, JSON.stringify(p)); return ContentService.createTextOutput('error: ' + err); }
-  }
-  return ContentService.createTextOutput('KAIEC 접수 수신 대기 중 (ok) / 기록 시트: ' + SHEET_ID);
+function str_(v) { return String(v == null ? '' : v).trim(); }
+function lower_(v) { return str_(v).toLowerCase(); }
+function stamp_(d) { return Utilities.formatDate(d, TZ, 'yyyy-MM-dd HH:mm'); }
+function kb_(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + 'MB' : Math.max(1, Math.round(n / 1024)) + 'KB'; }
+function errText_(err) { return String(err && err.message ? err.message : err); }
+function cleanName_(v) {
+  var s = String(v == null ? '' : v).replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim();
+  s = s.replace(/\s*님$/, '').trim();
+  return s.length > 40 ? s.slice(0, 40) : s;
+}
+function esc_(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-// 예전 방식(POST)으로 들어오는 경우도 그대로 받습니다.
-function doPost(e) {
-  try {
-    var d = {};
-    try { d = JSON.parse(e.postData.contents); } catch (err) { d = (e && e.parameter) || {}; }
-    return ContentService.createTextOutput(saveAndNotify_(d));
-  } catch (err) {
-    logError_(err, e && e.postData ? e.postData.contents : '');
-    return ContentService.createTextOutput('error: ' + err);
-  }
-}
+──────────────── 여기까지 복사 ────────────────
 
-// 편집기에서 이 함수를 실행하면 테스트 줄 1개 + 알림 메일 (권한 승인용)
-function testWrite() {
-  saveAndNotify_({course: 'AI윤리전문가 2급', name: '연동 테스트', phone: '010-0000-0000',
-                  email: 'test@kaiec.kr', job: '테스트'});
-}
+[2] 설치 순서 (10분)
 
-// 편집기에서 한 번만 실행: 예전 시트(OLD_ID)의 '접수' 탭 기록을 이 시트로 복사합니다 (이미 있는 줄은 건너뜀)
-function migrateOld() {
-  var src = SpreadsheetApp.openById(OLD_ID).getSheetByName('접수');
-  if (!src || src.getLastRow() < 2) { Logger.log('옮길 기록 없음'); return; }
-  var sv = src.getDataRange().getValues();
-  var sh = getSheet_();
-  var c = cols_(sh);
-  var existing = {};
-  var tv = sh.getDataRange().getValues();
-  for (var i = 1; i < tv.length; i++) {
-    var t = tv[i][c.date] instanceof Date ? tv[i][c.date].getTime() : String(tv[i][c.date]);
-    existing[tv[i][c.name] + '|' + tv[i][c.email] + '|' + t] = true;
-  }
-  var head = sv[0];
-  function col(name) { return head.indexOf(name); }
-  var moved = 0;
-  for (var r = 1; r < sv.length; r++) {
-    var row = sv[r];
-    var when = row[col('접수일시')];
-    var key = row[col('성명')] + '|' + row[col('이메일')] + '|' + (when instanceof Date ? when.getTime() : String(when));
-    if (existing[key] || !row[col('성명')]) continue;
-    appendRow_(sh, c, when, { course: row[col('응시 과정')], name: row[col('성명')], phone: row[col('휴대전화')],
-                              email: row[col('이메일')], job: row[col('직업/활동 분야')] });
-    existing[key] = true; moved++;
-  }
-  Logger.log('옮긴 줄: ' + moved);
-}
+  1. skkc.office@gmail.com 으로 로그인 → 시트 "AI윤리전문가 1기 접수명단" 열기
+     → 메뉴 [확장 프로그램 > Apps Script]
+  2. 왼쪽 Code.gs 클릭 → 편집창에서 Ctrl+A → Delete → 위 [1] 의 코드를 전부 붙여넣기 → Ctrl+S
+     (파일 맨 위 SHEET_ID · NOTIFY · MAIL 설정은 이미 맞게 들어 있습니다)
+  3. 위쪽 함수 선택 상자에서 checkSetup 선택 → [실행]
+     → 처음 한 번 "권한 검토" 창: 계정 선택 → 고급 → (안전하지 않은 페이지로) 이동 → 허용
+        (스프레드시트 · 지메일(별칭 조회, 발송) · 드라이브(안내서 PDF 읽기) 권한)
+     → 아래 실행 로그에 점검 결과 7줄이 나옵니다. 아래 [3] 으로 확인.
+  4. 활동 안내서 PDF 올리기: skkc.office 계정 구글 드라이브(어느 폴더든)에
+        "한국AI윤리위원회(KAIEC) AI윤리 캠페인위원 활동 안내서.pdf"   (관리자 자료 폴더의 활동 안내서 PDF 그대로)
+     를 올립니다. 파일 이름에 '캠페인위원' 이 들어 있으면 스크립트가 자동으로 찾습니다.
+     → checkSetup 다시 실행 → "활동 안내서 PDF: 정상 ('…안내서.pdf', 179KB)" 확인
+  5. previewMails 실행 → kaiec.korea@gmail.com 으로 견본 3통(제안 메일 · 접수 확인 메일 · 관리자 알림)이 갑니다.
+     PC 와 휴대전화에서 모양 · 첨부 · 발신 주소(contact@kaiec.kr)를 확인합니다. 시트에는 아무것도 쓰지 않습니다.
+  6. 배포: [배포 > 배포 관리] → 연필(수정) → 버전: "새 버전" → [배포]
+     ※ '새 배포'를 누르면 주소(/exec)가 바뀌어 사이트가 옛 주소로 계속 보내게 되므로 반드시 '배포 관리 > 새 버전' 입니다.
+  7. 사이트 점검: https://kaiec.kr/join/ 에서 AI 윤리 캠페인위원으로 테스트 제출
+     (이메일 test@kaiec.kr 로 하면 지원자 메일은 보내지 않고 시트 '지원자 메일' 칸에 "건너뜀: 테스트 · 내부 주소" 만 남습니다.
+      본인 주소로 제출하면 제안 메일이 실제로 옵니다)
+     → 시트 '위원 신청' 탭에 줄 추가 + 관리자 알림 메일 확인 → 테스트 줄은 지웁니다.
 
-──────────────── 여기까지 복사 (5차) ────────────────
+
+[3] checkSetup 실행 로그 읽는 법
+
+  · 접수 시트: AI윤리전문가 1기 접수명단 (1H-…)            ← 시트 연결 정상
+  · '접수' 탭 N건, '위원 신청' 탭 N건 (열 제목 확인 · 빠진 열 추가)
+  · 실행 계정: skkc.office@gmail.com
+  · 지원자 메일 발신 주소: contact@kaiec.kr (공식 메일 별칭 등록됨) · 답장 contact@kaiec.kr
+        ↳ "예비 주소. contact@kaiec.kr 별칭이 아직 없음" 이 나오면 [4] 참고. 발송은 되지만 발신 주소가 kaiec.korea@gmail.com 로 나갑니다.
+  · 활동 안내서 PDF: 정상 ('…활동 안내서.pdf', 179KB)     ← "확인 필요" 면 [2]-4 대로 드라이브에 올린 뒤 재실행
+  · 오늘 남은 메일 발송 가능 수: N통                        ← [5] 참고
+  · 지원자 자동 메일: 켜짐 · 캠페인위원 제안 메일: 켜짐 · 관리자 알림: kaiec.korea@gmail.com, skkc.office@gmail.com
+
+
+[4] 발신 주소 contact@kaiec.kr
+
+  실행 계정(skkc.office@gmail.com) 지메일에 contact@kaiec.kr 이 '다른 주소에서 메일 보내기' 별칭으로 등록되어 있어야
+  지원자 메일이 "한국AI윤리위원회 <contact@kaiec.kr>" 로 나갑니다.
+  등록: 지메일 톱니 > 모든 설정 보기 > 계정 및 가져오기 > "다른 주소에서 메일 보내기" > 다른 이메일 주소 추가
+        → 이름 한국AI윤리위원회, 주소 contact@kaiec.kr, (별칭으로 취급 체크) → 다음 → SMTP 정보 입력 → 확인 메일의 코드 입력
+  (비밀번호 · SMTP 정보는 관리자가 직접 입력합니다)
+  별칭이 없으면 kaiec.korea@gmail.com 별칭 → 그것도 없으면 실행 계정 주소 순서로 자동 선택하고, 답장 주소는 항상 contact@kaiec.kr 입니다.
+
+
+[5] 발송 한도와 안전장치
+
+  · 지메일 계정의 Apps Script 발송 한도는 하루 100통(수신자 기준, 구글 워크스페이스 계정이면 1,500통)입니다.
+    신청 1건 = 지원자 1통 + 관리자 2통(NOTIFY 2주소) = 3통 → 하루 30건 안팎까지 자동 발송됩니다.
+    남은 한도가 10통 이하로 내려가면 지원자 메일은 보류하고(시트 '지원자 메일' 칸에 "보류: 오늘 발송 한도 부족…"),
+    관리자 알림은 계속 갑니다. 보류된 분에게는 다음 날 previewMails 로 문안을 받아 직접 보내 주십시오.
+  · 같은 이메일 + 같은 참여 구분이 2분 안에 두 번 들어오면(새로고침 등) 한 번만 기록합니다.
+  · 같은 이메일에 제안 메일은 한 번만 보냅니다. 다시 신청해도 "건너뜀: 같은 이메일에 제안 메일을 이미 보냄" 으로 기록만 남습니다.
+  · test@kaiec.kr, no-reply, example.com 같은 주소에는 지원자 메일을 보내지 않습니다(MAIL.SKIP_EMAIL).
+  · 지원자 메일이 실패해도 시트 기록과 관리자 알림은 진행되고, '지원자 메일' 칸에 "실패: …", '오류로그' 탭에 원인이 남습니다.
+  · 관리자 알림은 발신 이름 "KAIEC 접수 알림"(실행 계정 주소)으로 갑니다.
+
+
+[6] 설정 바꾸기 (Code.gs 맨 위 MAIL 블록, 바꾼 뒤 저장 → 배포 관리 > 새 버전)
+
+  MAIL.APPLICANT_ON: false      → 지원자 자동 메일 전부 끔(관리자 알림만)
+  MAIL.CAMPAIGN_PROPOSAL: false → 캠페인위원 지원자에게도 제안 메일 대신 접수 확인 메일
+  MAIL.GUIDE_FILE_ID: '…'       → 안내서 PDF 를 드라이브 파일 ID 로 고정(이름 검색 대신)
+  MAIL.SKIP_EMAIL               → 자동 메일을 보내지 않을 주소 규칙
+  MAIL.QUOTA_RESERVE: 10        → 한도 보류 기준
+  NOTIFY                        → 관리자 알림 받을 주소(쉼표로 추가)
+  제안 메일 혜택 문안은 BENEFITS 배열(5항목), 접수 확인 메일 절차는 ackMail_ 의 steps 에 있습니다.
+
+
+[7] 캠페인위원 제안메일 자동 발송(v1.0.0, 구글 폼용)과의 관계
+
+  · v1.0.0 은 구글 폼 응답에 제안 메일을 보내는 별도 프로젝트로, 설치하지 않았습니다.
+  · 6차는 홈페이지 신청서(/join/)로 들어온 캠페인위원 지원자에게 같은 문안의 제안 메일을 접수 즉시 보냅니다.
+    홈페이지 신청만 받는다면 v1.0.0 은 설치하지 않아도 됩니다. 구글 폼도 함께 쓴다면 v1.0.0 을 그 시트에 설치합니다(두 경로가 겹치지 않음).
+
+
+[8] 문제가 생기면
+
+  · 알림은 오는데 지원자 메일이 없다 → 시트 '위원 신청' 탭 '지원자 메일' 칸의 문구가 이유입니다(건너뜀 · 보류 · 실패 · 꺼짐).
+  · "권한" 오류 → checkSetup 을 편집기에서 다시 실행해 권한을 허용합니다.
+  · 사이트 제출 후 시트에 아무것도 없다 → 배포가 '새 배포'로 되어 주소가 바뀌었는지 [배포 관리]에서 확인(사이트는
+    build.py 의 SHEET_WEBHOOK 주소로 보냅니다). 편집기에서 testJoin 을 실행하면 시트 기록 · 관리자 알림 경로를 바로 점검할 수 있습니다.
+  · 옛 4차 코드로 되돌리려면 이 파일의 이전 판(git 기록, 2026.09.13)에서 꺼내 붙여넣고 새 버전 배포.

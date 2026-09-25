@@ -4537,8 +4537,10 @@ def build_join():
         ("pen-line", "올바른 활용 기준 전하기", "보고서·과제·회의록에 AI를 쓸 때 지켜야 할 기준과 무분별한 사용의 문제를 주변에 전합니다. 전문 지식이 필요한 일이 아닙니다."),
         ("clock", "가볍게, 꾸준히", "주 1~2시간이면 충분합니다. 활동 방법과 자료는 위촉 후 온라인으로 안내하고, 활동 실적은 활동증명서와 인센티브로 돌려드립니다."),
     ]
+    # 카드 머리: 아이콘(왼쪽)과 순번(오른쪽 큼직한 연한 숫자)을 한 줄에 (번호 배지와 아이콘이 위아래로 쌓여 어색하던 배치를 정리 2026.09.25)
     do_html = "".join(
-        f'<article class="card reveal"><span class="card-num">0{i}</span><div class="card-icon"><i data-lucide="{ic}"></i></div><h3>{t}</h3><p>{d}</p></article>'
+        f'<article class="card do-card reveal"><div class="do-head"><div class="card-icon card-icon--teal"><i data-lucide="{ic}"></i></div>'
+        f'<span class="do-num" aria-hidden="true">0{i}</span></div><h3>{t}</h3><p>{d}</p></article>'
         for i, (ic, t, d) in enumerate(DO, 1))
     OTHERS = [
         ("briefcase", "운영위원", "위원회 사업·캠페인·행사를 함께 기획하고 운영합니다. 경력 요건 없음"),
@@ -4582,10 +4584,10 @@ def build_join():
       <div class="wrap page-hero-inner">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; 위원 참여</p>
         <span class="join-eyebrow">JOIN KAIEC · 위원 참여</span>
-        <h1>AI 윤리를 온라인에 알리는 사람, <br class="br-pc">AI 윤리 캠페인위원을 모집합니다</h1>
-        <p>보고서도 과제도 회의록도 AI로 만드는 시대, 무분별한 AI 사용을 막고 바르게 활용하는 문화는 알리는 사람이 많을수록 빨리 퍼집니다.
-           한국AI윤리위원회(KAIEC)의 AI 윤리 캠페인위원은 SNS·블로그·커뮤니티에서 올바른 AI 활용을 알리는 온라인 활동입니다.
-           전공·경력·나이 제한 없이, 비용 없이 참여하고, 위촉되면 홈페이지 공식 위원 명단에 이름이 오릅니다.</p>
+        <h1>AI 시대의 올바른 문화를 함께 만드는 사람, <br class="br-pc">KAIEC AI 윤리 캠페인위원을 모집합니다</h1>
+        <p>보고서도, 과제도, 업무도 AI로 하는 시대. AI를 잘 쓰는 것만큼 바르게 쓰는 문화가 중요합니다.
+           한국AI윤리위원회(KAIEC) AI 윤리 캠페인위원은 SNS·블로그·커뮤니티에서 올바른 AI 활용 문화를 알리는 온라인 활동입니다.
+           전공·경력·나이 제한 없이 누구나 무료로 참여할 수 있으며, 위촉 시 KAIEC 공식 위원으로 홈페이지에 등재됩니다.</p>
         <div class="hero-hooks">
           <span><i data-lucide="check"></i>전공·경력·나이 무관</span>
           <span><i data-lucide="check"></i>100% 온라인·재택</span>

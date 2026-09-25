@@ -1898,3 +1898,10 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
 .join-grid--3 .join-item{flex-direction:column;align-items:flex-start;gap:12px}
 .join-grid--3 .join-go{margin-top:2px}
 @media (max-width:860px){.join-grid--3{grid-template-columns:1fr}}
+/* join 2026.09.25: '이런 활동을 합니다' 카드 머리 : 아이콘과 순번을 한 줄에 */
+.do-card{position:relative}
+.do-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.do-head .card-icon{margin-bottom:0}
+.do-num{font-size:34px;font-weight:800;letter-spacing:-.05em;line-height:1;color:#CBDAF0;font-variant-numeric:tabular-nums}
+.do-card:hover .do-num{color:#9FB9E4}
+@media (max-width:860px){.do-head{margin-bottom:14px}.do-num{font-size:28px}}
