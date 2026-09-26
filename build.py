@@ -1978,11 +1978,11 @@ def build_members():
       var m=p.m,title=titleOf(p),unit=unitOf(p);
       if(!ov){
         ov=document.createElement('div');ov.className='mp-overlay';ov.hidden=true;
-        ov.innerHTML='<div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'
-          +'<button type="button" class="mp-close" aria-label="닫기">'+ICON_X+'</button><div class="bc-body"></div></div>';
+        ov.innerHTML='<div class="mp-wrap"><div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'
+          +'<div class="mp-bar"><button type="button" class="mp-close" aria-label="닫기">'+ICON_X+'</button></div><div class="bc-body"></div></div></div>';
         document.body.appendChild(ov);
         ov.addEventListener('click',function(e){
-          if(e.target===ov||e.target.closest('.mp-close')){closeP();return}
+          if(e.target===ov||e.target.classList.contains('mp-wrap')||e.target.closest('.mp-close')){closeP();return}
           var b=e.target.closest('[data-act]');if(!b)return;
           if(b.getAttribute('data-act')==='img')saveImage(b);else shareCard(b);
         });
@@ -2027,7 +2027,7 @@ def build_members():
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
         +'<p class="bc-note">'+TAGLINE+'</p>';
       lastFocus=document.activeElement;
-      ov.hidden=false;ov.querySelector('.mp-dialog').scrollTop=0;document.documentElement.classList.add('mp-lock');
+      ov.hidden=false;ov.scrollTop=0;document.documentElement.classList.add('mp-lock');
       requestAnimationFrame(function(){ov.classList.add('is-open')});
       if(!quiet)ov.querySelector('.mp-close').focus();
       if(history.replaceState)history.replaceState(null,'','#'+curId);

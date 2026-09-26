@@ -65,6 +65,9 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '한효주', en: 'Han Hyo-ju', code: 'HHJ6913', email: 'coolomo@gmail.com', since: '2026.09', field: 'AI 교육 · 차세대 인재 육성', photo: 'han-hyoju.jpg' },
   { name: '임호용', en: 'Lim Ho-yong', code: 'LHY6444', email: 'imyong7@hanmail.net', since: '2026.09', field: '생성형 AI 활용 · 실무 역량 강화', photo: 'lim-hoyong.jpg' },
   { name: '서완석', en: 'Seo Wan-seok', code: 'SWS7351', email: 'redoxi@naver.com', since: '2026.09', field: 'AI · 디지털 교육 혁신', photo: 'seo-wanseok.jpg' },
+  { name: '최재영', en: 'Choi Jae-young', code: 'CJY1882', email: 'kthigh11@naver.com', since: '2026.09', field: 'AI 윤리 · 개인정보 · 저작권 · 정보보안', photo: 'choi-jaeyoung.jpg' },
+  { name: '이찬미', en: 'Lee Chan-mi', code: 'LCM8153', email: 'chanchi-333@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI', photo: 'lee-chanmi.jpg' },
+  { name: '지하은', en: 'Ji Ha-eun', code: 'JHE6954', email: 'jihaeun070904@naver.com', since: '2026.09', field: '생성형 AI 활용', photo: 'ji-haeun.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 

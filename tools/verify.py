@@ -334,6 +334,31 @@ for js in ("members-data.js", "experts-data.js", "history-data.js"):
             probs.append(f"assets/js/{js}: {', '.join(found)}")
 check("기수(1기)·모집 중·접수 마감·D-day·NEW 배지 표기 미사용", probs)
 
+# ---------------------------------------------------------------- 7-3. 위원 명단 데이터 · 디지털 명함 (2026.09.26)
+# 사진 파일이 실제로 있는지, 위원 코드(이니셜+휴대전화 뒷자리 4개)가 겹치지 않는지 확인합니다.
+# 명함 팝업은 상자 안쪽 스크롤(max-height)이 아니라 바깥 배경이 스크롤되는 구조여야 아래 글씨가 잘리지 않습니다.
+probs = []
+mjs = read(os.path.join(BASE, "assets", "js", "members-data.js"))
+mjs_nc = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", mjs, flags=re.S))
+for ph in re.findall(r"photo:\s*'([^']+)'", mjs_nc):
+    if not os.path.isfile(os.path.join(BASE, "assets", "img", "members", ph)):
+        probs.append(f"members-data.js: 사진 파일 없음 assets/img/members/{ph}")
+codes = re.findall(r"code:\s*'([^']*)'", mjs_nc)
+for c in codes:
+    if not re.fullmatch(r"[A-Z]{2,4}\d{4}", c):
+        probs.append(f"members-data.js: 위원 코드 형식 이상 {c!r} (영문 이니셜 대문자 + 숫자 4개)")
+dup = sorted({c for c in codes if codes.count(c) > 1})
+if dup:
+    probs.append(f"members-data.js: 위원 코드 중복 {', '.join(dup)}")
+members_html = read(pages["members.html"])
+if "mp-wrap" not in members_html or "mp-bar" not in members_html:
+    probs.append("members: 명함 팝업 바깥 스크롤 구조(mp-wrap·mp-bar) 없음")
+css = read(os.path.join(BASE, "assets", "css", "style.css"))
+mdlg = re.search(r"\.mp-dialog\{[^}]*\}", css)
+if not mdlg or "max-height" in mdlg.group(0) or "overflow:auto" in mdlg.group(0):
+    probs.append("style.css: .mp-dialog 에 max-height/overflow:auto 가 다시 들어옴 (명함 하단 잘림 재발)")
+check("위원 명단 데이터(사진·위원 코드) · 디지털 명함 팝업 구조", probs)
+
 # ---------------------------------------------------------------- 8. 배포 파일
 probs = []
 if not os.path.isfile("CNAME") or read("CNAME").strip() != "kaiec.kr":

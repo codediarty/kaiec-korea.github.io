@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=833f1543b5">
+<link rel="stylesheet" href="/assets/css/style.css?v=7eefc0046a">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -204,10 +204,10 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=833f1543b5"></script>
-  <script src="/assets/js/members-data.js?v=833f1543b5"></script>
-  <script src="/assets/js/qrcode.min.js?v=833f1543b5"></script>
-  <script src="/assets/js/experts-data.js?v=833f1543b5"></script>
+  <script src="/assets/js/main.js?v=7eefc0046a"></script>
+  <script src="/assets/js/members-data.js?v=7eefc0046a"></script>
+  <script src="/assets/js/qrcode.min.js?v=7eefc0046a"></script>
+  <script src="/assets/js/experts-data.js?v=7eefc0046a"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -260,7 +260,7 @@
         +(NOTE[g]?'<p class="grp-note">'+NOTE[g]+'</p>':'');
     }
     function avatar(m){
-      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=896116c9" alt="'+m.name+'" loading="lazy"></div>';
+      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=c9bf5fdd" alt="'+m.name+'" loading="lazy"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="member-avatar">'+initial+'</div>';
     }
@@ -388,7 +388,7 @@
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
     function bigAvatar(m){
-      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=896116c9" alt="'+m.name+' 사진"></div>';
+      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=c9bf5fdd" alt="'+m.name+' 사진"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
     }
@@ -621,11 +621,11 @@
       var m=p.m,title=titleOf(p),unit=unitOf(p);
       if(!ov){
         ov=document.createElement('div');ov.className='mp-overlay';ov.hidden=true;
-        ov.innerHTML='<div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'
-          +'<button type="button" class="mp-close" aria-label="닫기">'+ICON_X+'</button><div class="bc-body"></div></div>';
+        ov.innerHTML='<div class="mp-wrap"><div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'
+          +'<div class="mp-bar"><button type="button" class="mp-close" aria-label="닫기">'+ICON_X+'</button></div><div class="bc-body"></div></div></div>';
         document.body.appendChild(ov);
         ov.addEventListener('click',function(e){
-          if(e.target===ov||e.target.closest('.mp-close')){closeP();return}
+          if(e.target===ov||e.target.classList.contains('mp-wrap')||e.target.closest('.mp-close')){closeP();return}
           var b=e.target.closest('[data-act]');if(!b)return;
           if(b.getAttribute('data-act')==='img')saveImage(b);else shareCard(b);
         });
@@ -670,7 +670,7 @@
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
         +'<p class="bc-note">'+TAGLINE+'</p>';
       lastFocus=document.activeElement;
-      ov.hidden=false;ov.querySelector('.mp-dialog').scrollTop=0;document.documentElement.classList.add('mp-lock');
+      ov.hidden=false;ov.scrollTop=0;document.documentElement.classList.add('mp-lock');
       requestAnimationFrame(function(){ov.classList.add('is-open')});
       if(!quiet)ov.querySelector('.mp-close').focus();
       if(history.replaceState)history.replaceState(null,'','#'+curId);
