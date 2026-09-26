@@ -1070,7 +1070,8 @@ html.mp-lock{overflow:hidden}
 
 /* ═══════════ AI윤리전문가 응시 접수 폼 (expert-apply.html) ═══════════ */
 .gform-bg{background:linear-gradient(180deg,#EAF0FA 0%,#F5F8FD 320px);padding-top:40px}
-.gform-wrap{max-width:788px;margin:0 auto;padding:0 22px}
+.gform-wrap{max-width:788px;margin:0 auto;padding:0 22px;
+  background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}   /* 옛 구글폼 임베드용 흰 상자(위 .gform-wrap)를 끄고, 카드가 바탕 위에 바로 놓이게 (2026.09.26) */
 .gform-wrap [hidden]{display:none!important}
 .gform-card{background:#fff;border:1px solid var(--gray-200);border-radius:14px;
   padding:30px 34px;margin-bottom:16px;box-shadow:0 1px 3px rgba(15,42,95,.05)}
@@ -2140,4 +2141,22 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
   .ea-get-grid{grid-template-columns:repeat(2,1fr)}
   .ea-sum{padding:14px 15px}
   .ea-stat small{display:block;margin:3px 0 0}
+}
+
+/* ---------- 위원 참여 신청(/join/, 2026.09.26 신청서를 히어로 바로 아래로) ---------- */
+.join-hero-inner{padding-block:56px 50px}
+.join-apply{padding-top:44px}
+.ja-head{margin:0 0 16px;text-align:center}
+.ja-head .gform-kicker{margin-bottom:10px}
+.ja-head h2{font-size:26px;letter-spacing:-.035em;color:var(--ink);margin-bottom:6px}
+.ja-head p{font-size:14.5px;color:var(--gray-600);word-break:keep-all}
+.choice--slim{padding:14px 18px}
+.choice--slim .choice-body{gap:3px}
+.choice--slim .choice-body > span:not(.choice-badge){font-size:13.5px;color:var(--gray-600);line-height:1.55;word-break:keep-all}
+.ja-cheer{margin:20px 0 12px;text-align:center;font-size:14px;font-weight:700;color:var(--navy);word-break:keep-all}
+#secPriv .trust-row{margin-top:16px}
+@media (max-width:600px){
+  .join-hero-inner{padding-block:40px 38px}
+  .join-apply{padding-top:32px}
+  .ja-head h2{font-size:22px}
 }
