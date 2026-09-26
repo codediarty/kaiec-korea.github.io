@@ -4239,96 +4239,74 @@ def build_expert_apply():
     - 2026.09.21 통합: 과정 선택 섹션을 없애고(과정 하나) 과정 요약 카드 → 신청 목적(자기설득) → 신청자 정보 → 절차·이수 평가 안내 → 개인정보 동의 → 결제
     - 2026.09.22 간소화(구입 유도율): 필수 체크는 개인정보 동의 하나만. 절차 확인 체크와 청약철회 확인 섹션은 이탈 요인이라 폼에서 뺐고(청약철회 조건은 terms.html#refund 와 결제 페이지에서 고지),
       그 자리에 '결제가 왜 성균관컨설팅으로 넘어가는지'를 짧게 설득하는 블록을 넣음. 머리글 통계는 STAT_71(리더 71%가 경력보다 AI 역량), 홈페이지 공식 등록을 머리글·완료 화면에 다시 강조
-    - 제출 시 시트 웹훅으로 접수 기록 + 위원회 알림 메일, 완료 화면에서 결제 페이지로 자동 이동"""
+    - 제출 시 시트 웹훅으로 접수 기록 + 위원회 알림 메일, 완료 화면에서 결제 페이지로 자동 이동
+    - 2026.09.26 부담 줄이기(사용자: 글이 많고 PDF 5권 표지가 '이걸 다 공부해야 하나' 부담): 긴 소개문·학습자료 표지 그림·절차 목록·평가 표·결제 설명 블록 삭제.
+      머리 카드(100% 온라인 · 원하는 시간에 자유롭게 이수 + 한 문장 + 4단계 + 가격) → 이수하면 남는 것 4칸 → STEP 1 신청자 정보 → STEP 2 기대하는 점(선택 칩)
+      → STEP 3 동의(내용은 접어 두기) + 요약·버튼 'AI윤리전문가 시작하기' + 결제 한 줄 안내. 활용 목적은 필수에서 선택으로(시트 '활용 목적' 칸, 추천 위원은 ' / 추천 위원: …'로 이어 붙임)"""
     PURPOSES = [
-        "이력서와 포트폴리오에 AI 윤리 전문 교육 이력(이수증)을 추가하고 싶습니다.",
-        "AI 역량을 증명할 공식 이수증(이수번호 · 홈페이지 공식 등록)을 갖고 싶습니다.",
-        "취업·이직 경쟁력을 높이는 데 활용하고 싶습니다.",
-        "현재 직무에서 AI 윤리 역량을 활용하고 싶습니다.",
-        "기업·기관의 AI 윤리·컴플라이언스 관련 업무에 활용하고 싶습니다.",
-        "무분별한 AI 활용의 문제와 위험성에 관심이 있어 올바른 AI 활용과 윤리를 배우고 싶습니다.",
-        "AI 윤리 전문강사·교육 활동에 관심이 있습니다.",
-        "책임 있는 AI 활용 문화 확산과 AI 윤리 활동에 참여하고 싶습니다.",
-        "연구·교육 분야의 전문 이력으로 활용하고 싶습니다.",
-        "AI 윤리 분야로 전문 활동 영역을 확장하고 싶습니다.",
+        "이력서·포트폴리오에 공식 이수 이력 추가",
+        "취업·이직 경쟁력 강화",
+        "현재 직무에 AI 윤리 역량 활용",
+        "기업·기관 AI 윤리·컴플라이언스 업무",
+        "올바른 AI 활용과 윤리 배우기",
+        "AI 윤리 강사·교육 활동",
+        "책임 있는 AI 문화 확산 참여",
+        "연구·교육 분야 전문 이력",
         "기타",
     ]
     PURPOSE_ITEMS = "".join(
-        f'<label class="check-item"><input type="checkbox" name="purpose" value="{p}">'
-        f'<span class="check-box"></span><span>{p}</span></label>' for p in PURPOSES)
+        f'<label><input type="checkbox" name="purpose" value="{p}"><span>{p}</span></label>' for p in PURPOSES)
     JOBS = "".join(
         f'<label><input type="radio" name="job" value="{j}"><span>{j}</span></label>' for j in [
         "대학생·대학원생", "기업·기관 재직자", "교사·강사", "교수·연구자",
         "취업준비생", "프리랜서·전문직", "사업자·기업 대표", "기타"])
-    USE_CARDS = [
-        ("award", "위원회 공식 이수증", "고유 이수번호가 기재된 「AI윤리전문가 양성과정 이수증」(PDF) 발급"),
-        ("file-search", "홈페이지 공식 등록 · 검색", "이수와 동시에 위원회 홈페이지에 공식 등록되어 기업·기관이 바로 확인"),
-        ("pen-line", "이력서 · 자기소개서 활용 가이드", "이수 이력 표기법과 자기소개서 문장 예시, 면접 답변 포인트를 정리한 이수자 전용 가이드"),
-        ("user-check", "전문위원 등록 신청 자격", "이수 후 전문위원 등록을 신청하면 홈페이지 프로필 공개, 전문강사·자문 활동으로 확장"),
+    STEPS = [
+        ("mouse-pointer-click", "간편 신청", "신청서 작성 후 안전결제"),
+        ("book-open", "핵심 확인", "학습자료로 원하는 시간에"),
+        ("monitor-check", "온라인 평가", f"{EXAM[1]}점 이상 · 재응시 가능"),
+        ("award", "이수 완료", "이수증 + 전문가 등록"),
     ]
-    USE_HTML = "".join(
-        f'<div class="use-card"><i data-lucide="{ic}"></i><strong>{t}</strong><span>{d}</span></div>'
-        for ic, t, d in USE_CARDS)
+    GOAL = ' class="is-goal"'
+    STEPS_HTML = "".join(
+        f'<li{GOAL if i == len(STEPS) - 1 else ""}><span class="ea-step-ic"><i data-lucide="{ic}"></i></span>'
+        f'<b>{t}</b><small>{d}</small></li>' for i, (ic, t, d) in enumerate(STEPS))
+    GETS = [
+        ("award", "공식 이수증", "고유 이수번호 기재"),
+        ("badge-check", "홈페이지 전문가 등록", "이름·이수번호로 확인"),
+        ("file-text", "이력서 활용 가이드", "표기법·자기소개서 예시"),
+        ("user-plus", "전문위원 신청 자격", "강사·자문 활동으로 확장"),
+    ]
+    GETS_HTML = "".join(
+        f'<div><i data-lucide="{ic}"></i><b>{t}</b><span>{d}</span></div>' for ic, t, d in GETS)
 
     body = f"""    <section class="section gform-bg">
       <div class="gform-wrap">
 
-        <div class="gform-card gform-head">
+        <div class="gform-card ea-hero">
           <p class="ref-chip" id="refChip" hidden></p>
-          <span class="gform-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</span>
-          <h1>AI윤리전문가{AIEP_H} 양성과정 신청</h1>
-          <p class="gform-lead">2026년, 기업·기관의 AI 활용 확대와 함께 ‘AI 윤리 전문가’의 역할이 커지고 있습니다.</p>
-          <p>생성형 AI가 기업·기관·학교의 실제 업무 전반으로 확산되면서 저작권, 개인정보, 정보보안,
-             할루시네이션, 편향과 차별, 결과물의 신뢰성과 책임까지 AI 윤리는 중요한 전문 영역으로 자리 잡고 있습니다.</p>
-          <p>AI윤리전문가 양성과정은 이러한 변화에 필요한 AI 윤리 지식과 실무 판단 역량을 위원회 표준교재로 체계적으로 배우고 온라인 이수 평가로 확인하여,
-             이력서와 커리어에 한국AI윤리위원회 공식 「{DOC_FULL}」을 더하는 전문 교육과정입니다.</p>
-          <p>이수와 동시에 <strong>위원회 홈페이지에 AI윤리전문가로 공식 등록</strong>되어 이름과 이수번호로 검색되므로, 기업·기관이 바로 확인할 수 있는 이력이 됩니다.
-             이력서·자기소개서 활용 가이드와 전문위원 등록 신청 자격까지 함께 드립니다.</p>
-          <div class="gform-callout"><i data-lucide="trending-up"></i>
-            <div><strong>{STAT_71["head"]}</strong><br>
-                 {STAT_71["body"]}
-                 <small class="src">{STAT_71["src"]}</small></div></div>
-          <p class="gform-org-note">한국AI윤리위원회 주관 · 성균관컨설팅 교육 운영(접수·결제)</p>
+          <span class="gform-kicker">한국AI윤리위원회 주관</span>
+          <h1>AI윤리전문가{AIEP_H} 양성과정</h1>
+          <p class="ea-promise"><i data-lucide="laptop"></i>100% 온라인 · 원하는 시간에 자유롭게 이수</p>
+          <p class="ea-lead">학습자료로 핵심 내용을 확인하고 온라인 평가를 통과하면<br class="br-pc">
+             <b>공식 이수증 발급 + 홈페이지 전문가 등록</b>까지 한 번에 완료됩니다.</p>
+          <ol class="ea-steps">{STEPS_HTML}</ol>
+          <div class="ea-price">
+            <div class="ea-price-tag"><span class="ap-badge">특별가</span><strong>{won(PRICE)}</strong><s>정가 {won(LIST_PRICE)}</s></div>
+            <a class="btn btn-primary ea-go" href="#secInfo">지금 신청하기 <i data-lucide="arrow-down"></i></a>
+          </div>
+        </div>
+
+        <div class="gform-card ea-gets">
+          <h2>이수하면 이렇게 남습니다</h2>
+          <div class="ea-get-grid">{GETS_HTML}</div>
+          <p class="ea-stat"><i data-lucide="trending-up"></i><span>{STAT_71["head"]}
+            <small>Microsoft · LinkedIn 2024 Work Trend Index</small></span></p>
         </div>
 
         <form id="examForm" novalidate>
 
-          <div class="gform-card" id="secCourse">
-            <div class="gform-sec">SECTION 1</div>
-            <h2>신청 과정</h2>
-            <p class="gform-desc">과정은 하나입니다. 따로 고르실 것 없이 아래 내용을 확인하고 다음 항목으로 넘어가 주세요.</p>
-            <div class="choice-list">
-              <div class="choice is-fixed">
-                <span class="choice-radio is-on" aria-hidden="true"></span>
-                <span class="choice-body">
-                  <span class="choice-badge">{HOOK_ZERO} · {HOOK_REG}</span>
-                  <strong>AI윤리전문가 양성과정</strong>
-                  <span>위원회 표준교재 등 학습자료 5종(PDF)으로 공부하고 온라인 이수 평가({EXAM[0]}문항, {EXAM[1]}점 이상)를 통과하면
-                    한국AI윤리위원회 공식 이수증 발급, 홈페이지 공식 등록, 이력서·자기소개서 활용 가이드까지 한 번에. 전공·경력 제한 없이 전 과정 온라인</span>
-                  <span class="apply-price">
-                    <span class="ap-badge">특별가</span>
-                    <span class="ap-now">{won(PRICE)}</span>
-                    <span class="ap-was">정가 {won(LIST_PRICE)}</span>
-                  </span>
-                  <span class="choice-note">학습자료 5종 + 온라인 이수 평가 {EXAM[0]}문항 + 공식 이수증 + 홈페이지 공식 등록 + 활용 가이드</span>
-                </span>
-              </div>
-            </div>
-            <figure class="mat-figure mat-figure--sm">
-              <img src="assets/img/materials-5set.jpg" alt="결제 즉시 받는 학습자료 5종 표지: 이수 평가 응시 안내, 핵심이론, 실전 모의고사, 정답 및 해설, 실무 도구집" loading="lazy" width="3200" height="861">
-            </figure>
-          </div>
-
-          <div class="gform-card" id="secPurpose">
-            <div class="gform-sec">SECTION 2</div>
-            <h2>신청 및 활용 목적 <span class="req">*</span></h2>
-            <p class="gform-desc">AI윤리전문가 양성과정에 관심을 갖게 된 이유와 활용 목적을 선택해 주세요. 복수 선택할 수 있습니다.</p>
-            <div class="check-grid" id="purposeGrid">{PURPOSE_ITEMS}</div>
-            <p class="err-msg">활용 목적을 하나 이상 선택해 주세요.</p>
-          </div>
-
           <div class="gform-card" id="secInfo">
-            <div class="gform-sec">SECTION 3</div>
+            <div class="gform-sec">STEP 1</div>
             <h2>신청자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
@@ -4339,8 +4317,7 @@ def build_expert_apply():
               <div class="field" id="fEmail">
                 <label for="f-email">이메일 주소 <span class="req">*</span></label>
                 <input id="f-email" type="email" name="email" autocomplete="email" placeholder="example@email.com">
-                <p class="field-hint">학습자료(PDF 5종)가 발송되는 이메일입니다. 결제 때에도 같은 이메일을 입력해 주세요(이수 평가 로그인 아이디가 됩니다).
-                   실제 사용하시는 이메일 주소를 정확하게 입력해 주세요.</p>
+                <p class="field-hint">학습자료와 평가 로그인 안내가 이 주소로 발송됩니다. 결제 때도 같은 이메일을 입력해 주세요.</p>
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fJob">
@@ -4351,72 +4328,38 @@ def build_expert_apply():
             </div>
           </div>
 
-          <div class="gform-card" id="secFlow">
-            <div class="gform-sec">SECTION 4</div>
-            <h2>교육 및 이수 평가 안내</h2>
-            <p class="gform-desc">신청과 결제, 학습과 평가까지 모두 온라인으로 진행됩니다.</p>
-            <ol class="gform-flow">
-              <li>양성과정 신청 (신청서 제출 · 교육비 결제)</li>
-              <li>학습자료 확인</li>
-              <li>자율학습 (표준교재 · 실전 모의고사)</li>
-              <li>평가응시 (홈페이지 상단 [평가응시])</li>
-              <li>이수 기준 충족 ({EXAM[1]}점 이상)</li>
-              <li class="is-final">이수증 발급 · 홈페이지 공식 등록 · 활용 가이드 발송</li>
-            </ol>
-            <p class="gform-body">결제가 끝나면 학습자료(PDF 5종) 내려받기 링크가 이메일로 발송되고, 같은 이메일이 <b>[평가응시] 아이디</b>가 됩니다(비밀번호는 휴대전화 번호 뒤 4자리).</p>
-            <div class="exam-info">
-              <div><span>평가 구성</span>{EXAM[0]}문항 · 4지선다형 · 시험 시간 {EXAM_MIN}분</div>
-              <div><span>이수 기준</span><b>100점 만점에 {EXAM[1]}점 이상</b></div>
-              <div><span>재응시</span>응시 기간({EXAM_WINDOW_DAYS}일) 안에서 기준에 이를 때까지</div>
-            </div>
-
-            <div class="use-block">
-              <div class="use-block-title"><i data-lucide="award"></i> 이수하면 받는 것</div>
-              <div class="use-grid">{USE_HTML}</div>
-            </div>
-          </div>
-
-          <div class="gform-card" id="secPay">
-            <div class="gform-sec">SECTION 5</div>
-            <h2>교육비 결제는 성균관컨설팅에서</h2>
-            <p class="gform-desc">신청서를 제출하면 결제 페이지가 성균관컨설팅(skkc.co.kr)으로 연결됩니다. 한국AI윤리위원회의 공식 교육 운영사이니 그대로 진행하시면 됩니다.</p>
-            <div class="gform-privacy">
-              <div><span>역할</span>위원회는 표준교재 집필, 이수 평가, 이수증 발급, 홈페이지 공식 등록을 직접 주관하고, 접수·결제·학습 안내 등 운영은 공식 교육 운영사 성균관컨설팅이 맡습니다</div>
-              <div><span>운영사</span>성균관대학교 RISE사업 공식 지원기업 · 한국AI윤리위원회 회원사 (결제 내역과 카드 명세서에는 '성균관컨설팅'으로 표기)</div>
-              <div><span>결제</span>안전결제(신용카드 · 간편결제) · 결제 증빙 발급 · 결제 확인 즉시 학습자료 5종 자동 발송, 같은 이메일이 [평가응시] 아이디</div>
-            </div>
-            <p class="field-hint" style="margin-top:14px">신청과 결제 조건은 <a href="terms.html" style="color:var(--blue);font-weight:700">서비스 이용안내</a>를 따릅니다.</p>
+          <div class="gform-card" id="secPurpose">
+            <div class="gform-sec">STEP 2</div>
+            <h2>이 과정으로 기대하는 점 <span class="field-opt">선택</span></h2>
+            <p class="gform-desc">해당하는 것을 모두 골라 주세요.</p>
+            <div class="pill-choice chip-multi" id="purposeGrid">{PURPOSE_ITEMS}</div>
           </div>
 
           <div class="gform-card" id="secPriv">
-            <div class="gform-sec">SECTION 6</div>
-            <h2>개인정보 수집·이용 동의</h2>
-            <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 신청 및 활용 목적, 신청정보</div>
-              <div><span>이용목적</span>신청자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
-              <div><span>보유기간</span>수집일로부터 3년. 이수자 명부는 이수 사실 확인을 위해 보관하며, 삭제를 요청하시면 즉시 파기합니다</div>
-            </div>
+            <div class="gform-sec">STEP 3</div>
+            <h2>동의하고 신청하기</h2>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
-              <span>개인정보 수집·이용에 동의합니다. <span class="req">*</span></span></label>
+              <span><b class="ea-must">[필수]</b> 개인정보 수집·이용에 동의합니다.</span></label>
             <p class="err-msg">개인정보 수집·이용 동의에 체크해 주세요.</p>
-            <p class="field-hint" style="margin-top:14px">자세한 내용은 <a href="privacy.html" style="color:var(--blue);font-weight:700">개인정보·운영정책</a>을 확인해 주세요.</p>
-          </div>
+            <details class="ea-more">
+              <summary>수집 항목 · 이용 목적 · 보유 기간 보기</summary>
+              <div class="gform-privacy">
+                <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 기대하는 점(선택), 신청정보</div>
+                <div><span>이용목적</span>신청자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
+                <div><span>보유기간</span>수집일로부터 3년. 이수자 명부는 이수 사실 확인을 위해 보관하며, 삭제를 요청하시면 즉시 파기합니다</div>
+              </div>
+              <p class="field-hint" style="margin-top:10px">자세한 내용은 <a href="privacy.html" style="color:var(--blue);font-weight:700">개인정보·운영정책</a>을 확인해 주세요.</p>
+            </details>
 
-          <div class="gform-card gform-submit">
-            <h2>AI윤리전문가 양성과정 신청</h2>
-            <p>이력서에 한 줄, 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록 이력을 더하세요.</p>
-            <div class="pay-summary pay-summary--one">
-              <div class="pay-mini"><div class="lv">AI윤리전문가 양성과정 · 이수증 + 홈페이지 공식 등록 + 활용 가이드</div>
-                <div class="list">정가 {won(LIST_PRICE)}</div><div class="sale">특별가 {won(PRICE)}</div></div>
+            <div class="ea-sum">
+              <div><b>AI윤리전문가 양성과정</b><small>공식 이수증 + 홈페이지 전문가 등록 + 이력서 활용 가이드</small></div>
+              <div class="ea-sum-price"><s>정가 {won(LIST_PRICE)}</s><strong>{won(PRICE)}</strong></div>
             </div>
-            <p>신청서를 제출한 후 교육비 결제를 완료하면 신청이 최종 확정됩니다.</p>
-            <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></button>
+            <button type="submit" class="btn btn-primary gform-submit-btn ea-submit-btn">AI윤리전문가 시작하기 <i data-lucide="arrow-right"></i></button>
             <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
-            <div class="trust-row">
-              <div><i data-lucide="award"></i> 한국AI윤리위원회 공식 이수증</div>
-              <div><i data-lucide="shield-check"></i> 성균관컨설팅 안전결제</div>
-              <div><i data-lucide="building-2"></i> 성균관대 RISE사업 공식 지원</div>
-            </div>
+            <p class="ea-paynote"><i data-lucide="shield-check"></i>
+              <span>제출하면 위원회 공식 교육 운영사 <b>성균관컨설팅</b>(성균관대학교 RISE사업 공식 지원기업)의 안전결제로 이어집니다.
+              카드 명세서에는 '성균관컨설팅'으로 표기됩니다. <a href="terms.html">서비스 이용안내</a></span></p>
           </div>
         </form>
 
@@ -4433,7 +4376,7 @@ def build_expert_apply():
             <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 자동으로 이동합니다</p>
             <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
           </div>
-          <p class="gform-paynote">결제 때 입력하신 이메일과 휴대전화 번호 뒤 4자리가 그대로 [평가응시] 로그인 정보가 됩니다. 결제 확인 즉시 학습자료 5종이 발송되고, 이수하면 위원회 홈페이지에 AI윤리전문가로 공식 등록됩니다.</p>
+          <p class="gform-paynote">결제 때 입력하신 이메일과 휴대전화 번호 뒤 4자리가 그대로 [평가응시] 로그인 정보가 됩니다. 결제가 확인되면 학습자료가 이메일로 발송되고, 이수하면 위원회 홈페이지에 AI윤리전문가로 공식 등록됩니다.</p>
           <div class="done-mailbox" id="mailBox">
             <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
                <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
@@ -4484,7 +4427,6 @@ def build_expert_apply():
       e.preventDefault();
       var job=form.querySelector('[name=job]:checked');
       var pz=purposes();
-      bad('secPurpose',pz.length===0);
       bad('fName',!v('name'));
       bad('fEmail',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')));
       bad('fJob',!job);
@@ -4493,17 +4435,19 @@ def build_expert_apply():
       document.getElementById('topErr').style.display=first?'block':'none';
       if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}
 
-      var pstr=pz.join(', ')+(REFTXT?' / '+REFTXT:'');
+      var pstr=[pz.join(', '),REFTXT].filter(Boolean).join(' / ');
       var lines=[
         '한국AI윤리위원회 AI윤리전문가 양성과정 신청','',
         '■ 신청 과정 : '+COURSE,
         '■ 성명 : '+v('name'),
         '■ 이메일 : '+v('email'),
         '■ 직업/활동 분야 : '+job.value,
-        '■ 신청 및 활용 목적 : '+pstr,'',
+        '■ 기대하는 점 : '+(pz.join(', ')||'(선택 안 함)')
+      ].concat(REFTXT?['■ '+REFTXT]:[]).concat([
+        '',
         '■ 개인정보 수집·이용 : 동의','',
         '--- kaiec.kr AI윤리전문가 양성과정 신청 페이지에서 작성됨 ---'
-      ];
+      ]);
 
       /* 접수 데이터 전송: 시트 웹훅으로 GET 전송(주소에 데이터), 없으면 메일 앱 폴백 */
       var HOOK='__HOOK__';

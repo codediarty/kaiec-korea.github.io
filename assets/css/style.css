@@ -2063,3 +2063,81 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
 @media (max-width:860px){.do-head{margin-bottom:14px}.do-num{font-size:28px}}
 /* 2026.09.25 AIEP 표기: 큰 제목 안의 (AIEP)는 조금 작고 가볍게 (본문에서는 일반 글자) */
 .aiep{font-size:.7em;font-weight:700;letter-spacing:.01em;opacity:.78;margin-left:.06em;white-space:nowrap}
+
+/* ---------- 양성과정 신청 페이지 (2026.09.26 부담 줄이기) ----------
+   머리 카드: 100% 온라인 약속 + 한 문장 + 4단계 + 가격 / 이수하면 남는 것 4칸 / STEP 1~3 */
+.ea-hero{border-top:7px solid var(--navy);padding:34px 34px 28px}
+.ea-hero .gform-kicker{margin-bottom:0}
+.ea-hero h1{margin:12px 0 14px;font-size:28px;line-height:1.3;letter-spacing:-.035em;color:var(--ink)}
+.ea-promise{display:inline-flex;align-items:center;gap:8px;margin:0;padding:8px 15px;border-radius:999px;
+  background:#E7F6F4;color:#00786F;font-size:14.5px;font-weight:800;letter-spacing:-.01em}
+.ea-promise svg{width:17px;height:17px;flex-shrink:0}
+.ea-lead{margin:14px 0 0;font-size:15.5px;line-height:1.75;color:var(--gray-700);word-break:keep-all}
+.ea-lead b{color:var(--navy);font-weight:800}
+.ea-steps{list-style:none;margin:24px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ea-steps li{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:16px 10px 15px;
+  border:1px solid var(--gray-200);border-radius:14px;background:#fff;text-align:center}
+.ea-steps li:not(:last-child)::after{content:"";position:absolute;z-index:1;right:-10px;top:50%;width:7px;height:7px;
+  border-top:2px solid var(--gray-300);border-right:2px solid var(--gray-300);transform:translateY(-50%) rotate(45deg)}
+.ea-step-ic{display:flex;align-items:center;justify-content:center;width:42px;height:42px;margin-bottom:7px;border-radius:12px;
+  background:var(--blue-050);color:var(--blue)}
+.ea-step-ic svg{width:21px;height:21px}
+.ea-steps b{font-size:14.5px;letter-spacing:-.02em;color:var(--ink)}
+.ea-steps small{font-size:12px;line-height:1.45;color:var(--gray-500);word-break:keep-all}
+.ea-steps li.is-goal{border-color:transparent;background:linear-gradient(155deg,#0F2A5F 0%,#1749B4 100%);box-shadow:0 8px 20px rgba(23,73,180,.22)}
+.ea-steps li.is-goal .ea-step-ic{background:rgba(255,255,255,.14);color:#fff}
+.ea-steps li.is-goal b{color:#fff}
+.ea-steps li.is-goal small{color:#C9D8F2}
+.ea-price{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-top:20px;
+  padding:16px 18px;border-radius:14px;background:var(--gray-050);border:1px solid var(--gray-100)}
+.ea-price-tag{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px}
+.ea-price-tag strong{font-size:25px;font-weight:800;letter-spacing:-.02em;color:var(--navy)}
+.ea-price-tag s{font-size:13px;color:var(--gray-400)}
+.ea-go{padding:12px 22px;font-size:15px}
+.ea-gets h2{font-size:18px;margin-bottom:14px}
+.ea-get-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ea-get-grid > div{display:flex;flex-direction:column;gap:3px;padding:15px 14px;border-radius:12px;background:var(--gray-050);border:1px solid var(--gray-100)}
+.ea-get-grid svg{width:21px;height:21px;margin-bottom:7px;color:var(--blue)}
+.ea-get-grid b{font-size:14px;letter-spacing:-.02em;color:var(--ink);word-break:keep-all}
+.ea-get-grid span{font-size:12.5px;line-height:1.5;color:var(--gray-500);word-break:keep-all}
+.ea-stat{display:flex;align-items:flex-start;gap:8px;margin:16px 0 0;font-size:13.5px;font-weight:700;line-height:1.55;color:var(--gray-700);word-break:keep-all}
+.ea-stat svg{width:17px;height:17px;flex-shrink:0;margin-top:2px;color:#00857A}
+.ea-stat span{flex:1;min-width:0}
+.ea-stat small{margin-left:6px;font-size:11.5px;font-weight:500;color:var(--gray-400);white-space:nowrap}
+#secPurpose h2 .field-opt{font-size:12.5px}
+.chip-multi label span::before{content:"+";display:inline-block;width:12px;margin-right:4px;font-weight:800;color:var(--gray-400)}
+.chip-multi label:has(input:checked) span::before{content:"✓";color:#fff}
+.ea-must{color:#DC2626;font-weight:800}
+.ea-more{margin-top:10px}
+.ea-more summary{display:inline-flex;align-items:center;gap:4px;cursor:pointer;list-style:none;font-size:12.5px;font-weight:700;color:var(--gray-500)}
+.ea-more summary::-webkit-details-marker{display:none}
+.ea-more summary::after{content:"";width:6px;height:6px;margin-left:4px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.ea-more[open] summary::after{transform:rotate(-135deg) translateY(-1px)}
+.ea-more summary:hover{color:var(--blue)}
+.ea-more .gform-privacy{margin-top:10px}
+.ea-sum{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:24px 0 16px;padding:16px 18px;
+  border:1.5px solid #D6E4FB;border-radius:14px;background:var(--blue-050)}
+.ea-sum b{display:block;font-size:15.5px;letter-spacing:-.02em;color:var(--ink)}
+.ea-sum small{display:block;margin-top:3px;font-size:12.5px;line-height:1.5;color:var(--gray-600);word-break:keep-all}
+.ea-sum-price{flex-shrink:0;text-align:right}
+.ea-sum-price s{display:block;font-size:12px;color:var(--gray-400)}
+.ea-sum-price strong{font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--blue-600)}
+.ea-submit-btn{display:flex;width:100%;justify-content:center}
+#secPriv #topErr{text-align:center}
+.ea-paynote{display:flex;gap:8px;align-items:flex-start;margin:14px 0 0;font-size:12.5px;line-height:1.65;color:var(--gray-500);word-break:keep-all}
+.ea-paynote svg{width:16px;height:16px;flex-shrink:0;margin-top:2px;color:#00857A}
+.ea-paynote b{color:var(--gray-700)}
+.ea-paynote a{color:var(--blue);font-weight:700;white-space:nowrap}
+@media (max-width:600px){
+  .ea-hero{padding:26px 20px 22px}
+  .ea-hero h1{font-size:23px}
+  .ea-promise{font-size:13.5px;padding:7px 13px}
+  .ea-lead{font-size:14.5px}
+  .ea-steps{grid-template-columns:repeat(2,1fr);gap:10px}
+  .ea-steps li:not(:last-child)::after{display:none}
+  .ea-price{flex-direction:column;align-items:stretch}
+  .ea-go{justify-content:center}
+  .ea-get-grid{grid-template-columns:repeat(2,1fr)}
+  .ea-sum{padding:14px 15px}
+  .ea-stat small{display:block;margin:3px 0 0}
+}
