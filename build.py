@@ -1700,8 +1700,11 @@ def build_members():
        [명함 이미지 저장]: 공식 위원증 형식 2160×2700 PNG(QR 포함). 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기.
        [명함 공유]: 모바일 공유 시트, PC는 링크 복사.
        주소 끝 #위원코드(예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다.
-       QR('AI윤리전문가 과정 보기') · [AI윤리전문가 커리어 시작하기] 는 https://kaiec.kr/expert-apply/ 로 연결(2026.09.26 사용자 지시).
-       추천 위원 코드는 성균관컨설팅 결제 때 구매자가 입력하므로 사이트는 ?ref 꼬리표·추천 표시·기억을 하지 않습니다(2026.09.26 밤 사용자 지시).
+       QR('AI윤리전문가 과정 보기')는 https://kaiec.kr/expert-apply/ 로 연결(2026.09.26 사용자 지시).
+       [AI윤리전문가 커리어 시작하기]는 성균관컨설팅 비회원 주문서로 바로 연결하고 위원 코드를 함께 넘깁니다(2026.09.26 밤 6차 사용자 지시:
+       '명함의 구매 링크는 결제 주문서로 연결되고 위원 코드가 자동 적용되면 좋겠다'). 주소 = PAY_BUY_URL + &kaiec_ref=위원코드.
+       성균관컨설팅 Footer Code(tools/skkc-kaiec-buy.html)가 [구매하기]를 대신 누르고, 주문서의 '추천 위원 코드' 칸(결제 폼)에 코드를 채웁니다.
+       우리 사이트에는 추천 표시·기억·설명을 두지 않습니다(2026.09.26 밤 사용자 지시 유지).
        문구는 영업처럼 보이지 않게(2026.09.26 5차): '신청하기' 대신 '커리어 시작하기', 확인 문구(위 사람은 …) 없음, 하단은 한 줄 다짐(TAGLINE).
        명함의 '이메일' 칸은 위원 본인 메일(members-data 의 email), 없으면 '대표 메일'(위원회 contact@kaiec.kr). */
     var ov=null,lastFocus=null,curId='',curP=null,IMG={};
@@ -1746,6 +1749,9 @@ def build_members():
     }
     function cardURL(id){return SITE+'/members/#'+id}
     function applyURL(){return SITE+'/expert-apply/'}
+    /* 명함의 [커리어 시작하기] → 성균관컨설팅 비회원 주문서 (위원 코드가 있으면 함께 넘겨 주문서에 자동 입력) */
+    var PAY_BUY='__PAYBUY__';
+    function buyURL(m){return PAY_BUY+(m&&m.code?'&amp;kaiec_ref='+encodeURIComponent(m.code):'')}
     function shareURL(){return cardURL(curId)}
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
@@ -2026,7 +2032,7 @@ def build_members():
         +'<span class="bc-verify">'+ICON_OK+(CHIP[p.g]||CHIP_DEF)+'</span>'
         +idBox
         +(lect?'<a class="bc-cta" href="lecture.html#request">'+ICON_MIC+'출강 문의하기</a>'
-              :'<a class="bc-cta" href="expert-apply.html">'+ICON_AWARD+'AI윤리전문가 커리어 시작하기</a>')
+              :'<a class="bc-cta" href="'+buyURL(m)+'">'+ICON_AWARD+'AI윤리전문가 커리어 시작하기</a>')
         +'<dl class="bc-info">'+rows+'</dl>'
         +'<div class="bc-actions"><button type="button" class="bc-btn bc-btn--primary" data-act="img">'+ICON_IMG+'명함 이미지 저장</button>'
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
@@ -2071,7 +2077,8 @@ def build_members():
     }else if(op){op.parentElement.parentElement.style.display='none'}
   })();
   </script>
-""".replace("__EMAIL__", EMAIL).replace("__SITE__", SITE_URL).replace("__PV__", PHOTO_V)
+""".replace("__EMAIL__", EMAIL).replace("__SITE__", SITE_URL).replace("__PV__", PHOTO_V).replace(
+        "__PAYBUY__", _html.escape(PAY_BUY_URL or "expert-apply.html"))
     page("members.html", "위원 명단",
          "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
          body, extra_script=script)

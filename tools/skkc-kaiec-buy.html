@@ -1,51 +1,158 @@
-<!-- KAIEC 결제 바로 연결 (성균관컨설팅 skkc.co.kr 아임웹에 한 번만 넣는 코드, 2026.09.26)
-     넣는 곳: 아임웹 관리자 > 설정 > SEO > 고급 설정 > Footer Code (모든 페이지 </body> 바로 위)
-     하는 일: kaiec.kr 결제 안내에서 넘어온 주소(shop_view?idx=…&kaiec_buy=1)일 때만 상품 화면의 [구매하기]를 대신 눌러
-             비회원 주문서(shop_payment)로 바로 보냅니다. 다른 방문자와 다른 페이지에는 아무 영향이 없습니다.
-     주문서 주소(order_code · order_no · order_member)는 구매자마다 새로 만들어지므로 고정 링크로 걸 수 없어 이렇게 처리합니다. -->
+<!-- KAIEC 결제 바로 연결 + 추천 위원 코드 자동 입력 (성균관컨설팅 skkc.co.kr 아임웹에 한 번만 넣는 코드, 2026.09.26 v2)
+     넣는 곳: 아임웹 관리자 > 설정 > SEO > 고급 설정 > Footer Code (모든 페이지 </body> 바로 위). 예전 코드가 있으면 이 코드로 통째로 바꿉니다.
+     하는 일
+       1) kaiec.kr 에서 넘어온 주소에 kaiec_ref=위원코드(예: PKH3185)가 있으면 이 탭에 3시간 동안 기억합니다.
+       2) 상품 화면(shop_view?idx=…&kaiec_buy=1)이면 [구매하기]를 대신 눌러 비회원 주문서(shop_payment)로 바로 보냅니다.
+       3) 주문서에서 AI윤리전문가 양성과정 주문일 때, 결제 폼의 '추천 위원 코드' 칸에 기억한 코드를 자동으로 채웁니다.
+          (그 칸이 없고 같은 이름의 쿠폰 코드가 등록돼 있으면 쿠폰 코드 칸에 넣어 적용합니다. 둘 다 없으면 아무것도 하지 않습니다.)
+     다른 방문자와 다른 페이지에는 영향이 없습니다. 주문서 주소(order_code · order_no · order_member)는 구매자마다 새로 만들어지므로
+     고정 링크로 걸 수 없어 이렇게 처리합니다. -->
 <script>
 (function () {
-  var q = location.search;
-  if (!/[?&]kaiec_buy=1(?:&|$)/.test(q) || location.pathname.indexOf('/shop_view') !== 0) return;
-  /* 뒤로 가기로 이 화면에 돌아와도 주문서를 또 만들지 않도록 주소에서 표시를 먼저 지웁니다 */
-  var cleanSearch = q.replace(/([?&])kaiec_buy=1(&|$)/, function (m, a, b) { return b ? a : ''; });
-  var cleanUrl = location.origin + location.pathname + cleanSearch;
-  try { history.replaceState(history.state, '', location.pathname + cleanSearch + location.hash); } catch (e) {}
+  var KEY = 'kaiec_ref', TTL = 3 * 60 * 60 * 1000;
+  var params = new URLSearchParams(location.search);
 
-  var cover = document.createElement('div');
-  cover.id = 'kaiecBuyCover';
-  cover.setAttribute('role', 'status');
-  cover.setAttribute('style', 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483646;display:flex;flex-direction:column;' +
-    'align-items:center;justify-content:center;gap:12px;padding:24px;background:rgba(255,255,255,.97);text-align:center;' +
-    'font:600 16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#1d2433');
-  cover.innerHTML = '<style>@keyframes kaiecBuySpin{to{transform:rotate(360deg)}}</style>' +
-    '<span style="width:34px;height:34px;border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:kaiecBuySpin .8s linear infinite"></span>' +
-    '<span>주문서를 여는 중입니다</span>' +
-    '<span style="font-weight:500;font-size:13px;color:#6b7383">AI윤리전문가 양성과정 · 회원가입 없이 비회원으로 주문합니다</span>';
-  function showCover() { if (document.body && !cover.parentNode) document.body.appendChild(cover); }
-  function hideCover() { if (cover.parentNode) cover.parentNode.removeChild(cover); }
-
-  var started = Date.now(), fired = false;
-  function ready() {
-    var d = window.SITE_SHOP_DETAIL;
-    if (!d || typeof d.confirmOrderWithCartItems !== 'function' || document.readyState !== 'complete') return false;
-    /* 상품 수량이 준비된 뒤에 눌러야 주문이 만들어집니다 (옵션 불러오기가 끝나면 1) */
-    return typeof d.getOrderCount !== 'function' || d.getOrderCount() > 0;
+  /* 1) 위원 코드 기억 + 주소 정리 (뒤로 가기로 돌아와도 주문서를 또 만들지 않도록 kaiec_buy 도 먼저 지움) */
+  var ref = (params.get('kaiec_ref') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (/^[A-Z]{2,4}\d{4}$/.test(ref)) {
+    try { sessionStorage.setItem(KEY, JSON.stringify({ code: ref, t: Date.now() })); } catch (e) {}
   }
-  function tick() {
-    if (fired) return;
-    showCover();
-    if (ready()) {
-      fired = true;
-      try { window.SITE_SHOP_DETAIL.confirmOrderWithCartItems('guest_login', cleanUrl); } catch (e) { hideCover(); return; }
-      /* 품절·오류 등으로 주문서로 넘어가지 못하면 가림막을 걷어 직접 [구매하기]를 누를 수 있게 합니다 */
-      setTimeout(hideCover, 8000);
+  var wantBuy = params.get('kaiec_buy') === '1' && location.pathname.indexOf('/shop_view') === 0;
+  if (params.has('kaiec_ref') || params.has('kaiec_buy')) {
+    params.delete('kaiec_ref'); params.delete('kaiec_buy');
+    var qs = params.toString();
+    try { history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash); } catch (e) {}
+  }
+  function storedCode() {
+    try {
+      var v = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      if (v && v.code && Date.now() - v.t < TTL) return v.code;
+    } catch (e) {}
+    return '';
+  }
+
+  /* 2) 상품 화면: [구매하기]를 대신 눌러 비회원 주문서로 */
+  if (wantBuy) {
+    var cleanUrl = location.origin + location.pathname + (params.toString() ? '?' + params.toString() : '');
+    var cover = document.createElement('div');
+    cover.id = 'kaiecBuyCover';
+    cover.setAttribute('role', 'status');
+    cover.setAttribute('style', 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483646;display:flex;flex-direction:column;' +
+      'align-items:center;justify-content:center;gap:12px;padding:24px;background:rgba(255,255,255,.97);text-align:center;' +
+      'font:600 16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#1d2433');
+    cover.innerHTML = '<style>@keyframes kaiecBuySpin{to{transform:rotate(360deg)}}</style>' +
+      '<span style="width:34px;height:34px;border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:kaiecBuySpin .8s linear infinite"></span>' +
+      '<span>주문서를 여는 중입니다</span>' +
+      '<span style="font-weight:500;font-size:13px;color:#6b7383">AI윤리전문가 양성과정 · 회원가입 없이 비회원으로 주문합니다</span>';
+    var showCover = function () { if (document.body && !cover.parentNode) document.body.appendChild(cover); };
+    var hideCover = function () { if (cover.parentNode) cover.parentNode.removeChild(cover); };
+    var started = Date.now(), fired = false;
+    var ready = function () {
+      var d = window.SITE_SHOP_DETAIL;
+      if (!d || typeof d.confirmOrderWithCartItems !== 'function' || document.readyState !== 'complete') return false;
+      /* 상품 수량이 준비된 뒤에 눌러야 주문이 만들어집니다 (옵션 불러오기가 끝나면 1) */
+      return typeof d.getOrderCount !== 'function' || d.getOrderCount() > 0;
+    };
+    var tick = function () {
+      if (fired) return;
+      showCover();
+      if (ready()) {
+        fired = true;
+        try { window.SITE_SHOP_DETAIL.confirmOrderWithCartItems('guest_login', cleanUrl); } catch (e) { hideCover(); return; }
+        /* 품절·오류 등으로 주문서로 넘어가지 못하면 가림막을 걷어 직접 [구매하기]를 누를 수 있게 합니다 */
+        setTimeout(hideCover, 8000);
+        return;
+      }
+      if (Date.now() - started < 12000) setTimeout(tick, 150); else hideCover();
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick); else tick();
+    window.addEventListener('pageshow', function (e) { if (e.persisted) hideCover(); });
+    return;
+  }
+
+  /* 3) 주문서: 추천 위원 코드 자동 입력 */
+  if (location.pathname.indexOf('/shop_payment') !== 0) return;
+  var code = storedCode();
+  if (!code) return;
+
+  function setVal(el, v) {
+    var proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+    var desc = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (desc && desc.set) desc.set.call(el, v); else el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  function toast(msg) {
+    var t = document.createElement('div');
+    t.setAttribute('role', 'status');
+    t.setAttribute('style', 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:2147483646;max-width:calc(100% - 32px);' +
+      'padding:11px 16px;border-radius:10px;background:#0A1628;color:#fff;box-shadow:0 8px 24px rgba(10,22,40,.25);' +
+      'font:600 13.5px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;text-align:center');
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 4500);
+  }
+  /* 결제 폼(쇼핑 설정 > 결제 폼 관리)에 만든 '추천 위원 코드' 칸 찾기: 제목에 추천 위원 · 위원 코드 · 추천인 · 추천 코드가 들어간 입력칸 */
+  function findField() {
+    var list = document.querySelectorAll('input[type="text"], input:not([type]), textarea');
+    for (var i = 0; i < list.length; i++) {
+      var el = list[i];
+      if (/쿠폰/.test(el.placeholder || '') || /^orderer/i.test(el.name || '')) continue;
+      var box = el.parentElement;
+      for (var d = 0; d < 4 && box; d++, box = box.parentElement) {
+        if (box.querySelectorAll('input, textarea').length !== 1) break;
+        if (/추천\s*위원|위원\s*코드|추천\s*코드|추천인/.test(box.innerText || '')) return el;
+      }
+    }
+    return null;
+  }
+  function couponInput() {
+    var list = document.querySelectorAll('input');
+    for (var i = 0; i < list.length; i++) if (/쿠폰/.test(list[i].placeholder || '')) return list[i];
+    return null;
+  }
+  /* 같은 이름의 쿠폰 코드가 등록돼 있는지 주문 금액 계산으로만 확인 (등록돼 있지 않으면 쿠폰 칸은 건드리지 않아 오류 창이 뜨지 않음) */
+  function couponExists(c) {
+    var tok = '', no = new URLSearchParams(location.search).get('order_no');
+    try { tok = sessionStorage.getItem('oms_token') || ''; } catch (e) {}
+    if (!tok || !no || !window.fetch) return Promise.resolve(false);
+    var body = { inputCouponCode: c }, gm = new URLSearchParams(location.search).get('order_member');
+    if (gm) body.guestMemberCode = gm;
+    return fetch('https://api.oms.imweb.me/customer/v1/orders/' + encodeURIComponent(no) + '/amount-due', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json', Authorization: 'Bearer ' + tok },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { return !!(j && j.data && j.data.totalInputCouponDiscount >= 0); })
+      .catch(function () { return false; });
+  }
+
+  var t0 = Date.now(), done = false, couponChecked = false, couponSeenAt = 0;
+  function run() {
+    if (done) return;
+    var text = document.body ? document.body.innerText || '' : '';
+    if (text.indexOf('AI윤리전문가') < 0) { if (Date.now() - t0 < 20000) return setTimeout(run, 400); return; }
+    var f = findField();
+    if (f) {
+      done = true;
+      if (!f.value) { setVal(f, code); toast('추천 위원 코드 ' + code + ' 가 자동으로 입력되었습니다'); }
       return;
     }
-    if (Date.now() - started < 12000) setTimeout(tick, 150); else hideCover();
+    var ci = couponInput();
+    if (ci && !couponSeenAt) couponSeenAt = Date.now();
+    /* 결제 폼 칸이 그려질 시간을 조금 준 뒤 쿠폰 코드로 확인 */
+    if (ci && !couponChecked && Date.now() - couponSeenAt > 1500) {
+      couponChecked = true;
+      couponExists(code).then(function (ok) {
+        if (!ok || done || ci.value) return;
+        done = true;
+        setVal(ci, code);
+        var form = ci.closest('form'), btn = form && form.querySelector('button[type="submit"]');
+        if (btn) btn.click(); else if (form && form.requestSubmit) form.requestSubmit();
+        toast('추천 위원 코드 ' + code + ' 가 적용되었습니다');
+      });
+    }
+    if (Date.now() - t0 < 20000) setTimeout(run, 400);
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick); else tick();
-  /* 주문서에서 뒤로 돌아온 경우(bfcache) 가림막이 남지 않게 */
-  window.addEventListener('pageshow', function (e) { if (e.persisted) hideCover(); });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
 </script>

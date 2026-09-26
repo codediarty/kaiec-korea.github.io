@@ -275,8 +275,16 @@ if 'id="paySheet"' not in apply_html or (build.PAY_URL and f'id="payGo" href="{P
 if build.PAY_URL and f'class="ea-preview js-pay-go" href="{PAY_BUY_ATTR}"' not in apply_html:
     probs.append("결제 안내 시트의 미리보기 [구매하기]가 링크가 아님 (눌러도 반응 없음 재발)")
 skkc_code = read(os.path.join(BASE, "tools", "skkc-kaiec-buy.html")) if os.path.isfile(os.path.join(BASE, "tools", "skkc-kaiec-buy.html")) else ""
-if "kaiec_buy=1" not in skkc_code or "confirmOrderWithCartItems('guest_login'" not in skkc_code:
+if "kaiec_buy" not in skkc_code or "confirmOrderWithCartItems('guest_login'" not in skkc_code:
     probs.append("tools/skkc-kaiec-buy.html (성균관컨설팅 Footer Code, 비회원 주문서 바로 연결) 없음 또는 내용 이상")
+# 2026.09.26 밤 6차(사용자: 명함의 구매 링크는 결제 주문서로, 위원 코드는 자동 적용): 명함 [커리어 시작하기] = PAY_BUY_URL + &kaiec_ref=위원코드.
+#   성균관컨설팅 Footer Code 가 코드를 기억했다가 주문서의 '추천 위원 코드' 칸(결제 폼) 또는 같은 이름의 쿠폰 코드로 넣음. 우리 사이트에는 추천 표시 없음
+members_page = read(pages["members.html"])
+if build.PAY_URL and (f"var PAY_BUY='{PAY_BUY_ATTR}'" not in members_page or "kaiec_ref=" not in members_page
+                      or "'<a class=\"bc-cta\" href=\"'+buyURL(m)+'\">'" not in members_page):
+    probs.append("디지털 명함 [커리어 시작하기]가 주문서 바로 연결 주소(PAY_BUY_URL + kaiec_ref=위원코드)가 아님")
+if "kaiec_ref" not in skkc_code or "/shop_payment" not in skkc_code or "추천\\s*위원" not in skkc_code:
+    probs.append("tools/skkc-kaiec-buy.html 에 위원 코드 기억·주문서 자동 입력(kaiec_ref · shop_payment · 추천 위원 칸)이 없음")
 if "7일 이내" in re.sub(r"<script[^>]*>.*?</script>", "", expert_html, flags=re.S) or "7일 이내" in read("assets/js/exam.js"):
     probs.append("이수증 발급 '7일 이내' 표기가 남아 있음 (이수 즉시 발급)")
 # 2026.09.26 밤: 추천 위원 코드는 성균관컨설팅 결제 때 입력. 사이트는 ?ref 꼬리표·추천 표시·기억을 하지 않음
