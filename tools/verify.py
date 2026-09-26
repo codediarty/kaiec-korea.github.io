@@ -303,8 +303,14 @@ if "SITE+'/go/?c='" not in members_page or "qr=qrSVG(qrURL(m))" not in members_p
 #   명함 이미지는 세로 신분증 비율(1000×1600 × 2) '공식 위원증'
 if 'class="bc-sub" href="/experts/"' not in members_page:
     probs.append("디지털 명함에 AI윤리전문가(AIEP) 과정 안내 링크(/experts/)가 없음")
-if "kakaotalk://web/openExternal" not in members_page or "function showSave(" not in members_page or "CW=1000,CH=1600" not in members_page:
-    probs.append("명함 이미지 저장: 카카오톡 인앱 처리 · 길게 눌러 저장 창 · 공식 위원증(1000×1600) 중 빠진 것이 있음")
+if "kakaotalk://web/openExternal" not in members_page or "function showSave(" not in members_page or "CW=1080,CH=1350" not in members_page:
+    probs.append("명함 이미지 저장: 카카오톡 인앱 처리 · 길게 눌러 저장 창 · 디지털 명함(1080×1350) 중 빠진 것이 있음")
+# 2026.09.26 밤 14차(사용자: QR 아래 '추천 할인 신청' 문구가 이상하다, 아이폰에서 꾹 눌러 저장해야 한다):
+#   화면 명함 QR 아래 글씨 없음, 아이폰은 탭 안에서 공유 시트(준비 전이면 '한 번 더 눌러 저장')
+if "추천 할인 신청" in members_page or "<span>'+qrLabel(m)+'</span>" in members_page:
+    probs.append("디지털 명함 QR 아래 '추천 할인 신청' 문구가 다시 들어옴")
+if "function arm(){" not in members_page or "NotAllowedError" not in members_page:
+    probs.append("아이폰 저장: 공유 시트를 누르는 순간 여는 처리(준비 전이면 한 번 더 누르기)가 없음")
 if "kaiec.kr/go/" in read("sitemap.xml"):
     probs.append("sitemap.xml 에 /go/ (QR 이동 전용, noindex)가 들어감")
 main_js = read(os.path.join(BASE, "assets", "js", "main.js"))
