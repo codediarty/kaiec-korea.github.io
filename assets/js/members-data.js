@@ -49,21 +49,22 @@ window.KAIEC_MEMBERS = [
      - name  : 성명
      - en    : 영문 이름 (위원 코드 이니셜과 맞춰 적기, 예: 박근호 → Park Keun-ho)
      - code  : 위원 코드 = 성명 영문 이니셜 + 휴대전화 뒷자리 4개 (예: 박근호, 휴대전화 뒷자리 3185 → PKH3185)
+     - email : (선택) 위원 본인 이메일. 디지털 명함의 '이메일' 칸과 명함 이미지에 표시됩니다(없으면 위원회 대표 메일).
      - since : 위촉 시기 (예: '2026.09')
      - field : 활동 분야 (한 줄로 짧게)
      - photo : (선택) assets/img/members/ 폴더의 사진 파일명. 없으면 이니셜 표시.
    ▶ 카드를 누르면 디지털 명함(사진·영문 이름·위원 코드·위촉 시기·소속·활동 분야·QR)이 열립니다.
      kaiec.kr/members/#PKH3185 처럼 위원 코드를 붙인 주소로 들어오면 그 위원의 명함이 바로 열립니다. */
 window.KAIEC_CAMPAIGN_MEMBERS = [
-  { name: '박근호', en: 'Park Keun-ho', code: 'PKH3185', since: '2026.09', field: 'AI 리터러시 교육 · 확산', photo: 'park-geunho.jpg' },
-  { name: '조성희', en: 'Cho Sung-hee', code: 'CSH7321', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 확산', photo: 'jo-seonghee.jpg' },
-  { name: '지정인', en: 'Ji Jung-in', code: 'JJI0046', since: '2026.09', field: 'AI 창업 · 책임 있는 AI 비즈니스', photo: 'ji-jeongin.jpg' },
-  { name: '서완석', en: 'Seo Wan-seok', code: 'SWS7351', since: '2026.09', field: 'AI · 디지털 교육 혁신', photo: 'seo-wanseok.jpg' },
-  { name: '양대산', en: 'Yang Dae-san', code: 'YDS5505', since: '2026.09', field: 'AI 교육 · 미래 인재 양성', photo: 'yang-daesan.jpg' },
-  { name: '허윤영', en: 'Heo Yun-young', code: 'HYY6754', since: '2026.09', field: 'AI 디지털 교육 · 에듀테크 활용', photo: 'heo-yunyoung.jpg' },
-  { name: '한효주', en: 'Han Hyo-ju', code: 'HHJ6913', since: '2026.09', field: 'AI 교육 · 차세대 인재 육성', photo: 'han-hyoju.jpg' },
-  { name: '임호용', en: 'Lim Ho-yong', code: 'LHY6444', since: '2026.09', field: '생성형 AI 활용 · 실무 역량 강화', photo: 'lim-hoyong.jpg' },
-  { name: '안지희', en: 'Ahn Ji-hee', code: 'AJH4650', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 거버넌스', photo: 'ahn-jihee.jpg' },
+  { name: '박근호', en: 'Park Keun-ho', code: 'PKH3185', email: 'cocopark84@gmail.com', since: '2026.09', field: 'AI 리터러시 교육 · 확산', photo: 'park-geunho.jpg' },
+  { name: '조성희', en: 'Cho Sung-hee', code: 'CSH7321', email: 'leonfan@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 확산', photo: 'jo-seonghee.jpg' },
+  { name: '지정인', en: 'Ji Jung-in', code: 'JJI0046', email: 'jguy12@hanmail.net', since: '2026.09', field: 'AI 창업 · 책임 있는 AI 비즈니스', photo: 'ji-jeongin.jpg' },
+  { name: '서완석', en: 'Seo Wan-seok', code: 'SWS7351', email: 'redoxi@naver.com', since: '2026.09', field: 'AI · 디지털 교육 혁신', photo: 'seo-wanseok.jpg' },
+  { name: '양대산', en: 'Yang Dae-san', code: 'YDS5505', email: 'tonyment@naver.com', since: '2026.09', field: 'AI 교육 · 미래 인재 양성', photo: 'yang-daesan.jpg' },
+  { name: '허윤영', en: 'Heo Yun-young', code: 'HYY6754', email: 'afturn@naver.com', since: '2026.09', field: 'AI 디지털 교육 · 에듀테크 활용', photo: 'heo-yunyoung.jpg' },
+  { name: '한효주', en: 'Han Hyo-ju', code: 'HHJ6913', email: 'coolomo@gmail.com', since: '2026.09', field: 'AI 교육 · 차세대 인재 육성', photo: 'han-hyoju.jpg' },
+  { name: '임호용', en: 'Lim Ho-yong', code: 'LHY6444', email: 'imyong7@hanmail.net', since: '2026.09', field: '생성형 AI 활용 · 실무 역량 강화', photo: 'lim-hoyong.jpg' },
+  { name: '안지희', en: 'Ahn Ji-hee', code: 'AJH4650', email: 'cleoahn@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 거버넌스', photo: 'ahn-jihee.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
