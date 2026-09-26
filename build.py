@@ -31,8 +31,18 @@ SITE_NAME = "한국AI윤리위원회"
 SITE_EN = "Korea AI Ethics Committee"         # 홈페이지·로고용 영문명 (KAIEC = Korea AI Ethics Committee)
 SITE_EN_FORMAL = "Korea AI Ethics Committee"  # 공식 영문 명칭 (위원회 소개 개요표 표기용, 브랜드명과 동일)
 EMAIL = "contact@kaiec.kr"                     # ← 대표 문의 메일 (2026.09.22 공식 도메인 메일로 전환. 수신은 ImprovMX → kaiec.korea@gmail.com 전달, 발신은 지메일 별칭)
-# (구) 위원 지원서 구글폼. 2026.09.13부터 위원·회원기관 신청은 자체 폼(join.html → 시트 웹훅)으로 받으므로 CTA에서는 사용하지 않음
+# 위원 지원서 구글폼(「한국 AI 윤리위원회 AI 윤리 파트너 관리」 시트의 '지원자_응답' 탭에 연결된 폼). CTA 버튼으로는 쓰지 않음
 GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/viewform"
+# 2026.09.26 사용자 지시: 사이트 위원 참여(/join/) 신청도 파트너 관리 시트(지원자_응답)에 구글폼 응답과 똑같이 쌓이도록,
+# 신청서 제출 때 이 폼의 formResponse 로 한 번 더 보냅니다(시트 웹훅 알림은 그대로 유지).
+# 아래 entry 번호와 선택지 문구는 폼 문항과 글자 하나까지 같아야 합니다(폼 문항을 고치면 viewform 의 FB_PUBLIC_LOAD_DATA_ 로 다시 확인).
+PARTNER_FORM_POST = GOOGLE_FORM.replace("/viewform", "/formResponse")
+PARTNER_FORM_ENTRY = {"name": "entry.829971654", "phone": "entry.212931901", "email": "entry.302845370",
+                      "role": "entry.1714421742", "intro": "entry.2002407835", "agree": "entry.346635098"}
+# 사이트 참여 구분 → 폼 '지원 분야' 선택지 (폼에 없는 값을 보내면 응답이 거부되므로 반드시 폼 선택지 그대로)
+PARTNER_FORM_ROLE = {"AI 윤리 캠페인위원": "AI 윤리 캠페인위원", "운영위원": "운영위원 (사업기획·대외협력)",
+                     "전문위원": "전문위원 (교육강사)", "공식 파트너": "제휴 파트너 신청"}
+PARTNER_FORM_AGREE = "동의합니다."
 # 카피클린 문서검사 바로가기 (모든 카피클린 CTA가 이 주소로 연결됨)
 COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
 # AI윤리전문가 양성과정 교육비 결제 링크 (성균관컨설팅 skkc.co.kr 안전결제 PG)
@@ -2630,10 +2640,10 @@ def build_legal():
              "<li>AI 윤리 관련 공개 자료, 캠페인, 교육기부 등 공익 활동</li>"
              "<li>기관 대상 출강·자문 및 협력 사업</li></ol>"),
             ("제5조 (신청과 계약의 성립)",
-             "<ol><li>양성과정 이용계약은 이용자가 신청 양식을 작성하여 제출하고, 교육비 결제가 완료된 시점에 성립합니다.</li>"
-             "<li>이용자는 신청 시 정확한 정보를 기재하여야 합니다. 허위 정보로 인해 발생한 불이익은 이용자가 부담합니다.</li>"
-             "<li>신청 이메일은 이수 평가 시스템의 로그인 계정으로 사용되므로, 결제 시에도 동일한 이메일을 입력하여야 합니다. "
-             "이메일 불일치로 계정이 생성되지 않은 경우 이용자는 위원회에 정정을 요청하여야 합니다.</li>"
+             "<ol><li>양성과정 이용계약은 이용자가 결제 페이지에서 교육비 결제를 완료한 시점에 성립합니다.</li>"
+             "<li>이용자는 결제 시 정확한 정보를 기재하여야 합니다. 허위 정보로 인해 발생한 불이익은 이용자가 부담합니다.</li>"
+             "<li>결제 시 입력한 이메일은 이수 평가 시스템의 로그인 계정으로 사용되므로 정확히 입력하여야 합니다. "
+             "이메일 오기재로 계정이 생성되지 않은 경우 이용자는 위원회에 정정을 요청하여야 합니다.</li>"
              "<li>위원회는 다음 각 호의 경우 신청을 승낙하지 않거나 사후에 계약을 해지할 수 있습니다."
              "<ul><li>타인의 명의를 도용하거나 허위 정보를 기재한 경우</li>"
              "<li>이 약관을 위반하여 과거에 이용이 제한된 사실이 있는 경우</li>"
@@ -2646,7 +2656,7 @@ def build_legal():
              "위원회는 이 밖의 명목으로 추가 비용을 청구하지 않습니다.</li>"
              "<li>기수별 특별가 등 한시적으로 적용되는 금액은 공지된 기간에만 적용되며, 기간 종료 후 신청분에는 적용되지 않습니다.</li></ol>"),
             ("제7조 (학습자료의 제공)",
-             "<ol><li>위원회는 결제 확인 후 이용자가 신청 시 기재한 이메일로 학습자료(PDF) 내려받기 링크를 발송합니다.</li>"
+             "<ol><li>위원회는 결제 확인 후 이용자가 결제 시 입력한 이메일로 학습자료(PDF) 내려받기 링크를 발송합니다.</li>"
              "<li>학습자료는 전자문서로만 제공되며 인쇄물 형태로는 제공하지 않습니다.</li>"
              "<li>이용자의 이메일 오기재, 수신 거부 설정, 메일함 용량 초과 등 이용자 측 사유로 수신되지 않은 경우에도 "
              "위원회가 발송을 완료한 때에 제공이 개시된 것으로 봅니다. 이 경우 이용자의 요청이 있으면 위원회는 재발송합니다.</li></ol>"),
@@ -2735,7 +2745,7 @@ def build_legal():
              "「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제2항 제5호는 <strong>디지털콘텐츠의 제공이 개시된 경우</strong> "
              "청약철회를 제한할 수 있도록 정하고 있습니다.</p>"
              "<p>따라서 다음의 경우에는 청약철회와 환불이 제한됩니다.</p>"
-             "<ol><li>신청 시 기재한 이메일로 학습자료(PDF) 내려받기 링크가 발송된 경우</li>"
+             "<ol><li>결제 시 입력한 이메일로 학습자료(PDF) 내려받기 링크가 발송된 경우</li>"
              "<li>이수 평가 시스템에 로그인하여 응시를 시작한 경우</li>"
              "<li>학습자료의 전부 또는 일부를 내려받은 경우</li></ol>"
              "<p class=\"lg-note\">위원회는 결제 안내 화면과 이 문서에 청약철회 제한 사실을 사전에 명확히 "
@@ -2784,14 +2794,15 @@ def build_legal():
             '        <div class="lg-part" id="privacy" style="margin-top:0;padding-top:0;border-top:0">개인정보처리방침</div>',
             ("1. 수집하는 개인정보의 항목과 방법",
              "<table class=\"lg-table\"><thead><tr><th>구분</th><th>수집 항목</th></tr></thead><tbody>"
-             "<tr><th>양성과정 신청</th><td>성명, 이메일, 직업·활동 분야, 신청 과정, 활용 목적</td></tr>"
+             "<tr><th>양성과정 결제</th><td>성명, 이메일, 휴대전화 번호, 결제일 (교육 운영사 결제 페이지에서 이용자가 입력한 정보를 결제 확인 후 전달받음)</td></tr>"
              "<tr><th>이수 평가 응시</th><td>성명, 이메일(로그인 아이디), 휴대전화 번호 뒤 4자리(초기 비밀번호), 응시 기록, 답안, 점수</td></tr>"
-             "<tr><th>위원 참여 신청</th><td>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 지원 동기, 자기소개</td></tr>"
+             "<tr><th>위원 참여 신청</th><td>성명, 이메일, 휴대전화, 직업·활동 분야, 소속(선택), 참여 구분, 기대하는 것·자기소개(선택)</td></tr>"
              "<tr><th>사회공헌 활동 문의</th><td>기관·단체명, 담당자 성명, 연락처, 문의 내용</td></tr>"
              "<tr><th>출강 문의</th><td>기관명, 담당자 성명, 연락처, 교육 희망 내용</td></tr>"
              "<tr><th>자동 생성 정보</th><td>접속 일시, 서비스 이용 기록(이수 평가 시스템 이용 시)</td></tr>"
              "</tbody></table>"
-             "<p>개인정보는 홈페이지의 신청·문의 양식을 통해 이용자가 직접 입력하는 방법으로만 수집합니다. "
+             "<p>개인정보는 홈페이지의 신청·문의 양식에 이용자가 직접 입력하는 방법과, 양성과정의 경우 교육 운영사 결제 페이지에서 "
+             "이용자가 입력한 정보를 결제 확인 후 전달받는 방법으로 수집합니다. "
              "위원회는 사상, 신념, 노동조합 가입, 정치적 견해, 건강, 성생활에 관한 정보 등 민감정보와 "
              "주민등록번호를 수집하지 않습니다.</p>"),
             ("2. 개인정보의 처리 목적",
@@ -2804,7 +2815,7 @@ def build_legal():
              "<li>민원 처리와 분쟁 대응</li></ol>"),
             ("3. 개인정보의 보유 및 이용 기간",
              "<table class=\"lg-table\"><thead><tr><th>구분</th><th>보유 기간</th></tr></thead><tbody>"
-             "<tr><th>양성과정 신청 정보</th><td>수집일부터 3년</td></tr>"
+             "<tr><th>양성과정 결제·신청 정보</th><td>수집일부터 3년</td></tr>"
              "<tr><th>이수자 명부(성명, 이메일, 과정, 이수번호, 이수일)</th><td>이수 사실 확인 업무를 위해 보관. 이용자가 삭제를 요청하면 즉시 파기</td></tr>"
              "<tr><th>이수 평가 응시 기록과 답안</th><td>수집일부터 3년</td></tr>"
              "<tr><th>참여 신청 정보</th><td>수집일부터 3년. 활동 종료 또는 삭제 요청 시 즉시 파기</td></tr>"
@@ -2823,7 +2834,7 @@ def build_legal():
              "<p>위원회는 서비스 운영을 위해 아래와 같이 개인정보 처리 업무를 위탁하고 있으며, 위탁 업무의 내용과 "
              "수탁자가 변경되는 경우 이 방침을 통해 공개합니다.</p>"
              "<table class=\"lg-table\"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가 · 시점 · 방법</th></tr></thead><tbody>"
-             "<tr><th>Google LLC</th><td>신청·문의 내용의 저장(Google 스프레드시트), 자동 알림 메일 발송(Google Apps Script), "
+             "<tr><th>Google LLC</th><td>신청·문의 내용의 저장(Google 스프레드시트 · Google 설문지), 자동 알림 메일 발송(Google Apps Script), "
              "이수 평가 시스템의 데이터 저장</td><td>미국 · 이용자가 양식을 제출하는 시점에 네트워크를 통해 전송</td></tr>"
              f"<tr><th>{PAY_AGENT}</th><td>교육비 결제와 환급 처리</td><td>국내</td></tr>"
              "</tbody></table>"
@@ -2849,6 +2860,8 @@ def build_legal():
              "<p>위원회 홈페이지는 광고 목적의 추적 기술을 사용하지 않습니다. 이수 평가 시스템은 응시 상태 유지를 위해 "
              "이용자의 브라우저 저장 공간(sessionStorage, localStorage)에 로그인 토큰과 임시 답안을 보관하며, "
              "이 정보는 이용자의 기기에만 저장되고 브라우저를 닫거나 로그아웃하면 삭제됩니다. "
+             "양성과정 안내 페이지는 위원의 추천 링크로 방문한 경우 추천 위원 코드를 30일 동안 브라우저(localStorage)에 보관하고 "
+             "결제 페이지 주소에 붙여 넘깁니다. 이 코드는 추천한 위원을 가리키는 값이며 이용자를 식별하지 않습니다. "
              "추후 방문 분석 도구를 도입하는 경우 이 방침을 개정하여 사전에 공개합니다.</p>"),
             ("10. 개인정보 보호책임자",
              f"<table class=\"lg-table\"><tbody>"
@@ -4078,7 +4091,7 @@ def build_expert():
           <h2 class="h-sec">신청·이수 절차</h2>
         </div>
         <div class="grid grid-3">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">양성과정 신청</h3><p style="font-size:14px">온라인 신청 후 안전결제로 교육비 납부</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">양성과정 신청</h3><p style="font-size:14px">가입 없이 안전결제 한 번으로 신청</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">학습자료 수령</h3><p style="font-size:14px">이메일의 링크로 학습자료(PDF 5종) 내려받기</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자율학습</h3><p style="font-size:14px">표준교재 · 실전 모의고사와 해설 별책</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">평가응시</h3><p style="font-size:14px">상단 <a href="exam.html" style="color:var(--blue);font-weight:700">[평가응시]</a>에서 로그인 · 결제 후 {EXAM_WINDOW_DAYS}일 이내</p></div>
@@ -4158,7 +4171,7 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>이수증은 언제 어떻게 받나요?</summary>
-          <div class="acc-body">{EXAM[1]}점 이상이면 결과 화면에서 바로 이수가 확정되고, <strong>한국AI윤리위원회 홈페이지에 공식 등록</strong>됩니다. 확인 후 7일 이내에 「{DOC_FULL}」(PDF)과 이력서·자기소개서 활용 가이드를 신청하신 이메일로 발급합니다.
+          <div class="acc-body">{EXAM[1]}점 이상이면 결과 화면에서 바로 이수가 확정되고, <strong>한국AI윤리위원회 홈페이지에 공식 등록</strong>됩니다. 확인 후 7일 이내에 「{DOC_FULL}」(PDF)과 이력서·자기소개서 활용 가이드를 결제 때 입력하신 이메일로 발급합니다.
             이수증에는 이수번호가 부여되며, 이후 위원회를 통해 이수 사실을 확인할 수 있습니다. 전문위원 등록 신청 방법도 함께 안내합니다.
             기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>로 보내주세요.</div>
         </details>
@@ -4235,34 +4248,33 @@ def build_expert():
 
 # -------------------------------------------------------- expert-apply.html
 def build_expert_apply():
-    """AI윤리전문가 양성과정 신청 폼 (자체 코딩 · 전환·자기설득 중심 개편 2026.09, 양성과정 표기 2026.09.14)
-    - 2026.09.21 통합: 과정 선택 섹션을 없애고(과정 하나) 과정 요약 카드 → 신청 목적(자기설득) → 신청자 정보 → 절차·이수 평가 안내 → 개인정보 동의 → 결제
-    - 2026.09.22 간소화(구입 유도율): 필수 체크는 개인정보 동의 하나만. 절차 확인 체크와 청약철회 확인 섹션은 이탈 요인이라 폼에서 뺐고(청약철회 조건은 terms.html#refund 와 결제 페이지에서 고지),
-      그 자리에 '결제가 왜 성균관컨설팅으로 넘어가는지'를 짧게 설득하는 블록을 넣음. 머리글 통계는 STAT_71(리더 71%가 경력보다 AI 역량), 홈페이지 공식 등록을 머리글·완료 화면에 다시 강조
-    - 제출 시 시트 웹훅으로 접수 기록 + 위원회 알림 메일, 완료 화면에서 결제 페이지로 자동 이동
-    - 2026.09.26 부담 줄이기(사용자: 글이 많고 PDF 5권 표지가 '이걸 다 공부해야 하나' 부담): 긴 소개문·학습자료 표지 그림·절차 목록·평가 표·결제 설명 블록 삭제.
-      머리 카드(100% 온라인 · 원하는 시간에 자유롭게 이수 + 한 문장 + 4단계 + 가격) → 이수하면 남는 것 4칸 → STEP 1 신청자 정보 → STEP 2 기대하는 점(선택 칩)
-      → STEP 3 동의(내용은 접어 두기) + 요약·버튼 'AI윤리전문가 시작하기' + 결제 한 줄 안내. 활용 목적은 필수에서 선택으로(시트 '활용 목적' 칸, 추천 위원은 ' / 추천 위원: …'로 이어 붙임)"""
+    """AI윤리전문가 양성과정 신청 페이지 = 양성과정 홍보 핵심 페이지 (위원 디지털 명함 QR·버튼, 캠페인위원 공유 링크가 모두 여기로 옴)
+    - 2026.09.21 통합(과정 하나), 09.22 간소화(필수는 동의 하나), 09.26 오전 부담 줄이기(긴 소개문·자료 표지·절차 목록 삭제)
+    - 2026.09.26 오후 사용자 지시: "여기는 자기설득용이라 이름·이메일을 받을 필요 없음. 결제할 때 성균관컨설팅에서 이메일을 받음.
+      캠페인위원들이 뿌릴 핵심 홍보 페이지" → 신청자 정보(성명·이메일·직업)·개인정보 동의·접수 전송·완료 화면을 모두 없앰.
+      구성: 머리 카드(100% 온라인 약속 + 한 문장 + 4단계 + 가격 + [AI윤리전문가 시작하기]) → 이수하면 남는 것 4칸
+      → 나에게 필요한 이유(선택 칩. 고르면 이 과정이 돕는 점이 바로 뜸. 어디에도 저장·전송하지 않음) → 가격 요약 + [AI윤리전문가 시작하기]
+      두 버튼 모두 결제 페이지(PAY_URL, 성균관컨설팅)로 바로 이동. 4단계 중 '핵심 확인'은 '자료 수령'으로(사용자 지시)
+    - 추천 위원: ?ref=위원코드 로 들어오면 머리에 '○○○ 위원의 추천으로 방문하셨습니다' 표시, 코드는 30일 기억(브라우저),
+      결제 버튼 주소에 utm_source=kaiec · utm_medium=referral · utm_campaign=위원코드 꼬리표로 붙여 넘김(개인정보 아님)"""
     PURPOSES = [
-        "이력서·포트폴리오에 공식 이수 이력 추가",
-        "취업·이직 경쟁력 강화",
-        "현재 직무에 AI 윤리 역량 활용",
-        "기업·기관 AI 윤리·컴플라이언스 업무",
-        "올바른 AI 활용과 윤리 배우기",
-        "AI 윤리 강사·교육 활동",
-        "책임 있는 AI 문화 확산 참여",
-        "연구·교육 분야 전문 이력",
-        "기타",
+        # (칩 문구, 고르면 뜨는 '이 과정이 돕는 점')
+        ("이력서·포트폴리오에 공식 이수 이력 추가", "고유 이수번호가 적힌 공식 이수증과 이력서 표기 가이드"),
+        ("취업·이직 경쟁력 강화", "이름과 이수번호로 확인되는 홈페이지 전문가 등록"),
+        ("현재 직무에 AI 윤리 역량 활용", "업무에 바로 쓰는 실무 도구집"),
+        ("기업·기관 AI 윤리·컴플라이언스 업무", "조직의 AI 활용 기준을 세우는 핵심 정리와 실무 도구집"),
+        ("올바른 AI 활용과 윤리 배우기", "전공·경력 없이 학습자료만으로 핵심 정리"),
+        ("AI 윤리 강사·교육 활동", "이수 후 전문위원 등록 신청으로 강의·자문 활동까지"),
+        ("책임 있는 AI 문화 확산 참여", "위원회 공식 AI윤리전문가로 홈페이지에 이름 등록"),
+        ("연구·교육 분야 전문 이력", "연구·교육 이력에 더하는 공식 이수 기록"),
+        ("기타", ""),
     ]
     PURPOSE_ITEMS = "".join(
-        f'<label><input type="checkbox" name="purpose" value="{p}"><span>{p}</span></label>' for p in PURPOSES)
-    JOBS = "".join(
-        f'<label><input type="radio" name="job" value="{j}"><span>{j}</span></label>' for j in [
-        "대학생·대학원생", "기업·기관 재직자", "교사·강사", "교수·연구자",
-        "취업준비생", "프리랜서·전문직", "사업자·기업 대표", "기타"])
+        f'<label><input type="checkbox" name="purpose" value="{_html.escape(p)}" data-fit="{_html.escape(f)}"><span>{p}</span></label>'
+        for p, f in PURPOSES)
     STEPS = [
-        ("mouse-pointer-click", "간편 신청", "신청서 작성 후 안전결제"),
-        ("book-open", "핵심 확인", "학습자료로 원하는 시간에"),
+        ("mouse-pointer-click", "간편 신청", "가입 없이 결제 한 번"),
+        ("book-open", "자료 수령", "이메일로 학습자료 발송"),
         ("monitor-check", "온라인 평가", f"{EXAM[1]}점 이상 · 재응시 가능"),
         ("award", "이수 완료", "이수증 + 전문가 등록"),
     ]
@@ -4278,6 +4290,7 @@ def build_expert_apply():
     ]
     GETS_HTML = "".join(
         f'<div><i data-lucide="{ic}"></i><b>{t}</b><span>{d}</span></div>' for ic, t, d in GETS)
+    PAY_HREF = _html.escape(PAY_URL or f"mailto:{EMAIL}")
 
     body = f"""    <section class="section gform-bg">
       <div class="gform-wrap">
@@ -4292,7 +4305,7 @@ def build_expert_apply():
           <ol class="ea-steps">{STEPS_HTML}</ol>
           <div class="ea-price">
             <div class="ea-price-tag"><span class="ap-badge">특별가</span><strong>{won(PRICE)}</strong><s>정가 {won(LIST_PRICE)}</s></div>
-            <a class="btn btn-primary ea-go" href="#secInfo">지금 신청하기 <i data-lucide="arrow-down"></i></a>
+            <a class="btn btn-primary ea-go js-pay" href="{PAY_HREF}">AI윤리전문가 시작하기 <i data-lucide="arrow-right"></i></a>
           </div>
         </div>
 
@@ -4303,86 +4316,25 @@ def build_expert_apply():
             <small>Microsoft · LinkedIn 2024 Work Trend Index</small></span></p>
         </div>
 
-        <form id="examForm" novalidate>
-
-          <div class="gform-card" id="secInfo">
-            <div class="gform-sec">STEP 1</div>
-            <h2>신청자 정보</h2>
-            <div class="gform-fields">
-              <div class="field" id="fName">
-                <label for="f-name">성명 <span class="req">*</span></label>
-                <input id="f-name" type="text" name="name" autocomplete="name" placeholder="홍길동">
-                <p class="err-msg">성명을 입력해 주세요.</p>
-              </div>
-              <div class="field" id="fEmail">
-                <label for="f-email">이메일 주소 <span class="req">*</span></label>
-                <input id="f-email" type="email" name="email" autocomplete="email" placeholder="example@email.com">
-                <p class="field-hint">학습자료와 평가 로그인 안내가 이 주소로 발송됩니다. 결제 때도 같은 이메일을 입력해 주세요.</p>
-                <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
-              </div>
-              <div class="field" id="fJob">
-                <label>현재 직업 또는 활동 분야 <span class="req">*</span></label>
-                <div class="pill-choice">{JOBS}</div>
-                <p class="err-msg">직업 또는 활동 분야를 선택해 주세요.</p>
-              </div>
-            </div>
+        <div class="gform-card ea-why" id="secPurpose">
+          <h2>나에게 필요한 이유 <span class="field-opt">골라 보기</span></h2>
+          <p class="gform-desc">해당하는 것을 눌러 보세요. 고른 내용은 저장되지 않습니다.</p>
+          <div class="pill-choice chip-multi" id="purposeGrid">{PURPOSE_ITEMS}</div>
+          <div class="ea-fit" id="fitBox" hidden aria-live="polite">
+            <strong>이 과정이 이렇게 돕습니다</strong>
+            <ul id="fitList"></ul>
           </div>
+        </div>
 
-          <div class="gform-card" id="secPurpose">
-            <div class="gform-sec">STEP 2</div>
-            <h2>이 과정으로 기대하는 점 <span class="field-opt">선택</span></h2>
-            <p class="gform-desc">해당하는 것을 모두 골라 주세요.</p>
-            <div class="pill-choice chip-multi" id="purposeGrid">{PURPOSE_ITEMS}</div>
+        <div class="gform-card ea-final" id="secGo">
+          <div class="ea-sum">
+            <div><b>AI윤리전문가 양성과정</b><small>공식 이수증 + 홈페이지 전문가 등록 + 이력서 활용 가이드</small></div>
+            <div class="ea-sum-price"><s>정가 {won(LIST_PRICE)}</s><strong>{won(PRICE)}</strong></div>
           </div>
-
-          <div class="gform-card" id="secPriv">
-            <div class="gform-sec">STEP 3</div>
-            <h2>동의하고 신청하기</h2>
-            <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
-              <span><b class="ea-must">[필수]</b> 개인정보 수집·이용에 동의합니다.</span></label>
-            <p class="err-msg">개인정보 수집·이용 동의에 체크해 주세요.</p>
-            <details class="ea-more">
-              <summary>수집 항목 · 이용 목적 · 보유 기간 보기</summary>
-              <div class="gform-privacy">
-                <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 기대하는 점(선택), 신청정보</div>
-                <div><span>이용목적</span>신청자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
-                <div><span>보유기간</span>수집일로부터 3년. 이수자 명부는 이수 사실 확인을 위해 보관하며, 삭제를 요청하시면 즉시 파기합니다</div>
-              </div>
-              <p class="field-hint" style="margin-top:10px">자세한 내용은 <a href="privacy.html" style="color:var(--blue);font-weight:700">개인정보·운영정책</a>을 확인해 주세요.</p>
-            </details>
-
-            <div class="ea-sum">
-              <div><b>AI윤리전문가 양성과정</b><small>공식 이수증 + 홈페이지 전문가 등록 + 이력서 활용 가이드</small></div>
-              <div class="ea-sum-price"><s>정가 {won(LIST_PRICE)}</s><strong>{won(PRICE)}</strong></div>
-            </div>
-            <button type="submit" class="btn btn-primary gform-submit-btn ea-submit-btn">AI윤리전문가 시작하기 <i data-lucide="arrow-right"></i></button>
-            <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
-            <p class="ea-paynote"><i data-lucide="shield-check"></i>
-              <span>제출하면 위원회 공식 교육 운영사 <b>성균관컨설팅</b>(성균관대학교 RISE사업 공식 지원기업)의 안전결제로 이어집니다.
-              카드 명세서에는 '성균관컨설팅'으로 표기됩니다. <a href="terms.html">서비스 이용안내</a></span></p>
-          </div>
-        </form>
-
-        <div class="gform-card gform-done" id="doneView" hidden>
-          <div class="done-icon"><i data-lucide="check"></i></div>
-          <h2>신청이 접수되었습니다</h2>
-          <p class="done-lead">이제 <strong>교육비 결제</strong> 한 단계만 남았습니다.</p>
-          <div class="done-pay">
-            <div class="done-pay-head"><i data-lucide="shield-check"></i>
-              <div><strong>성균관컨설팅 안전결제로 연결됩니다</strong>
-                <span>위원회 교육 운영사 · 성균관대학교 RISE사업 공식 지원기업</span></div>
-            </div>
-            <a id="payBtn" class="btn btn-primary" hidden>교육비 결제하기 <i data-lucide="credit-card"></i></a>
-            <p id="payCount" class="gform-count" hidden><strong>3</strong>초 후 자동으로 이동합니다</p>
-            <p id="payWait" class="gform-paywait" hidden>결제 안내는 작성하신 이메일로 보내드립니다.</p>
-          </div>
-          <p class="gform-paynote">결제 때 입력하신 이메일과 휴대전화 번호 뒤 4자리가 그대로 [평가응시] 로그인 정보가 됩니다. 결제가 확인되면 학습자료가 이메일로 발송되고, 이수하면 위원회 홈페이지에 AI윤리전문가로 공식 등록됩니다.</p>
-          <div class="done-mailbox" id="mailBox">
-            <p><strong>신청 내용 전송 안내</strong><br>자동 접수가 되지 않았다면 아래 신청 내용을 복사해
-               <a href="mailto:{EMAIL}">{EMAIL}</a> 으로 보내주세요.</p>
-            <textarea id="doneCopy" readonly aria-label="전송 내용 사본" tabindex="-1"></textarea>
-            <button type="button" class="btn btn-ghost" id="copyBtn">신청 내용 복사</button>
-          </div>
+          <a class="btn btn-primary gform-submit-btn ea-submit-btn js-pay" href="{PAY_HREF}">AI윤리전문가 시작하기 <i data-lucide="arrow-right"></i></a>
+          <p class="ea-paynote"><i data-lucide="shield-check"></i>
+            <span>위원회 공식 교육 운영사 <b>성균관컨설팅</b>(성균관대학교 RISE사업 공식 지원기업)의 안전결제로 이어지며, 카드 명세서에는 '성균관컨설팅'으로 표기됩니다.
+            결제 때 입력한 이메일로 학습자료가 발송되고, 그 이메일과 휴대전화 번호 뒤 4자리로 평가에 로그인합니다. <a href="terms.html">서비스 이용안내</a></span></p>
         </div>
 
       </div>
@@ -4392,14 +4344,12 @@ def build_expert_apply():
   <script src="assets/js/members-data.js"></script>
   <script>
   (function(){
-    var form=document.getElementById('examForm');
-    /* 2026.09.21 통합: 과정이 하나라 선택이 없습니다. 접수 시트의 '과정' 칸에는 아래 값이 그대로 기록됩니다 */
-    var COURSE='__COURSE__';
     var PAYLINK='__PAY__';
+    var CHECK='<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 
-    /* 추천 위원 (2026.09.26): 위원 디지털 명함의 QR · 신청 버튼은 ?ref=위원코드 로 들어옵니다.
-       30일 동안 기억했다가(다시 방문해도 유지) 접수 시트 '활용 목적' 칸 끝에 '추천 위원: 성명(코드)'를 붙여 보냅니다. */
-    var REF='',REFNAME='';
+    /* 추천 위원: 위원 디지털 명함의 QR · 버튼, 캠페인위원 공유 링크는 ?ref=위원코드 로 들어옵니다.
+       30일 동안 기억했다가(다시 방문해도 유지) 결제 버튼 주소에 utm 꼬리표로 붙여 넘깁니다. 이름·이메일 등 개인정보는 받지 않습니다. */
+    var REF='';
     try{
       var rq=new URLSearchParams(location.search).get('ref');
       if(rq&&/^[A-Za-z0-9-]{2,40}$/.test(rq)){REF=rq;localStorage.setItem('kaiec_ref',JSON.stringify({v:rq,t:Date.now()}));}
@@ -4410,98 +4360,36 @@ def build_expert_apply():
         (window.KAIEC_CAMPAIGN_MEMBERS||[]).map(function(m){return {name:m.name,en:m.en,code:m.code,role:'AI 윤리 캠페인위원'};}));
       var slug=function(e){return String(e||'').toLowerCase().replace(/[^a-z]+/g,'-').replace(/^-+|-+$/g,'');};
       var hit=ppl.filter(function(m){return (m.code&&m.code.toUpperCase()===REF.toUpperCase())||(m.en&&slug(m.en)===REF.toLowerCase());})[0];
-      if(hit){
-        REFNAME=hit.name;
-        var chip=document.getElementById('refChip');
-        if(chip){chip.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
-          +'<span>한국AI윤리위원회 <b>'+hit.name+'</b> '+String(hit.role||'').split(' · ')[0]+'의 추천으로 방문하셨습니다</span>';chip.hidden=false;}
+      var chip=document.getElementById('refChip');
+      if(hit&&chip){
+        chip.innerHTML=CHECK+'<span>한국AI윤리위원회 <b>'+hit.name+'</b> '+String(hit.role||'').split(' · ')[0]+'의 추천으로 방문하셨습니다</span>';
+        chip.hidden=false;
+      }
+      if(PAYLINK){
+        var link=PAYLINK+(PAYLINK.indexOf('?')>=0?'&':'?')+'utm_source=kaiec&utm_medium=referral&utm_campaign='+encodeURIComponent(REF);
+        document.querySelectorAll('.js-pay').forEach(function(a){a.href=link;});
       }
     }
-    var REFTXT=REF?('추천 위원: '+(REFNAME?REFNAME+'('+REF+')':REF)):'';
 
-    function bad(id,on){document.getElementById(id).classList.toggle('is-invalid',!!on);return !!on;}
-    function v(n){var el=form.querySelector('[name='+n+']');return (el&&el.value?el.value:'').trim();}
-    function purposes(){return Array.prototype.slice.call(form.querySelectorAll('[name=purpose]:checked')).map(function(x){return x.value;});}
-
-    form.addEventListener('submit',function(e){
-      e.preventDefault();
-      var job=form.querySelector('[name=job]:checked');
-      var pz=purposes();
-      bad('fName',!v('name'));
-      bad('fEmail',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')));
-      bad('fJob',!job);
-      bad('secPriv',!form.querySelector('[name=privok]').checked);
-      var first=document.querySelector('.is-invalid');
-      document.getElementById('topErr').style.display=first?'block':'none';
-      if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}
-
-      var pstr=[pz.join(', '),REFTXT].filter(Boolean).join(' / ');
-      var lines=[
-        '한국AI윤리위원회 AI윤리전문가 양성과정 신청','',
-        '■ 신청 과정 : '+COURSE,
-        '■ 성명 : '+v('name'),
-        '■ 이메일 : '+v('email'),
-        '■ 직업/활동 분야 : '+job.value,
-        '■ 기대하는 점 : '+(pz.join(', ')||'(선택 안 함)')
-      ].concat(REFTXT?['■ '+REFTXT]:[]).concat([
-        '',
-        '■ 개인정보 수집·이용 : 동의','',
-        '--- kaiec.kr AI윤리전문가 양성과정 신청 페이지에서 작성됨 ---'
-      ]);
-
-      /* 접수 데이터 전송: 시트 웹훅으로 GET 전송(주소에 데이터), 없으면 메일 앱 폴백 */
-      var HOOK='__HOOK__';
-      if(HOOK){
-        var qs='course='+encodeURIComponent(COURSE)+'&name='+encodeURIComponent(v('name'))
-             +'&email='+encodeURIComponent(v('email'))+'&job='+encodeURIComponent(job.value)
-             +'&purpose='+encodeURIComponent(pstr)+'&t='+Date.now();
-        var url=HOOK+'?'+qs; var ok=false;
-        try{fetch(url,{mode:'no-cors',keepalive:true,cache:'no-store'});ok=true;}catch(e1){}
-        if(!ok){try{var im=new Image();im.src=url;}catch(e2){}}
-        document.getElementById('mailBox').hidden=true;
-      }else{
-        var mail='mailto:__FEMAIL__?subject='+encodeURIComponent('[AI윤리전문가 양성과정 신청] '+v('name'))
-                +'&body='+encodeURIComponent(lines.join('\n'));
-        setTimeout(function(){location.href=mail;},400);
-      }
-
-      /* 완료 화면 표시 */
-      form.hidden=true;
-      var done=document.getElementById('doneView'); done.hidden=false;
-      document.getElementById('doneCopy').value=lines.join('\n');
-      window.scrollTo({top:done.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
-
-      /* 결제 페이지 자동 이동 (3초 카운트다운, 버튼으로 즉시 이동 가능) */
-      var link=PAYLINK||'';
-      if(link){
-        var pb=document.getElementById('payBtn'); pb.href=link; pb.hidden=false;
-        var pc=document.getElementById('payCount'); pc.hidden=false;
-        var num=pc.querySelector('strong'); var cnt=3; num.textContent=cnt;
-        var tick=setInterval(function(){
-          cnt--;
-          if(cnt<=0){clearInterval(tick);location.href=link;}
-          else{num.textContent=cnt;}
-        },1000);
-        pb.addEventListener('click',function(){clearInterval(tick);});
-      }else{
-        document.getElementById('payWait').hidden=false;
-      }
-    });
-
-    document.getElementById('copyBtn').addEventListener('click',function(){
-      var t=document.getElementById('doneCopy'); t.select();
-      var ok=false;
-      try{ok=document.execCommand('copy');}catch(err){}
-      if(navigator.clipboard){navigator.clipboard.writeText(t.value).catch(function(){});ok=true;}
-      this.textContent=ok?'복사되었습니다':'복사 후 붙여넣어 주세요';
-      var b=this; setTimeout(function(){b.textContent='신청 내용 복사';},2200);
-    });
+    /* 나에게 필요한 이유: 고른 항목마다 이 과정이 돕는 점을 보여 줍니다 (어디에도 저장·전송하지 않음) */
+    var grid=document.getElementById('purposeGrid'),box=document.getElementById('fitBox'),list=document.getElementById('fitList');
+    if(grid&&box&&list){
+      grid.addEventListener('change',function(){
+        var seen={},items=[];
+        grid.querySelectorAll('input:checked').forEach(function(x){
+          var f=x.getAttribute('data-fit');
+          if(f&&!seen[f]){seen[f]=1;items.push(f);}
+        });
+        list.innerHTML=items.map(function(f){var li=document.createElement('li');li.textContent=f;return '<li>'+CHECK+'<span>'+li.innerHTML+'</span></li>';}).join('');
+        box.hidden=!items.length;
+      });
+    }
   })();
   </script>
-""".replace('__FEMAIL__', EMAIL).replace('__PAY__', PAY_URL).replace('__HOOK__', SHEET_WEBHOOK).replace('__COURSE__', PROG)
+""".replace('__PAY__', PAY_URL)
 
     page("expert-apply.html", "AI윤리전문가(AIEP) 양성과정 신청",
-         "한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정 신청 페이지입니다. 신청자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
+         "한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정. 가입 없이 결제 한 번으로 시작해 이메일로 학습자료를 받고, 온라인 평가를 통과하면 공식 이수증 발급과 홈페이지 전문가 등록까지 한 번에 완료됩니다. 100% 온라인, 원하는 시간에 자유롭게 이수합니다.",
          body, extra_script=script,
          keywords=["AI윤리전문가 양성과정 신청", "AIEP 신청", "AI윤리전문가 과정 신청", "AI 윤리 교육 신청", "AI 윤리 이수증", "한국AI윤리위원회"])
 
@@ -4841,7 +4729,10 @@ def build_join():
     위촉 문서 대신 '홈페이지 공식 위원 명단 등재'를 혜택으로 내세움(위촉 증서는 발급하지 않음). 직업 선택은 문턱을 낮추고, 지원 동기·자기소개 예시는 캠페인(온라인 알리기) 중심
     - 허들 최소화: 필수는 참여 구분·성명·이메일·직업·지원 동기(체크)·동의뿐, 자기소개는 선택(예시 문장 칩), 소속은 '적기' 버튼을 누른 분만(공식 파트너 선택 시 기관명 칸 자동 표시)
     - 히어로·역할 카드의 [캠페인위원 지원하기] 류 버튼은 data-pick 으로 신청서의 참여 구분을 미리 고르고 #apply 로 이동(?type= 딥링크도 유지)
-    - 접수 데이터는 양성과정 신청과 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록
+    - 접수 데이터는 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 접수 시트 '위원 신청' 탭에 기록 + 관리자 알림
+    - 2026.09.26 사용자 지시: 같은 신청을 위원 지원서 구글폼(formResponse)으로도 보내 「AI 윤리 파트너 관리」 시트 '지원자_응답' 탭에
+      구글폼 응답과 똑같이 쌓이게 함(PARTNER_FORM_* 상수). 폼 '연락처'가 필수라 휴대전화도 필수로 바꿈.
+      자기소개 및 지원동기 칸 = 한 줄 자기소개 + 기대하는 것 + 직업·소속 + '(kaiec.kr 홈페이지 신청)'
     - 2026.09.26(사용자: 폼이 너무 밑에 있고 글이 많음): 순서를 히어로 → 신청서 → 활동 소개 → 혜택 → 절차 → FAQ 로 바꾸고, 신청서 머리 설명 카드·운영위원 등 안내 섹션 삭제,
       참여 구분은 한 줄 설명(기본 선택 캠페인위원), 기대하는 것은 짧은 선택 칩(필수 아님), 자기소개는 '남기기' 버튼으로 열기, 동의 내용은 접어 둠"""
     ROLES = [
@@ -4984,8 +4875,8 @@ def build_join():
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fPhone">
-                <label for="f-phone">휴대전화 번호 <span class="field-opt">(선택)</span></label>
-                <input id="f-phone" type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
+                <label for="f-phone">휴대전화 번호 <span class="req">*</span></label>
+                <input id="f-phone" type="tel" name="phone" inputmode="numeric" autocomplete="tel" placeholder="010-1234-5678">
                 <p class="err-msg">휴대전화 번호를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fJob">
@@ -5032,7 +4923,7 @@ def build_join():
             <details class="ea-more">
               <summary>수집 항목 · 이용 목적 · 보유 기간 보기</summary>
               <div class="gform-privacy">
-                <div><span>수집항목</span>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 기대하는 것·자기소개(선택)</div>
+                <div><span>수집항목</span>성명, 이메일, 휴대전화, 직업·활동 분야, 소속(선택), 참여 구분, 기대하는 것·자기소개(선택)</div>
                 <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내, 위촉 시 홈페이지 공식 위원 명단 게시(성명)</div>
                 <div><span>보유기간</span>수집일로부터 3년. 활동이 끝나거나 삭제를 요청하시면 즉시 파기합니다</div>
               </div>
@@ -5188,7 +5079,7 @@ def build_join():
       bad('secType',!jtype());
       bad('fName',!v('name'));
       bad('fEmail',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')));
-      bad('fPhone',digits.length>0&&!(digits.length>=10&&digits.length<=11&&digits.slice(0,2)==='01'));
+      bad('fPhone',!(digits.length>=9&&digits.length<=11));
       bad('fJob',!job);
       bad('secPriv',!form.querySelector('[name=privok]').checked);
       var first=document.querySelector('.is-invalid');
@@ -5200,7 +5091,7 @@ def build_join():
                 job:job.value,org:v('org'),motive:mot.join(', '),purpose:v('msg'),t:String(Date.now())};
       var lines=['한국AI윤리위원회 위원 참여 신청','',
         '■ 참여 구분 : '+t,'■ 성명 : '+data.name,'■ 이메일 : '+data.email,
-        '■ 휴대전화 : '+(data.phone||'(미기재)'),'■ 직업/활동 분야 : '+data.job,'■ 소속 : '+(data.org||'(미기재)'),
+        '■ 휴대전화 : '+data.phone,'■ 직업/활동 분야 : '+data.job,'■ 소속 : '+(data.org||'(미기재)'),
         '■ 기대하는 것 : '+(data.motive||'(선택 안 함)'),'■ 지원 사유·자기소개 : '+(data.purpose||'(미기재)'),'',
         '■ 개인정보 수집·이용 : 동의','','--- kaiec.kr 위원 참여 신청 페이지에서 작성됨 ---'];
 
@@ -5217,6 +5108,20 @@ def build_join():
                 +'&body='+encodeURIComponent(lines.join('\n'));
         setTimeout(function(){location.href=mail;},400);
       }
+
+      /* 파트너 관리 시트(지원자_응답 탭)에도 구글폼 응답과 같은 형식으로 기록 (2026.09.26)
+         위원 지원서 구글폼의 formResponse 로 보내므로 타임스탬프·성명·연락처·이메일·지원 분야·자기소개 및 지원동기·동의가
+         구글폼으로 받은 줄과 똑같이 쌓이고, 폼에 걸린 자동화(제안 메일 등)도 똑같이 적용됩니다. */
+      var GF=__GF_POST__, GE=__GF_ENTRY__, GR=__GF_ROLE__;
+      if(GF){
+        var intro=[data.purpose, data.motive?'기대하는 것: '+data.motive:'',
+                   '직업: '+data.job+(data.org?' · 소속: '+data.org:''), '(kaiec.kr 홈페이지 신청)'].filter(Boolean).join('\n');
+        var gf=new URLSearchParams();
+        gf.append(GE.name,data.name); gf.append(GE.phone,data.phone); gf.append(GE.email,data.email);
+        gf.append(GE.role,GR[t]||GR['AI 윤리 캠페인위원']); gf.append(GE.intro,intro); gf.append(GE.agree,__GF_AGREE__);
+        gf.append('fvv','1'); gf.append('pageHistory','0');
+        try{fetch(GF,{method:'POST',mode:'no-cors',keepalive:true,cache:'no-store',body:gf});}catch(e3){}
+      }
       form.hidden=true;
       var done=document.getElementById('doneView'); done.hidden=false;
       document.getElementById('doneCopy').value=lines.join('\n');
@@ -5232,7 +5137,12 @@ def build_join():
     });
   })();
   </script>
-""".replace('__FEMAIL__', EMAIL).replace('__HOOK__', SHEET_WEBHOOK)
+""".replace('__FEMAIL__', EMAIL).replace('__HOOK__', SHEET_WEBHOOK) \
+     .replace('__GF_POST__', _json_str(PARTNER_FORM_POST)).replace('__GF_ENTRY__', _json_str(PARTNER_FORM_ENTRY)) \
+     .replace('__GF_ROLE__', _json_str(PARTNER_FORM_ROLE)).replace('__GF_AGREE__', _json_str(PARTNER_FORM_AGREE))
+    missing = [name for _ic, name, *_rest in ROLES if name not in PARTNER_FORM_ROLE]
+    if missing:
+        raise SystemExit(f"PARTNER_FORM_ROLE 에 참여 구분 매핑이 없습니다: {missing}")
 
     page("join.html", "위원 참여",
          "한국AI윤리위원회(KAIEC) 위원 참여 신청. AI 윤리 캠페인위원(전공·경력·나이 무관, 온라인 활동)을 중심으로 운영위원·전문위원, 기관·기업·학교 공식 파트너까지 온라인으로 바로 지원하세요. 위촉되면 홈페이지 공식 위원 명단에 등록됩니다.",

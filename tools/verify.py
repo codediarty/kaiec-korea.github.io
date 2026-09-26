@@ -235,18 +235,37 @@ apply_html = read(pages["expert-apply.html"])
 expert_html = read(pages["expert.html"])
 index_html = read("index.html")
 hook = build.SHEET_WEBHOOK
+join_html = read(pages["join.html"])
 if hook:
     if not (hook.startswith("https://script.google.com/macros/s/") and hook.endswith("/exec")):
         probs.append(f"SHEET_WEBHOOK 형식 이상: {hook}")
-    if hook not in apply_html:
-        probs.append("접수 페이지에 SHEET_WEBHOOK 미반영")
-    if re.search(r"AKfycb[\w-]+", apply_html) and hook.split("/s/")[1].split("/")[0] not in apply_html:
-        probs.append("접수 페이지의 웹훅 주소가 build.py 상수와 다름")
+    if hook not in join_html:
+        probs.append("위원 참여 페이지에 SHEET_WEBHOOK 미반영")
+    if re.search(r"AKfycb[\w-]+", join_html) and hook.split("/s/")[1].split("/")[0] not in join_html:
+        probs.append("위원 참여 페이지의 웹훅 주소가 build.py 상수와 다름")
 else:
     probs.append("SHEET_WEBHOOK 비어 있음 (메일 폴백으로 동작)")
-# 2026.09.21 통합: 결제 링크는 PAY_URL 하나. 접수 완료 화면(자동 이동)과 /exam/ 로그인 화면에 있어야 함
-if build.PAY_URL and build.PAY_URL not in apply_html:
-    probs.append(f"PAY_URL 미반영 ({build.PAY_URL})")
+# 2026.09.26: 위원 참여 신청은 파트너 관리 시트(지원자_응답)에도 구글폼 응답으로 기록. 참여 구분마다 폼 '지원 분야' 선택지가 있어야 함
+if build.PARTNER_FORM_POST not in join_html or not build.PARTNER_FORM_POST.endswith("/formResponse"):
+    probs.append("위원 참여 페이지에 파트너 관리 시트 구글폼(formResponse) 전송 미반영")
+for key, entry in build.PARTNER_FORM_ENTRY.items():
+    if not re.fullmatch(r"entry\.\d+", entry) or entry not in join_html:
+        probs.append(f"위원 참여 페이지 구글폼 문항 번호 미반영 ({key}: {entry})")
+for role in re.findall(r'name="jtype" value="([^"]+)"', join_html):
+    if role not in build.PARTNER_FORM_ROLE:
+        probs.append(f"참여 구분 '{role}'의 구글폼 지원 분야 매핑 없음 (PARTNER_FORM_ROLE)")
+if not re.search(r'<label for="f-phone">휴대전화 번호 <span class="req">', join_html):
+    probs.append("위원 참여 휴대전화가 필수가 아님 (구글폼 '연락처'가 필수)")
+# 2026.09.26: 양성과정 신청 페이지는 개인정보를 받지 않고 결제 페이지로 바로 연결 (이메일은 결제 때 성균관컨설팅에서 입력)
+if re.search(r'name="(name|email|phone|job|privok)"', apply_html) or 'id="examForm"' in apply_html:
+    probs.append("양성과정 신청 페이지에 신청자 정보 입력칸이 다시 들어옴 (결제 때 받으므로 받지 않음)")
+if hook and hook in apply_html:
+    probs.append("양성과정 신청 페이지가 다시 시트 웹훅으로 신청 정보를 보냄")
+if "핵심 확인" in apply_html or "자료 수령" not in apply_html:
+    probs.append("양성과정 4단계 2번은 '자료 수령' (핵심 확인 표기 금지)")
+# 2026.09.21 통합: 결제 링크는 PAY_URL 하나. 양성과정 신청 페이지 버튼 2곳과 /exam/ 로그인 화면에 있어야 함
+if build.PAY_URL and apply_html.count(f'js-pay" href="{build.PAY_URL}"') != 2:
+    probs.append(f"양성과정 신청 페이지 결제 버튼 2곳에 PAY_URL 미반영 ({build.PAY_URL})")
 if "?course=" in apply_html or "?course=" in expert_html or "?course=" in index_html:
     probs.append("통합 이후 남은 ?course= 링크가 있음 (과정 선택은 없어졌습니다)")
 exam_html = read(pages["exam.html"])
@@ -285,7 +304,7 @@ if build.COPYCLEAN_URL not in read(pages["copyclean.html"]):
     probs.append("COPYCLEAN_URL 미반영")
 if "/join/#apply" not in read(pages["apply.html"]):
     probs.append("apply 페이지가 통합 신청 폼(/join/#apply)으로 연결되지 않음")
-if 'id="joinForm"' not in read(pages["join.html"]) or build.SHEET_WEBHOOK not in read(pages["join.html"]):
+if 'id="joinForm"' not in join_html or build.SHEET_WEBHOOK not in join_html:
     probs.append("join 페이지 신청 폼 또는 시트 웹훅 미반영")
 check("build.py 상수(웹훅·결제 링크·가격·구글폼·평가응시 설정) 페이지 반영", probs)
 

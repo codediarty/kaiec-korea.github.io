@@ -2065,8 +2065,8 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
 /* 2026.09.25 AIEP 표기: 큰 제목 안의 (AIEP)는 조금 작고 가볍게 (본문에서는 일반 글자) */
 .aiep{font-size:.7em;font-weight:700;letter-spacing:.01em;opacity:.78;margin-left:.06em;white-space:nowrap}
 
-/* ---------- 양성과정 신청 페이지 (2026.09.26 부담 줄이기) ----------
-   머리 카드: 100% 온라인 약속 + 한 문장 + 4단계 + 가격 / 이수하면 남는 것 4칸 / STEP 1~3 */
+/* ---------- 양성과정 신청 페이지 (2026.09.26 부담 줄이기, 같은 날 오후 신청자 정보 없이 결제로 바로) ----------
+   머리 카드: 100% 온라인 약속 + 한 문장 + 4단계 + 가격·버튼 / 이수하면 남는 것 4칸 / 나에게 필요한 이유(칩) / 가격 요약·버튼 */
 .ea-hero{border-top:7px solid var(--navy);padding:34px 34px 28px}
 .ea-hero .gform-kicker{margin-bottom:0}
 .ea-hero h1{margin:12px 0 14px;font-size:28px;line-height:1.3;letter-spacing:-.035em;color:var(--ink)}
@@ -2129,6 +2129,15 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
 .ea-paynote svg{width:16px;height:16px;flex-shrink:0;margin-top:2px;color:#00857A}
 .ea-paynote b{color:var(--gray-700)}
 .ea-paynote a{color:var(--blue);font-weight:700;white-space:nowrap}
+/* 2026.09.26 오후: 신청자 정보 없이 결제로 바로. '나에게 필요한 이유' 칩을 고르면 이 과정이 돕는 점이 뜸(저장·전송 없음) */
+.ea-fit{margin-top:16px;padding:14px 16px;border-radius:12px;background:#EEF7F6;border:1px solid #CFEAE6;animation:eaFitIn .25s ease}
+.ea-fit[hidden]{display:none}
+.ea-fit strong{display:block;margin-bottom:8px;font-size:13.5px;font-weight:800;letter-spacing:-.01em;color:#00786F}
+.ea-fit ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ea-fit li{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.55;color:var(--gray-700);word-break:keep-all}
+.ea-fit li svg{flex-shrink:0;margin-top:3px;color:#00857A}
+@keyframes eaFitIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ea-final .ea-sum{margin-top:0}
 @media (max-width:600px){
   .ea-hero{padding:26px 20px 22px}
   .ea-hero h1{font-size:23px}

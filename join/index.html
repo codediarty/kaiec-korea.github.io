@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=d6413c0ba0">
+<link rel="stylesheet" href="/assets/css/style.css?v=a9ab4b3ee6">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -138,8 +138,8 @@
                 <p class="err-msg">이메일 주소를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fPhone">
-                <label for="f-phone">휴대전화 번호 <span class="field-opt">(선택)</span></label>
-                <input id="f-phone" type="tel" name="phone" inputmode="numeric" placeholder="010-1234-5678">
+                <label for="f-phone">휴대전화 번호 <span class="req">*</span></label>
+                <input id="f-phone" type="tel" name="phone" inputmode="numeric" autocomplete="tel" placeholder="010-1234-5678">
                 <p class="err-msg">휴대전화 번호를 정확히 입력해 주세요.</p>
               </div>
               <div class="field" id="fJob">
@@ -186,7 +186,7 @@
             <details class="ea-more">
               <summary>수집 항목 · 이용 목적 · 보유 기간 보기</summary>
               <div class="gform-privacy">
-                <div><span>수집항목</span>성명, 이메일, 휴대전화(선택), 직업·활동 분야, 소속(선택), 참여 구분, 기대하는 것·자기소개(선택)</div>
+                <div><span>수집항목</span>성명, 이메일, 휴대전화, 직업·활동 분야, 소속(선택), 참여 구분, 기대하는 것·자기소개(선택)</div>
                 <div><span>이용목적</span>참여 신청 검토, 위촉 및 활동 안내, 위촉 시 홈페이지 공식 위원 명단 게시(성명)</div>
                 <div><span>보유기간</span>수집일로부터 3년. 활동이 끝나거나 삭제를 요청하시면 즉시 파기합니다</div>
               </div>
@@ -341,7 +341,7 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=d6413c0ba0"></script>
+  <script src="/assets/js/main.js?v=a9ab4b3ee6"></script>
 
   <script>
   (function(){
@@ -401,7 +401,7 @@
       bad('secType',!jtype());
       bad('fName',!v('name'));
       bad('fEmail',!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')));
-      bad('fPhone',digits.length>0&&!(digits.length>=10&&digits.length<=11&&digits.slice(0,2)==='01'));
+      bad('fPhone',!(digits.length>=9&&digits.length<=11));
       bad('fJob',!job);
       bad('secPriv',!form.querySelector('[name=privok]').checked);
       var first=document.querySelector('.is-invalid');
@@ -413,7 +413,7 @@
                 job:job.value,org:v('org'),motive:mot.join(', '),purpose:v('msg'),t:String(Date.now())};
       var lines=['한국AI윤리위원회 위원 참여 신청','',
         '■ 참여 구분 : '+t,'■ 성명 : '+data.name,'■ 이메일 : '+data.email,
-        '■ 휴대전화 : '+(data.phone||'(미기재)'),'■ 직업/활동 분야 : '+data.job,'■ 소속 : '+(data.org||'(미기재)'),
+        '■ 휴대전화 : '+data.phone,'■ 직업/활동 분야 : '+data.job,'■ 소속 : '+(data.org||'(미기재)'),
         '■ 기대하는 것 : '+(data.motive||'(선택 안 함)'),'■ 지원 사유·자기소개 : '+(data.purpose||'(미기재)'),'',
         '■ 개인정보 수집·이용 : 동의','','--- kaiec.kr 위원 참여 신청 페이지에서 작성됨 ---'];
 
@@ -429,6 +429,20 @@
         var mail='mailto:contact@kaiec.kr?subject='+encodeURIComponent('[위원 참여 신청] '+data.name+' · '+t)
                 +'&body='+encodeURIComponent(lines.join('\n'));
         setTimeout(function(){location.href=mail;},400);
+      }
+
+      /* 파트너 관리 시트(지원자_응답 탭)에도 구글폼 응답과 같은 형식으로 기록 (2026.09.26)
+         위원 지원서 구글폼의 formResponse 로 보내므로 타임스탬프·성명·연락처·이메일·지원 분야·자기소개 및 지원동기·동의가
+         구글폼으로 받은 줄과 똑같이 쌓이고, 폼에 걸린 자동화(제안 메일 등)도 똑같이 적용됩니다. */
+      var GF="https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/formResponse", GE={"name": "entry.829971654", "phone": "entry.212931901", "email": "entry.302845370", "role": "entry.1714421742", "intro": "entry.2002407835", "agree": "entry.346635098"}, GR={"AI 윤리 캠페인위원": "AI 윤리 캠페인위원", "운영위원": "운영위원 (사업기획·대외협력)", "전문위원": "전문위원 (교육강사)", "공식 파트너": "제휴 파트너 신청"};
+      if(GF){
+        var intro=[data.purpose, data.motive?'기대하는 것: '+data.motive:'',
+                   '직업: '+data.job+(data.org?' · 소속: '+data.org:''), '(kaiec.kr 홈페이지 신청)'].filter(Boolean).join('\n');
+        var gf=new URLSearchParams();
+        gf.append(GE.name,data.name); gf.append(GE.phone,data.phone); gf.append(GE.email,data.email);
+        gf.append(GE.role,GR[t]||GR['AI 윤리 캠페인위원']); gf.append(GE.intro,intro); gf.append(GE.agree,"동의합니다.");
+        gf.append('fvv','1'); gf.append('pageHistory','0');
+        try{fetch(GF,{method:'POST',mode:'no-cors',keepalive:true,cache:'no-store',body:gf});}catch(e3){}
       }
       form.hidden=true;
       var done=document.getElementById('doneView'); done.hidden=false;
