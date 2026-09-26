@@ -716,11 +716,11 @@ table.tbl tr:hover td{background:#FCFDFF}
 @media (max-width:600px){.gform-wrap iframe{height:1650px}}
 
 /* ---------- Reveal on scroll ----------
-   JS가 동작할 때만 숨겼다가 보여줍니다. JS가 꺼져 있어도 내용은 항상 보입니다. */
-.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
-.js .reveal.is-in{opacity:1;transform:none}
+   관찰 준비가 끝난 요소만 숨깁니다. 스크립트가 로드되지 않아도 내용은 보입니다. */
+.reveal.is-ready{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.reveal.is-ready.is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
-  .js .reveal{opacity:1;transform:none;transition:none}
+  .reveal.is-ready{opacity:1;transform:none;transition:none}
 }
 
 /* ---------- Hero v2: 메인 홈 (좌 카피·CTA / 우 AI 비주얼·모집 배너) ---------- */
@@ -1907,3 +1907,5 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
 @media (max-width:860px){.do-head{margin-bottom:14px}.do-num{font-size:28px}}
 /* 2026.09.25 AIEP 표기: 큰 제목 안의 (AIEP)는 조금 작고 가볍게 (본문에서는 일반 글자) */
 .aiep{font-size:.7em;font-weight:700;letter-spacing:.01em;opacity:.78;margin-left:.06em;white-space:nowrap}
+
+.agree input:focus-visible + .agree-box { outline:3px solid var(--blue); outline-offset:4px; }

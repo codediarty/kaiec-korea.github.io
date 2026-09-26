@@ -1,0 +1,205 @@
+/* AIEP: readable, evidence-led course and application pages. */
+.aiep-page { --aiep-line:#dce2e9; --aiep-muted:#526073; color:#15263d; }
+.aiep-page a:not(.btn):focus-visible,.home-editorial a:focus-visible { outline:3px solid #1f5fe0; outline-offset:5px; }
+.aiep-hero { padding:30px 0 0; background:#fff; }
+.aiep-breadcrumb { display:flex; gap:12px; font-size:13px; color:#667181; margin-bottom:38px; }
+.aiep-hero-grid { display:grid; grid-template-columns:minmax(0,1fr) 345px; gap:64px; align-items:start; }
+.aiep-kicker { margin:0 0 16px; color:#385a80; font-size:12px; font-weight:700; letter-spacing:.09em; }
+.aiep-intro h1 { margin:0; font-size:40px; font-weight:800; line-height:1.24; letter-spacing:-.055em; }
+.aiep-intro h1 span { display:inline-block; border-left:1px solid #c7d0db; padding-left:17px; margin-left:10px; color:#194a8b; font-size:32px; font-family:Archivo,sans-serif; letter-spacing:-.03em; }
+.aiep-english { font-family:Archivo,sans-serif; font-size:11px; letter-spacing:.2em; color:#69788a; margin:12px 0 35px; }
+.aiep-intro h2 { font-size:clamp(30px,3vw,39px); letter-spacing:-.045em; line-height:1.42; margin:0 0 20px; }
+.aiep-lead { color:#526073; font-size:16px; line-height:1.9; max-width:640px; }
+.aiep-intro-links { display:flex; flex-wrap:wrap; gap:12px 28px; margin-top:26px; }
+.aiep-mobile-apply { display:none; }
+.aiep-intro-links a { display:inline-flex; gap:8px; align-items:center; font-size:14px; font-weight:650; border-bottom:1px solid #b5c4d7; padding-bottom:4px; }
+.aiep-intro-links svg,.aiep-outcomes a svg,.aiep-process-note svg { width:16px; height:16px; }
+.aiep-enroll { border:1px solid #cdd7e3; border-top:3px solid #173c6a; padding:27px; border-radius:0 0 8px 8px; box-shadow:0 10px 32px #122d5010; }
+.aiep-enroll-label { font-size:14px; font-weight:700; }
+.aiep-price { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:15px 0 0; }
+.aiep-price strong { font-size:37px; letter-spacing:-.055em; line-height:1.2; }
+.aiep-price>span { color:#174b8f; background:#eef3fa; padding:3px 8px; border-radius:3px; font-size:12px; font-weight:700; }
+.aiep-list-price { color:#738092; margin:5px 0 18px; font-size:13px; }
+.aiep-facts { font-size:13px; border-top:1px solid var(--aiep-line); padding:16px 0; margin:0; }
+.aiep-facts>div { display:flex; gap:16px; justify-content:space-between; margin:7px 0; }
+.aiep-facts dt { color:#657184; flex-shrink:0; }
+.aiep-facts dd { margin:0; font-weight:600; text-align:right; }
+.aiep-enroll .btn { width:100%; border-radius:5px; padding:15px 12px; font-size:15px; box-shadow:none; gap:9px; }
+.aiep-enroll-note { font-size:11px; line-height:1.85; color:#647184; text-align:center; margin:15px 0 0; }
+.aiep-bottom-line { display:flex; flex-wrap:wrap; gap:15px 40px; border-top:1px solid var(--aiep-line); padding:22px 0; margin-top:38px; color:#45566b; font-size:13px; }
+.aiep-bottom-line span { display:flex; gap:9px; align-items:center; }
+.aiep-bottom-line svg { width:18px; height:18px; color:#315680; }
+.aiep-section-nav { background:#fff; border-top:1px solid #dce2e9; border-bottom:1px solid #dce2e9; }
+.aiep-section-nav .wrap { display:flex; gap:38px; overflow:auto; }
+.aiep-section-nav a { white-space:nowrap; padding:17px 0; font-size:14px; font-weight:650; }
+.aiep-section-nav a:hover { color:#1f5fe0; }
+.aiep-section { padding:78px 0; scroll-margin-top:135px; }
+.aiep-section--tint { background:#f5f7fa; }
+.aiep-section-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:35px; margin-bottom:32px; }
+.aiep-section-heading h2,.aiep-faq-title { font-size:32px; line-height:1.48; letter-spacing:-.045em; }
+.aiep-section-heading>p { font-size:15px; line-height:1.85; color:#526073; max-width:505px; margin:0 0 3px; }
+.aiep-books { margin:0; padding:28px 32px 14px; border:1px solid #dce2e9; background:white; }
+.aiep-books img { width:100%; height:auto; display:block; }
+.aiep-books figcaption { display:flex; justify-content:space-between; gap:15px; margin-top:14px; padding-top:14px; border-top:1px solid #e4e9f0; font-size:12px; color:#687486; }
+.aiep-books figcaption strong { color:#24466e; }
+.aiep-topic-line { display:flex; gap:13px 24px; justify-content:center; flex-wrap:wrap; padding:22px 0 30px; font-size:13px; color:#566a80; }
+.aiep-material-row { border-top:1px solid #dce2e9; }
+.aiep-material-row:last-child { border-bottom:1px solid #dce2e9; }
+.aiep-material-row summary { display:grid; grid-template-columns:38px 1fr auto 18px; align-items:center; gap:15px; padding:20px 4px; cursor:pointer; list-style:none; }
+.aiep-material-row summary::-webkit-details-marker { display:none; }
+.aiep-material-row summary::after { content:'+'; font-size:23px; color:#607a97; }
+.aiep-material-row[open] summary::after { content:'−'; }
+.aiep-row-no { color:#7890ac; font-size:12px; font-family:Archivo,sans-serif; }
+.aiep-material-row summary strong { font-size:17px; }
+.aiep-volume { color:#627185; font-size:13px; }
+.aiep-material-detail { padding:0 40px 24px 57px; color:#526073; font-size:14px; line-height:1.9; }
+.aiep-material-detail .chips { margin-top:12px; }
+.aiep-outcomes { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border-top:1px solid #c8d3e0; border-bottom:1px solid #c8d3e0; }
+.aiep-outcomes article { padding:27px 25px; border-right:1px solid #d6dfe9; }
+.aiep-outcomes article:first-child { padding-left:0; }
+.aiep-outcomes article:last-child { border:0; padding-right:0; }
+.aiep-outcomes article>span { font-size:12px; font-family:Archivo,sans-serif; color:#69819e; }
+.aiep-outcomes h3 { font-size:18px; line-height:1.6; margin:15px 0 12px; }
+.aiep-outcomes p { font-size:14px; color:#526073; line-height:1.9; }
+.aiep-outcomes a { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:#21548f; margin-top:13px; }
+.aiep-resume { display:grid; grid-template-columns:1fr 1.4fr; gap:32px; padding:27px 32px; background:#fff; border-left:3px solid #214a7c; margin-top:34px; }
+.aiep-resume .aiep-kicker { margin-bottom:8px; }
+.aiep-resume h3 { font-size:17px; }
+.aiep-resume strong { display:block; font-size:17px; }
+.aiep-resume p { font-size:13px; margin:6px 0; color:#58697e; }
+.aiep-resume small { font-size:12px; color:#788494; }
+.aiep-footnote { color:#637185; font-size:12px; line-height:1.8; margin-top:17px; }
+.aiep-audiences { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; margin-top:32px; }
+.aiep-audiences p { font-size:13px; color:#526073; }
+.aiep-audiences strong { display:block; color:#233c5d; margin-bottom:4px; font-size:15px; }
+.aiep-samples { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.aiep-samples .sq { margin:0; border-radius:8px; padding:26px; }
+.aiep-samples .sq-q { font-size:17px; line-height:1.7; align-items:flex-start; }
+.aiep-samples .sq-opt { font-size:14px; line-height:1.65; }
+.aiep-samples .sq-exp { font-size:14px; }
+.aiep-process { list-style:none; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:30px; padding:0; margin:0; counter-reset:steps; }
+.aiep-process li { border-top:2px solid #274e7b; padding-top:22px; }
+.aiep-process li>span { font-family:Archivo,sans-serif; color:#6f85a0; font-size:13px; }
+.aiep-process h3 { margin:13px 0 10px; font-size:20px; }
+.aiep-process p { font-size:14px; color:#526073; line-height:1.9; }
+.aiep-process-note { display:flex; justify-content:space-between; gap:20px; border-top:1px solid #d8e0eb; padding-top:23px; margin-top:30px; font-size:13px; color:#526073; }
+.aiep-process-note a { display:flex; gap:7px; align-items:center; color:#174a8b; white-space:nowrap; }
+.aiep-faq-title { margin:0 0 28px; }
+.aiep-contact { text-align:center; padding-top:25px; font-size:14px; color:#66778c; }
+.aiep-contact a { color:#1e4d88; margin-left:14px; text-decoration:underline; }
+.aiep-final { background:#142d4f; color:white; padding:58px 0; }
+.aiep-final>.wrap { display:flex; justify-content:space-between; align-items:center; gap:30px; }
+.aiep-final .aiep-kicker { color:#abc1db; }
+.aiep-final h2 { font-size:35px; line-height:1.48; letter-spacing:-.045em; }
+.aiep-final p:not(.aiep-kicker) { font-size:14px; color:#bccde1; margin-top:15px; }
+.aiep-final-action { display:flex; flex-direction:column; align-items:center; gap:16px; flex-shrink:0; }
+.aiep-final-action>span { font-size:16px; }
+.aiep-final-action .btn { border-radius:5px; box-shadow:none; }
+.aiep-final-action>a:last-child { font-size:12px; color:#b8cbe1; text-decoration:underline; }
+.aiep-apply-shell { padding:44px 22px 65px; background:#f5f7fa; }
+.aiep-apply-shell .gform-wrap { max-width:1040px; display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:23px; padding:0; background:transparent; border:0; border-radius:0; box-shadow:none; overflow:visible; }
+.aiep-apply-shell .gform-card { border-radius:7px; margin:0; box-shadow:none; padding:29px; }
+.aiep-apply-shell .gform-head { grid-column:1/-1; border:0; background:transparent; padding:0 0 10px; }
+.aiep-apply-shell .gform-head h1 { font-size:30px; margin:12px 0; }
+.aiep-apply-shell .gform-head p { font-size:14px; line-height:1.8; margin:7px 0 0; color:#56687c; }
+.aiep-apply-shell .gform-head .gform-lead { font-size:16px; }
+.aiep-apply-summary { grid-column:2; grid-row:2; align-self:start; border-top:3px solid #1a426f; }
+.aiep-apply-price { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px; }
+.aiep-apply-price>span { font-size:13px; color:#5a6d84; }.aiep-apply-price strong { font-size:28px; letter-spacing:-.04em; }
+.aiep-apply-summary ul { margin:0 0 20px; padding-left:17px; color:#53647a; font-size:13px; line-height:1.9; }
+.aiep-apply-summary li+li { margin-top:9px; }.aiep-apply-summary>a { font-size:13px; color:#214f88; text-decoration:underline; }
+.aiep-apply-form,.aiep-apply-shell .gform-done { grid-column:1; grid-row:2; }
+.aiep-apply-form h2 { font-size:22px; }.aiep-apply-form .gform-desc { font-size:14px; }
+.aiep-apply-form .gform-fields { gap:21px; margin-top:25px; }.aiep-apply-form .req { font-size:11px; font-weight:500; color:#536a89; }
+.aiep-apply-form .field input,.aiep-apply-form .field select { width:100%; border:1px solid #c7d2df; border-radius:4px; padding:12px; background:white; font:inherit; font-size:15px; }
+.aiep-apply-form .field input:focus,.aiep-apply-form .field select:focus { outline:2px solid #1f5fe0; outline-offset:2px; }
+.aiep-apply-form [aria-invalid=true] { border-color:#a53030!important; }
+.aiep-apply-optional { border-top:1px solid #e0e6ee; border-bottom:1px solid #e0e6ee; margin:26px 0 23px; padding:16px 0; }
+.aiep-apply-optional summary { font-size:14px; font-weight:600; cursor:pointer; }.aiep-apply-optional summary span { color:#738399; font-size:12px; font-weight:400; }
+.aiep-apply-consent .field-hint { font-size:12px; line-height:1.9; }.aiep-apply-consent .agree { font-size:14px; margin-top:15px; }
+.agree input:focus-visible + .agree-box { outline:3px solid #1f5fe0; outline-offset:4px; }
+.aiep-apply-payment-note { padding:18px 0; margin-top:10px; font-size:13px; color:#52647b; }.aiep-apply-payment-note .field-hint { margin-top:10px; }
+.aiep-apply-form a,.aiep-apply-shell .gform-done a:not(.btn) { color:#1e508d; text-decoration:underline; }
+.aiep-apply-form .gform-submit-btn { width:100%; border-radius:5px; box-shadow:none; font-size:15px; }
+.aiep-field-error,.aiep-apply-status.is-error { color:#a52727; font-size:13px; line-height:1.75; margin:9px 0 0; }
+.aiep-apply-status { font-size:13px; margin:10px 0; }.aiep-apply-form button:disabled { opacity:.65; cursor:wait; }
+.aiep-apply-shell .gform-done { text-align:left; }.aiep-apply-shell .gform-done h2 { font-size:25px; }.aiep-apply-shell .gform-done p { font-size:14px; margin:16px 0; }
+.aiep-apply-shell #payBtn { margin:8px 0 0; font-size:15px; width:100%; border-radius:5px; }.aiep-apply-shell #copyBtn { margin-top:15px; font-size:13px; }
+/* Homepage: institution first, with a clear route into the course. */
+.home-editorial { padding:65px 0 60px; background:#f5f7fa; border-bottom:1px solid #e1e7ed; }
+.home-editorial>.wrap { display:grid; grid-template-columns:1.2fr 1fr; gap:55px; align-items:center; }
+.home-editorial h1 { font-size:41px; letter-spacing:-.05em; line-height:1.46; margin-bottom:24px; color:#142c4c; }
+.home-editorial .home-lead { font-size:16px; color:#52647b; line-height:1.9; max-width:540px; }
+.home-editorial .hero-ctas { justify-content:flex-start; margin:28px 0 0; gap:10px; }
+.home-editorial .hero-ctas .btn { font-size:14px; border-radius:5px; padding:13px 18px; box-shadow:none; }
+.home-course { display:block; background:#fff; border:1px solid #ced9e6; padding:32px; transition:border-color .2s,box-shadow .2s; }
+.home-course:hover { border-color:#799abe; box-shadow:0 12px 30px #183e6710; }
+.home-course-top { display:flex; justify-content:space-between; align-items:center; font-size:11px; letter-spacing:.05em; color:#536e91; }
+.home-course-mark { font-family:Archivo,sans-serif; font-size:64px; letter-spacing:-.04em; color:#143d70; line-height:1.2; margin-top:17px; }
+.home-course h2 { font-size:22px; margin:8px 0; }
+.home-course p { font-size:13px; color:#64758a; }
+.home-course img { width:100%; height:auto; margin:22px 0; }
+.home-course-bottom { border-top:1px solid #e1e7ed; padding-top:17px; display:flex; justify-content:space-between; font-size:13px; color:#234f85; align-items:center; }
+.home-course-bottom svg { width:18px; }
+@media(max-width:1000px) {
+  .aiep-hero-grid { gap:30px; grid-template-columns:minmax(0,1fr) 325px; }
+  .aiep-intro h1 { font-size:34px; }.aiep-intro h1 span { font-size:27px; }
+  .aiep-desktop-br { display:none; }.aiep-section-heading>p br { display:none; }
+  .aiep-outcomes { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .aiep-outcomes article:nth-child(2) { border-right:0; }.aiep-outcomes article:nth-child(3) { padding-left:0; }
+  .aiep-outcomes article:nth-child(-n+2) { border-bottom:1px solid #d6dfe9; }
+  .aiep-process { gap:20px; }.home-editorial>.wrap { gap:30px; }.home-editorial h1 { font-size:34px; }
+}
+@media(max-width:760px) {
+  .aiep-apply-shell { padding:30px 18px 50px; }.aiep-apply-shell .gform-wrap { display:flex; flex-direction:column; gap:20px; }
+  .aiep-apply-shell .gform-card { padding:24px 20px; }.aiep-apply-shell .gform-head { padding:0 0 4px; }.aiep-apply-shell .gform-head h1 { font-size:26px; }
+  .aiep-apply-summary { width:100%; }.aiep-apply-summary ul { font-size:12px; }.aiep-apply-summary li+li { margin-top:4px; }.aiep-apply-price { margin-bottom:14px; }
+  .aiep-hero { padding-top:20px; }.aiep-breadcrumb { margin-bottom:24px; font-size:11px; }
+  .aiep-hero-grid { grid-template-columns:1fr; gap:28px; }.aiep-kicker { font-size:11px; margin-bottom:13px; }
+  .aiep-intro h1 { font-size:30px; }.aiep-intro h1 span { font-size:24px; padding-left:11px; margin-left:6px; }
+  .aiep-mobile-apply { display:flex; width:100%; font-size:14px; border-radius:5px; margin-top:21px; box-shadow:none; padding:14px 15px; }
+  .aiep-english { margin-bottom:24px; font-size:10px; }.aiep-intro h2 { font-size:30px; }
+  .aiep-lead { font-size:15px; line-height:1.85; }.aiep-intro-links { margin-top:20px; }.aiep-intro-links a { font-size:13px; }
+  .aiep-enroll { padding:23px; }.aiep-enroll-note { font-size:12px; }.aiep-price strong { font-size:36px; }
+  .aiep-bottom-line { flex-direction:column; gap:11px; margin-top:25px; padding:21px 0; font-size:12px; }
+  .aiep-section-nav .wrap { gap:25px; }.aiep-section-nav a { font-size:13px; }
+  .aiep-section { padding:49px 0; scroll-margin-top:105px; }.aiep-section-heading { display:block; margin-bottom:23px; }
+  .aiep-section-heading h2,.aiep-faq-title { font-size:27px; }.aiep-section-heading>p { font-size:14px; margin-top:17px; }
+  .aiep-books { padding:18px 12px 12px; }.aiep-books figcaption { font-size:10px; gap:10px; }.aiep-books figcaption strong { white-space:nowrap; }
+  .aiep-topic-line { gap:8px 16px; font-size:11px; padding-bottom:22px; }
+  .aiep-material-row summary { grid-template-columns:25px 1fr 18px; gap:9px; padding:17px 0; }.aiep-material-row summary strong { font-size:15px; }
+  .aiep-volume { grid-column:2; grid-row:2; font-size:11px; }.aiep-material-row summary::after { grid-column:3; grid-row:1/3; }
+  .aiep-material-detail { padding:0 5px 22px 34px; font-size:13px; }
+  .aiep-outcomes { grid-template-columns:1fr; }.aiep-outcomes article,.aiep-outcomes article:last-child { padding:22px 0; border-right:0; border-bottom:1px solid #d6dfe9; }
+  .aiep-outcomes article:last-child { border-bottom:0; }.aiep-outcomes h3 { margin:7px 0; }.aiep-outcomes p { font-size:14px; }
+  .aiep-resume { grid-template-columns:1fr; gap:17px; padding:24px 21px; }.aiep-resume strong { font-size:15px; }.aiep-resume p { font-size:12px; overflow-wrap:anywhere; }
+  .aiep-audiences { grid-template-columns:1fr; gap:17px; }.aiep-footnote { font-size:11px; }
+  .aiep-samples { grid-template-columns:1fr; gap:18px; }.aiep-samples .sq { padding:21px 17px; }.aiep-samples .sq-q { font-size:15px; }.aiep-samples .sq-opt { font-size:13px; }
+  .aiep-process { grid-template-columns:1fr 1fr; gap:28px 20px; }.aiep-process h3 { font-size:17px; }.aiep-process p { font-size:12px; }
+  .aiep-process-note { flex-direction:column; font-size:12px; gap:12px; }
+  .aiep-final { padding:42px 0; }.aiep-final>.wrap { display:block; }.aiep-final h2 { font-size:30px; }.aiep-final-action { align-items:flex-start; margin-top:28px; }.aiep-final-action .btn { width:100%; }
+  .home-editorial { padding:39px 0; }.home-editorial>.wrap { grid-template-columns:1fr; gap:30px; }.home-editorial h1 { font-size:31px; }.home-editorial .home-lead { font-size:14px; }
+  .home-editorial .hero-ctas .btn { font-size:13px; padding:12px 15px; }.home-course { padding:24px; }.home-course-mark { font-size:52px; }
+}
+
+/* AIEP registry page: optional course information, scoped independently. */
+.aiep-related-head{display:flex;align-items:flex-start;justify-content:space-between;gap:36px;margin-bottom:28px}
+.aiep-related-head .h-sub{margin:0;max-width:720px}
+.aiep-related-price{flex:0 0 auto;text-align:right;padding-top:6px}
+.aiep-related-price span,.aiep-related-price small{display:block;color:var(--gray-600);font-size:13px;line-height:1.6}
+.aiep-related-price strong{display:block;color:var(--navy,#102b4d);font-size:32px;letter-spacing:-1px;line-height:1.5}
+.aiep-related-materials{margin:0 0 28px}
+.aiep-related-materials figcaption{margin-top:10px;color:var(--gray-600);font-size:13px;line-height:1.7;text-align:center}
+.aiep-related-grid .card{padding:25px 23px}
+.aiep-related-grid h3{font-size:18px;line-height:1.5}
+.aiep-related-grid p{font-size:15px;line-height:1.85}
+.aiep-related-bottom{margin-top:27px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
+.aiep-related-bottom p{margin:0;max-width:560px;font-size:15px;line-height:1.85;color:var(--gray-600)}
+@media(max-width:720px){
+  .aiep-related-head{flex-direction:column;gap:18px}
+  .aiep-related-price{text-align:left;padding-top:0}
+  .aiep-related-price strong{font-size:28px}
+  .aiep-related-bottom{align-items:stretch}
+  .aiep-related-bottom .btns{width:100%}
+  .aiep-related-bottom .btn{white-space:normal}
+}
