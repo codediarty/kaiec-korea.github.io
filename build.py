@@ -5167,7 +5167,7 @@ def build_join():
     msg.addEventListener('input',function(){mc.textContent=this.value.length;});
     document.querySelectorAll('#msgQuick button').forEach(function(b){
       b.addEventListener('click',function(){
-        var t=b.textContent.trim(), cur=msg.value.trim();
+        var t=b.textContent.replace(/[\u2060\u00a0]/g,function(c){return c==='\u00a0'?' ':'';}).trim(), cur=msg.value.trim();   /* 줄바꿈 방지 문자는 빼고 넣음 */
         if(cur.indexOf(t)>=0){return;}
         msg.value=(cur?cur+' ':'')+t; mc.textContent=msg.value.length; msg.focus();
       });
