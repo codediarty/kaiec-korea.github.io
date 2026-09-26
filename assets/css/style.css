@@ -313,8 +313,26 @@ table.tbl tr:hover td{background:#FCFDFF}
 .member--vacant .member-avatar{background:var(--gray-100);color:var(--gray-400)}
 .member--vacant .member-name{color:var(--gray-400)}
 .member--vacant .member-field{color:var(--gray-400)}
-.grp-title{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px;font-size:19px}
+.grp-title{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin-bottom:18px;font-size:19px}
+.grp-name{display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
 .grp-bar{width:4px;height:19px;border-radius:2px;background:var(--blue)}
+/* 상단 임원진 (2026.09.26): 위원장 · 부위원장 · 고문·자문위원 / 감사 · 사무국 을 4열 격자 두 줄로.
+   그룹이 카드 수만큼 칸을 차지하고(lg-1~4), 안쪽 카드 격자도 같은 칸 수라 카드 크기가 아래 명단과 같습니다 */
+.lead-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px 18px;margin-bottom:44px}
+.lead-grp{min-width:0}
+.lg-1{grid-column:span 1}.lead-grp.lg-1 .member-grid{grid-template-columns:1fr}
+.lg-2{grid-column:span 2}.lead-grp.lg-2 .member-grid{grid-template-columns:repeat(2,1fr)}
+.lg-3{grid-column:span 3}.lead-grp.lg-3 .member-grid{grid-template-columns:repeat(3,1fr)}
+.lg-4{grid-column:span 4}.lead-grp.lg-4 .member-grid{grid-template-columns:repeat(4,1fr)}
+@media (max-width:1230px){
+  .lead-grid{grid-template-columns:repeat(3,1fr)}
+  .lg-4{grid-column:span 3}.lead-grp.lg-4 .member-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:600px){
+  .lead-grid{grid-template-columns:repeat(2,1fr);gap:30px 18px}
+  .lg-3,.lg-4{grid-column:span 2}.lead-grp.lg-3 .member-grid,.lead-grp.lg-4 .member-grid{grid-template-columns:repeat(2,1fr)}
+  .lead-grp .grp-title{flex-direction:column;align-items:flex-start;gap:8px}
+}
 .grp-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border-radius:999px;
   background:var(--ink);color:#fff;font-size:12px;font-weight:700;letter-spacing:.01em;box-shadow:0 2px 8px rgba(10,22,40,.18)}
 .grp-badge svg{width:13px;height:13px;color:#6FE3D8}
@@ -344,16 +362,20 @@ html.mp-lock{overflow:hidden}
   background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .2s}
 .mp-close:hover{background:rgba(255,255,255,.28)}
 .mp-close:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.bc-head{position:relative;height:132px;padding:20px 22px;display:flex;align-items:flex-start;gap:10px;text-align:left;
-  background:radial-gradient(110% 150% at 100% 0%,rgba(0,180,166,.30),transparent 55%),
-    repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 1px,transparent 1px 8px),
-    linear-gradient(135deg,var(--ink) 0%,var(--navy) 58%,var(--blue-600) 100%)}
-.bc-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--teal),#5FA8FF)}
-.bc-head .brand-badge{width:86px;height:40px;background:#fff;box-shadow:none}
-.bc-head .brand-badge::after{border-color:rgba(10,22,40,.22)}
-/* 명함 로고는 viewBox 에 여백을 둔 변형(BADGE_CARD · WORDMARK_CARD)이라 글자 아래가 잘리지 않습니다 */
-.bc-head .badge-wm{width:62px;height:13.2px;fill:var(--ink);overflow:visible}
-.bc-head .brand-wm{width:178px;height:35.2px;margin-top:2px;overflow:visible;--wm-ko:#fff;--wm-en:#B4C6E0}
+.bc-head{position:relative;height:136px;padding:22px 24px;display:flex;align-items:flex-start;text-align:left;
+  background:linear-gradient(180deg,#17325F 0%,#0E2144 100%);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.bc-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:#C9A96B}
+/* 명함 로고 (2026.09.26 3차): 벡터 패스 대신 글꼴 텍스트(Archivo · Noto Serif KR)라 1배율 화면에서도 획이 또렷합니다.
+   영문 캡션 자간(.169em)은 국문 폭과 같아지도록 맞춘 값 (국문 24px : 캡션 10px 비율 유지) */
+.bc-lockup{display:flex;align-items:center;gap:12px}
+.bc-seal{position:relative;flex-shrink:0;display:flex;align-items:center;justify-content:center;width:88px;height:42px;border-radius:8px;
+  background:linear-gradient(180deg,#1E3F75 0%,#10264D 100%);box-shadow:0 0 0 1px #C9A96B,0 4px 12px rgba(0,0,0,.22)}
+.bc-seal::after{content:"";position:absolute;inset:4px;border:1px solid rgba(255,255,255,.28);border-radius:5px;pointer-events:none}
+.bc-seal span{font:800 15.5px/1 Archivo,'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.16em;margin-right:-.16em;color:#fff}
+.bc-wm{display:flex;flex-direction:column;font-size:24px}
+.bc-wm b{font-family:'Noto Serif KR','Noto Serif CJK KR','Nanum Myeongjo',AppleMyungjo,serif;font-weight:900;font-size:1em;line-height:1.08;
+  letter-spacing:.012em;color:#fff;white-space:nowrap}
+.bc-wm i{margin-top:5px;font:normal 700 .4167em/1 Archivo,'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.169em;color:#D6C194;white-space:nowrap}
 .bc-photo{position:relative;z-index:1;width:132px;height:132px;margin:-58px auto 14px;border-radius:50%;overflow:hidden;
   border:4px solid #fff;background:var(--gray-100);box-shadow:0 12px 28px rgba(10,22,40,.22)}
 .bc-photo img{width:100%;height:100%;object-fit:cover;display:block}
@@ -375,8 +397,10 @@ html.mp-lock{overflow:hidden}
 .bc-id-sub{margin-top:6px;font-size:12px;font-weight:600;color:var(--gray-600)}
 .bc-id-sub--em{color:var(--blue-600);font-weight:700}
 .bc-id-sub + .bc-id-sub{margin-top:2px}
-.bc-qr{flex-shrink:0;width:84px;height:84px;padding:6px;background:#fff;border-radius:10px;border:1px solid #DCE6F7}
-.bc-qr svg{display:block;width:100%;height:100%}
+.bc-qr-wrap{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bc-qr-wrap span{font-size:10.5px;font-weight:700;letter-spacing:-.01em;color:var(--blue-600);white-space:nowrap}
+.bc-qr{flex-shrink:0;width:88px;height:88px;padding:6px;background:#fff;border-radius:10px;border:1px solid #DCE6F7}
+.bc-qr svg{display:block;width:100%;height:100%;shape-rendering:crispEdges}
 .bc-info{margin:10px 22px 0;text-align:left}
 .bc-info div{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:baseline;padding:11px 2px;border-bottom:1px solid var(--gray-100)}
 .bc-info div:last-child{border-bottom:0}
@@ -385,6 +409,19 @@ html.mp-lock{overflow:hidden}
 .bc-unit{display:block;margin-top:1px;font-size:13px;font-weight:600;color:var(--gray-600)}
 .bc-info a{color:inherit;text-decoration:none;border-bottom:1px solid var(--gray-300)}
 .bc-info a:hover{color:var(--blue);border-color:var(--blue)}
+/* 홈페이지 행: 문구 전체가 눌리는 링크 (모바일에서 '공식 홈페이지' 글자를 눌러도 이동, 2026.09.26) */
+.bc-info a.bc-home{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:40px;margin:-4px 0;border-bottom:0;color:var(--gray-900)}
+.bc-home span{display:flex;flex-direction:column;line-height:1.4}
+.bc-home small{font-size:12.5px;font-weight:600;color:var(--blue)}
+.bc-home svg{flex-shrink:0;width:16px;height:16px;color:var(--gray-400);transition:transform .2s,color .2s}
+.bc-info a.bc-home:hover span{color:var(--blue)}
+.bc-info a.bc-home:hover svg{color:var(--blue);transform:translateX(2px)}
+/* 신청 페이지: 위원 명함 QR · 버튼(?ref=)으로 들어온 경우 추천 위원 표시 */
+.ref-chip{display:flex;align-items:center;gap:8px;margin:0 0 14px;padding:10px 14px;border-radius:12px;background:#EEF7F6;border:1px solid #CFEAE6;
+  color:#0B6B63;font-size:13.5px;font-weight:600;line-height:1.5;word-break:keep-all}
+.ref-chip[hidden]{display:none}
+.ref-chip svg{flex-shrink:0}
+.ref-chip b{font-weight:800}
 .bc-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 22px 0}
 .bc-btn{height:46px;border-radius:12px;border:1px solid var(--gray-200);background:#fff;cursor:pointer;font:inherit;font-size:13.5px;font-weight:700;
   color:var(--gray-700);display:flex;align-items:center;justify-content:center;gap:6px;transition:border-color .2s,color .2s,background .2s}
@@ -401,7 +438,11 @@ html.mp-lock{overflow:hidden}
 .bc-note{margin:12px 24px 0;font-size:11.5px;line-height:1.6;color:var(--gray-500);word-break:keep-all}
 @media (max-width:600px){
   .mp-overlay{padding:16px}
-  .bc-head{height:124px;padding:18px}
+  .bc-head{height:128px;padding:18px}
+  .bc-lockup{gap:10px}
+  .bc-seal{width:80px;height:38px}
+  .bc-seal span{font-size:14px}
+  .bc-wm{font-size:22px}
   .bc-photo{width:120px;height:120px;margin-top:-54px}
   .bc-name{font-size:25px}
   .bc-id{margin:16px 16px 0;padding:12px 12px 12px 14px;gap:10px}
@@ -413,9 +454,9 @@ html.mp-lock{overflow:hidden}
   .bc-note{margin:12px 18px 0}
 }
 @media (max-width:380px){
-  .bc-head .brand-badge{width:78px;height:37px}
-  .bc-head .badge-wm{width:56px;height:11.9px}
-  .bc-head .brand-wm{width:158px;height:31.3px}
+  .bc-seal{width:72px;height:35px}
+  .bc-seal span{font-size:12.5px}
+  .bc-wm{font-size:19.5px}
   .bc-btn{font-size:12.5px;gap:5px}
 }
 

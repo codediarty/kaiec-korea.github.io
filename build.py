@@ -43,7 +43,7 @@ COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
 # 'AI윤리전문가' 또는 '양성과정'만 있으면 통합 과정으로 자동 등록하므로, 1.5.0 배포 뒤에는 idx=26 상품명에서 '기본과정' 표기를 빼도 됩니다
 # (1.4.4 이하가 돌고 있는 동안에는 '기본과정' 표기를 남겨 두어야 자동 등록이 됩니다).
 PAY_URL = "https://skkc.co.kr/shop_view?idx=26"      # AI윤리전문가 양성과정 교육비 결제 링크
-# 수강 신청을 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
+# 양성과정 신청을 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
 # 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 신청 내용이 메일 앱으로 발송됩니다.
 SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec"
 # 양성과정 가격 정보 (변경 시 여기만 수정 후 재실행: expert·신청 폼·메인 배너·게시글 배너에 일괄 반영)
@@ -85,7 +85,7 @@ EXAM_MIN = 60                             # 시험 시간(분): 응시자가 [�
 EXAM_LEGACY_ADV = (50, 70)
 EXAM_MIN_LEGACY_ADV = 75
 EXAM_WINDOW_DAYS = 30                     # 응시 가능 기간: 결제일부터 30일
-# 수강생에게 제공하는 학습자료 (과정 설명에 한 줄로 표기, 2026.09.16)
+# 신청자에게 제공하는 학습자료 (과정 설명에 한 줄로 표기, 2026.09.16)
 MATERIALS = "『핵심이론』 표준교재, 실전 모의고사 2회분, 정답 및 해설 별책, 『실무 도구집』, 이수 평가 응시 안내"   # 5종 모두 PDF로 제공
 # 이수 평가 시스템(/exam/) 백엔드: '평가 운영 시트'에 연결된 앱스 스크립트 웹 앱 주소(/exec). 접수용 SHEET_WEBHOOK과는 별개 프로젝트입니다.
 # 비어 있으면 로그인 카드에 '평가 시스템 연결 준비 중'을 표시하고 체험 모드(브라우저 안 모의 평가)만 동작합니다.
@@ -119,7 +119,7 @@ MATERIAL_ITEMS = [
      ["출제 기준표", "영역별 문항 비중", "응시 절차 안내"]),
 ]
 # 학습자료 다시 내려받기(/exam/ 로그인 후 보조 패널, 2026.09.22 백엔드 Code 1.5.6 materials): 학습자료 5종은 안내 메일의 내려받기 링크로 나가고,
-# 이 패널은 메일을 잃어버린 수강생용입니다. 드라이브 파일 이름 앞 번호(00~04)로 짝을 맞춰 제목·분량·아이콘을 붙이고, 번호가 없는 파일은
+# 이 패널은 메일을 잃어버린 응시자용입니다. 드라이브 파일 이름 앞 번호(00~04)로 짝을 맞춰 제목·분량·아이콘을 붙이고, 번호가 없는 파일은
 # 파일 이름 그대로 보여 줌. mb 는 체험 모드 표시용 대략값(실제 화면은 서버가 준 용량)
 MATERIAL_FILES = [
     ("00", "이수 평가 응시 안내", "13쪽 · 출제 기준표 · 7일 학습 플랜", "clipboard-list", 0.2),
@@ -361,13 +361,6 @@ WORDMARK_USE = (f'<svg class="brand-wm" viewBox="{_wm_vb}" aria-hidden="true" fo
                 f'<use href="#wm-ko"/><use href="#wm-en"/></svg>')
 
 
-# 디지털 명함 헤더용 로고 (2026.09.26): 글자 아래가 잘려 보이던 기기가 있어 viewBox 에 사방 여백을 둔 변형을 씁니다.
-BADGE_CARD = BADGE_SVG.replace('viewBox="0 0 59.04 10.66"', 'viewBox="-1.2 -1.2 61.44 13.06"')
-WORDMARK_CARD = (f'<svg class="brand-wm" viewBox="-1 -1 171.68 33.95" aria-hidden="true" focusable="false">'
-                 f'<use href="#wm-ko"/><use href="#wm-en"/></svg>')
-assert 'viewBox="-1.2' in BADGE_CARD, "badge.svg viewBox 가 바뀌었습니다. BADGE_CARD 치환 기준을 고쳐 주세요."
-
-
 def brand(reuse=False):
     """헤더·푸터 공통 브랜드 블록. reuse=True(푸터)는 헤더 SVG의 패스를 <use>로 참조해 페이지 용량을 아낍니다."""
     wm = WORDMARK_USE if reuse else WORDMARK_SVG
@@ -398,7 +391,7 @@ def header():
       {brand()}
       <nav class="nav" id="nav">
           {links}
-          <a class="nav-exam" href="exam.html"><i data-lucide="lock"></i>평가응시<span>수강생 로그인</span></a>
+          <a class="nav-exam" href="exam.html"><i data-lucide="lock"></i>평가응시<span>응시자 로그인</span></a>
           <span class="nav-sep" aria-hidden="true"></span>
           <span class="header-cta"><a class="btn btn-primary btn-sm" href="experts.html">AI윤리전문가 보기</a><a class="btn btn-ghost btn-sm" href="join.html">위원 참여하기</a></span>
       </nav>
@@ -852,7 +845,7 @@ def build_index(posts):
               <span class="price-tag">특별가</span>
             </div>
             <ul class="offer-list">
-              <li>전공·경력 제한 없이 누구나 수강, 전 과정 온라인</li>
+              <li>전공·경력 제한 없이 누구나 신청, 전 과정 온라인</li>
               <li>공식 이수증 · 홈페이지 공식 등록 · 이력서·자기소개서 활용 가이드 모두 포함</li>
               <li>이수 기준 {EXAM[1]}점, 응시 기간 안 {RETAKE}</li>
               <li>이수 후 전문위원 등록 신청 자격 (전문강사 · 자문 활동)</li>
@@ -1553,10 +1546,10 @@ def build_members():
     var BADGE={'위원장':'KAIEC 임원','부위원장':'KAIEC 임원','감사':'KAIEC 임원','고문·자문위원':'KAIEC 자문단','사무국':'KAIEC 운영진',
       '전문위원':'KAIEC 공식 출강','AI 윤리 캠페인위원':'KAIEC 공식 위촉'};
     var NOTE={
-      '전문위원':'대학·기업·공공기관 현장을 직접 찾아가 AI 윤리 교육을 진행하는 위원회 소속 전문 강사진입니다. 외주 강사가 아닌 석·박사 전문위원 2인이 강의와 실습을 나누어 공동 출강합니다. <a href="lecture.html#request">출강 문의 →</a>',
+      '전문위원':'대학·기업·공공기관 현장을 직접 찾아가 AI 윤리 교육을 진행하는 위원회 소속 전문 강사진입니다. 외주 강사가 아닌 석·박사 전문위원이 기관의 교육 대상과 목적에 맞춰 커리큘럼을 설계하고 직접 출강합니다. <a href="lecture.html#request">출강 문의 →</a>',
       'AI 윤리 캠페인위원':'위원회 검토를 거쳐 공식 위촉된 위원입니다. 온·오프라인에서 올바른 AI 활용 문화를 알리고 확산합니다.'};
     function grpHead(g){
-      return '<h3 class="grp-title"><span class="grp-bar"></span>'+g
+      return '<h3 class="grp-title"><span class="grp-name"><span class="grp-bar"></span>'+g+'</span>'
         +(BADGE[g]?'<span class="grp-badge">'+CHECK+BADGE[g]+'</span>':'')+'</h3>'
         +(NOTE[g]?'<p class="grp-note">'+NOTE[g]+'</p>':'');
     }
@@ -1590,7 +1583,7 @@ def build_members():
         +'<div class="member-name">위촉 진행 중 · '+n+'석</div>'
         +'<div class="member-field">'+(roles||'지원 안내 보기')+' →</div></a>';
     }
-    function secHTML(g,inPair){
+    function secHTML(g,mode){
       var list=window.KAIEC_MEMBERS.filter(function(m){return m.group===g});
       if(!list.length)return '';
       var filled=list.filter(function(m){return m.name!=='공석'});
@@ -1600,19 +1593,20 @@ def build_members():
         var roles=vacant.map(function(m){return m.role}).filter(function(r,i,a){return r&&a.indexOf(r)===i}).join(' · ');
         cards+=recruitCard(g,vacant.length,roles);
       }
-      return '<div style="margin-bottom:'+(inPair?'0':'44px')+'">'
+      if(mode==='lead'){
+        var n=Math.min(4,filled.length+(vacant.length?1:0));
+        return '<div class="lead-grp lg-'+n+'">'+grpHead(g)+'<div class="member-grid">'+cards+'</div></div>';
+      }
+      return '<div style="margin-bottom:44px">'
         +grpHead(g)
         +'<div class="member-grid">'+cards+'</div></div>';
     }
     var html='';
-    /* 상단 2열 배치: 위원장|부위원장, 고문·자문위원|감사 */
-    [['위원장','부위원장'],['고문·자문위원','감사']].forEach(function(pair){
-      var l=secHTML(pair[0],true), r=secHTML(pair[1],true);
-      if(l||r) html+='<div class="pair-row">'+l+r+'</div>';
-    });
-    ['사무국','전문위원'].forEach(function(g){
-      html+=secHTML(g,false);
-    });
+    /* 상단 임원진 (2026.09.26): 위원장 · 부위원장 · 고문·자문위원 / 감사 · 사무국 을 4열 격자 두 줄로.
+       그룹마다 카드 수만큼 칸을 차지하므로 카드 크기는 아래 전문위원·캠페인위원과 같습니다. */
+    var lead=['위원장','부위원장','고문·자문위원','감사','사무국'].map(function(g){return secHTML(g,'lead')}).join('');
+    if(lead)html+='<div class="lead-grid">'+lead+'</div>';
+    html+=secHTML('전문위원');
     /* AI 윤리 캠페인위원: 전문위원 아래, 같은 크기 카드. 위촉된 인원만 표시 + 모집 카드 1장 */
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(named.length){
@@ -1629,25 +1623,40 @@ def build_members():
         +'<div class="member-grid">'+cards+'</div></div>';
     }
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
-    /* 디지털 명함 (2026.09.26 2차): 실명 카드를 누르면 위원회 로고 · 사진 · 직위 · 영문 이름 · 그룹 인증 문구 · 위원 코드(또는 직위)와
-       취임/선임/위촉 시기 · 확인용 QR · 소속 · 분야 · 대표 메일 · 홈페이지. 전문위원은 출강 정보와 [출강 문의하기].
-       버튼: [명함 이미지 저장](QR 포함 1080×1350 PNG, 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기) · [명함 공유](모바일 공유 시트, PC는 링크 복사).
-       주소 끝 #위원코드(예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다. */
+    /* 디지털 명함 (2026.09.26 3차): 실명 카드를 누르면 위원회 로고 · 사진 · 직위 · 영문 이름 · 그룹 인증 문구 · 위원 코드(또는 직위)와
+       취임/선임/위촉 시기 · 확인용 QR · 소속 · 분야 · 대표 연락처. 전문위원은 출강 정보와 [출강 문의하기].
+       명함 머리 로고는 글꼴 텍스트(Archivo · Noto Serif KR)로 그려 1배율 화면에서도 획이 또렷합니다(페이지 열 때 글꼴 미리 불러옴).
+       [명함 이미지 저장]: 진남색 · 금색 증서식 위원증 디자인, 2160×2700 PNG(QR 포함). 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기.
+       [명함 공유]: 모바일 공유 시트, PC는 링크 복사.
+       주소 끝 #위원코드(예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다.
+       QR · [양성과정 신청하기] 는 https://kaiec.kr/expert-apply/?ref=위원코드 로 연결(위원은 영업 창구, 2026.09.26 사용자 지시).
+       신청 페이지가 ref 를 30일 기억했다가 접수 시트 '활용 목적' 칸 끝에 '추천 위원: 성명(코드)'로 붙여 보내므로 위원별 실적 확인에 쓸 수 있습니다. */
     var ov=null,lastFocus=null,curId='',curP=null,IMG={};
-    var ORG='한국AI윤리위원회',EMAIL='__EMAIL__';
+    var ORG='한국AI윤리위원회',EMAIL='__EMAIL__',SITE='__SITE__';
     var FONT="'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
+    var SERIF="'Noto Serif KR','Noto Serif CJK KR','Nanum Myeongjo',AppleMyungjo,Batang,serif";
+    var LATIN="Archivo,'Pretendard Variable',Pretendard,-apple-system,'Segoe UI',Arial,sans-serif";
+    var GOLD='#C9A96B',GOLD_L='#E3CB94',STEEL='#B3C4DD',MUTED='#8FA3C2';
     var UNIT={'고문·자문위원':'고문·자문위원단','사무국':'사무국','전문위원':'전문위원회','AI 윤리 캠페인위원':'AI 윤리 캠페인위원단'};
     var SINCE={'위원장':'취임','부위원장':'선임','감사':'선임','사무국':'선임'};
     var CHIP={'위원장':'한국AI윤리위원회 임원','부위원장':'한국AI윤리위원회 임원','감사':'한국AI윤리위원회 임원',
       '고문·자문위원':'한국AI윤리위원회 고문·자문위원','사무국':'한국AI윤리위원회 사무국',
       '전문위원':'KAIEC 공식 출강 강사','AI 윤리 캠페인위원':'한국AI윤리위원회 공식 위촉'};
     var FIELD={'위원장':'담당','부위원장':'담당','감사':'담당','사무국':'담당','고문·자문위원':'자문 분야','전문위원':'전문 분야'};
+    /* 명함 머리 로고 글꼴을 미리 불러 둡니다 (처음 열 때 대체 글꼴이 잠깐 보이지 않도록) */
+    if(document.fonts&&document.fonts.load){
+      [["900 24px "+SERIF,ORG],["800 16px "+LATIN,'KAIEC'],["700 10px "+LATIN,'KOREA AI ETHICS COMMITTEE']].forEach(function(f){
+        try{document.fonts.load(f[0],f[1]).catch(function(){})}catch(e){}
+      });
+    }
     function ic(d,w){return '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(w||2)+'" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'}
     var ICON_X=ic('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',2.2);
     var ICON_OK=ic('<path d="M20 6 9 17l-5-5"/>',2.6);
     var ICON_IMG=ic('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>');
     var ICON_SHARE=ic('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>');
     var ICON_MIC=ic('<path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/>');
+    var ICON_AWARD=ic('<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>');
+    var ICON_HOME=ic('<path d="m9 18 6-6-6-6"/>',2.4);
     function titleOf(p){return (p.m.role||p.g).split(' · ')[0]}
     function unitOf(p){
       var parts=(p.m.role||p.g).split(' · '),u=UNIT[p.g]||'';
@@ -1659,24 +1668,22 @@ def build_members():
       if(p.m.en)return p.m.en.toLowerCase().replace(/[^a-z]+/g,'-').replace(/^-+|-+$/g,'');
       return 'm'+i;
     }
-    function urlFor(id){return location.origin+location.pathname+'#'+id}
-    function shareURL(){return urlFor(curId)}
-    function sinceText(p){
-      var t=p.m.since?(SINCE[p.g]||'위촉')+' '+p.m.since:'';
-      if(p.g==='전문위원')t='AI 윤리 전문 교육 강사'+(t?' · '+t:'');
-      return t;
-    }
+    function cardURL(id){return SITE+'/members/#'+id}
+    function applyURL(id){return SITE+'/expert-apply/?ref='+encodeURIComponent(id)}
+    function shareURL(){return cardURL(curId)}
+    function sinceLabel(p){return SINCE[p.g]||'위촉'}
+    function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
     function bigAvatar(m){
       if(m.photo)return '<div class="bc-photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+' 사진"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
     }
-    function qrObj(url){
+    function qrObj(url,ecc){
       if(typeof qrcode!=='function')return null;
-      try{var q=qrcode(0,'M');q.addData(url);q.make();return q}catch(err){return null}
+      try{var q=qrcode(0,ecc||'M');q.addData(url);q.make();return q}catch(err){return null}
     }
     function qrSVG(url){
-      var q=qrObj(url);if(!q)return '';
+      var q=qrObj(url,'L');if(!q)return '';   /* 화면용은 작게 보이므로 오류 정정 L 로 칸 수를 줄여 더 크고 또렷하게 */
       return q.createSvgTag({cellSize:4,margin:0,scalable:true}).replace('fill="black"','fill="#0A1628"');
     }
     function flash(btn,html){
@@ -1687,7 +1694,8 @@ def build_members():
     }
     function isTouch(){return !!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches)}
 
-    /* ── 명함 이미지 (canvas) ─────────────────────────── */
+    /* ── 명함 이미지 (canvas, 논리 1080×1350 × 2배) ─────────────────── */
+    var SCALE=2;
     function svgData(el){
       var str=new XMLSerializer().serializeToString(el);
       if(str.indexOf('xmlns=')<0)str=str.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"');
@@ -1695,13 +1703,13 @@ def build_members():
     }
     function badgeURL(){
       var src=document.querySelector('.badge-wm');if(!src)return '';
-      var el=src.cloneNode(true);el.removeAttribute('class');el.setAttribute('fill','#0A1628');
+      var el=src.cloneNode(true);el.removeAttribute('class');el.setAttribute('fill','#FFFFFF');
       el.setAttribute('width','590');el.setAttribute('height','107');return svgData(el);
     }
     function wmURL(){
       var ko=document.getElementById('wm-ko');if(!ko||!ko.ownerSVGElement)return '';
       var el=ko.ownerSVGElement.cloneNode(true),ps=el.querySelectorAll('path');el.removeAttribute('class');
-      for(var i=0;i<ps.length;i++){var id=ps[i].getAttribute('id');ps[i].removeAttribute('id');ps[i].setAttribute('style','fill:'+(id==='wm-en'?'#A9BCD8':'#FFFFFF'))}
+      for(var i=0;i<ps.length;i++){var id=ps[i].getAttribute('id');ps[i].removeAttribute('id');ps[i].setAttribute('style','fill:'+(id==='wm-en'?GOLD_L:'#FFFFFF'))}
       el.setAttribute('width','1697');el.setAttribute('height','320');return svgData(el);
     }
     function loadImg(src){
@@ -1711,15 +1719,15 @@ def build_members():
       });
     }
     function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+    function measureSpaced(ctx,t,sp){var w=0;for(var i=0;i<t.length;i++)w+=ctx.measureText(t[i]).width+(i<t.length-1?sp:0);return w}
     function spaced(ctx,t,x,y,sp,align){
-      var ws=[],w=0,i;for(i=0;i<t.length;i++){ws.push(ctx.measureText(t[i]).width);w+=ws[i]+(i<t.length-1?sp:0)}
-      var sx=align==='center'?x-w/2:(align==='right'?x-w:x),al=ctx.textAlign;ctx.textAlign='left';
-      for(i=0;i<t.length;i++){ctx.fillText(t[i],sx,y);sx+=ws[i]+sp}
+      var w=measureSpaced(ctx,t,sp),sx=align==='center'?x-w/2:(align==='right'?x-w:x),al=ctx.textAlign;ctx.textAlign='left';
+      for(var i=0;i<t.length;i++){ctx.fillText(t[i],sx,y);sx+=ctx.measureText(t[i]).width+sp}
       ctx.textAlign=al;return w;
     }
-    function fitFont(ctx,t,max,size,weight){
-      var s=size;ctx.font=weight+' '+s+'px '+FONT;
-      while(s>18&&ctx.measureText(t).width>max){s-=1;ctx.font=weight+' '+s+'px '+FONT}
+    function fitFont(ctx,t,max,size,weight,fam){
+      var s=size;fam=fam||FONT;ctx.font=weight+' '+s+'px '+fam;
+      while(s>16&&ctx.measureText(t).width>max){s-=1;ctx.font=weight+' '+s+'px '+fam}
       return s;
     }
     function drawQR(ctx,url,x,y,size){
@@ -1729,77 +1737,114 @@ def build_members():
       for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(q.isDark(r,k))ctx.fillRect(x+off+k*c,y+off+r*c,c,c);
     }
     function paint(ctx,p,id,photo,badge,wm){
-      var m=p.m,W=1080,H=1350,HB=400,cx=540,title=titleOf(p),unit=unitOf(p);
-      ctx.textBaseline='alphabetic';ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-      /* 머리띠 */
-      var g=ctx.createLinearGradient(0,0,W,HB);g.addColorStop(0,'#0A1628');g.addColorStop(.58,'#0F2A5F');g.addColorStop(1,'#1749B4');
-      ctx.fillStyle=g;ctx.fillRect(0,0,W,HB);
-      var rg=ctx.createRadialGradient(W,0,0,W,0,760);rg.addColorStop(0,'rgba(0,180,166,.32)');rg.addColorStop(1,'rgba(0,180,166,0)');
-      ctx.fillStyle=rg;ctx.fillRect(0,0,W,HB);
-      ctx.save();ctx.beginPath();ctx.rect(0,0,W,HB);ctx.clip();ctx.strokeStyle='rgba(255,255,255,.045)';ctx.lineWidth=3;
-      for(var x=-HB;x<W;x+=24){ctx.beginPath();ctx.moveTo(x,HB);ctx.lineTo(x+HB,0);ctx.stroke()}
-      ctx.restore();
-      var ag=ctx.createLinearGradient(0,0,W,0);ag.addColorStop(0,'#00B4A6');ag.addColorStop(1,'#5FA8FF');ctx.fillStyle=ag;ctx.fillRect(0,HB-8,W,8);
-      /* 로고 */
-      ctx.fillStyle='#fff';rr(ctx,72,64,216,98,20);ctx.fill();
-      ctx.strokeStyle='rgba(10,22,40,.22)';ctx.lineWidth=2.5;rr(ctx,81,73,198,80,13);ctx.stroke();
-      if(badge){var bw=148,bh=bw*10.66/59.04;ctx.drawImage(badge,72+(216-bw)/2,64+(98-bh)/2,bw,bh)}
-      else{ctx.fillStyle='#0A1628';ctx.font='800 40px '+FONT;ctx.textAlign='center';spaced(ctx,'KAIEC',180,128,6,'center')}
-      if(wm){var wh=88,ww=wh*169.68/31.95;ctx.drawImage(wm,316,64+(98-wh)/2,ww,wh)}
-      else{ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font='800 52px '+FONT;ctx.fillText(ORG,316,122);ctx.fillStyle='#A9BCD8';ctx.font='700 20px '+FONT;spaced(ctx,'KOREA AI ETHICS COMMITTEE',318,154,5,'left')}
-      ctx.fillStyle='rgba(255,255,255,.55)';ctx.font='700 20px '+FONT;spaced(ctx,'OFFICIAL DIGITAL MEMBER CARD',74,202,5,'left');
-      /* 사진 */
-      var cy=HB,R=180;
-      ctx.save();ctx.shadowColor='rgba(10,22,40,.28)';ctx.shadowBlur=44;ctx.shadowOffsetY=16;ctx.fillStyle='#fff';
-      ctx.beginPath();ctx.arc(cx,cy,R+12,0,Math.PI*2);ctx.fill();ctx.restore();
-      ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
-      if(photo){var sq=Math.min(photo.naturalWidth,photo.naturalHeight);ctx.drawImage(photo,(photo.naturalWidth-sq)/2,(photo.naturalHeight-sq)/2,sq,sq,cx-R,cy-R,R*2,R*2)}
-      else{var ig=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);ig.addColorStop(0,'#EEF3FE');ig.addColorStop(1,'#E6F8F6');ctx.fillStyle=ig;ctx.fillRect(cx-R,cy-R,R*2,R*2);
-        ctx.fillStyle='#1F5FE0';ctx.font='800 140px '+FONT;ctx.textAlign='center';ctx.fillText((m.name||'?').slice(0,1),cx,cy+50)}
-      ctx.restore();
-      /* 직위 · 이름 · 영문 */
-      ctx.textAlign='center';ctx.fillStyle='#1F5FE0';ctx.font='800 38px '+FONT;ctx.fillText(title,cx,660);
-      ctx.fillStyle='#0A1628';ctx.font='800 92px '+FONT;ctx.fillText(m.name,cx,760);
-      if(m.en){ctx.fillStyle='#9CA3AF';ctx.font='700 30px '+FONT;spaced(ctx,m.en.toUpperCase(),cx,812,9,'center')}
-      /* 인증 칩 */
-      var chip=CHIP[p.g]||'공식 명단 등재';ctx.font='700 30px '+FONT;
-      var tw=ctx.measureText(chip).width,cw=tw+90,chx=cx-cw/2,chy=846;
-      ctx.fillStyle='#E6F8F6';rr(ctx,chx,chy,cw,64,32);ctx.fill();
-      ctx.strokeStyle='#00786F';ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';
-      ctx.beginPath();ctx.moveTo(chx+28,chy+33);ctx.lineTo(chx+37,chy+42);ctx.lineTo(chx+52,chy+24);ctx.stroke();
-      ctx.fillStyle='#00786F';ctx.textAlign='left';ctx.fillText(chip,chx+64,chy+43);
-      /* 코드 상자 + QR */
-      var bx=72,by=948,bw2=936,bh2=236;
-      var bgr=ctx.createLinearGradient(0,by,0,by+bh2);bgr.addColorStop(0,'#F6F9FE');bgr.addColorStop(1,'#EEF3FC');
-      ctx.fillStyle=bgr;rr(ctx,bx,by,bw2,bh2,28);ctx.fill();ctx.strokeStyle='#DCE6F7';ctx.lineWidth=2;ctx.stroke();
-      var lab=m.code?'위원 코드':'직위';ctx.fillStyle='#6B7280';ctx.font='700 28px '+FONT;ctx.fillText(lab,bx+40,by+62);
-      var lw=ctx.measureText(lab).width;ctx.fillStyle='#9CA3AF';ctx.font='700 20px '+FONT;spaced(ctx,m.code?'MEMBER CODE':'POSITION',bx+40+lw+16,by+61,4,'left');
-      if(m.code){ctx.fillStyle='#1749B4';ctx.font='800 76px '+FONT;spaced(ctx,m.code,bx+40,by+150,10,'left')}
-      else{ctx.fillStyle='#0A1628';fitFont(ctx,title,560,64,800);ctx.fillText(title,bx+40,by+146)}
-      var st=sinceText(p);if(st){ctx.fillStyle='#4B5563';fitFont(ctx,st,600,30,600);ctx.fillText(st,bx+40,by+200)}
-      var qs=196,qx=bx+bw2-36-qs,qy=by+(bh2-qs)/2;
-      ctx.fillStyle='#fff';rr(ctx,qx,qy,qs,qs,20);ctx.fill();ctx.strokeStyle='#DCE6F7';ctx.lineWidth=2;ctx.stroke();
-      drawQR(ctx,urlFor(id),qx+14,qy+14,qs-28);
-      /* 소속 · 분야 */
-      ctx.fillStyle='#E5E7EB';ctx.fillRect(72,1214,936,2);
-      function row(label,val,y){
-        ctx.textAlign='left';ctx.fillStyle='#6B7280';ctx.font='600 28px '+FONT;ctx.fillText(label,72,y);
-        ctx.fillStyle='#111827';fitFont(ctx,val,1008-240,30,700);ctx.fillText(val,240,y);
+      var m=p.m,W=1080,H=1350,cx=540,title=titleOf(p),unit=unitOf(p),lect=p.g==='전문위원';
+      ctx.textBaseline='alphabetic';ctx.textAlign='left';
+      /* 바탕: 위원회 배지와 같은 진남색 + 가장자리를 살짝 눌러 깊이감 */
+      var bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#17325F');bg.addColorStop(1,'#0B1B36');
+      ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+      var vg=ctx.createRadialGradient(cx,600,160,cx,680,1000);vg.addColorStop(0,'rgba(255,255,255,.045)');vg.addColorStop(1,'rgba(0,0,0,.30)');
+      ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+      /* 증서식 이중 테두리 + 모서리 장식 */
+      ctx.strokeStyle='rgba(201,169,107,.95)';ctx.lineWidth=2;ctx.strokeRect(36,36,W-72,H-72);
+      ctx.strokeStyle='rgba(201,169,107,.42)';ctx.lineWidth=1;ctx.strokeRect(47,47,W-94,H-94);
+      [[36,36],[W-36,36],[36,H-36],[W-36,H-36]].forEach(function(c){
+        ctx.save();ctx.translate(c[0],c[1]);ctx.rotate(Math.PI/4);
+        ctx.fillStyle='#10254A';ctx.fillRect(-9,-9,18,18);ctx.strokeStyle=GOLD;ctx.lineWidth=2;ctx.strokeRect(-7,-7,14,14);
+        ctx.restore();
+      });
+      /* 로고: 진남색 배지(금색 테두리 + 안쪽 실선) + 국문·영문 워드마크 */
+      var bw=148,bh=68,gp=26,wh=74,ww=wh*169.68/31.95,lw=bw+gp+ww,lx=Math.round((W-lw)/2),ly=102;
+      var bgr=ctx.createLinearGradient(0,ly,0,ly+bh);bgr.addColorStop(0,'#1E3F75');bgr.addColorStop(1,'#10264D');
+      ctx.fillStyle=bgr;rr(ctx,lx,ly,bw,bh,12);ctx.fill();
+      ctx.strokeStyle=GOLD;ctx.lineWidth=2;rr(ctx,lx,ly,bw,bh,12);ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,.30)';ctx.lineWidth=1.5;rr(ctx,lx+7,ly+7,bw-14,bh-14,7);ctx.stroke();
+      if(badge){var kw=96,kh=kw*10.66/59.04;ctx.drawImage(badge,lx+(bw-kw)/2,ly+(bh-kh)/2,kw,kh)}
+      else{ctx.fillStyle='#fff';ctx.font='800 25px '+LATIN;spaced(ctx,'KAIEC',lx+bw/2,ly+bh/2+9,4,'center')}
+      if(wm){ctx.drawImage(wm,lx+bw+gp,ly+(bh-wh)/2,ww,wh)}
+      else{ctx.fillStyle='#fff';ctx.font='900 46px '+SERIF;ctx.fillText(ORG,lx+bw+gp,ly+46);
+        ctx.fillStyle=GOLD_L;ctx.font='700 16px '+LATIN;spaced(ctx,'KOREA AI ETHICS COMMITTEE',lx+bw+gp+2,ly+72,3.4,'left')}
+      /* 제목 줄 */
+      ctx.font='700 18px '+LATIN;var tt='OFFICIAL MEMBER CARD',tsp=7.5,tw=measureSpaced(ctx,tt,tsp),ty=238;
+      ctx.fillStyle=GOLD;spaced(ctx,tt,cx,ty,tsp,'center');
+      ctx.fillStyle='rgba(201,169,107,.55)';
+      ctx.fillRect(100,ty-7,Math.round(cx-tw/2-30-100),1.5);ctx.fillRect(Math.round(cx+tw/2+30),ty-7,Math.round(W-100-(cx+tw/2+30)),1.5);
+      /* 사진 (3:4, 금색 액자선) */
+      var px=100,py=290,pw=360,ph=480;
+      ctx.strokeStyle='rgba(201,169,107,.8)';ctx.lineWidth=1.5;ctx.strokeRect(px-12,py-12,pw+24,ph+24);
+      ctx.save();ctx.shadowColor='rgba(0,0,0,.38)';ctx.shadowBlur=34;ctx.shadowOffsetY=12;ctx.fillStyle='#10254A';ctx.fillRect(px,py,pw,ph);ctx.restore();
+      ctx.save();ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();
+      if(photo){
+        var iw=photo.naturalWidth,ih=photo.naturalHeight,rt=pw/ph,sw,sh,sx,sy;
+        if(iw/ih>rt){sh=ih;sw=ih*rt;sx=(iw-sw)/2;sy=0}else{sw=iw;sh=iw/rt;sx=0;sy=0}
+        ctx.drawImage(photo,sx,sy,sw,sh,px,py,pw,ph);
+      }else{
+        var ig=ctx.createLinearGradient(px,py,px,py+ph);ig.addColorStop(0,'#21406F');ig.addColorStop(1,'#132B52');
+        ctx.fillStyle=ig;ctx.fillRect(px,py,pw,ph);
+        ctx.fillStyle=GOLD_L;ctx.font='900 176px '+SERIF;ctx.textAlign='center';
+        ctx.fillText((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·',px+pw/2,py+ph/2+62);ctx.textAlign='left';
       }
-      row('소속',ORG+(unit?' '+unit:''),1262);
-      if(m.field)row(FIELD[p.g]||'활동 분야',m.field,1314);
+      ctx.restore();
+      /* 오른쪽: 직위 · 이름 · 영문 · 위원 코드(또는 취임·선임·위촉 일자) */
+      var rx=508,rw=W-100-rx;
+      ctx.fillStyle=GOLD_L;fitFont(ctx,title,rw,30,700);ctx.fillText(title,rx,346);
+      ctx.fillStyle='#fff';fitFont(ctx,m.name,rw,112,900,SERIF);ctx.fillText(m.name,rx,466);
+      if(m.en){ctx.fillStyle=STEEL;ctx.font='700 23px '+LATIN;spaced(ctx,m.en.toUpperCase(),rx+3,520,4.2,'left')}
+      ctx.fillStyle='rgba(201,169,107,.55)';ctx.fillRect(rx,560,rw,1.5);
+      var lab=m.code?'위원 코드':sinceLabel(p)+' 일자',lab2=m.code?'MEMBER CODE':'SINCE';
+      ctx.fillStyle=MUTED;ctx.font='600 22px '+FONT;ctx.fillText(lab,rx,612);
+      var lw2=ctx.measureText(lab).width;ctx.fillStyle='rgba(201,169,107,.9)';ctx.font='700 15px '+LATIN;spaced(ctx,lab2,rx+lw2+14,611,4.2,'left');
+      var idv=m.code||m.since||'';
+      if(idv){ctx.fillStyle='#fff';ctx.font='800 64px '+LATIN;spaced(ctx,idv,rx-2,690,m.code?6:3,'left')}
+      var sub=m.code?(m.since?'위촉 '+m.since:''):(lect?'AI 윤리 전문 교육 강사':unit);
+      if(sub){ctx.fillStyle=STEEL;fitFont(ctx,sub,rw,26,600);ctx.fillText(sub,rx,740)}
+      /* 아래: 소속 · 분야 · (출강) · 발급 + 확인용 QR */
+      var qs=208,qx=W-100-qs,qy=826;
+      var rows=[['소속',ORG+(unit?' '+unit:'')]];
+      if(m.field)rows.push([FIELD[p.g]||'활동 분야',m.field]);
+      if(lect)rows.push(['출강','기관 맞춤형 현장 강의']);
+      rows.push(['발급',today()]);
+      var gapY=60,y0=Math.round(qy+qs/2-(rows.length-1)*gapY/2+9);
+      rows.forEach(function(r,k){
+        var y=y0+k*gapY;
+        ctx.fillStyle=MUTED;ctx.font='600 23px '+FONT;ctx.fillText(r[0],100,y);
+        ctx.fillStyle='#fff';fitFont(ctx,r[1],qx-40-222,27,600);ctx.fillText(r[1],222,y);
+        if(k<rows.length-1){ctx.fillStyle='rgba(255,255,255,.09)';ctx.fillRect(100,y+22,qx-40-100,1)}
+      });
+      ctx.fillStyle='#fff';rr(ctx,qx,qy,qs,qs,14);ctx.fill();
+      drawQR(ctx,applyURL(id),qx+16,qy+16,qs-32);
+      ctx.fillStyle=GOLD_L;ctx.font='700 17px '+FONT;ctx.textAlign='center';ctx.fillText('AI윤리전문가 양성과정 신청',qx+qs/2,qy+qs+34);ctx.textAlign='left';
+      ctx.fillStyle=GOLD;ctx.font='700 12px '+LATIN;spaced(ctx,'SCAN TO APPLY',qx+qs/2,qy+qs+58,4,'center');
+      /* 인증 문구 · 홈페이지 · 미세 문자 */
+      ctx.fillStyle='rgba(201,169,107,.5)';ctx.fillRect(100,1126,W-200,1.5);
+      var chip=CHIP[p.g]||'공식 명단 등재';ctx.font='700 29px '+FONT;
+      var chw=ctx.measureText(chip).width,sx2=Math.round(cx-(chw+54)/2),sy2=1186;
+      ctx.strokeStyle=GOLD;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(sx2+18,sy2-10,18,0,Math.PI*2);ctx.stroke();
+      ctx.lineWidth=3.5;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(sx2+10,sy2-10);ctx.lineTo(sx2+16,sy2-4);ctx.lineTo(sx2+27,sy2-17);ctx.stroke();
+      ctx.fillStyle=GOLD_L;ctx.fillText(chip,sx2+54,sy2);
+      ctx.fillStyle=STEEL;ctx.font='600 21px '+FONT;ctx.textAlign='center';ctx.fillText('한국AI윤리위원회 공식 홈페이지  kaiec.kr',cx,1236);ctx.textAlign='left';
+      /* 미세 문자: 테두리 안쪽 폭에 들어가는 만큼만 반복해 가운데 정렬 (단어가 잘리지 않게) */
+      ctx.fillStyle='rgba(201,169,107,.42)';ctx.font='700 11px '+LATIN;
+      var unitT='KOREA AI ETHICS COMMITTEE  ·  KAIEC  ·  OFFICIAL MEMBER CARD',sepT='  ·  ',maxW=W-140,mt=unitT,nx;
+      while(true){nx=mt+sepT+unitT;if(measureSpaced(ctx,nx,2.2)>maxW)break;mt=nx}
+      spaced(ctx,mt,cx,1284,2.2,'center');
     }
     function makeImage(p,id,photoSrc){
-      var m=p.m,texts=[m.name,titleOf(p),m.en||'',CHIP[p.g]||'',unitOf(p),ORG,m.field||'',m.code||'',sinceText(p),
-        '위원 코드 직위 소속 담당 활동 자문 전문 분야 공식 명단 등재 MEMBER CODE POSITION OFFICIAL DIGITAL CARD KOREA ETHICS COMMITTEE 0123456789'].join(' ');
-      var fonts=(document.fonts&&document.fonts.load)
-        ?Promise.all(['800','700','600'].map(function(w){return document.fonts.load(w+' 40px '+FONT,texts)})).catch(function(){})
-        :Promise.resolve();
+      var m=p.m,ko=[m.name,titleOf(p),CHIP[p.g]||'',unitOf(p),ORG,m.field||'',
+        '소속 분야 담당 자문 전문 활동 출강 기관 맞춤형 현장 강의 발급 위원 코드 일자 취임 선임 위촉 교육 강사 공식 홈페이지 AI윤리전문가 양성과정 신청 0123456789.'].join(' ');
+      var lat='KAIEC OFFICIAL MEMBER CARD SCAN TO APPLY KOREA AI ETHICS COMMITTEE SINCE 0123456789.-· '+(m.en||'').toUpperCase()+(m.code||'');
+      var loads=[];
+      if(document.fonts&&document.fonts.load){
+        ['700','600'].forEach(function(w){loads.push(document.fonts.load(w+' 40px '+FONT,ko))});
+        loads.push(document.fonts.load('900 40px '+SERIF,m.name+ORG));
+        ['700','800'].forEach(function(w){loads.push(document.fonts.load(w+' 40px '+LATIN,lat))});
+      }
+      var fonts=Promise.all(loads).catch(function(){});
       var wait=new Promise(function(r){setTimeout(r,2500)});
       return Promise.all([Promise.race([fonts,wait]),loadImg(photoSrc),loadImg(badgeURL()),loadImg(wmURL())]).then(function(r){
         function render(useVec){
-          var cv=document.createElement('canvas');cv.width=1080;cv.height=1350;
-          paint(cv.getContext('2d'),p,id,r[1],useVec?r[2]:null,useVec?r[3]:null);return cv;
+          var cv=document.createElement('canvas');cv.width=1080*SCALE;cv.height=1350*SCALE;
+          var ctx=cv.getContext('2d');ctx.scale(SCALE,SCALE);ctx.imageSmoothingQuality='high';
+          paint(ctx,p,id,r[1],useVec?r[2]:null,useVec?r[3]:null);return cv;
         }
         function toBlob(cv){return new Promise(function(res,rej){try{cv.toBlob(function(b){b?res(b):rej(new Error('blob'))},'image/png')}catch(e){rej(e)}})}
         return toBlob(render(true)).catch(function(){return toBlob(render(false))});
@@ -1872,31 +1917,34 @@ def build_members():
         });
       }
       curP=p;curId=pid(p,i);
-      var lect=p.g==='전문위원',qr=qrSVG(shareURL());
+      var lect=p.g==='전문위원',qr=qrSVG(applyURL(curId));
       var idBox='<div class="bc-id"><div class="bc-id-main">'
         +(m.code?'<div class="bc-id-label">위원 코드<span>MEMBER CODE</span></div><div class="bc-id-val bc-id-val--code">'+m.code+'</div>'
                 :'<div class="bc-id-label">직위<span>POSITION</span></div><div class="bc-id-val">'+title+'</div>')
         +(lect?'<div class="bc-id-sub bc-id-sub--em">AI 윤리 전문 교육 강사</div>':'')
-        +(m.since?'<div class="bc-id-sub">'+(SINCE[p.g]||'위촉')+' '+m.since+'</div>':'')
-        +'</div>'+(qr?'<div class="bc-qr" role="img" aria-label="디지털 명함 확인 QR 코드">'+qr+'</div>':'')+'</div>';
+        +(m.since?'<div class="bc-id-sub">'+sinceLabel(p)+' '+m.since+'</div>':'')
+        +'</div>'+(qr?'<div class="bc-qr-wrap"><div class="bc-qr" role="img" aria-label="AI윤리전문가 양성과정 신청 QR 코드">'+qr+'</div><span>양성과정 신청</span></div>':'')+'</div>';
       var rows='<div><dt>소속</dt><dd>'+ORG+(unit?'<span class="bc-unit">'+unit+'</span>':'')+'</dd></div>'
         +(m.field?'<div><dt>'+(FIELD[p.g]||'활동 분야')+'</dt><dd>'+m.field+'</dd></div>':'')
         +(lect?'<div><dt>출강 대상</dt><dd>대학 · 기업 · 공공기관 · 학교</dd></div>'
-              +'<div><dt>출강 방식</dt><dd>오프라인 현장 강의<span class="bc-unit">석·박사 전문위원 2인 공동 출강 · 출강확인서 발급</span></dd></div>':'')
-        +'<div><dt>대표 연락처</dt><dd><a href="mailto:'+EMAIL+'">'+EMAIL+'</a><span class="bc-unit"><a href="index.html">kaiec.kr</a> · 한국AI윤리위원회 공식 홈페이지</span></dd></div>';
+              +'<div><dt>출강 방식</dt><dd>기관 맞춤형 현장 강의<span class="bc-unit">교육 대상·목적에 맞춘 커리큘럼 설계 · 출강확인서 발급</span></dd></div>':'')
+        +'<div><dt>대표 메일</dt><dd><a href="mailto:'+EMAIL+'">'+EMAIL+'</a></dd></div>'
+        +'<div><dt>홈페이지</dt><dd><a class="bc-home" href="index.html"><span>한국AI윤리위원회 공식 홈페이지<small>kaiec.kr</small></span>'+ICON_HOME+'</a></dd></div>';
       ov.querySelector('.bc-body').innerHTML=
-        '<div class="bc-head"><span class="brand-badge">__BADGE__</span>__WMCARD__</div>'
+        '<div class="bc-head"><div class="bc-lockup" aria-hidden="true"><span class="bc-seal"><span>KAIEC</span></span>'
+        +'<span class="bc-wm"><b>'+ORG+'</b><i>KOREA AI ETHICS COMMITTEE</i></span></div></div>'
         +bigAvatar(m)
         +'<div class="bc-role">'+title+'</div>'
         +'<div class="bc-name" id="bcName">'+m.name+'</div>'
         +(m.en?'<div class="bc-en">'+m.en.toUpperCase()+'</div>':'')
         +'<span class="bc-verify">'+ICON_OK+(CHIP[p.g]||'공식 명단 등재')+'</span>'
         +idBox
-        +(lect?'<a class="bc-cta" href="lecture.html#request">'+ICON_MIC+'출강 문의하기</a>':'')
+        +(lect?'<a class="bc-cta" href="lecture.html#request">'+ICON_MIC+'출강 문의하기</a>'
+              :'<a class="bc-cta" href="expert-apply.html?ref='+encodeURIComponent(curId)+'">'+ICON_AWARD+'AI윤리전문가 양성과정 신청하기</a>')
         +'<dl class="bc-info">'+rows+'</dl>'
         +'<div class="bc-actions"><button type="button" class="bc-btn bc-btn--primary" data-act="img">'+ICON_IMG+'명함 이미지 저장</button>'
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
-        +'<p class="bc-note">QR 코드를 스캔하면 한국AI윤리위원회 공식 홈페이지에서 이 명함을 확인할 수 있습니다.</p>';
+        +'<p class="bc-note">QR 코드를 스캔하면 AI윤리전문가(AIEP) 양성과정 신청 페이지로 연결됩니다.</p>';
       lastFocus=document.activeElement;
       ov.hidden=false;ov.querySelector('.mp-dialog').scrollTop=0;document.documentElement.classList.add('mp-lock');
       requestAnimationFrame(function(){ov.classList.add('is-open')});
@@ -1937,7 +1985,7 @@ def build_members():
     }else if(op){op.parentElement.parentElement.style.display='none'}
   })();
   </script>
-""".replace("__EMAIL__", EMAIL).replace("__BADGE__", BADGE_CARD).replace("__WMCARD__", WORDMARK_CARD)
+""".replace("__EMAIL__", EMAIL).replace("__SITE__", SITE_URL)
     page("members.html", "위원 명단",
          "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
          body, extra_script=script)
@@ -2535,11 +2583,11 @@ def build_legal():
              "위원회와 이용자의 권리·의무 및 책임 사항을 정하는 것을 목적으로 합니다.</p>"),
             ("제2조 (용어의 정의)",
              "<ol><li><strong>이용자</strong>란 이 약관에 따라 서비스를 이용하는 모든 분을 말합니다.</li>"
-             "<li><strong>수강자</strong>란 AI윤리전문가 양성과정을 신청하고 교육비 결제를 완료한 이용자를 말합니다.</li>"
-             "<li><strong>학습자료</strong>란 위원회가 수강자에게 제공하는 표준교재, 모의고사, 정답 및 해설, 실무 도구집, "
+             "<li><strong>신청자</strong>란 AI윤리전문가 양성과정을 신청하고 교육비 결제를 완료한 이용자를 말합니다.</li>"
+             "<li><strong>학습자료</strong>란 위원회가 신청자에게 제공하는 표준교재, 모의고사, 정답 및 해설, 실무 도구집, "
              "응시 안내 등 전자문서(PDF) 일체를 말합니다.</li>"
              "<li><strong>이수 평가</strong>란 위원회가 온라인으로 시행하는 평가를 말합니다.</li>"
-             "<li><strong>이수증</strong>이란 이수 기준을 충족한 수강자에게 위원회가 발급하는 교육 이수 확인 문서를 말합니다.</li></ol>"),
+             "<li><strong>이수증</strong>이란 이수 기준을 충족한 신청자에게 위원회가 발급하는 교육 이수 확인 문서를 말합니다.</li></ol>"),
             ("제3조 (약관의 게시와 개정)",
              "<ol><li>위원회는 이 약관을 서비스 화면에 게시하여 이용자가 언제든지 확인할 수 있도록 합니다.</li>"
              "<li>위원회는 관계 법령을 위반하지 않는 범위에서 이 약관을 개정할 수 있으며, 개정 시 적용일과 개정 사유를 "
@@ -2584,7 +2632,7 @@ def build_legal():
              "<li>문항이나 답안을 촬영·복제·유출한 경우</li>"
              "<li>그 밖에 평가의 공정성을 현저히 해친 경우</li></ul></li></ol>"),
             ("제9조 (이수증 발급과 이수자 등록)",
-             "<ol><li>이수 기준을 충족한 수강자에게는 이수번호가 부여된 이수증(PDF)이 발급되고, 위원회 이수자 명부에 등록됩니다.</li>"
+             "<ol><li>이수 기준을 충족한 신청자에게는 이수번호가 부여된 이수증(PDF)이 발급되고, 위원회 이수자 명부에 등록됩니다.</li>"
              "<li>발급은 결과 확인 후 통상 7일 이내에 이루어지며, 공휴일·시스템 점검·확인 지연 등의 사정이 있는 경우 소요 기간이 달라질 수 있습니다.</li>"
              "<li>이수자는 별도의 등록 신청 절차를 거쳐 위원회 전문위원으로 등록될 수 있습니다. 전문위원 등록은 "
              "위원회의 심사를 거치며, 이수 사실만으로 당연히 등록되는 것은 아닙니다.</li>"
@@ -2624,7 +2672,7 @@ def build_legal():
              "<p>청약철회와 환불에 관한 사항은 이 문서 아래의 <a href=\"#refund\">청약철회와 환불</a>에서 정한 바에 따릅니다.</p>"),
             ("제15조 (서비스의 변경과 중단)",
              "<ol><li>위원회는 교육과정의 구성, 학습자료의 내용, 평가 문항, 운영 일정을 개선 목적으로 변경할 수 있습니다. "
-             "이미 결제한 수강자에게 불리한 변경이 있는 경우 사전에 통지합니다.</li>"
+             "이미 결제한 신청자에게 불리한 변경이 있는 경우 사전에 통지합니다.</li>"
              "<li>시스템 점검, 설비 교체, 통신 장애, 천재지변 등 부득이한 사유가 있는 경우 서비스의 전부 또는 일부를 "
              "일시 중단할 수 있으며, 이 경우 사전에 공지합니다. 예측할 수 없는 사유인 경우에는 사후에 공지합니다.</li>"
              "<li>제2항에 따른 중단으로 응시 기간이 실질적으로 줄어든 경우 위원회는 그에 상응하는 기간을 연장합니다.</li></ol>"),
@@ -2839,7 +2887,7 @@ def build_legal():
              "서비스, 개인정보 처리에 대하여 관리 권한이 없으며 책임을 지지 않습니다.</p>"),
             ("차. 게시 정보의 변경",
              "<p>교육과정의 구성, 금액, 모집 일정, 제공 자료, 평가 기준 등 홈페이지에 게시된 정보는 운영 사정에 따라 "
-             "변경될 수 있습니다. 이미 결제를 완료한 수강자에게 불리한 변경이 있는 경우에는 사전에 개별 통지합니다. "
+             "변경될 수 있습니다. 이미 결제를 완료한 신청자에게 불리한 변경이 있는 경우에는 사전에 개별 통지합니다. "
              "게시된 정보와 실제 운영이 다른 부분을 발견하신 경우 위원회 공식 메일로 알려 주시면 확인 후 정정하겠습니다.</p>"
              f"<p class=\"lg-note\">이 안내는 {LEGAL_DATE}부터 적용되며, 서비스 이용안내와 함께 하나의 안내 체계를 이룹니다.</p>"),
         ],
@@ -3337,7 +3385,7 @@ def build_lecture():
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:78px 72px">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; 강의 신청</p>
-        <span class="hl-pill"><i data-lucide="badge-check"></i>한국AI윤리위원회 소속 전문 인력 2인 공동 출강 · 기관 맞춤 설계</span>
+        <span class="hl-pill"><i data-lucide="badge-check"></i>한국AI윤리위원회 소속 석·박사 전문위원 직접 출강 · 기관 맞춤 설계</span>
         <h1>AI 윤리교육 · 전문 출강</h1>
         <p class="ph-lead">AI 윤리부터 컴플라이언스, 정보보안, 연구윤리까지.<br>
            기관에 맞춰 <b class="t">위원회 전문 인력이 직접</b> 찾아갑니다.</p>
@@ -3347,7 +3395,7 @@ def build_lecture():
           <span><i data-lucide="check"></i>1~4시간 자유 선택</span>
           <span><i data-lucide="check"></i>6개 분야 자유 조합</span>
           <span><i data-lucide="check"></i>AI기본법 반영 최신 교안</span>
-          <span><i data-lucide="check"></i>전문 인력 2인 공동 출강</span>
+          <span><i data-lucide="check"></i>기관 맞춤형 커리큘럼 설계</span>
           <span><i data-lucide="check"></i>출강확인서 · 이수확인서 발급</span>
         </div>
         <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:26px">
@@ -3360,7 +3408,7 @@ def build_lecture():
     <section class="section section--tight">
       <div class="wrap">
         <div class="stats reveal">
-          <div class="stat"><div class="stat-num">2인</div><div class="stat-label">공동 출강</div><div class="stat-sub">강의와 실습을 나누어 진행</div></div>
+          <div class="stat"><div class="stat-num">석·박사</div><div class="stat-label">전문위원 직접 출강</div><div class="stat-sub">외주 없는 위원회 소속 강사진</div></div>
           <div class="stat"><div class="stat-num" style="font-size:clamp(19px,2.2vw,24px);line-height:1.4">2026 기준</div><div class="stat-label">AI기본법 반영 교안</div><div class="stat-sub">제도와 사례를 최신으로 갱신</div></div>
           <div class="stat"><div class="stat-num">1~4시간</div><div class="stat-label">교육시간 자유 선택</div><div class="stat-sub">기관 일정에 맞춰 구성</div></div>
           <div class="stat"><div class="stat-num">6개 분야</div><div class="stat-label">자유 조합 커리큘럼</div><div class="stat-sub">필요한 주제만 골라 담기</div></div>
@@ -3375,7 +3423,7 @@ def build_lecture():
             <span class="eyebrow">How We Teach</span>
             <h2 class="h-sec">듣고 끝나지 않는 AI 윤리 강의</h2>
             <p class="lead" style="margin-bottom:22px">원칙을 나열하는 강의가 아니라, <strong>내일 당장 마주칠 장면</strong>으로 시작합니다.
-               위원회 소속 전문 인력 2인이 강의와 실습을 나누어 진행합니다.</p>
+               위원회 소속 석·박사 전문위원이 기관의 교육 대상과 목적에 맞춰 강의와 실습을 설계하고 직접 진행합니다.</p>
             <ul style="display:grid;gap:12px;margin-bottom:8px">
               <li style="display:flex;gap:10px;align-items:flex-start"><i data-lucide="check-circle-2" style="width:19px;height:19px;color:#00B4A6;flex-shrink:0;margin-top:4px"></i><span><strong>실제 장면에서 출발합니다.</strong> 보고서 초안을 AI로 쓴 경우, 회의 녹취를 외부 AI에 넣은 경우처럼
                  조직에서 이미 벌어지고 있는 상황을 먼저 꺼내 놓고 기준을 함께 세웁니다</span></li>
@@ -3389,7 +3437,7 @@ def build_lecture():
             <div class="inst-card">
               <div class="inst-avatar"><i data-lucide="book-open"></i></div>
               <div>
-                <div class="inst-deg">강사 1 · 메인 강의</div>
+                <div class="inst-deg">PART 1 · 강의</div>
                 <div class="inst-name">원칙과 사례</div>
                 <div class="inst-field">AI 활용 원칙, 국내외 제도, 실제로 문제가 된 사례 분석</div>
               </div>
@@ -3397,7 +3445,7 @@ def build_lecture():
             <div class="inst-card">
               <div class="inst-avatar inst-avatar--teal"><i data-lucide="user-check"></i></div>
               <div>
-                <div class="inst-deg">강사 2 · 실습 · 질의</div>
+                <div class="inst-deg">PART 2 · 실습 · 질의</div>
                 <div class="inst-name">우리 조직의 기준</div>
                 <div class="inst-field">참여자의 실제 업무 상황을 받아 함께 판단해 보는 실습과 질의응답</div>
               </div>
@@ -3408,8 +3456,8 @@ def build_lecture():
               같은 원칙을 같은 깊이로 배우시게 됩니다.
             </div>
             <div class="notice notice--teal" style="font-size:13.5px">
-              <strong>참여자가 말을 하게 만듭니다.</strong> 두 강사가 강의와 실습을 나누어 진행하기 때문에,
-              대규모 인원 교육에서도 질문이 끊기지 않고 실습형 워크숍이 안정적으로 돌아갑니다.
+              <strong>기관마다 새로 설계합니다.</strong> 사전 협의로 교육 대상·인원·업무 환경을 확인하고,
+              그 기관에서 실제로 쓰는 사례와 실습 과제로 커리큘럼을 다시 구성합니다. 같은 주제라도 기관마다 다른 교육이 됩니다.
             </div>
           </div>
         </div>
@@ -3422,7 +3470,7 @@ def build_lecture():
           <span class="eyebrow">Format</span>
           <h2 class="h-sec">교육시간은 1시간부터 4시간까지</h2>
           <p class="h-sub">기관의 일정과 목적에 맞춰 교육시간을 정하고, 6개 분야에서 필요한 주제만 골라 담습니다.
-             모든 과정에 위원회 전문 인력 2인이 함께 출강합니다. 아래는 기관에서 가장 많이 선택하는 구성 예시입니다.</p>
+             모든 과정은 위원회 소속 전문위원이 기관에 맞춰 설계하고 직접 출강합니다. 아래는 기관에서 가장 많이 선택하는 구성 예시입니다.</p>
         </div>
         <div class="fmt-grid">
 {fmt_cards}
@@ -3498,7 +3546,7 @@ def build_lecture():
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">교육시간 선택</h3><p style="font-size:14px">1~4시간 중 선택</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">교육 분야 선택</h3><p style="font-size:14px">6개 분야 자유 조합</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 05</span><h3 style="font-size:16px">커리큘럼 · 견적 안내</h3><p style="font-size:14px">위원회가 최종 구성해 견적과 함께 회신</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 06</span><h3 style="font-size:16px">전문인력 2인 출강</h3><p style="font-size:14px">교육 진행 · 증빙 발급</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 06</span><h3 style="font-size:16px">전문위원 직접 출강</h3><p style="font-size:14px">교육 진행 · 증빙 발급</p></div>
         </div>
       </div>
     </section>
@@ -3641,7 +3689,7 @@ def build_lecture():
 """.replace('__LEMAIL__', L_EMAIL)
 
     page("lecture.html", "AI 윤리교육 · 전문 출강",
-         "한국AI윤리위원회 소속 전문 인력 2인이 학교·기업·공공기관에 직접 출강하는 AI 윤리교육. AI 윤리, 기업 AI 컴플라이언스, 개인정보·보안, 생성형 AI 저작권, 청소년 AI 윤리를 1~4시간 맞춤 과정으로 제공합니다.",
+         "한국AI윤리위원회 소속 석·박사 전문위원이 학교·기업·공공기관에 직접 출강하는 맞춤형 AI 윤리교육. AI 윤리, 기업 AI 컴플라이언스, 개인정보·보안, 생성형 AI 저작권, 청소년 AI 윤리를 1~4시간 과정으로 제공합니다.",
          body, extra_script=script,
          keywords=["AI 윤리교육", "AI 교육 출강", "생성형 AI 교육", "AI 컴플라이언스 교육", "AI 연구윤리 교육",
                    "딥페이크 예방 교육", "청소년 AI 교육", "기업 AI 교육", "AI 정보보안 교육", "찾아가는 AI 교육"])
@@ -3675,7 +3723,7 @@ def build_expert():
       바로 와닿는 '이수하면 받는 것' 8가지(BENEFITS)를 앞세움. 학습자료는 통합 교재(9개 장 + 부록) 기준, 쪽수는 자료 통합 작업 전이라 적지 않음
     - 등록된 자격 제도가 아니므로 인증(자격)·검정·급수 표현을 쓰지 않음 (2026.09.14). 2026.09.16부터 '이수 평가·이수증'으로 표기
     - 2026.09.16 학습 방식: 온라인 강의 없이 위원회 표준교재 등 학습자료 5종(PDF) 자율학습 + 온라인 이수 평가, 응시 기간 안 기준에 이를 때까지 재응시
-    - 수강·이수 절차 6단계(양성과정 신청 → 학습자료 확인 → 자율학습 → 평가응시 → 이수 기준 충족 → 이수증 발급), 응시는 상단 [평가응시] 로그인"""
+    - 신청·이수 절차 6단계(양성과정 신청 → 학습자료 확인 → 자율학습 → 평가응시 → 이수 기준 충족 → 이수증 발급), 응시는 상단 [평가응시] 로그인"""
     pay_btns = (f'<div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px">'
                 f'<a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>'
                 f'<span style="font-size:13px;color:var(--gray-500)">신청을 완료하면 결제 페이지로 자동 연결됩니다</span></div>')
@@ -3935,7 +3983,7 @@ def build_expert():
         </div>
         <div class="notice" style="margin-top:24px">
           <strong>위원회 주관 · 성균관컨설팅 운영:</strong> 본 과정은 한국AI윤리위원회(KAIEC)가 커리큘럼 구성부터 이수 평가, 이수증 발급, 이수자 공식 등록까지 직접 주관하고,
-          성균관대학교 RISE사업 공식 지원기업인 성균관컨설팅(skkc.co.kr)이 접수·결제·수강 안내 등 교육 운영을 맡습니다.
+          성균관대학교 RISE사업 공식 지원기업인 성균관컨설팅(skkc.co.kr)이 접수·결제·학습 안내 등 교육 운영을 맡습니다.
           학습자료는 위원회 6개 분과 전문위원의 자문과 검토를 거쳐 집필되며, 교육비 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
         </div>
       </div>
@@ -3955,7 +4003,7 @@ def build_expert():
             <ul class="trust-list">
               <li><i data-lucide="award"></i><div><strong>한국AI윤리위원회 주관 · 공식 이수증 발급</strong><span>커리큘럼 구성, 이수 평가, 이수증 발급, 이수자 공식 등록까지 위원회가 직접 주관</span></div></li>
               <li><i data-lucide="badge-check"></i><div><strong>이수와 동시에 위원회 공식 등록</strong><span>이수번호가 부여된 이수증을 발급하고, 홈페이지에 공식 등록되어 검색됩니다</span></div></li>
-              <li><i data-lucide="building-2"></i><div><strong>성균관대학교 RISE사업 공식 지원기업 성균관컨설팅 교육 운영</strong><span>접수·결제·수강 안내를 맡고, 교육비는 성균관컨설팅 안전결제로 처리</span></div></li>
+              <li><i data-lucide="building-2"></i><div><strong>성균관대학교 RISE사업 공식 지원기업 성균관컨설팅 교육 운영</strong><span>접수·결제·학습 안내를 맡고, 교육비는 성균관컨설팅 안전결제로 처리</span></div></li>
               <li><i data-lucide="scale"></i><div><strong>이수 기준은 {EXAM[1]}점, 기준은 낮추지 않습니다</strong><span>대신 응시 기간 안에서는 기준에 이를 때까지 다시 응시하실 수 있습니다</span></div></li>
             </ul>
           </div>
@@ -3998,7 +4046,7 @@ def build_expert():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Process</span>
-          <h2 class="h-sec">수강·이수 절차</h2>
+          <h2 class="h-sec">신청·이수 절차</h2>
         </div>
         <div class="grid grid-3">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">양성과정 신청</h3><p style="font-size:14px">온라인 신청 후 안전결제로 교육비 납부</p></div>
@@ -4021,7 +4069,7 @@ def build_expert():
           <h2 class="h-sec">자주 묻는 질문</h2>
         </div>
         <details class="acc">
-          <summary>전공이나 경력이 없어도 수강할 수 있나요?</summary>
+          <summary>전공이나 경력이 없어도 신청할 수 있나요?</summary>
           <div class="acc-body">네. AI윤리전문가 양성과정은 전공·경력 제한이 없습니다. 생성형 AI를 사용해 본 경험이 있다면
             누구나 시작하실 수 있으며, 표준교재가 개념과 기초부터 다루므로 사전 지식이 없어도 충분히 따라올 수 있습니다.</div>
         </details>
@@ -4045,7 +4093,7 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>이수증은 어떤 문서이고 어떻게 활용할 수 있나요?</summary>
-          <div class="acc-body">한국AI윤리위원회가 주관하는 전문 교육과정을 수강하고 이수 평가를 통과했음을 증명하는 위원회의 공식 문서로, 이수번호가 부여되어 위원회 홈페이지에 공식 등록됩니다.
+          <div class="acc-body">한국AI윤리위원회가 주관하는 전문 교육과정을 마치고 이수 평가를 통과했음을 증명하는 위원회의 공식 문서로, 이수번호가 부여되어 위원회 홈페이지에 공식 등록됩니다.
             국가가 인정하는 자격 제도와는 별개의 교육 이력으로, 이력서·포트폴리오의 교육·연수 항목에
             "{RESUME_KO} ({RESUME_NO})"로, 영문 이력서에는 "{PROG_EN} ({RESUME_NO})"로 기재하실 수 있습니다.
             이수 후 전문위원 등록을 신청해 등록되면 홈페이지 프로필 주소를 함께 제시할 수 있고, 전문강사·자문, Fellowship·캠페인 등 실제 활동 기회와 연계됩니다.</div>
@@ -4158,8 +4206,8 @@ def build_expert():
 
 # -------------------------------------------------------- expert-apply.html
 def build_expert_apply():
-    """AI윤리전문가 양성과정 수강 신청 폼 (자체 코딩 · 전환·자기설득 중심 개편 2026.09, 양성과정 표기 2026.09.14)
-    - 2026.09.21 통합: 과정 선택 섹션을 없애고(과정 하나) 과정 요약 카드 → 수강 목적(자기설득) → 수강자 정보 → 절차·이수 평가 안내 → 개인정보 동의 → 결제
+    """AI윤리전문가 양성과정 신청 폼 (자체 코딩 · 전환·자기설득 중심 개편 2026.09, 양성과정 표기 2026.09.14)
+    - 2026.09.21 통합: 과정 선택 섹션을 없애고(과정 하나) 과정 요약 카드 → 신청 목적(자기설득) → 신청자 정보 → 절차·이수 평가 안내 → 개인정보 동의 → 결제
     - 2026.09.22 간소화(구입 유도율): 필수 체크는 개인정보 동의 하나만. 절차 확인 체크와 청약철회 확인 섹션은 이탈 요인이라 폼에서 뺐고(청약철회 조건은 terms.html#refund 와 결제 페이지에서 고지),
       그 자리에 '결제가 왜 성균관컨설팅으로 넘어가는지'를 짧게 설득하는 블록을 넣음. 머리글 통계는 STAT_71(리더 71%가 경력보다 AI 역량), 홈페이지 공식 등록을 머리글·완료 화면에 다시 강조
     - 제출 시 시트 웹훅으로 접수 기록 + 위원회 알림 메일, 완료 화면에서 결제 페이지로 자동 이동"""
@@ -4197,8 +4245,9 @@ def build_expert_apply():
       <div class="gform-wrap">
 
         <div class="gform-card gform-head">
+          <p class="ref-chip" id="refChip" hidden></p>
           <span class="gform-kicker">한국AI윤리위원회 주관 · AI윤리전문가 양성과정</span>
-          <h1>AI윤리전문가{AIEP_H} 양성과정 수강 신청</h1>
+          <h1>AI윤리전문가{AIEP_H} 양성과정 신청</h1>
           <p class="gform-lead">2026년, 기업·기관의 AI 활용 확대와 함께 ‘AI 윤리 전문가’의 역할이 커지고 있습니다.</p>
           <p>생성형 AI가 기업·기관·학교의 실제 업무 전반으로 확산되면서 저작권, 개인정보, 정보보안,
              할루시네이션, 편향과 차별, 결과물의 신뢰성과 책임까지 AI 윤리는 중요한 전문 영역으로 자리 잡고 있습니다.</p>
@@ -4243,7 +4292,7 @@ def build_expert_apply():
 
           <div class="gform-card" id="secPurpose">
             <div class="gform-sec">SECTION 2</div>
-            <h2>수강 및 활용 목적 <span class="req">*</span></h2>
+            <h2>신청 및 활용 목적 <span class="req">*</span></h2>
             <p class="gform-desc">AI윤리전문가 양성과정에 관심을 갖게 된 이유와 활용 목적을 선택해 주세요. 복수 선택할 수 있습니다.</p>
             <div class="check-grid" id="purposeGrid">{PURPOSE_ITEMS}</div>
             <p class="err-msg">활용 목적을 하나 이상 선택해 주세요.</p>
@@ -4251,7 +4300,7 @@ def build_expert_apply():
 
           <div class="gform-card" id="secInfo">
             <div class="gform-sec">SECTION 3</div>
-            <h2>수강자 정보</h2>
+            <h2>신청자 정보</h2>
             <div class="gform-fields">
               <div class="field" id="fName">
                 <label for="f-name">성명 <span class="req">*</span></label>
@@ -4278,7 +4327,7 @@ def build_expert_apply():
             <h2>교육 및 이수 평가 안내</h2>
             <p class="gform-desc">신청과 결제, 학습과 평가까지 모두 온라인으로 진행됩니다.</p>
             <ol class="gform-flow">
-              <li>양성과정 신청 (수강 신청 · 교육비 결제)</li>
+              <li>양성과정 신청 (신청서 제출 · 교육비 결제)</li>
               <li>학습자료 확인</li>
               <li>자율학습 (표준교재 · 실전 모의고사)</li>
               <li>평가응시 (홈페이지 상단 [평가응시])</li>
@@ -4303,7 +4352,7 @@ def build_expert_apply():
             <h2>교육비 결제는 성균관컨설팅에서</h2>
             <p class="gform-desc">신청서를 제출하면 결제 페이지가 성균관컨설팅(skkc.co.kr)으로 연결됩니다. 한국AI윤리위원회의 공식 교육 운영사이니 그대로 진행하시면 됩니다.</p>
             <div class="gform-privacy">
-              <div><span>역할</span>위원회는 표준교재 집필, 이수 평가, 이수증 발급, 홈페이지 공식 등록을 직접 주관하고, 접수·결제·수강 안내 등 운영은 공식 교육 운영사 성균관컨설팅이 맡습니다</div>
+              <div><span>역할</span>위원회는 표준교재 집필, 이수 평가, 이수증 발급, 홈페이지 공식 등록을 직접 주관하고, 접수·결제·학습 안내 등 운영은 공식 교육 운영사 성균관컨설팅이 맡습니다</div>
               <div><span>운영사</span>성균관대학교 RISE사업 공식 지원기업 · 한국AI윤리위원회 회원사 (결제 내역과 카드 명세서에는 '성균관컨설팅'으로 표기)</div>
               <div><span>결제</span>안전결제(신용카드 · 간편결제) · 결제 증빙 발급 · 결제 확인 즉시 학습자료 5종 자동 발송, 같은 이메일이 [평가응시] 아이디</div>
             </div>
@@ -4314,8 +4363,8 @@ def build_expert_apply():
             <div class="gform-sec">SECTION 6</div>
             <h2>개인정보 수집·이용 동의</h2>
             <div class="gform-privacy">
-              <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 수강 및 활용 목적, 신청정보</div>
-              <div><span>이용목적</span>수강자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
+              <div><span>수집항목</span>성명, 이메일, 직업·활동 분야, 신청 및 활용 목적, 신청정보</div>
+              <div><span>이용목적</span>신청자 확인, 교육 및 이수 평가 운영, 이수자 관리 및 이수증 발급, 기관 요청 시 이수 사실 확인 회신</div>
               <div><span>보유기간</span>수집일로부터 3년. 이수자 명부는 이수 사실 확인을 위해 보관하며, 삭제를 요청하시면 즉시 파기합니다</div>
             </div>
             <label class="agree"><input type="checkbox" name="privok"><span class="agree-box"></span>
@@ -4325,13 +4374,13 @@ def build_expert_apply():
           </div>
 
           <div class="gform-card gform-submit">
-            <h2>AI윤리전문가 양성과정 수강 신청</h2>
+            <h2>AI윤리전문가 양성과정 신청</h2>
             <p>이력서에 한 줄, 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록 이력을 더하세요.</p>
             <div class="pay-summary pay-summary--one">
               <div class="pay-mini"><div class="lv">AI윤리전문가 양성과정 · 이수증 + 홈페이지 공식 등록 + 활용 가이드</div>
                 <div class="list">정가 {won(LIST_PRICE)}</div><div class="sale">특별가 {won(PRICE)}</div></div>
             </div>
-            <p>신청서를 제출한 후 교육비 결제를 완료하면 수강 등록이 최종 확정됩니다.</p>
+            <p>신청서를 제출한 후 교육비 결제를 완료하면 신청이 최종 확정됩니다.</p>
             <button type="submit" class="btn btn-primary gform-submit-btn">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></button>
             <p class="err-msg" id="topErr">입력하지 않은 필수 항목이 있습니다. 표시된 항목을 확인해 주세요.</p>
             <div class="trust-row">
@@ -4368,12 +4417,35 @@ def build_expert_apply():
     </section>"""
 
     script = r"""
+  <script src="assets/js/members-data.js"></script>
   <script>
   (function(){
     var form=document.getElementById('examForm');
     /* 2026.09.21 통합: 과정이 하나라 선택이 없습니다. 접수 시트의 '과정' 칸에는 아래 값이 그대로 기록됩니다 */
     var COURSE='__COURSE__';
     var PAYLINK='__PAY__';
+
+    /* 추천 위원 (2026.09.26): 위원 디지털 명함의 QR · 신청 버튼은 ?ref=위원코드 로 들어옵니다.
+       30일 동안 기억했다가(다시 방문해도 유지) 접수 시트 '활용 목적' 칸 끝에 '추천 위원: 성명(코드)'를 붙여 보냅니다. */
+    var REF='',REFNAME='';
+    try{
+      var rq=new URLSearchParams(location.search).get('ref');
+      if(rq&&/^[A-Za-z0-9-]{2,40}$/.test(rq)){REF=rq;localStorage.setItem('kaiec_ref',JSON.stringify({v:rq,t:Date.now()}));}
+      else{var st=JSON.parse(localStorage.getItem('kaiec_ref')||'null');if(st&&st.v&&Date.now()-st.t<30*864e5)REF=st.v;}
+    }catch(eRef){}
+    if(REF){
+      var ppl=[].concat((window.KAIEC_MEMBERS||[]).filter(function(m){return m.name&&m.name!=='공석';}),
+        (window.KAIEC_CAMPAIGN_MEMBERS||[]).map(function(m){return {name:m.name,en:m.en,code:m.code,role:'AI 윤리 캠페인위원'};}));
+      var slug=function(e){return String(e||'').toLowerCase().replace(/[^a-z]+/g,'-').replace(/^-+|-+$/g,'');};
+      var hit=ppl.filter(function(m){return (m.code&&m.code.toUpperCase()===REF.toUpperCase())||(m.en&&slug(m.en)===REF.toLowerCase());})[0];
+      if(hit){
+        REFNAME=hit.name;
+        var chip=document.getElementById('refChip');
+        if(chip){chip.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+          +'<span>한국AI윤리위원회 <b>'+hit.name+'</b> '+String(hit.role||'').split(' · ')[0]+'의 추천으로 방문하셨습니다</span>';chip.hidden=false;}
+      }
+    }
+    var REFTXT=REF?('추천 위원: '+(REFNAME?REFNAME+'('+REF+')':REF)):'';
 
     function bad(id,on){document.getElementById(id).classList.toggle('is-invalid',!!on);return !!on;}
     function v(n){var el=form.querySelector('[name='+n+']');return (el&&el.value?el.value:'').trim();}
@@ -4392,14 +4464,14 @@ def build_expert_apply():
       document.getElementById('topErr').style.display=first?'block':'none';
       if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return;}
 
-      var pstr=pz.join(', ');
+      var pstr=pz.join(', ')+(REFTXT?' / '+REFTXT:'');
       var lines=[
-        '한국AI윤리위원회 AI윤리전문가 양성과정 수강 신청','',
+        '한국AI윤리위원회 AI윤리전문가 양성과정 신청','',
         '■ 신청 과정 : '+COURSE,
         '■ 성명 : '+v('name'),
         '■ 이메일 : '+v('email'),
         '■ 직업/활동 분야 : '+job.value,
-        '■ 수강 및 활용 목적 : '+pstr,'',
+        '■ 신청 및 활용 목적 : '+pstr,'',
         '■ 개인정보 수집·이용 : 동의','',
         '--- kaiec.kr AI윤리전문가 양성과정 신청 페이지에서 작성됨 ---'
       ];
@@ -4455,10 +4527,10 @@ def build_expert_apply():
   </script>
 """.replace('__FEMAIL__', EMAIL).replace('__PAY__', PAY_URL).replace('__HOOK__', SHEET_WEBHOOK).replace('__COURSE__', PROG)
 
-    page("expert-apply.html", "AI윤리전문가(AIEP) 양성과정 수강 신청",
-         "한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정 수강 신청 페이지입니다. 수강자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
+    page("expert-apply.html", "AI윤리전문가(AIEP) 양성과정 신청",
+         "한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정 신청 페이지입니다. 신청자 정보를 입력하면 결제 페이지로 연결되고, 결제 후 학습자료와 이수 평가 안내를 받습니다.",
          body, extra_script=script,
-         keywords=["AI윤리전문가 양성과정 신청", "AIEP 신청", "AI윤리전문가 수강 신청", "AI 윤리 교육 신청", "AI 윤리 이수증", "한국AI윤리위원회"])
+         keywords=["AI윤리전문가 양성과정 신청", "AIEP 신청", "AI윤리전문가 과정 신청", "AI 윤리 교육 신청", "AI 윤리 이수증", "한국AI윤리위원회"])
 
 
 # ---------------------------------------------------------------- experts.html
@@ -4796,7 +4868,7 @@ def build_join():
     위촉 문서 대신 '홈페이지 공식 위원 명단 등재'를 혜택으로 내세움(위촉 증서는 발급하지 않음). 직업 선택은 문턱을 낮추고, 지원 동기·자기소개 예시는 캠페인(온라인 알리기) 중심
     - 허들 최소화: 필수는 참여 구분·성명·이메일·직업·지원 동기(체크)·동의뿐, 자기소개는 선택(예시 문장 칩), 소속은 '적기' 버튼을 누른 분만(공식 파트너 선택 시 기관명 칸 자동 표시)
     - 히어로·역할 카드의 [캠페인위원 지원하기] 류 버튼은 data-pick 으로 신청서의 참여 구분을 미리 고르고 #apply 로 이동(?type= 딥링크도 유지)
-    - 접수 데이터는 수강 신청과 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
+    - 접수 데이터는 양성과정 신청과 같은 시트 웹훅(SHEET_WEBHOOK)으로 POST 전송(type=join) → 앱스 스크립트가 '위원 신청' 탭에 기록"""
     ROLES = [
         # (아이콘, 구분명, 배지, 이런 분께, 주요 역할, 강조)
         ("megaphone", "AI 윤리 캠페인위원", "누구나 · 추천",
@@ -5616,7 +5688,7 @@ def build_exam():
     {sprite}"""
 
     page("exam.html", "평가응시",
-         "한국AI윤리위원회 AI윤리전문가(AIEP) 양성과정 수강생 전용 온라인 이수 평가입니다. 결제 이메일과 휴대전화 번호 뒤 4자리로 로그인해 "
+         "한국AI윤리위원회 AI윤리전문가(AIEP) 양성과정 신청자 전용 온라인 이수 평가입니다. 결제 이메일과 휴대전화 번호 뒤 4자리로 로그인해 "
          f"{exam_text()} 평가에 응시하고 결과를 확인하세요.",
          body,
          extra_head=f'<link rel="stylesheet" href="assets/css/exam.css?v={BUILD_V}">\n',
@@ -5725,7 +5797,7 @@ def build_apply():
           <article class="card reveal"><div class="card-icon"><i data-lucide="monitor-play"></i></div>
             <h3>AI 윤리 교육 할인</h3><p>임직원 대상 출강 교육(1~4시간 맞춤 과정)을 회원 등급에 따라 할인된 비용으로 이용합니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="award"></i></div>
-            <h3>양성과정 수강 우대</h3><p>임직원의 AI윤리전문가 양성과정(기본·심화) 수강 시 우선 접수와 우대 혜택이 적용됩니다.</p></article>
+            <h3>양성과정 신청 우대</h3><p>임직원의 AI윤리전문가 양성과정(기본·심화) 신청 시 우선 접수와 우대 혜택이 적용됩니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="shield-check"></i></div>
             <h3>AI 활용 기준 자문</h3><p>사내 생성형 AI 활용 지침과 AI기본법 대응 방향에 대한 기초 자문을 제공합니다.</p></article>
           <article class="card reveal"><div class="card-icon"><i data-lucide="megaphone"></i></div>
@@ -5764,7 +5836,7 @@ def build_apply():
               <li>· 준회원 혜택 전체 포함</li>
               <li>· 회원기관 현판 제공</li>
               <li>· AI 윤리 교육 20% 할인</li>
-              <li>· 임직원 양성과정 수강 우대</li>
+              <li>· 임직원 양성과정 신청 우대</li>
               <li>· 위원회 홈페이지 로고 게재</li>
             </ul>
           </div>

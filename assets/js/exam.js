@@ -6,7 +6,7 @@
    API: POST text/plain JSON {action: login | status | start | save | submit | materials}, GET ?action=ping
         (이수 평가 API 계약서 + 1.1.0 추가 사항: start 요청의 name, attempt.name, Result.name)
    학습자료 다시 내려받기(2026.09.22, 백엔드 Code 1.5.6): 학습자료 5종은 안내 메일의 내려받기 링크(+ 전체 ZIP 링크)로 나가고, 대시보드의
-        '학습자료 다시 내려받기' 패널은 메일을 잃어버린 수강생용 보조 창구입니다. materials 로 드라이브 파일 목록(이름 · 크기 · 내려받기 주소 · 전체 ZIP)을 받아
+        '학습자료 다시 내려받기' 패널은 메일을 잃어버린 응시자용 보조 창구입니다. materials 로 드라이브 파일 목록(이름 · 크기 · 내려받기 주소 · 전체 ZIP)을 받아
         파일별 [내려받기] 버튼과 [전체 한 번에 내려받기]로 그리며, 백엔드가 지원하지 않으면(1.5.5 이하) 패널을 아예 그리지 않습니다.
         /exam/?go=materials 로 들어오면 로그인 뒤 그 패널로 바로 이동합니다.
    체험 모드: /exam/?demo=1 로만 진입 (브라우저 안 모의 API, 기록이 남지 않음)
@@ -658,7 +658,7 @@
         el.pin.value = '';
         setBtnBusy(el.loginBtn, false);
         showDashboard();
-        toast((j.name || '수강생') + '님, 로그인되었습니다.', 'ok');
+        toast((j.name || '응시자') + '님, 로그인되었습니다.', 'ok');
       }, function (e) {
         setBtnBusy(el.loginBtn, false);
         errBox(el.err, e.message);
@@ -831,7 +831,7 @@
     var done = list.length > 0 && list.every(function (c) { return c.completed; });
     var cur = done ? 5 : 4, pass = passOf(courseCfg(MAIN_COURSE));
     var FLOW = [
-      ['양성과정 신청', '수강 신청·교육비 결제'],
+      ['양성과정 신청', '신청서 제출·교육비 결제'],
       ['학습자료 확인', '메일의 링크로 5종 내려받기'],
       ['자율학습', '표준교재 · 모의고사 학습'],
       ['평가응시', '온라인 이수 평가 응시'],
@@ -890,7 +890,7 @@
             ? '<a class="ex-btn ex-btn--secondary" href="' + esc(m.zip.dl) + '" target="_blank" rel="noopener">' + ico('download') + '전체 한 번에 내려받기 (ZIP · ' + fmtMB(m.zip.mb) + ')</a>'
             : (m.folderUrl ? '<a class="ex-btn ex-btn--secondary" href="' + esc(m.folderUrl) + '" target="_blank" rel="noopener">' + ico('folder') + '드라이브 폴더에서 한 번에 받기' + ico('external-link') + '<span class="sr-only">(새 창)</span></a>' : '')) +
         '</div>';
-      aside = '<small class="ex-panel-note">수강생 전용 · 외부 공유와 재배포 금지</small>';
+      aside = '<small class="ex-panel-note">응시자 전용 · 외부 공유와 재배포 금지</small>';
     }
     return '<section class="ex-panel ex-mats" id="exMats" aria-labelledby="exMatsTitle"><header class="ex-panel-head"><h2 class="ex-h" id="exMatsTitle">' + ico('book-open') + '학습자료 다시 내려받기</h2>' + aside + '</header>' + body + '</section>';
   }
