@@ -59,7 +59,10 @@ window.KAIEC_MEMBERS = [
    ▶ 카드를 누르면 디지털 명함(사진·영문 이름·위원 코드·위촉 시기·소속·활동 분야·QR)이 열립니다.
      kaiec.kr/members/#PKH3185 처럼 위원 코드를 붙인 주소로 들어오면 그 위원의 명함이 바로 열립니다. */
 window.KAIEC_CAMPAIGN_MEMBERS = [
-  { name: '박근호', en: 'Park Keun-ho', code: 'PKH3185', since: '2026.09', field: 'AI 리터러시 교육·확산', photo: 'park-geunho.jpg' },
+  { name: '박근호', en: 'Park Keun-ho', code: 'PKH3185', since: '2026.09', field: 'AI 리터러시 교육 · 확산', photo: 'park-geunho.jpg' },
+  { name: '조성희', en: 'Cho Sung-hee', code: 'CSH7321', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 확산', photo: 'jo-seonghee.jpg' },
+  { name: '지정인', en: 'Ji Jung-in', code: 'JJI0046', since: '2026.09', field: 'AI 창업 · 책임 있는 AI 비즈니스', photo: 'ji-jeongin.jpg' },
+  { name: '서완석', en: 'Seo Wan-seok', code: 'SWS7351', since: '2026.09', field: 'AI · 디지털 교육 혁신', photo: 'seo-wanseok.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 

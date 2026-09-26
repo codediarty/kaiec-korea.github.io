@@ -313,10 +313,14 @@ table.tbl tr:hover td{background:#FCFDFF}
 .member--vacant .member-avatar{background:var(--gray-100);color:var(--gray-400)}
 .member--vacant .member-name{color:var(--gray-400)}
 .member--vacant .member-field{color:var(--gray-400)}
+.grp-title{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px;font-size:19px}
+.grp-bar{width:4px;height:19px;border-radius:2px;background:var(--blue)}
 .grp-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px 5px 9px;border-radius:999px;
   background:var(--ink);color:#fff;font-size:12px;font-weight:700;letter-spacing:.01em;box-shadow:0 2px 8px rgba(10,22,40,.18)}
 .grp-badge svg{width:13px;height:13px;color:#6FE3D8}
-.grp-note{margin:-8px 0 18px;font-size:14px;color:var(--gray-500);line-height:1.65}
+.grp-note{margin:-8px 0 18px;font-size:14px;color:var(--gray-500);line-height:1.65;word-break:keep-all}
+.grp-note a{color:var(--blue);font-weight:700;text-decoration:none;white-space:nowrap}
+.grp-note a:hover{text-decoration:underline}
 .member-role{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.03em;margin-bottom:5px}
 .member-name{font-size:17px;font-weight:700;letter-spacing:-.03em;margin-bottom:6px}
 .member-field{font-size:13.5px;color:var(--gray-500);line-height:1.6}
@@ -345,10 +349,11 @@ html.mp-lock{overflow:hidden}
     repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 1px,transparent 1px 8px),
     linear-gradient(135deg,var(--ink) 0%,var(--navy) 58%,var(--blue-600) 100%)}
 .bc-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--teal),#5FA8FF)}
-.bc-head .brand-badge{width:74px;height:34px;background:#fff;box-shadow:none}
+.bc-head .brand-badge{width:86px;height:40px;background:#fff;box-shadow:none}
 .bc-head .brand-badge::after{border-color:rgba(10,22,40,.22)}
-.bc-head .badge-wm{width:49px;height:8.9px;fill:var(--ink)}
-.bc-head .brand-wm{width:146px;height:27.5px;margin-top:3px;--wm-ko:#fff;--wm-en:#9FB3D1}
+/* 명함 로고는 viewBox 에 여백을 둔 변형(BADGE_CARD · WORDMARK_CARD)이라 글자 아래가 잘리지 않습니다 */
+.bc-head .badge-wm{width:62px;height:13.2px;fill:var(--ink);overflow:visible}
+.bc-head .brand-wm{width:178px;height:35.2px;margin-top:2px;overflow:visible;--wm-ko:#fff;--wm-en:#B4C6E0}
 .bc-photo{position:relative;z-index:1;width:132px;height:132px;margin:-58px auto 14px;border-radius:50%;overflow:hidden;
   border:4px solid #fff;background:var(--gray-100);box-shadow:0 12px 28px rgba(10,22,40,.22)}
 .bc-photo img{width:100%;height:100%;object-fit:cover;display:block}
@@ -368,6 +373,8 @@ html.mp-lock{overflow:hidden}
 .bc-id-val{margin-top:4px;font-size:20px;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
 .bc-id-val--code{font-size:23px;letter-spacing:.14em;color:var(--blue-600);font-variant-numeric:tabular-nums}
 .bc-id-sub{margin-top:6px;font-size:12px;font-weight:600;color:var(--gray-600)}
+.bc-id-sub--em{color:var(--blue-600);font-weight:700}
+.bc-id-sub + .bc-id-sub{margin-top:2px}
 .bc-qr{flex-shrink:0;width:84px;height:84px;padding:6px;background:#fff;border-radius:10px;border:1px solid #DCE6F7}
 .bc-qr svg{display:block;width:100%;height:100%}
 .bc-info{margin:10px 22px 0;text-align:left}
@@ -385,6 +392,12 @@ html.mp-lock{overflow:hidden}
 .bc-btn--primary{background:var(--ink);border-color:var(--ink);color:#fff}
 .bc-btn--primary:hover{background:var(--navy);border-color:var(--navy);color:#fff}
 .bc-btn svg{width:16px;height:16px}
+.bc-cta{display:flex;align-items:center;justify-content:center;gap:7px;height:48px;margin:14px 22px 0;border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),var(--blue-600));color:#fff;font-size:14.5px;font-weight:800;text-decoration:none;
+  box-shadow:0 6px 16px rgba(31,95,224,.28);transition:transform .2s,box-shadow .2s}
+.bc-cta:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(31,95,224,.34);color:#fff}
+.bc-cta svg{width:17px;height:17px}
+.bc-cta + .bc-info{margin-top:6px}
 .bc-note{margin:12px 24px 0;font-size:11.5px;line-height:1.6;color:var(--gray-500);word-break:keep-all}
 @media (max-width:600px){
   .mp-overlay{padding:16px}
@@ -396,7 +409,14 @@ html.mp-lock{overflow:hidden}
   .bc-qr{width:76px;height:76px}
   .bc-info{margin:8px 16px 0}
   .bc-actions{margin:12px 16px 0}
+  .bc-cta{margin:12px 16px 0}
   .bc-note{margin:12px 18px 0}
+}
+@media (max-width:380px){
+  .bc-head .brand-badge{width:78px;height:37px}
+  .bc-head .badge-wm{width:56px;height:11.9px}
+  .bc-head .brand-wm{width:158px;height:31.3px}
+  .bc-btn{font-size:12.5px;gap:5px}
 }
 
 /* ---------- Partner logos ---------- */
