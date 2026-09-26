@@ -138,7 +138,7 @@ html:not(.js) .ex-boot{display:none}
 .ex-lbox-brand .brand-wm{width:148px;height:28px;--wm-ko:#fff;--wm-en:#A3BCDB}
 .ex-lbox-prog{position:relative;margin:0;font-size:12.5px;font-weight:600;letter-spacing:-.01em;color:#A3BCDB}
 .ex-lbox-title{position:relative;margin:5px 0 0;font-size:25px;font-weight:700;line-height:1.3;letter-spacing:-.02em;color:#fff}
-.ex-lbox-en{position:relative;margin:8px 0 0;font-size:10px;font-weight:700;letter-spacing:.22em;color:rgba(255,255,255,.42)}
+.ex-lbox-en{position:relative;margin:8px 0 0;font-size:10.5px;font-weight:700;letter-spacing:.2em;color:rgba(255,255,255,.55)}
 .ex-lbox-body{padding:24px 32px 24px}
 .ex-lbox-sub{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 16px;font-size:17px;font-weight:700;color:var(--ex-ink)}
 .ex-secure{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border:1px solid var(--ex-ok-line);border-radius:999px;
@@ -168,9 +168,9 @@ html:not(.js) .ex-boot{display:none}
 .ex-paybtn-t{display:flex;align-items:center;gap:4px;font-size:13.5px;font-weight:700;color:var(--ex-navy);letter-spacing:-.03em;white-space:nowrap}
 .ex-paybtn-t .ex-ico{width:11px;height:11px;color:var(--ex-mute);flex-shrink:0}
 .ex-paybtn-p{font-size:15px;font-weight:800;color:var(--ex-ink);letter-spacing:-.03em}
-.ex-lbox-note{margin:11px 0 0;font-size:11.8px;line-height:1.6;color:var(--ex-mute);text-align:center}
+.ex-lbox-note{margin:11px 0 0;font-size:12.5px;line-height:1.6;color:var(--ex-mute);text-align:center}
 .ex-lbox-foot{padding:11px 20px;border-top:1px solid var(--ex-line-2);background:#F8F9FB;
-  font-size:11.8px;line-height:1.7;color:var(--ex-mute);text-align:center}
+  font-size:12.5px;line-height:1.7;color:var(--ex-mute);text-align:center}
 .ex-lbox-foot a{color:var(--ex-link);font-weight:600;word-break:break-all}
 
 /* ---------- 페이지 머리 (로그인 뒤) ---------- */
@@ -844,7 +844,7 @@ body.ex-lock{overflow:hidden}
   .ex-dialog-body{padding:14px 18px 16px}
   .ex-dialog-body .ex-kv{grid-template-columns:108px minmax(0,1fr)}
   .ex-dialog-foot{padding:12px 18px calc(12px + env(safe-area-inset-bottom))}
-  .ex-dialog-foot .ex-btn{flex:1;min-width:0}
+  .ex-dialog-foot .ex-btn{flex:1;min-width:0;white-space:normal;height:auto;min-height:44px;line-height:1.3;padding-top:9px;padding-bottom:9px}   /* 2026.09.26: 360px에서 '제출' 글자 잘림 방지 */
   .ex-bigtime strong{font-size:36px}
 }
 @media (max-width:420px){

@@ -1100,7 +1100,7 @@ html.mp-lock{overflow:hidden}
 .pill-choice{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
 .pill-choice label{position:relative;border:1.5px solid var(--gray-200);border-radius:999px;
   padding:8px 15px;font-size:13.5px;color:var(--gray-700);cursor:pointer;transition:all .15s}
-.pill-choice input{position:absolute;opacity:0;pointer-events:none}
+.pill-choice input{position:absolute;left:0;top:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
 .pill-choice label:hover{border-color:var(--gray-300)}
 .pill-choice label:has(input:checked){border-color:var(--blue);background:var(--blue);color:#fff;font-weight:700}
 .gform-info h3{font-size:15px;margin:18px 0 9px;color:var(--ink)}
@@ -2240,3 +2240,175 @@ html.ea-lock,html.ea-lock body{overflow:hidden}
   .join-apply{padding-top:32px}
   .ja-head h2{font-size:22px}
 }
+
+/* ═══════════ 모바일 완성도 2차 (2026.09.26 밤, 사용자: 모바일 전체 검토 · 더 완성도 있게) ═══════════
+   390 · 360px로 전 페이지를 점검한 결과를 반영합니다. 데스크톱 모양은 그대로 두고 대부분 600px 이하에서만 적용합니다. */
+/* 줄바꿈 다듬기: 마지막 줄에 한두 글자만 남지 않게 (지원 브라우저에서만 적용되고, 나머지는 원래대로 보임) */
+p,li,dd,td,summary,figcaption,.member-field,.oc-desc,.tl-desc,.stat-sub,.field-hint,.gform-desc,.why-stats span,
+.worth-b>strong,.sq-q,.moment>div,.choice-body span,.inst-field,.ea-cv-body b,.bn strong,.board-title{text-wrap:pretty}
+.h-sub,.acc summary,.lg-table th,.member-role,.cta-band p,.quiz-lead{text-wrap:balance}
+.nw{white-space:nowrap}
+/* 터치 화면: 누른 뒤 카드가 떠 있는 채로 남지 않게 */
+@media (hover:none){
+  .card:hover,.board-card:hover,.vol:hover,.worth:hover,.bn:hover,.logo-item:hover,.member--link:hover{transform:none}
+  .board-card:hover .board-thumb img{transform:none}
+}
+/* 게시판 썸네일은 원본 비율(1200×630) 그대로 */
+.board-thumb{aspect-ratio:1200/630}
+.news-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px}
+/* 공통 소품 */
+.form-submit{justify-self:start}
+.biz-row{margin-bottom:64px}
+.biz-title{font-size:26px;letter-spacing:-.035em;margin-bottom:14px}
+.price-card>ul{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
+.vol{overflow:hidden}
+.lg-part{font-size:19px;color:var(--ink)}
+.lg-links a[aria-current="page"]{border-color:var(--blue);color:var(--blue);background:var(--blue-050)}
+table.tbl tbody th{vertical-align:top}
+#mouForm .choice{font-weight:400}
+.story .field-hint{font-size:12.5px;line-height:1.65;color:var(--gray-500)}
+.rl-main{min-width:0}   /* 360px에서 등록 조회 상자가 옆으로 넘치던 문제 */
+.src,.ea-stat small{color:var(--gray-500)}
+/* 법령 문서 목차 */
+.lg-toc{margin:0 0 30px;border:1px solid var(--gray-200);border-radius:14px;background:var(--gray-050)}
+.lg-toc summary{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;list-style:none;font-size:14.5px;font-weight:800;color:var(--ink)}
+.lg-toc summary::-webkit-details-marker{display:none}
+.lg-toc summary span{font-size:12.5px;font-weight:600;color:var(--gray-500)}
+.lg-toc summary::after{content:"";width:7px;height:7px;margin-left:auto;border-right:2px solid var(--gray-500);border-bottom:2px solid var(--gray-500);transform:rotate(45deg);transition:transform .2s}
+.lg-toc[open] summary::after{transform:rotate(-135deg)}
+.lg-toc ol{list-style:none;margin:0;padding:4px 18px 16px;display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.lg-toc li a{display:block;padding:7px 0;font-size:13.5px;line-height:1.45;color:var(--gray-700)}
+.lg-toc li a:hover{color:var(--blue)}
+.lg-toc li.lg-toc-part{grid-column:1/-1;margin-top:8px}
+.lg-toc li.lg-toc-part a{font-weight:800;color:var(--ink)}
+/* 링크드인 입력 안내 (이력서 가이드) */
+.li-guide{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:5px}
+.li-guide li{display:flex;gap:10px;align-items:baseline;font-size:13px;line-height:1.5;font-weight:600;color:var(--ink)}
+.li-guide li span{flex:none;width:128px;font-size:11.5px;font-weight:800;letter-spacing:.02em;color:var(--gray-500)}
+/* 404 */
+.swipe-hint{display:none}
+.err-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:360px;margin:0 auto}
+.err-btns .btn{justify-content:center;padding-left:10px;padding-right:10px}
+@media (max-width:860px){
+  /* 좌우 배치가 한 줄로 쌓일 때는 글(제목)이 먼저, 그림 상자는 뒤로 */
+  .split>.split-visual:first-child{order:2}
+}
+@media (max-width:600px){
+  /* 입력칸 16px: 아이폰 Safari가 칸을 누를 때 화면을 확대하지 않게 */
+  .field input,.field select,.field textarea,.rl-form input,.mini-search input{font-size:16px}
+  .mini-search input{align-self:stretch;min-height:44px}
+  details.ea-more summary{padding:10px 0;min-height:40px}
+  .form-submit{justify-self:stretch;justify-content:center}
+  /* 푸터: 구분선(|) 없이 한 줄씩, 누르기 쉬운 링크 */
+  .footer-info{flex-direction:column;align-items:flex-start;gap:3px}
+  .footer-info .fsep{display:none}
+  .footer-col li{margin-bottom:2px}
+  .footer-col a{display:inline-block;padding:6px 0}
+  .footer-legal{gap:0 20px;padding-top:4px}
+  .footer-legal a{display:inline-flex;align-items:center;min-height:40px}
+  .footer-bottom span:last-child,.f-dup{display:none}
+  /* 아이콘 카드: 아이콘을 제목 왼쪽에 두어 카드 높이를 줄임 */
+  .card:not(.center):has(>.card-icon){display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:14px;align-items:center}
+  .card:not(.center):has(>.card-icon)>*{grid-column:1/-1}
+  .card:not(.center):has(>.card-icon)>.card-icon{grid-column:1;margin:0}
+  .card:not(.center):has(>.card-icon)>.card-icon+h3{grid-column:2;margin:0}
+  .card:not(.center):has(>.card-icon)>h3+*{margin-top:10px}
+  /* 단계 카드(STEP 01 …): 두 칸씩, 홀수 개의 마지막 칸은 전체 폭 */
+  .grid:has(>.card.center>.card-num){grid-template-columns:1fr 1fr;gap:10px}
+  .grid>.card.center:has(>.card-num){padding:16px 12px!important}
+  .grid>.card.center:has(>.card-num) h3{font-size:15px!important;margin-bottom:5px}
+  .grid>.card.center:has(>.card-num) p{font-size:13px!important;line-height:1.55}
+  .grid>.card.center:has(>.card-num) .card-num{margin-bottom:8px}
+  .grid:has(>.card.center>.card-num)>.card:last-child:nth-child(odd){grid-column:1/-1}
+  /* 게시판: 썸네일 왼쪽 + 제목 오른쪽 (요약은 글 안에서) */
+  .board-grid{gap:10px}
+  .board-card{flex-direction:row;align-items:center;gap:13px;padding:12px;border-radius:14px}
+  .board-thumb{flex:none;width:104px;aspect-ratio:1200/630;border-radius:8px}
+  .board-body{padding:0;gap:5px;justify-content:center}
+  .board-title{font-size:15px;line-height:1.42}
+  .board-sum,.board-more{display:none}
+  .board-thumb--ph .ph-mark{font-size:15px}
+  .board-thumb--ph .ph-cat{font-size:10px}
+  .news-filter{flex-wrap:nowrap;overflow-x:auto;margin:0 -22px 20px;padding:0 22px 4px;scrollbar-width:none}
+  .news-filter::-webkit-scrollbar{display:none}
+  .news-filter .btn{flex:none;min-height:40px}
+  /* 여러 개 고르는 칩: 한 줄에 하나씩 가지런히 */
+  .chip-multi{display:grid;grid-template-columns:1fr;gap:7px}
+  .chip-multi label{border-radius:12px;padding:11px 14px;font-size:14px}
+  #fJob .pill-choice{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  #fJob .pill-choice label{border-radius:12px;text-align:center;padding:10px 8px}
+  /* 명단 */
+  .member-role{font-size:12px}
+  .grp-title{flex-direction:column;align-items:flex-start;gap:8px}
+  .logo-grid>.logo-item:last-child:nth-child(odd){grid-column:1/-1}
+  /* 위원회 소개: 인사말 · 조직도 · 개요표 */
+  .greeting--wide p{font-size:15.5px;line-height:1.88;margin-bottom:15px}
+  .greeting-quote{font-size:16px;padding:16px 18px}
+  .oc-tag{letter-spacing:.07em}
+  .oc-siderow{align-items:stretch}
+  .oc-childs{grid-template-columns:1fr 1fr}
+  .oc-child::before{display:none}
+  .oc-desc,.oc-child small{font-size:12.5px}
+  .charter-box li:last-child{border-bottom:0!important}
+  table.tbl tbody th{width:92px!important;white-space:normal}
+  table.tbl thead th{white-space:normal}
+  /* 주요사업: 제목만 되풀이하는 오른쪽 그림 상자는 숨김 */
+  .biz-row{margin-bottom:40px}
+  .biz-title{font-size:21px}
+  .biz-visual{display:none}
+  /* 출강 */
+  .cu-icon{display:none}
+  .inst-deg{font-size:12px}
+  .hl-pill{border-radius:14px;line-height:1.45}
+  .small-contact{font-size:13.5px;color:var(--gray-600)}
+  .small-contact a{color:var(--blue);font-weight:700}
+  /* 사회공헌 신청: 선택지는 고른 항목만 설명을 펼침 */
+  #mouForm .choice{padding:13px 16px}
+  #mouForm .choice-badge{display:none}
+  #mouForm .choice-body>span:not(.choice-badge){display:none}
+  #mouForm .choice:has(input:checked) .choice-body>span:not(.choice-badge){display:block}
+  /* 양성과정 안내(expert): 혜택 카드 · 학습자료 그림 · 이력서 가이드 · 가치 카드 */
+  .bn{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:12px;align-items:center;padding:18px 18px 16px}
+  .bn-ic{width:40px;height:40px;margin:0}
+  .bn strong{margin:0;padding-right:28px}
+  .bn p{grid-column:1/-1;margin-top:8px}
+  .mat-figure--swipe{overflow-x:auto;margin-left:-22px;margin-right:-22px;padding:0 22px 6px}
+  .mat-figure--swipe img{width:720px;max-width:none}
+  .mat-figure--swipe figcaption{text-align:left}
+  .mat-figure--swipe .swipe-hint{display:block;margin-top:8px;font-size:12.5px;color:var(--gray-500)}
+  .li-guide li{flex-direction:column;gap:1px}
+  .li-guide li span{width:auto}
+  .worth{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:14px;align-items:center}
+  .worth-b{display:contents}
+  .worth-b>strong{grid-column:2;margin:0;padding-right:28px}
+  .worth-b p,.worth-b .chips{grid-column:1/-1}
+  .worth-b p{margin-top:10px}
+  /* 공식 AI윤리전문가(experts) */
+  .story .btn{width:100%;justify-content:center}
+  .src{font-size:12px}
+  /* 양성과정 신청(expert-apply): 첫 화면에 가격 · 버튼이 보이도록 4단계를 낮게, 번호로 순서 표시 */
+  .gform-bg{padding-top:20px}
+  .ea-steps{counter-reset:eas;gap:8px;margin-top:18px}
+  .ea-steps li{padding:11px 10px 10px;gap:2px}
+  .ea-step-ic{display:none}
+  .ea-steps li b::before{counter-increment:eas;content:counter(eas) ". ";color:var(--blue)}
+  .ea-steps li.is-goal b::before{color:#9FC1FF}
+  .ea-hero .gform-kicker{letter-spacing:.03em}
+  .ea-stat small{font-size:12px}
+  .ea-cv-body[lang="en"] b{font-size:16px}
+  /* 법령 문서: 3칸 표는 한 줄씩 카드로, 목차는 한 칸 */
+  .lg-meta{flex-direction:column;align-items:flex-start;gap:2px}
+  .lg-meta .fsep{display:none}
+  .lg-toc ol{grid-template-columns:1fr}
+  .lg-table--3 thead{display:none}
+  .lg-table--3,.lg-table--3 tbody,.lg-table--3 tr,.lg-table--3 th,.lg-table--3 td{display:block;width:auto!important}
+  .lg-table--3 tr{border:1px solid var(--gray-200);border-radius:10px;overflow:hidden;margin-bottom:10px}
+  .lg-table--3 th,.lg-table--3 td{border:0}
+  .lg-table--3 td{border-top:1px solid var(--gray-100)}
+  .lg-table--3 td::before{content:attr(data-label);display:block;margin-bottom:2px;font-size:12px;font-weight:700;color:var(--gray-500)}
+  /* 자가진단 */
+  #qNext{width:100%;justify-content:center}
+  .quiz-retry{padding:10px 16px}
+}
+@media (max-width:560px){.ai-visual img{object-position:60% center}}
+@media (max-width:480px){.ph-lead{font-size:18px!important}}

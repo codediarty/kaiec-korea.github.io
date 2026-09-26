@@ -70,8 +70,8 @@ body{width:1200px;height:630px;overflow:hidden;font-family:"Pretendard","Noto Sa
 .chip{display:inline-flex;align-items:center;gap:10px;font-size:19px;font-weight:800;letter-spacing:.06em;
   padding:9px 18px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
 .chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
-h1{font-size:64px;font-weight:900;line-height:1.22;letter-spacing:-.035em;max-width:820px;margin-top:22px;text-wrap:balance}
-.sub{font-size:27px;color:#C4D4EC;margin-top:18px;max-width:800px;line-height:1.5;font-weight:500}
+h1{font-size:64px;font-weight:900;line-height:1.22;letter-spacing:-.035em;max-width:820px;margin-top:22px;text-wrap:balance;word-break:keep-all}
+.sub{font-size:27px;color:#C4D4EC;margin-top:18px;max-width:800px;line-height:1.5;font-weight:500;word-break:keep-all}
 .foot{display:flex;justify-content:space-between;align-items:flex-end;font-size:19px;color:#A9C0E0;font-weight:600}
 .accent{background:linear-gradient(96deg,#6FE3D8,#8FB7FF);-webkit-background-clip:text;background-clip:text;color:transparent}
 """

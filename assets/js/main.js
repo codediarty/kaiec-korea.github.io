@@ -81,7 +81,7 @@
   /* 7. 하단 고정 접수 바: 첫 화면을 지나면 나타나고, 배너·푸터가 보이면 숨김 ----------------- */
   var sticky = document.getElementById('stickyCta');
   if (sticky) {
-    var blockers = document.querySelectorAll('.site-footer, .cta-band, .gform-done');
+    var blockers = document.querySelectorAll('.site-footer, .cta-band, .gform-done, .offer-card');   /* 2026.09.26: 가격 카드(같은 버튼)가 보이면 하단 바를 숨김 */
     var visible = [];
     function sync() {
       var on = window.pageYOffset > 520 && visible.length === 0;

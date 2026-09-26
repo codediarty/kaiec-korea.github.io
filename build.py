@@ -70,7 +70,7 @@ HOOK_REG = "이수 즉시 공식 등재"         # 이수와 동시에 홈페이
 # /expert/ Career Value 띠와 신청 폼 머리글에 같은 문구를 씁니다 (수치·출처는 STAT_71로 한 곳에서 관리).
 STAT_71 = {
     "num": "71%",
-    "head": "이제는 전 세계 리더의 71%가 경력보다 AI 역량을 먼저 봅니다.",
+    "head": "이제는 전 세계 리더의 71%가 경력보다 AI&nbsp;역량을 먼저 봅니다.",
     "body": "AI 역량이 없는 경력자보다 <strong>AI 역량을 갖춘 저경력자를 채용하겠다</strong>는 리더가 71%, AI 역량이 없으면 채용하지 않겠다는 리더가 66%입니다. "
             "이력서의 AI 역량은 이제 '있으면 좋은 것'이 아니라 가장 먼저 보는 평가 기준입니다.",
     "src": "출처: Microsoft · LinkedIn, 2024 Work Trend Index (31개국 31,000명 조사)",
@@ -154,7 +154,8 @@ BENEFITS = [
     ("pen-line", "이력서 · 자기소개서 활용 가이드",
      "이력서 어느 칸에 어떻게 쓰는지, 자기소개서 문장 예시와 면접 답변 포인트까지. 이수자 전용 가이드."),
     ("id-card", "이력서 가이드",
-     f"국문: {RESUME_KO} ({RESUME_NO}) / 영문: {PROG_EN} ({RESUME_NO}). 이대로 적으면 됩니다."),
+     f"영문 이력서에는 <span class=\"nw\">AI Ethics Professional (AIEP)</span>, Korea AI Ethics Committee로 적고 "
+     f"이수번호 <span class=\"nw\">{RESUME_NO.replace('No. ', '')}</span>를 함께 씁니다. 국문 표기와 LinkedIn 입력법도 안내합니다."),
     ("briefcase", "『실무 도구집』 양식 13종",
      "사내 AI 사용 기준, AI 활용 고지문, 위험도 점검표 등. 고쳐 쓰는 실무 양식, 이수 뒤에도 계속 씁니다."),
     ("user-check", "위원회 전문위원 지원 자격",
@@ -460,7 +461,7 @@ def footer():
           <ul>
             <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
             <li><a href="join.html">위원 참여하기</a></li>
-            <li><a href="mou.html">사회공헌</a></li>
+            <li class="f-dup"><a href="mou.html">사회공헌</a></li>
           </ul>
         </div>
       </div>
@@ -468,7 +469,7 @@ def footer():
         <span>기관명 한국AI윤리위원회</span><span class="fsep">|</span>
         <span>대표자 위원장 신동복</span><span class="fsep">|</span>
         <span>고유번호 272-32-01885</span><span class="fsep">|</span>
-        <span>연구실 : 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리 (16419)</span><span class="fsep">|</span>
+        <span>연구실 : 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리&nbsp;(16419)</span><span class="fsep">|</span>
         <span>공식 문의 <a href="mailto:{EMAIL}" style="color:inherit">{EMAIL}</a></span>
       </div>
       <div class="footer-info footer-info--sub">
@@ -503,6 +504,30 @@ def out_path(filename):
 
 
 _LINK_RE = re.compile(r'(href|src)="([A-Za-z0-9_\-]+\.html)((?:[?#][^"]*)?)"')
+# 2026.09.26 모바일 검토: 본문 글자 사이의 ' · ' 앞에 줄바꿈 금지 공백을 넣어, 줄이 '·'로 시작하지 않게 합니다.
+# 태그 속성·<script>·<style>·<textarea>·<title> 안은 건드리지 않습니다(JSON-LD · 메타 설명 · 창 제목 그대로).
+_RAW_BLOCK_RE = re.compile(r'(<(script|style|textarea|title)\b[^>]*>.*?</\2>)', re.S | re.I)
+
+
+def _glue_seps(t):
+    # ' · ' 앞은 줄바꿈 금지 공백, '결제·신청'처럼 붙어 있는 '·' 양옆은 단어 이음(U+2060)으로 묶어 줄 첫머리에 '·'가 오지 않게
+    t = t.replace(' · ', '\u00a0· ')
+    return re.sub(r'(?<=\S)·(?=\S)', '\u2060·\u2060', t)
+
+
+def keep_seps(html):
+    out = []
+    parts = _RAW_BLOCK_RE.split(html)
+    # split 결과: [텍스트, 블록 전체, 태그명, 텍스트, 블록 전체, 태그명, ...]
+    for i, seg in enumerate(parts):
+        if i % 3 == 0:
+            seg = re.sub(r'>([^<]+)<', lambda m: '>' + _glue_seps(m.group(1)) + '<', seg)
+            out.append(seg)
+        elif i % 3 == 1:
+            out.append(seg)
+    return "".join(out)
+
+
 def clean_links(html):
     """생성된 HTML 안의 상대 링크(x.html)와 자산 경로(assets/…)를 루트 기준 깔끔한 주소로 변환"""
     html = _LINK_RE.sub(lambda m: f'{m.group(1)}="{url_for(m.group(2))}{m.group(3)}"', html)
@@ -609,7 +634,7 @@ def page(filename, title, desc, body, extra_head="", extra_script="", keywords=N
 {extra_script}</body>
 </html>
 """
-    html = clean_links(inline_icons(html))
+    html = keep_seps(clean_links(inline_icons(html)))
     target = os.path.join(BASE, out_path(filename))
     os.makedirs(os.path.dirname(target), exist_ok=True)
     with io.open(target, "w", encoding="utf-8") as f:
@@ -639,11 +664,18 @@ def resume_box(note_basic=True):
             <div class="rrow">
               <span class="resume-tag">이수 직후</span>
               <div class="rlines">
-                <p><b>국문 이력서</b><code>{RESUME_KO} ({RESUME_NO})</code></p>
-                <p><b>영문 이력서</b><code>{RESUME_EN} ({RESUME_EN_NO})</code></p>
+                <p><b>국문 이력서</b><code>{RESUME_KO} <span class="nw">({RESUME_NO})</span></code></p>
+                <p><b>영문 이력서</b><code>{RESUME_EN} <span class="nw">({RESUME_EN_NO})</span></code></p>
                 <p><b>영문 설명 한 줄</b><code>{RESUME_EN_DESC}</code></p>
-                <small>교육·연수 칸에 한 줄이면 됩니다. 이수번호는 이름과 함께 홈페이지에서 검색되므로, 칸이 좁으면 번호를 빼고 <strong>{PROG_EN}</strong>까지만 적어도 됩니다.
-                  링크드인은 한 줄 소개(Headline)에 <strong>{LINKEDIN_HEADLINE}</strong>를 붙이고, 자격·수료 항목(Licenses &amp; certifications)의 Name에 AI Ethics Professional (AIEP), Issuing organization에 Korea AI Ethics Committee, Credential ID에 이수번호, URL에 kaiec.kr/experts/ 를 넣습니다.
+                <small>교육·연수 칸에 한 줄이면 됩니다. 이수번호는 이름과 함께 홈페이지에서 검색되므로, 칸이 좁으면 번호를 빼고 <strong>{PROG_EN}</strong>까지만 적어도 됩니다.</small>
+                <ul class="li-guide" lang="en">
+                  <li><span>LinkedIn Headline</span>{LINKEDIN_HEADLINE}</li>
+                  <li><span>Name</span>AI Ethics Professional (AIEP)</li>
+                  <li><span>Issuing organization</span>Korea AI Ethics Committee</li>
+                  <li><span>Credential ID</span>이수번호 (예: KAIEC-E-2026-0001)</li>
+                  <li><span>Credential URL</span>kaiec.kr/experts/</li>
+                </ul>
+                <small>
                   자기소개서 문장 예시와 면접 답변 포인트는 이수자 전용 <strong>이력서·자기소개서 활용 가이드</strong>로 함께 드립니다.</small>
               </div>
             </div>
@@ -740,7 +772,7 @@ BUSINESS = [
      "생성형 AI를 활용하는 개인과 조직이 지켜야 할 기본 원칙을 정리하고 확산합니다. 학습·연구·업무 현장에서 AI를 '숨기는 도구'가 아니라 '밝히고 검증하는 도구'로 쓰는 문화를 만드는 것을 목표로 합니다.",
      ["AI 활용 원칙 및 자율 가이드라인 정리", "분야별 AI 활용 체크리스트 배포", "AI 윤리 인식 개선 활동"]),
     ("megaphone", "AI 윤리 캠페인 및 교육·콘텐츠",
-     "온라인 캠페인, 카드뉴스, 영상, 강의 자료 등 누구나 쉽게 접근할 수 있는 형태로 AI 윤리 콘텐츠를 제작·배포합니다. 대학생·대학원생·연구자·직장인 등 실사용자 눈높이에 맞춘 실용적 내용을 지향합니다.",
+     "온라인 캠페인, 카드뉴스, 영상, 강의 자료 등 누구나 쉽게 접근할 수 있는 형태로 AI 윤리 콘텐츠를 <span class=\"nw\">제작·배포</span>합니다. 대학생·대학원생·연구자·직장인 등 실사용자 눈높이에 맞춘 실용적 내용을 지향합니다.",
      ["온·오프라인 AI 윤리 캠페인 기획", "교육 자료 및 강의 콘텐츠 제작", "SNS 기반 인식 개선 콘텐츠 운영"]),
     ("award", "AI윤리전문가 양성과정 운영",
      "AI 윤리 지식과 실무역량을 갖춘 전문 인력을 양성합니다. 「AI윤리전문가 양성과정」과 전문강사 양성을 운영하고, 이수자를 위원회 홈페이지에 공식 등록하며, 전문위원 등록으로 AI 윤리위원·전문위원 제도와 현장 활동까지 연결합니다.",
@@ -751,7 +783,7 @@ BUSINESS = [
     ("file-search", "AI 활용 문서의 책임 있는 사전점검",
      "논문·과제·보고서 등 AI를 활용해 작성한 문서를 제출 전에 스스로 점검하는 문화를 확산합니다. 제재가 아닌 <strong>자기 점검</strong>을 통해 불필요한 오해와 분쟁을 예방하는 것이 목적입니다.",
      ["사전점검 문화 확산 캠페인", "제휴 서비스 「카피클린」과의 공동 활동", "점검 가이드라인 안내"]),
-    ("book-open", "AI 윤리 연구 및 정책·사회적 이슈 공유",
+    ("book-open", "AI 윤리 연구 및 <span class=\"nw\">정책·사회적</span> 이슈 공유",
      "국내외 AI 윤리 기준, 관련 정책 동향, 사회적 쟁점을 정리해 공유합니다. 특정 입장을 대변하기보다 논의에 필요한 정보를 정리해 전달하는 데 초점을 둡니다.",
      ["국내외 AI 윤리 동향 정리", "이슈 브리프 및 리포트 발행", "연구·토론 모임 운영"]),
 ]
@@ -990,7 +1022,7 @@ def build_index(posts):
               위원회가 <strong>윤리 기준과 캠페인</strong>을, 카피클린이 <strong>AI 문서 분석 기술</strong>을 맡아
               "제출 전에 스스로 확인하는 문화"를 함께 만들어갑니다.
             </div>
-            <div style="display:flex;gap:11px;flex-wrap:wrap">
+            <div class="btns">
               <a class="btn btn-teal" href="{COPYCLEAN_URL}" target="_blank" rel="noopener">카피클린 바로가기 <i data-lucide="external-link"></i></a>
               <a class="btn btn-ghost" href="copyclean.html">제휴 내용 자세히 보기 <i data-lucide="arrow-right"></i></a>
             </div>
@@ -1126,7 +1158,7 @@ def org_chart():
 
           <!-- 부위원장 · 사무총장 -->
           <div class="oc-node oc-lv2">
-            <div class="oc-tag">VICE CHAIRPERSON · SECRETARY GENERAL</div>
+            <div class="oc-tag"><span class="nw">VICE CHAIRPERSON</span> · <span class="nw">SECRETARY GENERAL</span></div>
             <div class="oc-title">부위원장 · 사무총장</div>
             <div class="oc-desc">위원장 보좌 · 위원회 운영 총괄</div>
           </div>
@@ -1308,7 +1340,7 @@ def build_about():
           <span class="eyebrow">Organization</span>
           <h2 class="h-sec">조직도</h2>
           <p class="h-sub">위원회는 위원장을 중심으로 사무국과 6개 전문분과, AI 윤리 캠페인위원을 두고,
-             전국 단위의 지역 운영위원회·캠퍼스 위원회로 확장되는 구조입니다. 직책별 구성원은 <a href="members.html" style="color:var(--blue);font-weight:600">위원 명단 페이지</a>에서 확인하실 수 있습니다.</p>
+             전국 단위의 지역 운영위원회·캠퍼스 위원회로 확장되는 구조입니다. 직책별 구성원은 <a href="members.html" style="color:var(--blue);font-weight:600">위원 명단&nbsp;페이지</a>에서 확인하실 수 있습니다.</p>
         </div>
 {org_chart()}
       </div>
@@ -1404,16 +1436,16 @@ def build_business():
                 <span style="font-size:15px;color:var(--gray-700)">{x}</span></li>""" for x in items)
         rev = "direction:rtl" if i % 2 else ""
         inner = "direction:ltr" if i % 2 else ""
-        blocks.append(f"""      <div class="split reveal" style="margin-bottom:64px;{rev}">
+        blocks.append(f"""      <div class="split reveal biz-row" style="{rev}">
           <div style="{inner}">
             <span class="card-num">사업 {i+1:02d}</span>
-            <h2 style="font-size:26px;letter-spacing:-.035em;margin-bottom:14px">{t}</h2>
+            <h2 class="biz-title">{t}</h2>
             <p style="font-size:16px;color:var(--gray-600);line-height:1.8;margin-bottom:18px">{d}</p>
             <ul>
 {lis}
             </ul>
           </div>
-          <div class="split-visual" style="{inner};min-height:250px{';background:linear-gradient(150deg,#0A1628,#00857A)' if i%3==2 else ''}">
+          <div class="split-visual biz-visual" style="{inner};min-height:250px{';background:linear-gradient(150deg,#0A1628,#00857A)' if i%3==2 else ''}">
             <div class="card-icon" style="background:rgba(255,255,255,.14);color:#fff;width:58px;height:58px">
               <i data-lucide="{ic}" style="width:27px;height:27px"></i>
             </div>
@@ -1599,11 +1631,13 @@ def build_members():
       }
       var i=PEOPLE.push({m:m,g:g})-1;
       var roleTxt=(m.cred?m.cred+' · ':'')+(m.role||g);
+      /* 2026.09.26 모바일: 그룹 제목과 같은 말(예: '전문위원 · ')은 목록 카드에서만 떼고, ' · ' 앞은 줄바꿈하지 않음 */
+      var roleShown=(g&&roleTxt.indexOf(g+' · ')===0?roleTxt.slice(g.length+3):roleTxt).replace(/ · /g,'\u00a0· ');
       return '<div class="member member--link" role="button" tabindex="0" aria-haspopup="dialog" data-p="'+i+'" aria-label="'+m.name+' '+roleTxt+' 디지털 명함 보기">'
         +avatar(m)
-        +'<div class="member-role">'+roleTxt+'</div>'
+        +'<div class="member-role">'+roleShown+'</div>'
         +'<div class="member-name">'+m.name+'</div>'
-        +'<div class="member-field">'+(m.field||'')+'</div>'
+        +'<div class="member-field">'+String(m.field||'').replace(/ · /g,'\u00a0· ')+'</div>'
         +'<div class="member-more">디지털 명함 보기</div>'
         +'</div>';
     }
@@ -2221,7 +2255,7 @@ def build_copyclean():
     <section class="section">
       <div class="wrap">
         <div class="notice" style="margin-bottom:48px">
-          <strong>파트너십:</strong> 한국AI윤리위원회와 「카피클린(CopyClean)」은
+          <strong>파트너십:</strong> 한국AI윤리위원회와 <span class="nw">「카피클린(CopyClean)」은</span>
           AI 활용 문서의 <strong>사전점검 문화 확산</strong>을 위해 협력하는 파트너입니다.
           위원회는 윤리 기준·캠페인·교육을, 카피클린은 AI 문서 분석 기술을 담당합니다.
         </div>
@@ -2358,9 +2392,9 @@ def build_copyclean():
           <p class="h-sub">두 주체의 역할을 명확히 구분해 안내드립니다.</p>
         </div>
         <div class="table-wrap">
-          <table class="tbl">
+          <table class="tbl tbl--fit" style="min-width:auto">
             <thead>
-              <tr><th style="width:22%">구분</th><th>한국AI윤리위원회</th><th>카피클린 (CopyClean)</th></tr>
+              <tr><th style="width:22%">구분</th><th>한국AI윤리위원회</th><th>카피클린</th></tr>
             </thead>
             <tbody>
               <tr><th>성격</th><td>AI 윤리 전문기관</td><td>AI 문서 분석 서비스</td></tr>
@@ -2392,8 +2426,10 @@ def build_copyclean():
 
 # ----------------------------------------------------------------- news.html
 def build_news(posts):
+    # 2026.09.26 모바일 검토: 글이 없는 분류(예: '활동')는 버튼을 만들지 않음 (눌러도 빈 목록이 되던 문제)
+    used = [c for c in CATEGORIES if any(p["category"] == c for p in posts)]
     cat_btns = '<button class="btn btn-sm btn-primary" data-cat="전체">전체</button>' + "".join(
-        f'<button class="btn btn-sm btn-ghost" data-cat="{c}">{c}</button>' for c in CATEGORIES)
+        f'<button class="btn btn-sm btn-ghost" data-cat="{c}">{c}</button>' for c in used)
     cards = "\n".join(board_card(p) for p in posts) if posts else \
         '<p style="text-align:center;color:var(--gray-500);padding:50px 0">등록된 소식이 없습니다.</p>'
 
@@ -2403,11 +2439,11 @@ def build_news(posts):
 
     <section class="section">
       <div class="wrap">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px" id="newsFilter">
+        <div class="news-filter" id="newsFilter" role="group" aria-label="분류">
           {cat_btns}
         </div>
         <div class="board-grid" id="boardGrid">
-{cards}
+{cards.replace(' loading="lazy"', ' fetchpriority="high"', 1)}
         </div>
       </div>
     </section>"""
@@ -2580,17 +2616,24 @@ PAY_AGENT_URL = "https://www.skkc.co.kr"
 def legal_page(fname, nav_title, h1, lead, sections, desc):
     """서비스 이용안내·개인정보 운영정책 공통 틀.
     sections 항목은 (소제목, 본문) 또는 (소제목, 본문, id), 문자열이면 그대로 삽입합니다."""
-    parts = []
-    for it in sections:
+    parts, toc = [], []
+    for n, it in enumerate(sections, 1):
         if isinstance(it, str):
             parts.append(it)
+            m = re.search(r'id="([^"]+)"[^>]*>([^<]+)<', it)
+            if m:   # 큰 구분(개인정보처리방침 · 청약철회와 환불 등)은 목차에서 굵게
+                toc.append(f'<li class="lg-toc-part"><a href="#{m.group(1)}">{m.group(2).strip()}</a></li>')
             continue
-        sid = f' id="{it[2]}"' if len(it) > 2 else ''
-        parts.append(f"""        <section class="lg-sec"{sid}>
+        sid = it[2] if len(it) > 2 else f"s{n}"
+        parts.append(f"""        <section class="lg-sec" id="{sid}">
           <h2>{it[0]}</h2>
           {it[1]}
         </section>""")
+        toc.append(f'<li><a href="#{sid}">{it[0]}</a></li>')
     secs = "\n".join(parts)
+    # 2026.09.26 모바일 검토: 긴 문서라 맨 위에 접는 목차 (누르면 해당 조항으로 이동)
+    toc_html = (f'<details class="lg-toc"><summary>목차 보기 <span>{len([t for t in toc if "lg-toc-part" not in t])}개 조항</span></summary>'
+                f'<ol>{"".join(toc)}</ol></details>')
     body = f"""    <section class="page-hero">
       <div class="wrap page-hero-inner" style="padding-block:60px 54px">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; {nav_title}</p>
@@ -2605,12 +2648,13 @@ def legal_page(fname, nav_title, h1, lead, sections, desc):
           <span>시행일 {LEGAL_DATE}</span><span class="fsep">|</span>
           <span>한국AI윤리위원회 (Korea AI Ethics Committee)</span>
         </div>
+        {toc_html}
         <div class="legal">
 {secs}
         </div>
         <div class="lg-links">
-          <a href="terms.html">서비스 이용안내</a>
-          <a href="privacy.html">개인정보·운영정책</a>
+          <a href="terms.html"{' aria-current="page"' if fname == "terms.html" else ''}>서비스 이용안내</a>
+          <a href="privacy.html"{' aria-current="page"' if fname == "privacy.html" else ''}>개인정보·운영정책</a>
         </div>
       </div>
     </section>"""
@@ -2621,11 +2665,11 @@ def build_legal():
     # ---------------------------------------------------------------- 이용약관
     legal_page(
         "terms.html", "서비스 이용안내", "서비스 이용안내",
-        "한국AI윤리위원회가 운영하는 kaiec.kr 과 이곳에서 제공하는 교육·평가·발급 서비스의 이용 조건입니다. "
+        "한국AI윤리위원회가 운영하는 kaiec.kr과 이곳에서 제공하는 교육·평가·발급 서비스의 이용 조건입니다. "
         "신청 전에 확인해 주시기 바랍니다.",
         [
             ("제1조 (목적)",
-             "<p>이 약관은 한국AI윤리위원회(이하 “위원회”)가 kaiec.kr 을 통해 제공하는 AI윤리전문가 양성과정, "
+             "<p>이 약관은 한국AI윤리위원회(이하 “위원회”)가 kaiec.kr을 통해 제공하는 AI윤리전문가 양성과정, "
              "온라인 이수 평가, 이수증 발급과 이수자 등록, 그 밖의 부수 서비스(이하 “서비스”)의 이용에 관하여 "
              "위원회와 이용자의 권리·의무 및 책임 사항을 정하는 것을 목적으로 합니다.</p>"),
             ("제2조 (용어의 정의)",
@@ -2841,12 +2885,12 @@ def build_legal():
             ("5. 개인정보 처리의 위탁과 국외 이전",
              "<p>위원회는 서비스 운영을 위해 아래와 같이 개인정보 처리 업무를 위탁하고 있으며, 위탁 업무의 내용과 "
              "수탁자가 변경되는 경우 이 방침을 통해 공개합니다.</p>"
-             "<table class=\"lg-table\"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가 · 시점 · 방법</th></tr></thead><tbody>"
-             "<tr><th>Google LLC</th><td>신청·문의 내용의 저장(Google 스프레드시트 · Google 설문지), 자동 알림 메일 발송(Google Apps Script), "
-             "이수 평가 시스템의 데이터 저장</td><td>미국 · 이용자가 양식을 제출하는 시점에 네트워크를 통해 전송</td></tr>"
-             f"<tr><th>{PAY_AGENT}</th><td>교육비 결제와 환급 처리</td><td>국내</td></tr>"
+             "<table class=\"lg-table lg-table--3\"><thead><tr><th>수탁자</th><th>위탁 업무</th><th>이전 국가 · 시점 · 방법</th></tr></thead><tbody>"
+             "<tr><th>Google LLC</th><td data-label=\"위탁 업무\">신청·문의 내용의 저장(Google 스프레드시트 · Google 설문지), 자동 알림 메일 발송(Google Apps Script), "
+             "이수 평가 시스템의 데이터 저장</td><td data-label=\"이전 국가 · 시점 · 방법\">미국 · 이용자가 양식을 제출하는 시점에 네트워크를 통해 전송</td></tr>"
+             f"<tr><th>{PAY_AGENT}</th><td data-label=\"위탁 업무\">교육비 결제와 환급 처리</td><td data-label=\"이전 국가 · 시점 · 방법\">국내</td></tr>"
              "</tbody></table>"
-             "<p>Google LLC 로 이전되는 항목은 제1항에서 정한 수집 항목과 같으며, 보유 기간은 제3항과 같습니다. "
+             "<p>Google LLC로 이전되는 항목은 제1항에서 정한 수집 항목과 같으며, 보유 기간은 제3항과 같습니다. "
              "이용자는 개인정보의 국외 이전을 거부할 수 있으나, 이 경우 온라인 신청과 이수 평가 응시가 제한될 수 있습니다. "
              "거부를 원하시는 분은 위원회 공식 메일로 연락해 주시면 대체 방법을 안내해 드립니다.</p>"),
             ("6. 개인정보의 파기",
@@ -3085,7 +3129,7 @@ def build_mou():
         <div class="center" style="margin-bottom:38px">
           <span class="eyebrow">Free Education</span>
           <h2 class="h-sec">위원회가 직접 찾아가는 무료 교육</h2>
-          <p class="h-sub">한국AI윤리위원회 <strong>위원회 전문위원과 AI 윤리위원이 직접 나가는 기관 재능기부</strong>입니다.
+          <p class="h-sub">한국AI윤리위원회 <strong>전문위원과 AI 윤리위원이 직접 나가는 기관 재능기부</strong>입니다.
              신청 기관은 장소와 인원만 준비해 주시면 되고, 강사비와 교재비는 받지 않습니다.</p>
         </div>
         <div class="vol-grid">
@@ -3235,7 +3279,7 @@ def build_mou():
             <label for="msg">남기실 말씀<span class="req">*</span></label>
             <textarea id="msg" name="문의내용" required placeholder="교육 장소와 대상, 또는 협력을 희망하시는 내용을 자유롭게 적어 주세요."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="justify-self:start">
+          <button type="submit" class="btn btn-primary form-submit">
             신청 보내기 <i data-lucide="send"></i>
           </button>
           <p class="field-hint">
@@ -3446,7 +3490,7 @@ def build_lecture():
           <span><i data-lucide="check"></i>기관 맞춤형 커리큘럼 설계</span>
           <span><i data-lucide="check"></i>출강확인서 · 이수확인서 발급</span>
         </div>
-        <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:26px">
+        <div class="btns" style="margin-top:26px">
           <a class="btn btn-primary" href="#request">출강 문의하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#fields">교육 분야 보기</a>
         </div>
@@ -3457,7 +3501,7 @@ def build_lecture():
       <div class="wrap">
         <div class="stats reveal">
           <div class="stat"><div class="stat-num">석·박사</div><div class="stat-label">전문위원 직접 출강</div><div class="stat-sub">외주 없는 위원회 소속 강사진</div></div>
-          <div class="stat"><div class="stat-num" style="font-size:clamp(19px,2.2vw,24px);line-height:1.4">2026 기준</div><div class="stat-label">AI기본법 반영 교안</div><div class="stat-sub">제도와 사례를 최신으로 갱신</div></div>
+          <div class="stat"><div class="stat-num">2026 기준</div><div class="stat-label">AI기본법 반영 교안</div><div class="stat-sub">제도와 사례를 최신으로 갱신</div></div>
           <div class="stat"><div class="stat-num">1~4시간</div><div class="stat-label">교육시간 자유 선택</div><div class="stat-sub">기관 일정에 맞춰 구성</div></div>
           <div class="stat"><div class="stat-num">6개 분야</div><div class="stat-label">자유 조합 커리큘럼</div><div class="stat-sub">필요한 주제만 골라 담기</div></div>
         </div>
@@ -3615,7 +3659,7 @@ def build_lecture():
         <div class="center" style="margin-bottom:34px">
           <span class="eyebrow">Contact</span>
           <h2 class="h-sec">AI 윤리교육 출강 문의</h2>
-          <p class="h-sub" style="margin:0 auto">우리 기관에 필요한 AI 교육을 직접 구성해 보세요.
+          <p class="h-sub" style="margin:0 auto">우리 기관에 필요한 AI&nbsp;교육을 직접 구성해 보세요.
              작성해 주시면 담당자가 확인 후 1~3일 내 회신드립니다.</p>
         </div>
 
@@ -3665,7 +3709,7 @@ def build_lecture():
             <label for="l-msg">요청 사항 (선택)</label>
             <textarea id="l-msg" name="요청사항" style="min-height:100px" placeholder="희망 일정, 예상 인원, 조합하고 싶은 분야 등을 간단히 적어주셔도 좋습니다."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="justify-self:start">
+          <button type="submit" class="btn btn-primary form-submit">
             출강 문의 보내기 <i data-lucide="send"></i>
           </button>
           <p class="field-hint">
@@ -3679,15 +3723,15 @@ def build_lecture():
     <section class="section section--tight">
       <div class="wrap">
         <div class="cta-band">
-          <div><h2>우리 기관에 필요한 AI 교육을 직접 구성해 보세요</h2>
+          <div><h2>우리 기관에 필요한 AI&nbsp;교육을 직접 구성해 보세요</h2>
             <p>기업·공공기관부터 학교·대학·연구기관까지, 교육 대상과 목적에 맞춰
-               1시간부터 4시간까지 맞춤형 AI 윤리교육을 제공합니다. 문의해 주시면 1~3일 내 커리큘럼과 견적을 함께 회신드립니다.</p></div>
+               1시간부터 4시간까지 맞춤형 AI&nbsp;윤리교육을 제공합니다. 문의해 주시면 1~3일 내 커리큘럼과 견적을 함께 회신드립니다.</p></div>
           <div class="btns">
             <a class="btn btn-white" href="#request">AI 윤리교육 출강 문의</a>
             <a class="btn btn-light" href="{CERT_HREF}">{CERT_CTA}</a>
           </div>
         </div>
-        <p class="small-contact">출강 문의 &nbsp;|&nbsp; {L_EMAIL} &nbsp;·&nbsp; {L_TEL}</p>
+        <p class="small-contact">출강 문의 <a href="mailto:{L_EMAIL}">{L_EMAIL}</a> <span aria-hidden="true">·</span> <a href="tel:{L_TEL.replace("-", "")}">{L_TEL}</a></p>
       </div>
     </section>"""
 
@@ -3705,9 +3749,9 @@ def build_lecture():
       if(m.photo){av='<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'?v=__PV__" alt="'+m.name+'" loading="lazy"></div>'}
       else{var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';av='<div class="member-avatar">'+initial+'</div>'}
       return '<div class="member">'+av
-        +'<div class="member-role">'+(m.role||'전문위원')+'</div>'
+        +'<div class="member-role">'+String(m.role||'전문위원').replace(/ · /g,'\u00a0· ')+'</div>'
         +'<div class="member-name">'+m.name+'</div>'
-        +'<div class="member-field">'+(m.field||'')+'</div></div>';
+        +'<div class="member-field">'+String(m.field||'').replace(/ · /g,'\u00a0· ')+'</div></div>';
     }).join('');
   })();
   /* 출강 문의 폼: 작성 내용을 담아 메일 앱을 엽니다 */
@@ -3772,9 +3816,9 @@ def build_expert():
     - 등록된 자격 제도가 아니므로 인증(자격)·검정·급수 표현을 쓰지 않음 (2026.09.14). 2026.09.16부터 '이수 평가·이수증'으로 표기
     - 2026.09.16 학습 방식: 온라인 강의 없이 위원회 표준교재 등 학습자료 5종(PDF) 자율학습 + 온라인 이수 평가, 응시 기간 안 기준에 이를 때까지 재응시
     - 신청·이수 절차 6단계(양성과정 신청 → 학습자료 확인 → 자율학습 → 평가응시 → 이수 기준 충족 → 이수증 발급), 응시는 상단 [평가응시] 로그인"""
-    pay_btns = (f'<div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px">'
+    pay_btns = (f'<div class="pay-btns" style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:24px">'
                 f'<a class="btn btn-primary" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>'
-                f'<span style="font-size:13px;color:var(--gray-500)">신청을 완료하면 결제 페이지로 자동 연결됩니다</span></div>')
+                f'<span style="font-size:13px;color:var(--gray-500)">결제는 위원회 공식 교육 운영사 성균관컨설팅 안전결제로 진행됩니다</span></div>')
 
     # 이수하면 받는 것 8가지 (BENEFITS 상수)
     bn_html = "".join(f"""
@@ -3886,7 +3930,7 @@ def build_expert():
           <span><i data-lucide="check"></i>공식 이수증 발급</span>
           <span><i data-lucide="check"></i>AI윤리전문가 공식 등록</span>
         </div>
-        <div style="display:flex;gap:11px;flex-wrap:wrap;margin-top:26px">
+        <div class="btns" style="margin-top:26px">
           <a class="btn btn-primary" href="{CERT_HREF}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           <a class="btn btn-light" href="#benefits">이수 후 달라지는 것 보기 <i data-lucide="arrow-right"></i></a>
         </div>
@@ -3910,14 +3954,14 @@ def build_expert():
           <span class="eyebrow">Why Now</span>
           <h2 class="h-sec">왜 지금, AI윤리전문가인가 <span class="hot-tag">HOT</span></h2>
           <p class="h-sub">AI기본법 시행과 EU AI Act 적용이 같은 해에 시작됐습니다. AI 윤리는 교양에서 <strong>실무 요건</strong>이 됐고,
-             먼저 준비한 사람이 첫 자리를 차지합니다.</p>
+             먼저 준비한 사람이 첫&nbsp;자리를 차지합니다.</p>
         </div>
         <div class="grid grid-2">
 {why_cards}
         </div>
         <div class="notice notice--teal" style="margin-top:26px">
           <strong>핵심은 하나입니다.</strong> 조직마다 "AI를 어디까지 어떻게 써야 하는가"에 답할 사람이 필요해졌습니다.
-          이 과정은 그 답을 배우고 증명하는 가장 빠른 길입니다.
+          이 과정은 그&nbsp;답을 배우고 증명하는 가장 빠른 길입니다.
         </div>
       </div>
     </section>
@@ -3961,7 +4005,7 @@ def build_expert():
         </div>
 {resume_box()}
         <div class="grid grid-3" style="margin-top:26px">
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">양성과정 이수</h3><p style="font-size:14px">위원회 공식 이수증과 홈페이지 공식 등록로 남는 첫 번째 이력</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 01</span><h3 style="font-size:16px">양성과정 이수</h3><p style="font-size:14px">위원회 공식 이수증과 홈페이지 공식 등록으로 남는 첫 번째 이력</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 02</span><h3 style="font-size:16px">스펙 향상 · 커리어 활용</h3><p style="font-size:14px">취업 · 이직 · 승진, 사내 AI 활용 기준 담당으로</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">CAREER PATH 03</span><h3 style="font-size:16px">전문 활동으로 확장</h3><p style="font-size:14px">전문위원 등록 신청, 위원회 캠페인 · Fellowship 참여</p></div>
         </div>
@@ -3996,9 +4040,9 @@ def build_expert():
               <span class="price-now">{won(PRICE)}</span>
               <span class="price-tag">특별가</span>
             </div>
-            <div style="margin-top:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+            <div class="oc-cta" style="margin-top:4px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
               <a class="btn btn-white" href="{CERT_HREF}">{CERT_CTA} <i data-lucide="arrow-right"></i></a>
-              <span style="font-size:12.5px;color:#AFC4E4">신청 완료 후 결제 페이지로 자동 연결</span>
+              <span style="font-size:12.5px;color:#AFC4E4">성균관컨설팅 안전결제로 바로 시작</span>
             </div>
           </article>
           <aside class="one-course-side">
@@ -4012,10 +4056,11 @@ def build_expert():
           <div class="center" style="margin:54px 0 26px">
             <span class="eyebrow">Study Materials</span>
             <h2 class="h-sec">위원회가 직접 집필한 학습자료 5종</h2>
-            <p class="h-sub" style="margin:0 auto">영상 진도율을 채우는 과정이 아닙니다. 결제 즉시 PDF 5종을 받아 원하는 속도로 공부하고, 준비되면 바로 응시합니다.</p>
+            <p class="h-sub" style="margin:0 auto">영상 진도율을 채우는 과정이 아닙니다. 결제 즉시 PDF&nbsp;5종을 받아 원하는 속도로 공부하고, 준비되면 바로 응시합니다.</p>
           </div>
-          <figure class="mat-figure reveal">
+          <figure class="mat-figure mat-figure--swipe reveal">
             <img src="assets/img/materials-5set.jpg" alt="AI윤리전문가 양성과정 학습자료 5종 표지: 00 이수 평가 응시 안내, 01 핵심이론, 02 실전 모의고사, 03 정답 및 해설, 04 실무 도구집" loading="lazy" width="3200" height="861">
+            <figcaption class="swipe-hint">옆으로 밀어서 5종 표지를 모두 볼 수 있습니다</figcaption>
           </figure>
           <ol class="lec-list">{mat_html}
           </ol>
@@ -4154,7 +4199,8 @@ def build_expert():
         <details class="acc">
           <summary>교육비 결제는 어떻게 하나요?</summary>
           <div class="acc-body">교육비는 성균관대학교 RISE사업 공식 지원기업인 성균관컨설팅(skkc.co.kr)의 안전결제(신용카드·간편결제)로
-            납부하실 수 있습니다. 신청을 완료하면 결제 페이지로 자동 연결되며, 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
+            납부하실 수 있습니다. 신청 페이지의 [AI윤리전문가 시작하기]를 누르면 결제 안내가 나오고, 성균관컨설팅 결제 페이지에서
+            [구매하기] → 비회원 구매로 바로 결제할 수 있습니다. 결제 내역에는 '성균관컨설팅'으로 표기됩니다.
             카드전표 등 결제 증빙은 결제 시 발급됩니다.</div>
         </details>
         <details class="acc">
@@ -4492,7 +4538,7 @@ def build_experts():
          "이수 즉시 한국AI윤리위원회 홈페이지에 AI윤리전문가로 등록되고 검색됩니다. 공식 이수증(이수번호)과 활용 가이드를 받습니다.",
          ["홈페이지 공식 등록 · 검색", "이수번호 부여", "활용 가이드"]),
         ("스펙으로, 활동으로 확장",
-         "취업·이직·현재 직무에 바로 쓰고, 위원회 캠페인·Fellowship에 참여합니다. <small class=\"adv-note\">전문위원 등록을 신청해 등록되면 프로필 공개, 전문강사·자문 활동</small>",
+         "취업·이직·현재 직무에 바로 쓰고, 위원회 <span class=\"nw\">캠페인·Fellowship에</span> 참여합니다. <small class=\"adv-note\">전문위원 등록을 신청해 등록되면 프로필 공개, 전문강사·자문 활동</small>",
          ["취업 · 이직 · 직무", "위원회 활동 참여", "전문위원 등록 신청"]),
     ]
     FAQ = [
@@ -4569,7 +4615,7 @@ def build_experts():
           <div class="story">
             <h3>왜 지금 이렇게 뜨거운가</h3>
             <p>기업은 사내 AI 기준을 세울 사람을, 학교는 학생의 AI 활용을 지도할 사람을, 공공기관은 도입 전 위험을 점검할 사람을 찾기 시작했습니다.</p>
-            <p>그런데 이 역량을 증명한 사람은 아직 소수입니다. 먼저 준비한 사람이 첫 자리를 차지합니다. 지금이 그때입니다.</p>
+            <p>그런데 이 역량을 증명한 사람은 아직 소수입니다. 먼저 준비한 사람이 첫&nbsp;자리를 차지합니다. 지금이 그때입니다.</p>
             <a class="btn btn-primary" href="{APPLY}">AI윤리전문가 양성과정 신청하기 <i data-lucide="arrow-right"></i></a>
           </div>
           <div class="moment-list">
@@ -4584,7 +4630,7 @@ def build_experts():
       <div class="wrap">
         <div class="center" style="margin-bottom:30px">
           <span class="eyebrow">What Is It</span>
-          <h2 class="h-sec">AI윤리전문가란, 누구나 갖고 싶은 AI 역량 이력입니다</h2>
+          <h2 class="h-sec">AI윤리전문가란, 누구나 갖고&nbsp;싶은 AI 역량 이력입니다</h2>
           <p class="h-sub" style="margin:0 auto">AI를 잘 쓰는 사람은 많습니다. 기업이 찾는 사람은 AI의 결과를 검증하고 <strong>책임 있게 쓸 줄 아는 사람</strong>입니다.
              그 역량을 한국AI윤리위원회가 확인해 준 이력이 AI윤리전문가입니다. 전공·경력 제한 없이, 전 과정 100% 온라인으로 시작합니다.</p>
         </div>
@@ -4656,7 +4702,7 @@ def build_experts():
             <p>성명 또는 이수번호를 입력하면 한국AI윤리위원회 공식 등록 여부를 바로 확인할 수 있습니다.</p>
             <form class="rl-form" role="search" onsubmit="return false">
               <i data-lucide="search"></i>
-              <input type="search" id="regQ" placeholder="성명 또는 이수번호 (예: KAIEC-E-2026-0001)" aria-label="AI윤리전문가 등록 조회" autocomplete="off">
+              <input type="search" id="regQ" placeholder="성명 또는 이수번호" aria-label="AI윤리전문가 등록 조회" autocomplete="off">
               <button type="button" id="regBtn">조회</button>
             </form>
             <div class="rl-meta"><span id="regN"></span><span id="regHint">이수 확정과 함께 등록되어 이 화면에서 바로 검색됩니다</span></div>
@@ -4808,7 +4854,7 @@ def build_join():
         ("monitor-play", "전문위원", "양성과정 이수자",
          "AI 윤리 교육·자문·캠페인 콘텐츠 감수 활동", False),
         ("handshake", "공식 파트너", "기관 · 기업 · 학교",
-         "AI 윤리 캠페인·교육을 함께할 기업·기관·대학·학교", False),
+         "AI 윤리 캠페인·교육을 함께할 <span class=\"nw\">기업·기관·대학·학교</span>", False),
     ]
     ROLE_ITEMS = "".join(
         f'<label class="choice choice--role choice--slim{" choice--hot" if hot else ""}"><input type="radio" name="jtype" value="{name}"{" checked" if hot else ""}><span class="choice-radio"></span>'
@@ -4890,7 +4936,7 @@ def build_join():
       <div class="wrap page-hero-inner join-hero-inner">
         <p class="crumb"><a href="index.html">홈</a> &nbsp;›&nbsp; 위원 참여</p>
         <span class="join-eyebrow">JOIN KAIEC · 위원 참여</span>
-        <h1>AI 시대의 올바른 문화를 함께 만드는 사람, <br class="br-pc">KAIEC AI 윤리 캠페인위원을 모집합니다</h1>
+        <h1>AI 시대의 올바른 문화를 함께 만드는 사람, <br class="br-pc">KAIEC <span class="nw">AI 윤리 캠페인위원을</span> 모집합니다</h1>
         <p>보고서도, 과제도, 업무도 AI로 하는 시대. AI를 잘 쓰는 것만큼 바르게 쓰는 문화가 중요합니다.
            한국AI윤리위원회(KAIEC) AI 윤리 캠페인위원은 SNS·블로그·커뮤니티에서 올바른 AI 활용 문화를 알리는 온라인 활동입니다.</p>
         <div class="hero-hooks">
@@ -4919,7 +4965,7 @@ def build_join():
             <div class="gform-sec">STEP 1</div>
             <h2>참여 구분 <span class="req">*</span></h2>
             <div class="choice-list">{ROLE_ITEMS}</div>
-            <p class="field-hint">전문위원은 AI윤리전문가 양성과정 이수자 대상입니다. <a href="expert-apply.html" style="color:var(--blue);font-weight:700">양성과정 보기</a></p>
+            <p class="field-hint">전문위원은 AI윤리전문가 양성과정 이수자 대상입니다. <a href="expert-apply.html" style="color:var(--blue);font-weight:700;white-space:nowrap">양성과정 보기</a></p>
             <p class="err-msg">참여 구분을 선택해 주세요.</p>
           </div>
 
@@ -5258,7 +5304,7 @@ def build_quiz():
     RESULTS = [
         (12, "AI 윤리 리더형", "이미 기준을 갖고 판단하고 있습니다.",
          "대부분의 장면에서 책임 있는 판단을 하고 있습니다. 이제 필요한 것은 그 판단력을 조직 밖에서도 인정받는 증명입니다. "
-         "AI윤리전문가 양성과정은 지금의 감각을 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록로 남기고, 전문위원 등록과 전문강사·자문 활동으로 넓히는 가장 빠른 길입니다."),
+         "AI윤리전문가 양성과정은 지금의 감각을 한국AI윤리위원회 공식 이수증과 홈페이지 공식 등록으로 남기고, 전문위원 등록과 전문강사·자문 활동으로 넓히는 가장 빠른 길입니다."),
         (7, "실무 감각형", "큰 방향은 맞지만, 상황마다 흔들리는 지점이 있습니다.",
          "판단의 방향은 옳은데 기준이 정리되어 있지 않아 장면마다 결과가 달라집니다. 체계적으로 한 번 정리하면 판단이 빨라지고, "
          "그 기준을 이수증으로 남길 수 있습니다. AI윤리전문가 양성과정이 정확히 그 역할을 합니다."),
@@ -5327,7 +5373,7 @@ def build_quiz():
       <div class="wrap-narrow">
         <div class="center" style="margin-bottom:24px">
           <span class="eyebrow">Why It Matters</span>
-          <h2 class="h-sec">기준을 아는 한 사람이 조직 전체의 리스크를 줄입니다</h2>
+          <h2 class="h-sec">기준을 아는 한 사람이 조직&nbsp;전체의 리스크를 줄입니다</h2>
           <p class="h-sub" style="margin:0 auto">2026년 AI기본법 시행 이후 기업·기관·학교는 AI를 어디까지 어떻게 활용해야 하는지 답할 사람을 찾고 있습니다.
              이 진단의 7개 장면이 바로 그 기준이고, AI윤리전문가 양성과정은 그 기준을 체계적으로 배우고 이수증으로 증명하는 과정입니다.</p>
         </div>
@@ -5358,6 +5404,7 @@ def build_quiz():
       b.classList.add(sc===best?'is-best':(sc>0?'is-half':'is-low'));
       expT.textContent=sc===best?'좋은 판단입니다':(sc>0?'방향은 맞지만 한 걸음 더':'여기서 사고가 납니다');
       expX.textContent=q.e; exp.hidden=false;
+      bar.style.width=((i+1)/Q.length*100)+'%';   /* 답을 고르면 진행 막대가 채워짐 (2026.09.26) */
       next.innerHTML=(i===Q.length-1?'결과 보기':'다음 문항')+' <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
       exp.scrollIntoView({behavior:'smooth',block:'nearest'});
     }
@@ -5614,7 +5661,7 @@ def build_exam():
 def build_apply():
     roles = [
         ("crown", "대표위원", "위원회를 대표해 대외 활동과 주요 의사결정에 참여합니다.", "리더십 · 대외 활동"),
-        ("briefcase", "운영위원장 · 운영위원", "사업 기획과 프로그램 운영, 활동 관리를 총괄·수행합니다.", "기획 · 운영"),
+        ("briefcase", "운영위원장 · 운영위원", "사업 기획과 프로그램 운영, 활동 관리를 총괄하고 수행합니다.", "기획 · 운영"),
         ("map-pin", "지역 운영위원", "권역별 지역 조직을 이끌며 지역 단위 캠페인과 활동을 운영합니다.", "지역 조직"),
         ("school", "캠퍼스 위원장", "소속 대학의 캠퍼스 위원회를 이끌며 교내 확산 활동을 담당합니다.", "대학 조직"),
         ("megaphone", "홍보위원", "위원회 채널과 콘텐츠를 통해 AI 윤리 캠페인을 알립니다.", "홍보 · 콘텐츠"),
@@ -5660,6 +5707,10 @@ def build_apply():
 
     <section class="section section--gray section--tight">
       <div class="wrap-narrow">
+        <div class="center" style="margin-bottom:22px">
+          <span class="eyebrow">Process</span>
+          <h2 class="h-sec">지원 절차</h2>
+        </div>
         <div class="grid grid-4">
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 01</span><h3 style="font-size:16px">지원서 제출</h3><p style="font-size:14px">아래 지원서 작성</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 02</span><h3 style="font-size:16px">서류 검토</h3><p style="font-size:14px">약 3~5일</p></div>
@@ -5700,8 +5751,8 @@ def build_apply():
         <div class="center" style="margin-bottom:42px">
           <span class="eyebrow">Corporate Membership</span>
           <h2 class="h-sec">한국AI윤리위원회 회원기관</h2>
-          <p class="h-sub">책임 있는 AI를 실천하는 기업·기관의 네트워크입니다. 회원기관는 위원회의 교육·자문·인증 자원을
-             우선적으로 활용하고, <strong>"한국AI윤리위원회 회원기관"</strong>로서 대외 신뢰를 확보합니다.</p>
+          <p class="h-sub">책임 있는 AI를 실천하는 기업·기관의 네트워크입니다. 회원기관은 위원회의 교육·자문·인증 자원을
+             우선적으로 활용하고, <strong>"한국AI윤리위원회 회원기관"</strong>으로서 대외 신뢰를 확보합니다.</p>
         </div>
         <div class="grid grid-3">
           <article class="card reveal"><div class="card-icon"><i data-lucide="badge-check"></i></div>
