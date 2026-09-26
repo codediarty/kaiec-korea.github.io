@@ -249,11 +249,11 @@
     var PEOPLE=[];
     var CHECK='<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
     /* 그룹 제목 오른쪽 배지 (인원수 대신 표기, 2026.09.26) */
-    /* 임원진(위원장·부위원장·고문·자문위원·사무국·감사)은 배지 없이 직함만 (2026.09.26 사용자: '임원' 반복이 조잡) */
-    var BADGE={'전문위원':'KAIEC 공식 출강','AI 윤리 캠페인위원':'KAIEC 공식 위촉'};
+    /* 임원진 배지는 맨 앞 위원장 옆에 'KAIEC 임원진' 하나만 (2026.09.26 사용자: 그룹마다 '임원' 반복은 조잡) */
+    var BADGE={'위원장':'KAIEC 임원진','전문위원':'KAIEC 소속 출강','AI 윤리 캠페인위원':'KAIEC 공식 위촉'};
     var NOTE={
       '전문위원':'KAIEC 소속 전문위원이 대학·기업·공공기관을 대상으로 맞춤형 AI 교육을 진행합니다. <a href="/lecture/#request">출강 문의 →</a>',
-      'AI 윤리 캠페인위원':'위원회 검토를 거쳐 공식 위촉된 위원입니다. 온·오프라인에서 올바른 AI 활용 문화를 알리고 확산합니다.'};
+      'AI 윤리 캠페인위원':'위원회 검토를 거쳐 공식 위촉된 위원으로, 책임 있는 AI 문화 정착과 긍정적 사회가치 확산에 함께합니다.'};
     function grpHead(g){
       return '<h3 class="grp-title"><span class="grp-name"><span class="grp-bar"></span>'+g+'</span>'
         +(BADGE[g]?'<span class="grp-badge">'+CHECK+BADGE[g]+'</span>':'')+'</h3>'
@@ -350,7 +350,7 @@
         TXT='#0B1B36',G7='#374151',G6='#4B5563',G5='#6B7280',G4='#9CA3AF',LINE='#E3E8EF';
     var UNIT={'고문·자문위원':'고문·자문위원단','사무국':'사무국','전문위원':'전문위원회','AI 윤리 캠페인위원':'AI 윤리 캠페인위원단'};
     var SINCE={'위원장':'취임','부위원장':'선임','감사':'선임','사무국':'선임'};
-    var CHIP={'전문위원':'KAIEC 공식 출강 강사','AI 윤리 캠페인위원':'한국AI윤리위원회 공식 위촉'};
+    var CHIP={'전문위원':'KAIEC 소속 출강 강사','AI 윤리 캠페인위원':'한국AI윤리위원회 공식 위촉'};
     var CHIP_DEF='한국AI윤리위원회 공식 명단 등재';
     var FIELD={'위원장':'담당','부위원장':'담당','감사':'담당','사무국':'담당','고문·자문위원':'자문 분야','전문위원':'전문 분야'};
     /* 명함 머리 로고 글꼴을 미리 불러 둡니다 (처음 열 때 대체 글꼴이 잠깐 보이지 않도록) */
