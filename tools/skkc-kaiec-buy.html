@@ -1,0 +1,51 @@
+<!-- KAIEC 결제 바로 연결 (성균관컨설팅 skkc.co.kr 아임웹에 한 번만 넣는 코드, 2026.09.26)
+     넣는 곳: 아임웹 관리자 > 설정 > SEO > 고급 설정 > Footer Code (모든 페이지 </body> 바로 위)
+     하는 일: kaiec.kr 결제 안내에서 넘어온 주소(shop_view?idx=…&kaiec_buy=1)일 때만 상품 화면의 [구매하기]를 대신 눌러
+             비회원 주문서(shop_payment)로 바로 보냅니다. 다른 방문자와 다른 페이지에는 아무 영향이 없습니다.
+     주문서 주소(order_code · order_no · order_member)는 구매자마다 새로 만들어지므로 고정 링크로 걸 수 없어 이렇게 처리합니다. -->
+<script>
+(function () {
+  var q = location.search;
+  if (!/[?&]kaiec_buy=1(?:&|$)/.test(q) || location.pathname.indexOf('/shop_view') !== 0) return;
+  /* 뒤로 가기로 이 화면에 돌아와도 주문서를 또 만들지 않도록 주소에서 표시를 먼저 지웁니다 */
+  var cleanSearch = q.replace(/([?&])kaiec_buy=1(&|$)/, function (m, a, b) { return b ? a : ''; });
+  var cleanUrl = location.origin + location.pathname + cleanSearch;
+  try { history.replaceState(history.state, '', location.pathname + cleanSearch + location.hash); } catch (e) {}
+
+  var cover = document.createElement('div');
+  cover.id = 'kaiecBuyCover';
+  cover.setAttribute('role', 'status');
+  cover.setAttribute('style', 'position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483646;display:flex;flex-direction:column;' +
+    'align-items:center;justify-content:center;gap:12px;padding:24px;background:rgba(255,255,255,.97);text-align:center;' +
+    'font:600 16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#1d2433');
+  cover.innerHTML = '<style>@keyframes kaiecBuySpin{to{transform:rotate(360deg)}}</style>' +
+    '<span style="width:34px;height:34px;border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:kaiecBuySpin .8s linear infinite"></span>' +
+    '<span>주문서를 여는 중입니다</span>' +
+    '<span style="font-weight:500;font-size:13px;color:#6b7383">AI윤리전문가 양성과정 · 회원가입 없이 비회원으로 주문합니다</span>';
+  function showCover() { if (document.body && !cover.parentNode) document.body.appendChild(cover); }
+  function hideCover() { if (cover.parentNode) cover.parentNode.removeChild(cover); }
+
+  var started = Date.now(), fired = false;
+  function ready() {
+    var d = window.SITE_SHOP_DETAIL;
+    if (!d || typeof d.confirmOrderWithCartItems !== 'function' || document.readyState !== 'complete') return false;
+    /* 상품 수량이 준비된 뒤에 눌러야 주문이 만들어집니다 (옵션 불러오기가 끝나면 1) */
+    return typeof d.getOrderCount !== 'function' || d.getOrderCount() > 0;
+  }
+  function tick() {
+    if (fired) return;
+    showCover();
+    if (ready()) {
+      fired = true;
+      try { window.SITE_SHOP_DETAIL.confirmOrderWithCartItems('guest_login', cleanUrl); } catch (e) { hideCover(); return; }
+      /* 품절·오류 등으로 주문서로 넘어가지 못하면 가림막을 걷어 직접 [구매하기]를 누를 수 있게 합니다 */
+      setTimeout(hideCover, 8000);
+      return;
+    }
+    if (Date.now() - started < 12000) setTimeout(tick, 150); else hideCover();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tick); else tick();
+  /* 주문서에서 뒤로 돌아온 경우(bfcache) 가림막이 남지 않게 */
+  window.addEventListener('pageshow', function (e) { if (e.persisted) hideCover(); });
+})();
+</script>

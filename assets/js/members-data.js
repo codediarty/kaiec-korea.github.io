@@ -14,6 +14,8 @@
      - cred  : (선택) 자격 표기. 직책 앞에 붙어 '변호사 · 법률고문'처럼 표시됩니다.
      - en    : (선택) 영문 이름. 디지털 명함에 대문자로 표시되고, 명함 주소(#shin-dong-bok)에도 쓰입니다.
      - since : (선택) 취임·선임·위촉 시기. 예) '2026.07'  (위원장은 '취임', 부위원장·감사·사무국은 '선임', 그 외는 '위촉'으로 표시)
+     - email : (선택) 디지털 명함의 '이메일' 칸과 명함 이미지에 표시. 없으면 위원회 대표 메일(contact@kaiec.kr).
+               위원회 주소는 '이름.성@kaiec.kr' 형식 (예: 조현석 → hyunseok.cho@kaiec.kr). 메일함(또는 전달 설정)을 먼저 만들어 두세요.
    ▶ 해당 group에 사람이 한 명도 없으면 그 구분은 화면에 표시되지 않습니다.
    ▶ 전문위원 명단은 '강의 신청' 페이지의 자문 위원단에도 자동으로 표시됩니다.
    ▶ 위원장 항목의 name은 '위원회 소개' 페이지 인사말 서명에도 자동으로 들어갑니다.
@@ -25,15 +27,15 @@ window.KAIEC_MEMBERS = [
   { group: '위원장', role: '위원장', name: '신동복', en: 'Shin Dong-bok', since: '2026.06', field: 'AI 윤리 · 정책', photo: 'shin-dongbok.jpg' },
 
   // ── 부위원장 ───────────────────────────────────────────────
-  { group: '부위원장', role: '부위원장', name: '조현석', en: 'Cho Hyun-seok', since: '2026.07', field: '운영 총괄 · 대외 협력', photo: 'jo-hyunseok.jpg' },
+  { group: '부위원장', role: '부위원장', name: '조현석', en: 'Cho Hyun-seok', email: 'hyunseok.cho@kaiec.kr', since: '2026.07', field: '운영 총괄 · 대외 협력', photo: 'jo-hyunseok.jpg' },
 
   // ── 고문·자문위원 ─────────────────────────────────────────
-  { group: '고문·자문위원', role: '학술고문', name: '임형택', en: 'Lim Hyung-taek', since: '2026.08', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
-  { group: '고문·자문위원', role: '법률고문', cred: '변호사', name: '한수연', en: 'Han Soo-yeon', since: '2026.08', field: 'IT법 · 개인정보 법제 · 저작권', photo: 'han-sooyeon.jpg' },
+  { group: '고문·자문위원', role: '학술고문', name: '임형택', en: 'Lim Hyung-taek', email: 'hyungtaek.lim@kaiec.kr', since: '2026.08', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
+  { group: '고문·자문위원', role: '법률고문', cred: '변호사', name: '한수연', en: 'Han Soo-yeon', email: 'sooyeon.han@kaiec.kr', since: '2026.08', field: 'IT법 · 개인정보 법제 · 저작권', photo: 'han-sooyeon.jpg' },
 
   // ── 사무국 (감사 포함, 2026.09.26 사용자 지시: 감사는 사무국 안에 표시, 팀장 공석 카드는 표시하지 않음) ──
   { group: '사무국', role: '사무총장', name: '오준호', en: 'Oh Jun-ho', since: '2026.07', field: '사업 기획 · 위원회 운영 총괄', photo: 'oh-junho.jpg' },
-  { group: '사무국', role: '감사', name: '윤미정', en: 'Yoon Mi-jeong', since: '2026.07', field: '운영 · 회계 감사', photo: 'yoon-mijeong.jpg' },
+  { group: '사무국', role: '감사', name: '윤미정', en: 'Yoon Mi-jeong', email: 'mijeong.yoon@kaiec.kr', since: '2026.07', field: '운영 · 회계 감사', photo: 'yoon-mijeong.jpg' },
 
   // ── 전문위원 (교육·리터러시 분과 · AI 윤리 교육 담당) ────────
   { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '김동섭', en: 'Kim Dong-seop', since: '2026.08', field: 'AI 윤리 교육 · 성균관대 공학 박사', photo: 'kim-dongseop.jpg' },

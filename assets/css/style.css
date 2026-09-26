@@ -2178,7 +2178,12 @@ html.ea-lock,html.ea-lock body{overflow:hidden}
 .ea-flow-skkc{background:var(--blue-050);color:var(--blue-600)}
 .ea-sheet-panel h2{margin:0 0 8px;font-size:20px;line-height:1.4;letter-spacing:-.03em;color:var(--ink)}
 .ea-sheet-lead{margin:0;font-size:13.5px;line-height:1.65;color:var(--gray-600);word-break:keep-all}
-.ea-preview{margin:16px 0 14px;border:1px solid var(--gray-200);border-radius:12px;overflow:hidden;background:#fff}
+/* 미리보기 카드 자체가 [구매하기] 링크 (2026.09.26 사용자: 미리보기 속 구매하기를 눌러도 아무 반응이 없음) */
+.ea-preview{display:block;margin:16px 0 14px;border:1px solid var(--gray-200);border-radius:12px;overflow:hidden;background:#fff;
+  color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:border-color .2s,box-shadow .2s,transform .12s}
+.ea-preview:hover{border-color:#B9CCF2;box-shadow:0 6px 18px rgba(31,95,224,.12);color:inherit}
+.ea-preview:active{transform:scale(.99)}
+.ea-preview:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
 .ea-preview-bar{display:flex;align-items:center;gap:5px;padding:7px 10px;background:var(--gray-050);border-bottom:1px solid var(--gray-100)}
 .ea-preview-bar i{width:7px;height:7px;border-radius:50%;background:#D5DBE3}
 .ea-preview-bar em{margin-left:8px;font-style:normal;font-size:11.5px;font-weight:700;color:var(--gray-500)}
@@ -2189,7 +2194,9 @@ html.ea-lock,html.ea-lock body{overflow:hidden}
 .ea-preview-body p s{font-size:12px;color:#B0B5BC}
 .ea-preview-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .ea-preview-btns span{display:flex;align-items:center;justify-content:center;height:36px;border:1px solid #D0D4DA;border-radius:4px;font-size:13px;color:#333}
-.ea-preview-btns span.is-buy{position:relative;background:#333;border-color:#333;color:#fff;font-weight:700;box-shadow:0 0 0 3px rgba(31,95,224,.35)}
+.ea-preview-btns span:first-child{opacity:.45}
+.ea-preview-btns span.is-buy{position:relative;background:#333;border-color:#333;color:#fff;font-weight:700;box-shadow:0 0 0 3px rgba(31,95,224,.35);transition:background .2s}
+.ea-preview:hover .ea-preview-btns span.is-buy,.ea-preview:active .ea-preview-btns span.is-buy{background:#111}
 .ea-preview-body small{display:block;margin-top:7px;text-align:right;font-size:11.5px;font-weight:700;color:var(--blue)}
 .ea-sheet-steps{list-style:none;counter-reset:eas;margin:0;padding:0;display:grid;gap:8px}
 .ea-sheet-steps li{counter-increment:eas;position:relative;padding-left:30px;font-size:13.5px;line-height:1.6;color:var(--gray-700);word-break:keep-all}

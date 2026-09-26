@@ -53,6 +53,11 @@ COPYCLEAN_URL = "https://skkc.co.kr/ai-detector"
 # 'AI윤리전문가' 또는 '양성과정'만 있으면 통합 과정으로 자동 등록하므로, 1.5.0 배포 뒤에는 idx=26 상품명에서 '기본과정' 표기를 빼도 됩니다
 # (1.4.4 이하가 돌고 있는 동안에는 '기본과정' 표기를 남겨 두어야 자동 등록이 됩니다).
 PAY_URL = "https://skkc.co.kr/shop_view?idx=26"      # AI윤리전문가 양성과정 교육비 결제 링크
+# 2026.09.26 사용자: 결제 안내의 [구매하기]를 누르면 바로 결제 주문서(shop_payment)로 가야 함.
+# 주문서 주소(order_code · order_no · order_member)는 구매자가 [구매하기]를 누를 때마다 새로 만들어지는 일회용이라 고정 링크로 걸 수 없음.
+# 그래서 사이트의 결제 버튼은 상품 주소 뒤에 kaiec_buy=1 을 붙여 보내고, 성균관컨설팅 아임웹 Footer Code에 넣는
+# tools/skkc-kaiec-buy.html 이 이 표시를 보면 [구매하기]를 대신 눌러 비회원 주문서로 바로 보냄(코드가 없으면 상품 화면이 열릴 뿐 무해)
+PAY_BUY_URL = (PAY_URL + ("&" if "?" in PAY_URL else "?") + "kaiec_buy=1") if PAY_URL else ""
 # 양성과정 신청을 구글 스프레드시트로 자동 수집하는 앱스 스크립트 웹 앱 주소(/exec 로 끝남).
 # 시트에 연결되면 이 주소를 넣고 재실행하세요. 비어 있으면 신청 내용이 메일 앱으로 발송됩니다.
 SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec"
@@ -4346,7 +4351,7 @@ def build_expert_apply():
     ]
     GETS_HTML = "".join(
         f'<div><i data-lucide="{ic}"></i><b>{t}</b><span>{d}</span></div>' for ic, t, d in GETS)
-    PAY_HREF = _html.escape(PAY_URL or f"mailto:{EMAIL}")
+    PAY_HREF = _html.escape(PAY_BUY_URL or f"mailto:{EMAIL}")
 
     body = f"""    <section class="section gform-bg">
       <div class="gform-wrap">
@@ -4427,22 +4432,22 @@ def build_expert_apply():
         </div>
         <h2 id="paySheetTitle">결제는 공식 교육 운영사<br>성균관컨설팅에서 진행됩니다</h2>
         <p class="ea-sheet-lead">한국AI윤리위원회는 교육 · 평가 · 이수증 발급을, 성균관컨설팅(성균관대학교 RISE사업 공식 지원기업)은 교육 운영과 결제를 맡고 있습니다.</p>
-        <div class="ea-preview" aria-hidden="true">
-          <div class="ea-preview-bar"><i></i><i></i><i></i><em>skkc.co.kr</em></div>
-          <div class="ea-preview-body">
+        <a class="ea-preview js-pay-go" href="{PAY_HREF}" aria-label="구매하기: 성균관컨설팅 비회원 주문서로 이동">
+          <div class="ea-preview-bar" aria-hidden="true"><i></i><i></i><i></i><em>skkc.co.kr</em></div>
+          <div class="ea-preview-body" aria-hidden="true">
             <b>[한국AI윤리위원회] AI윤리전문가 양성과정</b>
             <p><strong>{won(PRICE)}</strong><s>{won(LIST_PRICE)}</s></p>
             <div class="ea-preview-btns"><span>장바구니</span><span class="is-buy">구매하기</span></div>
-            <small>다음 화면에서 이 버튼을 누르세요</small>
+            <small>구매하기를 누르면 비회원 주문서로 이어집니다</small>
           </div>
-        </div>
+        </a>
         <ol class="ea-sheet-steps">
-          <li><b>[구매하기]</b>를 누르고 로그인 창이 뜨면 <b>비회원 구매</b>를 고르세요. 회원가입은 필요 없습니다.</li>
+          <li><b>[구매하기]</b>를 누르면 <b>비회원 주문서</b>가 열립니다. 회원가입은 필요 없습니다.</li>
           <li>이름 · 이메일 · 휴대전화를 적고 카드 또는 간편결제로 결제합니다.</li>
           <li>결제한 이메일로 학습자료와 평가 로그인 안내가 도착합니다.</li>
         </ol>
         <p class="ea-sheet-note">카드 명세서에는 '성균관컨설팅'으로 표시됩니다 · <a href="terms.html#refund">청약철회 · 환불 안내</a></p>
-        <a class="btn btn-primary ea-sheet-go" id="payGo" href="{PAY_HREF}">성균관컨설팅 결제 페이지로 이동 <i data-lucide="arrow-right"></i></a>
+        <a class="btn btn-primary ea-sheet-go js-pay-go" id="payGo" href="{PAY_HREF}">성균관컨설팅 결제 페이지로 이동 <i data-lucide="arrow-right"></i></a>
         <button type="button" class="ea-sheet-later" data-close>조금 더 둘러볼게요</button>
       </div>
     </div>"""
@@ -4476,7 +4481,8 @@ def build_expert_apply():
     if(sheet){
       sheet.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheet);});
       document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet();});
-      go.addEventListener('click',function(){go.classList.add('is-going');go.setAttribute('aria-busy','true');});
+      /* 이동 버튼과 미리보기 속 [구매하기] 모두 같은 주소(상품 + kaiec_buy=1 → 성균관컨설팅 쪽 코드가 비회원 주문서로 바로 연결) */
+      sheet.querySelectorAll('.js-pay-go').forEach(function(a){a.addEventListener('click',function(){go.classList.add('is-going');go.setAttribute('aria-busy','true');});});
       /* 결제 페이지에서 뒤로 돌아온 경우(bfcache) 시트와 스크롤 잠금을 정리 */
       window.addEventListener('pageshow',function(){sheet.classList.remove('is-open');sheet.hidden=true;document.documentElement.classList.remove('ea-lock');go.classList.remove('is-going');go.removeAttribute('aria-busy');});
     }
@@ -5536,7 +5542,7 @@ def build_exam():
            '"%s":{total:%d,minutes:%d,point:%s,passScore:%d},'
            '"기본과정":{total:%d,minutes:%d,point:%s,passScore:%d},'
            '"심화과정":{total:%d,minutes:%d,point:%s,passScore:%d}}};</script>'
-           % (_js(EXAM_API), EXAM_WINDOW_DAYS, _js(EMAIL), _js(PAY_URL),
+           % (_js(EXAM_API), EXAM_WINDOW_DAYS, _js(EMAIL), _js(PAY_BUY_URL),
               _json.dumps(materials, ensure_ascii=False, separators=(",", ":")),
               PROG, EXAM[0], EXAM_MIN, _n(100 / EXAM[0]), EXAM[1],
               EXAM[0], EXAM_MIN, _n(100 / EXAM[0]), EXAM[1],
@@ -5571,7 +5577,7 @@ def build_exam():
 
     # 로그인 상자 아래 결제 버튼 (성균관컨설팅 결제 페이지, 새 창). 링크가 비어 있으면 그 버튼은 만들지 않음
     # 아직 등록 전인 분을 위한 '응시 자격' 안내와 과정 등록 버튼(성균관컨설팅 결제 페이지, 새 창)
-    pay_btns = (f'<a class="ex-paybtn" href="{PAY_URL}" target="_blank" rel="noopener">'
+    pay_btns = (f'<a class="ex-paybtn" href="{_html.escape(PAY_BUY_URL)}" target="_blank" rel="noopener">'
                 f'<span class="ex-paybtn-t">AIEP 과정 등록하기{_ic("external-link")}</span>'
                 f'<span class="ex-paybtn-p">{won(PRICE)}</span>'
                 f'<span class="sr-only">(정가 {won(LIST_PRICE)}, 새 창)</span></a>') if PAY_URL else ""

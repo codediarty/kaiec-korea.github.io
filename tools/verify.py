@@ -21,6 +21,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE)
 os.chdir(BASE)
 import build  # 상수·url_for·out_path·load_posts 를 그대로 사용 (빌드는 실행되지 않음)
+from html import escape as html_escape
 
 DASH = "\u2014"   # 줄표(긴 대시)
 # 2026.09.14 원복: 기관명은 한국AI윤리위원회(Korea AI Ethics Committee). 아래 표기는 어디에도 남기지 않는다
@@ -264,8 +265,18 @@ if hook and hook in apply_html:
 if "핵심 확인" in apply_html or "자료 수령" not in apply_html:
     probs.append("양성과정 4단계 2번은 '자료 수령' (핵심 확인 표기 금지)")
 # 2026.09.26 밤: 결제 이동 전 안내 시트(역할 설명·다음 화면 미리보기·3단계)가 있어야 함 (성균관컨설팅으로 갑자기 넘어가 이탈하는 문제)
-if 'id="paySheet"' not in apply_html or (build.PAY_URL and f'id="payGo" href="{build.PAY_URL}"' not in apply_html):
-    probs.append("양성과정 신청 페이지 결제 안내 시트(#paySheet · 이동 버튼 PAY_URL) 없음")
+# 2026.09.26 밤: 결제 버튼은 상품 주소 + kaiec_buy=1 (PAY_BUY_URL). 성균관컨설팅 아임웹 Footer Code(tools/skkc-kaiec-buy.html)가
+#   이 표시를 보고 [구매하기]를 대신 눌러 비회원 주문서로 바로 보냄. 시트 속 미리보기 카드([구매하기])도 같은 주소로 가는 링크여야 함
+PAY_BUY_ATTR = html_escape(build.PAY_BUY_URL) if build.PAY_URL else ""
+if build.PAY_URL and build.PAY_BUY_URL != build.PAY_URL + ("&" if "?" in build.PAY_URL else "?") + "kaiec_buy=1":
+    probs.append("PAY_BUY_URL 이 PAY_URL + kaiec_buy=1 이 아님")
+if 'id="paySheet"' not in apply_html or (build.PAY_URL and f'id="payGo" href="{PAY_BUY_ATTR}"' not in apply_html):
+    probs.append("양성과정 신청 페이지 결제 안내 시트(#paySheet · 이동 버튼 PAY_BUY_URL) 없음")
+if build.PAY_URL and f'class="ea-preview js-pay-go" href="{PAY_BUY_ATTR}"' not in apply_html:
+    probs.append("결제 안내 시트의 미리보기 [구매하기]가 링크가 아님 (눌러도 반응 없음 재발)")
+skkc_code = read(os.path.join(BASE, "tools", "skkc-kaiec-buy.html")) if os.path.isfile(os.path.join(BASE, "tools", "skkc-kaiec-buy.html")) else ""
+if "kaiec_buy=1" not in skkc_code or "confirmOrderWithCartItems('guest_login'" not in skkc_code:
+    probs.append("tools/skkc-kaiec-buy.html (성균관컨설팅 Footer Code, 비회원 주문서 바로 연결) 없음 또는 내용 이상")
 if "7일 이내" in re.sub(r"<script[^>]*>.*?</script>", "", expert_html, flags=re.S) or "7일 이내" in read("assets/js/exam.js"):
     probs.append("이수증 발급 '7일 이내' 표기가 남아 있음 (이수 즉시 발급)")
 # 2026.09.26 밤: 추천 위원 코드는 성균관컨설팅 결제 때 입력. 사이트는 ?ref 꼬리표·추천 표시·기억을 하지 않음
@@ -273,13 +284,13 @@ for fname, html in ((f, read(p)) for f, p in pages.items()):
     if re.search(r"expert-apply(/|\.html)\?ref=", html) or "setItem('kaiec_ref'" in html or "추천으로 방문" in html or "utm_campaign" in html:
         probs.append(f"{fname}: 추천 위원 꼬리표·표시가 다시 들어옴 (추천 위원 코드는 결제 때 입력)")
 # 2026.09.21 통합: 결제 링크는 PAY_URL 하나. 양성과정 신청 페이지 버튼 2곳과 /exam/ 로그인 화면에 있어야 함
-if build.PAY_URL and apply_html.count(f'js-pay" href="{build.PAY_URL}"') != 2:
-    probs.append(f"양성과정 신청 페이지 결제 버튼 2곳에 PAY_URL 미반영 ({build.PAY_URL})")
+if build.PAY_URL and apply_html.count(f'js-pay" href="{PAY_BUY_ATTR}"') != 2:
+    probs.append(f"양성과정 신청 페이지 결제 버튼 2곳에 PAY_BUY_URL 미반영 ({build.PAY_BUY_URL})")
 if "?course=" in apply_html or "?course=" in expert_html or "?course=" in index_html:
     probs.append("통합 이후 남은 ?course= 링크가 있음 (과정 선택은 없어졌습니다)")
 exam_html = read(pages["exam.html"])
-if build.PAY_URL and f'href="{build.PAY_URL}" target="_blank" rel="noopener"' not in exam_html:
-    probs.append(f"/exam/ 로그인 화면에 PAY_URL 결제 버튼(새 창) 없음 ({build.PAY_URL})")
+if build.PAY_URL and f'href="{PAY_BUY_ATTR}" target="_blank" rel="noopener"' not in exam_html:
+    probs.append(f"/exam/ 로그인 화면에 PAY_BUY_URL 결제 버튼(새 창) 없음 ({build.PAY_BUY_URL})")
 if exam_html.count('class="ex-paybtn"') != 1:
     probs.append("/exam/ 로그인 화면 결제 버튼은 1개여야 함 (통합 과정)")
 if f'api:{json.dumps(build.EXAM_API)}' not in exam_html:
