@@ -263,6 +263,15 @@ if hook and hook in apply_html:
     probs.append("양성과정 신청 페이지가 다시 시트 웹훅으로 신청 정보를 보냄")
 if "핵심 확인" in apply_html or "자료 수령" not in apply_html:
     probs.append("양성과정 4단계 2번은 '자료 수령' (핵심 확인 표기 금지)")
+# 2026.09.26 밤: 결제 이동 전 안내 시트(역할 설명·다음 화면 미리보기·3단계)가 있어야 함 (성균관컨설팅으로 갑자기 넘어가 이탈하는 문제)
+if 'id="paySheet"' not in apply_html or (build.PAY_URL and f'id="payGo" href="{build.PAY_URL}"' not in apply_html):
+    probs.append("양성과정 신청 페이지 결제 안내 시트(#paySheet · 이동 버튼 PAY_URL) 없음")
+if "7일 이내" in re.sub(r"<script[^>]*>.*?</script>", "", expert_html, flags=re.S) or "7일 이내" in read("assets/js/exam.js"):
+    probs.append("이수증 발급 '7일 이내' 표기가 남아 있음 (이수 즉시 발급)")
+# 2026.09.26 밤: 추천 위원 코드는 성균관컨설팅 결제 때 입력. 사이트는 ?ref 꼬리표·추천 표시·기억을 하지 않음
+for fname, html in ((f, read(p)) for f, p in pages.items()):
+    if re.search(r"expert-apply(/|\.html)\?ref=", html) or "setItem('kaiec_ref'" in html or "추천으로 방문" in html or "utm_campaign" in html:
+        probs.append(f"{fname}: 추천 위원 꼬리표·표시가 다시 들어옴 (추천 위원 코드는 결제 때 입력)")
 # 2026.09.21 통합: 결제 링크는 PAY_URL 하나. 양성과정 신청 페이지 버튼 2곳과 /exam/ 로그인 화면에 있어야 함
 if build.PAY_URL and apply_html.count(f'js-pay" href="{build.PAY_URL}"') != 2:
     probs.append(f"양성과정 신청 페이지 결제 버튼 2곳에 PAY_URL 미반영 ({build.PAY_URL})")

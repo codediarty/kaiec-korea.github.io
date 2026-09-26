@@ -59,12 +59,12 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '박근호', en: 'Park Keun-ho', code: 'PKH3185', email: 'cocopark84@gmail.com', since: '2026.09', field: 'AI 리터러시 교육 · 확산', photo: 'park-geunho.jpg' },
   { name: '조성희', en: 'Cho Sung-hee', code: 'CSH7321', email: 'leonfan@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 확산', photo: 'jo-seonghee.jpg' },
   { name: '지정인', en: 'Ji Jung-in', code: 'JJI0046', email: 'jguy12@hanmail.net', since: '2026.09', field: 'AI 창업 · 책임 있는 AI 비즈니스', photo: 'ji-jeongin.jpg' },
-  { name: '서완석', en: 'Seo Wan-seok', code: 'SWS7351', email: 'redoxi@naver.com', since: '2026.09', field: 'AI · 디지털 교육 혁신', photo: 'seo-wanseok.jpg' },
+  { name: '안지희', en: 'Ahn Ji-hee', code: 'AJH4650', email: 'cleoahn@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 거버넌스', photo: 'ahn-jihee.jpg' },
   { name: '양대산', en: 'Yang Dae-san', code: 'YDS5505', email: 'tonyment@naver.com', since: '2026.09', field: 'AI 교육 · 미래 인재 양성', photo: 'yang-daesan.jpg' },
   { name: '허윤영', en: 'Heo Yun-young', code: 'HYY6754', email: 'afturn@naver.com', since: '2026.09', field: 'AI 디지털 교육 · 에듀테크 활용', photo: 'heo-yunyoung.jpg' },
   { name: '한효주', en: 'Han Hyo-ju', code: 'HHJ6913', email: 'coolomo@gmail.com', since: '2026.09', field: 'AI 교육 · 차세대 인재 육성', photo: 'han-hyoju.jpg' },
   { name: '임호용', en: 'Lim Ho-yong', code: 'LHY6444', email: 'imyong7@hanmail.net', since: '2026.09', field: '생성형 AI 활용 · 실무 역량 강화', photo: 'lim-hoyong.jpg' },
-  { name: '안지희', en: 'Ahn Ji-hee', code: 'AJH4650', email: 'cleoahn@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 거버넌스', photo: 'ahn-jihee.jpg' },
+  { name: '서완석', en: 'Seo Wan-seok', code: 'SWS7351', email: 'redoxi@naver.com', since: '2026.09', field: 'AI · 디지털 교육 혁신', photo: 'seo-wanseok.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 

@@ -89,6 +89,13 @@ AIEP_H = '<span class="aiep">(AIEP)</span>'   # 큰 제목용: 괄호 부분을 
 PROG_EN = "AI Ethics Professional (AIEP), Korea AI Ethics Committee"  # 이력서 영문 표기 (2026.09.22: 약어 KAIEC 대신 기관명을 풀어 씀. 이수번호 KAIEC-E-연도-일련번호가 약어를 대신함)
 RESUME_KO = "AI윤리전문가(AIEP) · 한국AI윤리위원회 이수"          # 이력서 국문 한 줄 (뒤에 이수번호 No. KAIEC-E-2026-0001 을 붙임)
 RESUME_NO = "No. KAIEC-E-2026-0001"                    # 이력서 예시용 이수번호 형식
+# 2026.09.26 밤(사용자: '프로페셔널' 영문을 있어 보이게, 이력서 코멘트 추천): 영문 이력서 · LinkedIn 표기 예시.
+# 제도상 자격이 아니므로 Certified · License 표현은 쓰지 않고 'Certificate No.'(이수증 번호)와 'Completed a program'으로 씁니다.
+RESUME_EN = "AI Ethics Professional (AIEP), Korea AI Ethics Committee, 2026"
+RESUME_EN_NO = "Certificate No. KAIEC-E-2026-0001"
+RESUME_EN_DESC = ("Completed a program on responsible AI practice, covering AI ethics principles, "
+                  "high-impact AI risk review, and organizational AI-use guidelines.")
+LINKEDIN_HEADLINE = "Responsible AI | AI Ethics Professional (AIEP)"
 EXAM = (40, 70)                           # 이수 평가: 문항 수, 이수 기준 점수 (통합 과정. 백엔드 Code 1.5.0의 「AI윤리전문가 양성과정」 평가와 같음)
 EXAM_MIN = 60                             # 시험 시간(분): 응시자가 [시험 시작]을 누른 때부터
 # 평가 백엔드가 1.4.4 이하로 돌고 있으면 계정의 과정이 '기본과정'·'심화과정'으로 올 수 있으므로 /exam/ 설정에는 옛 값도 함께 넣어 둡니다 (호환용, 사이트에는 표시하지 않음)
@@ -633,9 +640,10 @@ def resume_box(note_basic=True):
               <span class="resume-tag">이수 직후</span>
               <div class="rlines">
                 <p><b>국문 이력서</b><code>{RESUME_KO} ({RESUME_NO})</code></p>
-                <p><b>영문 이력서</b><code>{PROG_EN} ({RESUME_NO})</code></p>
+                <p><b>영문 이력서</b><code>{RESUME_EN} ({RESUME_EN_NO})</code></p>
+                <p><b>영문 설명 한 줄</b><code>{RESUME_EN_DESC}</code></p>
                 <small>교육·연수 칸에 한 줄이면 됩니다. 이수번호는 이름과 함께 홈페이지에서 검색되므로, 칸이 좁으면 번호를 빼고 <strong>{PROG_EN}</strong>까지만 적어도 됩니다.
-                  링크드인은 Name에 AI Ethics Professional (AIEP), Issuing organization에 Korea AI Ethics Committee, Credential ID에 이수번호, URL에 kaiec.kr/experts/ 를 넣습니다.
+                  링크드인은 한 줄 소개(Headline)에 <strong>{LINKEDIN_HEADLINE}</strong>를 붙이고, 자격·수료 항목(Licenses &amp; certifications)의 Name에 AI Ethics Professional (AIEP), Issuing organization에 Korea AI Ethics Committee, Credential ID에 이수번호, URL에 kaiec.kr/experts/ 를 넣습니다.
                   자기소개서 문장 예시와 면접 답변 포인트는 이수자 전용 <strong>이력서·자기소개서 활용 가이드</strong>로 함께 드립니다.</small>
               </div>
             </div>
@@ -1463,7 +1471,7 @@ def build_members():
     """위원 명단 (2026.09.23: 옛 '조직 · 위원' 페이지. 조직도 · 6개 전문분과 · 운영 개요는 '위원회 소개'(about) 로 옮기고
     이 페이지는 위원 명단과 공식 파트너만 둠. 명단 데이터는 assets/js/members-data.js)"""
     body = hero_sub("위원 명단",
-                    "위원장과 임원진, 고문·자문위원, 사무국, 전문위원, AI 윤리 캠페인위원, 그리고 공식 등록된 AI윤리전문가까지 한국AI윤리위원회와 함께하는 분들입니다.",
+                    "AI 윤리와 책임 있는 기술 활용을 위해 각 분야의 전문가와 위원들이 함께합니다.",
                     "위원 명단") + f"""
 
     <section class="section">
@@ -1653,10 +1661,10 @@ def build_members():
        [명함 이미지 저장]: 공식 위원증 형식 2160×2700 PNG(QR 포함). 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기.
        [명함 공유]: 모바일 공유 시트, PC는 링크 복사.
        주소 끝 #위원코드(예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다.
-       QR('전문가 과정 보기') · [AI윤리전문가 커리어 시작하기] 는 https://kaiec.kr/expert-apply/?ref=위원코드 로 연결(2026.09.26 사용자 지시).
+       QR('AI윤리전문가 과정 보기') · [AI윤리전문가 커리어 시작하기] 는 https://kaiec.kr/expert-apply/ 로 연결(2026.09.26 사용자 지시).
+       추천 위원 코드는 성균관컨설팅 결제 때 구매자가 입력하므로 사이트는 ?ref 꼬리표·추천 표시·기억을 하지 않습니다(2026.09.26 밤 사용자 지시).
        문구는 영업처럼 보이지 않게(2026.09.26 5차): '신청하기' 대신 '커리어 시작하기', 확인 문구(위 사람은 …) 없음, 하단은 한 줄 다짐(TAGLINE).
-       명함의 '이메일' 칸은 위원 본인 메일(members-data 의 email), 없으면 '대표 메일'(위원회 contact@kaiec.kr).
-       신청 페이지가 ref 를 30일 기억했다가 접수 시트 '활용 목적' 칸 끝에 '추천 위원: 성명(코드)'로 붙여 보내므로 위원별 실적 확인에 쓸 수 있습니다. */
+       명함의 '이메일' 칸은 위원 본인 메일(members-data 의 email), 없으면 '대표 메일'(위원회 contact@kaiec.kr). */
     var ov=null,lastFocus=null,curId='',curP=null,IMG={};
     var ORG='한국AI윤리위원회',EMAIL='__EMAIL__',SITE='__SITE__';
     var FONT="'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
@@ -1698,7 +1706,7 @@ def build_members():
       return 'm'+i;
     }
     function cardURL(id){return SITE+'/members/#'+id}
-    function applyURL(id){return SITE+'/expert-apply/?ref='+encodeURIComponent(id)}
+    function applyURL(){return SITE+'/expert-apply/'}
     function shareURL(){return cardURL(curId)}
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
@@ -1833,10 +1841,10 @@ def build_members():
         var slw=ctx.measureText(sl).width;ctx.fillStyle=G4;ctx.font='700 12px '+LATIN;spaced(ctx,'SINCE',tx+slw+12,603,3,'left');
         ctx.fillStyle=INK;ctx.font='800 40px '+LATIN;ctx.fillText(m.since,tx,660)}
       ctx.fillStyle=LINE;ctx.fillRect(L,714,R-L,1.5);
-      /* QR: AI윤리전문가 과정(신청 페이지 ?ref=위원 코드) */
+      /* QR: AI윤리전문가 과정 신청 페이지(kaiec.kr/expert-apply/) */
       var qs=208,qx=R-qs,qy=742;
       ctx.fillStyle='#fff';rr(ctx,qx,qy,qs,qs,14);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=1.5;rr(ctx,qx+.75,qy+.75,qs-1.5,qs-1.5,13);ctx.stroke();
-      drawQR(ctx,applyURL(id),qx+16,qy+16,qs-32);
+      drawQR(ctx,applyURL(),qx+16,qy+16,qs-32);
       ctx.textAlign='center';ctx.fillStyle=G7;ctx.font='700 16px '+FONT;ctx.fillText('AI윤리전문가 과정 보기',qx+qs/2,qy+qs+32);
       ctx.fillStyle=G4;ctx.font='700 11px '+LATIN;spaced(ctx,'SCAN TO VIEW',qx+qs/2,qy+qs+54,3,'center');ctx.textAlign='left';
       /* 소속 · 분야 · (출강) · (이메일) · 발급일 : 줄 수에 맞춰 간격 자동 */
@@ -1955,7 +1963,7 @@ def build_members():
         });
       }
       curP=p;curId=pid(p,i);
-      var lect=p.g==='전문위원',qr=qrSVG(applyURL(curId));
+      var lect=p.g==='전문위원',qr=qrSVG(applyURL());
       var idBox='<div class="bc-id"><div class="bc-id-main">'
         +(m.code?'<div class="bc-id-label">위원 코드<span>MEMBER CODE</span></div><div class="bc-id-val bc-id-val--code">'+m.code+'</div>'
                 :'<div class="bc-id-label">직위<span>POSITION</span></div><div class="bc-id-val">'+title+'</div>')
@@ -1979,7 +1987,7 @@ def build_members():
         +'<span class="bc-verify">'+ICON_OK+(CHIP[p.g]||CHIP_DEF)+'</span>'
         +idBox
         +(lect?'<a class="bc-cta" href="lecture.html#request">'+ICON_MIC+'출강 문의하기</a>'
-              :'<a class="bc-cta" href="expert-apply.html?ref='+encodeURIComponent(curId)+'">'+ICON_AWARD+'AI윤리전문가 커리어 시작하기</a>')
+              :'<a class="bc-cta" href="expert-apply.html">'+ICON_AWARD+'AI윤리전문가 커리어 시작하기</a>')
         +'<dl class="bc-info">'+rows+'</dl>'
         +'<div class="bc-actions"><button type="button" class="bc-btn bc-btn--primary" data-act="img">'+ICON_IMG+'명함 이미지 저장</button>'
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
@@ -2672,7 +2680,7 @@ def build_legal():
              "<li>그 밖에 평가의 공정성을 현저히 해친 경우</li></ul></li></ol>"),
             ("제9조 (이수증 발급과 이수자 등록)",
              "<ol><li>이수 기준을 충족한 신청자에게는 이수번호가 부여된 이수증(PDF)이 발급되고, 위원회 이수자 명부에 등록됩니다.</li>"
-             "<li>발급은 결과 확인 후 통상 7일 이내에 이루어지며, 공휴일·시스템 점검·확인 지연 등의 사정이 있는 경우 소요 기간이 달라질 수 있습니다.</li>"
+             "<li>이수증은 이수 기준 충족이 확인되는 즉시 발급합니다. 다만 시스템 점검 등 부득이한 사정이 있는 경우 발급이 늦어질 수 있습니다.</li>"
              "<li>이수자는 별도의 등록 신청 절차를 거쳐 위원회 전문위원으로 등록될 수 있습니다. 전문위원 등록은 "
              "위원회의 심사를 거치며, 이수 사실만으로 당연히 등록되는 것은 아닙니다.</li>"
              "<li>이수자는 이수 사실을 이력서, 포트폴리오 등에 기재할 수 있습니다. 다만 위원회가 부여하지 않은 명칭이나 "
@@ -2860,8 +2868,6 @@ def build_legal():
              "<p>위원회 홈페이지는 광고 목적의 추적 기술을 사용하지 않습니다. 이수 평가 시스템은 응시 상태 유지를 위해 "
              "이용자의 브라우저 저장 공간(sessionStorage, localStorage)에 로그인 토큰과 임시 답안을 보관하며, "
              "이 정보는 이용자의 기기에만 저장되고 브라우저를 닫거나 로그아웃하면 삭제됩니다. "
-             "양성과정 안내 페이지는 위원의 추천 링크로 방문한 경우 추천 위원 코드를 30일 동안 브라우저(localStorage)에 보관하고 "
-             "결제 페이지 주소에 붙여 넘깁니다. 이 코드는 추천한 위원을 가리키는 값이며 이용자를 식별하지 않습니다. "
              "추후 방문 분석 도구를 도입하는 경우 이 방침을 개정하여 사전에 공개합니다.</p>"),
             ("10. 개인정보 보호책임자",
              f"<table class=\"lg-table\"><tbody>"
@@ -4096,7 +4102,7 @@ def build_expert():
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 03</span><h3 style="font-size:16px">자율학습</h3><p style="font-size:14px">표준교재 · 실전 모의고사와 해설 별책</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 04</span><h3 style="font-size:16px">평가응시</h3><p style="font-size:14px">상단 <a href="exam.html" style="color:var(--blue);font-weight:700">[평가응시]</a>에서 로그인 · 결제 후 {EXAM_WINDOW_DAYS}일 이내</p></div>
           <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 05</span><h3 style="font-size:16px">이수 기준 충족</h3><p style="font-size:14px">{EXAM[1]}점 이상<br>기준에 이를 때까지 재응시</p></div>
-          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 06</span><h3 style="font-size:16px">이수증 · 공식 등록</h3><p style="font-size:14px">결과 확인 후 7일 이내 PDF 발급 · 홈페이지 공식 등록 · 활용 가이드 발송</p></div>
+          <div class="card center reveal" style="padding:24px 18px"><span class="card-num">STEP 06</span><h3 style="font-size:16px">이수증 · 공식 등록</h3><p style="font-size:14px">이수 즉시 PDF 발급 · 홈페이지 공식 등록 · 활용 가이드 발송</p></div>
         </div>
         {pay_btns}
         <p class="field-hint" style="margin-top:18px;text-align:center">특별가 {won(PRICE)}(정가 {won(LIST_PRICE)}) · {HOOK_ZERO} · {HOOK_START}<br>
@@ -4171,7 +4177,7 @@ def build_expert():
         </details>
         <details class="acc">
           <summary>이수증은 언제 어떻게 받나요?</summary>
-          <div class="acc-body">{EXAM[1]}점 이상이면 결과 화면에서 바로 이수가 확정되고, <strong>한국AI윤리위원회 홈페이지에 공식 등록</strong>됩니다. 확인 후 7일 이내에 「{DOC_FULL}」(PDF)과 이력서·자기소개서 활용 가이드를 결제 때 입력하신 이메일로 발급합니다.
+          <div class="acc-body">{EXAM[1]}점 이상이면 결과 화면에서 바로 이수가 확정되고, <strong>한국AI윤리위원회 홈페이지에 공식 등록</strong>됩니다. 「{DOC_FULL}」(PDF)과 이력서·자기소개서 활용 가이드는 이수 즉시 결제 때 입력하신 이메일로 발급합니다.
             이수증에는 이수번호가 부여되며, 이후 위원회를 통해 이수 사실을 확인할 수 있습니다. 전문위원 등록 신청 방법도 함께 안내합니다.
             기타 문의는 <a href="mailto:{EMAIL}" style="color:var(--blue);font-weight:600">{EMAIL}</a>로 보내주세요.</div>
         </details>
@@ -4255,8 +4261,12 @@ def build_expert_apply():
       구성: 머리 카드(100% 온라인 약속 + 한 문장 + 4단계 + 가격 + [AI윤리전문가 시작하기]) → 이수하면 남는 것 4칸
       → 나에게 필요한 이유(선택 칩. 고르면 이 과정이 돕는 점이 바로 뜸. 어디에도 저장·전송하지 않음) → 가격 요약 + [AI윤리전문가 시작하기]
       두 버튼 모두 결제 페이지(PAY_URL, 성균관컨설팅)로 바로 이동. 4단계 중 '핵심 확인'은 '자료 수령'으로(사용자 지시)
-    - 추천 위원: ?ref=위원코드 로 들어오면 머리에 '○○○ 위원의 추천으로 방문하셨습니다' 표시, 코드는 30일 기억(브라우저),
-      결제 버튼 주소에 utm_source=kaiec · utm_medium=referral · utm_campaign=위원코드 꼬리표로 붙여 넘김(개인정보 아님)"""
+    - 2026.09.26 밤 사용자 지시: 추천 위원 코드는 성균관컨설팅 결제 때 구매자가 입력하므로 사이트에서는 설명·선택·표시를 하지 않음
+      (같은 날 넣었던 ?ref 추천 표시 · 30일 기억 · 결제 주소 utm 꼬리표 모두 삭제, 예전에 저장된 값은 방문 시 지움)
+    - 2026.09.26 밤 이탈 개선(사용자: 성균관컨설팅으로 넘어가는 게 부자연스러워 어리둥절해 결제를 안 함):
+      4단계 첫 칸을 '간편 결제 · 공식 운영사 성균관컨설팅'으로, 가격 아래 '결제는 … 성균관컨설팅 결제 페이지에서 진행' 한 줄,
+      버튼을 누르면 결제 안내 시트(#paySheet: KAIEC → 성균관컨설팅 역할 설명, 다음 화면 미리보기, [구매하기] → 비회원 구매 → 결제 3단계,
+      명세서 표기 · 환불 안내, [성균관컨설팅 결제 페이지로 이동])를 띄운 뒤 같은 창에서 이동. 영문 부제와 '이력서 · LinkedIn 표기' 카드 추가"""
     PURPOSES = [
         # (칩 문구, 고르면 뜨는 '이 과정이 돕는 점')
         ("이력서·포트폴리오에 공식 이수 이력 추가", "고유 이수번호가 적힌 공식 이수증과 이력서 표기 가이드"),
@@ -4273,10 +4283,10 @@ def build_expert_apply():
         f'<label><input type="checkbox" name="purpose" value="{_html.escape(p)}" data-fit="{_html.escape(f)}"><span>{p}</span></label>'
         for p, f in PURPOSES)
     STEPS = [
-        ("mouse-pointer-click", "간편 신청", "가입 없이 결제 한 번"),
+        ("credit-card", "간편 결제", "공식 운영사 성균관컨설팅"),
         ("book-open", "자료 수령", "이메일로 학습자료 발송"),
         ("monitor-check", "온라인 평가", f"{EXAM[1]}점 이상 · 재응시 가능"),
-        ("award", "이수 완료", "이수증 + 전문가 등록"),
+        ("award", "이수 완료", "이수증 즉시 발급"),
     ]
     GOAL = ' class="is-goal"'
     STEPS_HTML = "".join(
@@ -4296,9 +4306,9 @@ def build_expert_apply():
       <div class="gform-wrap">
 
         <div class="gform-card ea-hero">
-          <p class="ref-chip" id="refChip" hidden></p>
           <span class="gform-kicker">한국AI윤리위원회 주관</span>
           <h1>AI윤리전문가{AIEP_H} 양성과정</h1>
+          <p class="ea-en" lang="en"><span>{AIEP_EN} Program</span><span class="ea-en-org">Korea AI Ethics Committee</span></p>
           <p class="ea-promise"><i data-lucide="laptop"></i>100% 온라인 · 원하는 시간에 자유롭게 이수</p>
           <p class="ea-lead">학습자료로 핵심 내용을 확인하고 온라인 평가를 통과하면<br class="br-pc">
              <b>공식 이수증 발급 + 홈페이지 전문가 등록</b>까지 한 번에 완료됩니다.</p>
@@ -4307,6 +4317,7 @@ def build_expert_apply():
             <div class="ea-price-tag"><span class="ap-badge">특별가</span><strong>{won(PRICE)}</strong><s>정가 {won(LIST_PRICE)}</s></div>
             <a class="btn btn-primary ea-go js-pay" href="{PAY_HREF}">AI윤리전문가 시작하기 <i data-lucide="arrow-right"></i></a>
           </div>
+          <p class="ea-handoff"><i data-lucide="shield-check"></i><span>결제는 위원회 공식 교육 운영사 <b>성균관컨설팅</b> 결제 페이지에서 진행됩니다</span></p>
         </div>
 
         <div class="gform-card ea-gets">
@@ -4314,6 +4325,27 @@ def build_expert_apply():
           <div class="ea-get-grid">{GETS_HTML}</div>
           <p class="ea-stat"><i data-lucide="trending-up"></i><span>{STAT_71["head"]}
             <small>Microsoft · LinkedIn 2024 Work Trend Index</small></span></p>
+        </div>
+
+        <div class="gform-card ea-resume">
+          <h2>이력서 · LinkedIn에는 이렇게 적습니다</h2>
+          <div class="ea-cv">
+            <div class="ea-cv-row">
+              <span class="ea-cv-tag">English</span>
+              <div class="ea-cv-body" lang="en"><b>AI Ethics Professional (AIEP)</b>
+                <span>Korea AI Ethics Committee · 2026 · <span class="nw">{RESUME_EN_NO}</span></span>
+                <em>{RESUME_EN_DESC}</em></div>
+            </div>
+            <div class="ea-cv-row">
+              <span class="ea-cv-tag">국문</span>
+              <div class="ea-cv-body"><b>{RESUME_KO}</b><span>이수번호 {RESUME_NO.replace("No. ", "")}</span></div>
+            </div>
+            <div class="ea-cv-row">
+              <span class="ea-cv-tag">LinkedIn</span>
+              <div class="ea-cv-body"><b lang="en">{LINKEDIN_HEADLINE}</b><span>한 줄 소개(Headline)에 붙이고, 자격·수료 항목에는 이수번호를 적습니다</span></div>
+            </div>
+          </div>
+          <p class="ea-cv-note">이수하면 표기법과 자기소개서 예시를 담은 <b>이력서 활용 가이드</b>를 함께 드립니다.</p>
         </div>
 
         <div class="gform-card ea-why" id="secPurpose">
@@ -4333,42 +4365,74 @@ def build_expert_apply():
           </div>
           <a class="btn btn-primary gform-submit-btn ea-submit-btn js-pay" href="{PAY_HREF}">AI윤리전문가 시작하기 <i data-lucide="arrow-right"></i></a>
           <p class="ea-paynote"><i data-lucide="shield-check"></i>
-            <span>위원회 공식 교육 운영사 <b>성균관컨설팅</b>(성균관대학교 RISE사업 공식 지원기업)의 안전결제로 이어지며, 카드 명세서에는 '성균관컨설팅'으로 표기됩니다.
-            결제 때 입력한 이메일로 학습자료가 발송되고, 그 이메일과 휴대전화 번호 뒤 4자리로 평가에 로그인합니다. <a href="terms.html">서비스 이용안내</a></span></p>
+            <span>결제는 위원회 공식 교육 운영사 <b>성균관컨설팅</b>(성균관대학교 RISE사업 공식 지원기업) 결제 페이지에서 진행되며, 카드 명세서에는 '성균관컨설팅'으로 표기됩니다.
+            결제한 이메일로 학습자료와 평가 로그인 안내가 도착합니다. <a href="terms.html">서비스 이용안내</a></span></p>
         </div>
 
       </div>
-    </section>"""
+    </section>
+
+    <div class="ea-sheet" id="paySheet" hidden>
+      <div class="ea-sheet-dim" data-close></div>
+      <div class="ea-sheet-panel" role="dialog" aria-modal="true" aria-labelledby="paySheetTitle">
+        <button type="button" class="ea-sheet-x" data-close aria-label="닫기"><i data-lucide="x"></i></button>
+        <div class="ea-flow" aria-hidden="true">
+          <span class="ea-flow-kaiec">KAIEC</span><i data-lucide="arrow-right"></i><span class="ea-flow-skkc">성균관컨설팅</span>
+        </div>
+        <h2 id="paySheetTitle">결제는 공식 교육 운영사<br>성균관컨설팅에서 진행됩니다</h2>
+        <p class="ea-sheet-lead">한국AI윤리위원회는 교육 · 평가 · 이수증 발급을, 성균관컨설팅(성균관대학교 RISE사업 공식 지원기업)은 교육 운영과 결제를 맡고 있습니다.</p>
+        <div class="ea-preview" aria-hidden="true">
+          <div class="ea-preview-bar"><i></i><i></i><i></i><em>skkc.co.kr</em></div>
+          <div class="ea-preview-body">
+            <b>[한국AI윤리위원회] AI윤리전문가 양성과정</b>
+            <p><strong>{won(PRICE)}</strong><s>{won(LIST_PRICE)}</s></p>
+            <div class="ea-preview-btns"><span>장바구니</span><span class="is-buy">구매하기</span></div>
+            <small>다음 화면에서 이 버튼을 누르세요</small>
+          </div>
+        </div>
+        <ol class="ea-sheet-steps">
+          <li><b>[구매하기]</b>를 누르고 로그인 창이 뜨면 <b>비회원 구매</b>를 고르세요. 회원가입은 필요 없습니다.</li>
+          <li>이름 · 이메일 · 휴대전화를 적고 카드 또는 간편결제로 결제합니다.</li>
+          <li>결제한 이메일로 학습자료와 평가 로그인 안내가 도착합니다.</li>
+        </ol>
+        <p class="ea-sheet-note">카드 명세서에는 '성균관컨설팅'으로 표시됩니다 · <a href="terms.html#refund">청약철회 · 환불 안내</a></p>
+        <a class="btn btn-primary ea-sheet-go" id="payGo" href="{PAY_HREF}">성균관컨설팅 결제 페이지로 이동 <i data-lucide="arrow-right"></i></a>
+        <button type="button" class="ea-sheet-later" data-close>조금 더 둘러볼게요</button>
+      </div>
+    </div>"""
 
     script = r"""
-  <script src="assets/js/members-data.js"></script>
   <script>
   (function(){
-    var PAYLINK='__PAY__';
     var CHECK='<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    /* 2026.09.26 밤: 추천 위원 기억 기능을 없앴으므로 예전에 저장된 값이 있으면 지웁니다 (추천 위원 코드는 성균관컨설팅 결제 때 입력) */
+    try{localStorage.removeItem('kaiec_ref');}catch(eRef){}
 
-    /* 추천 위원: 위원 디지털 명함의 QR · 버튼, 캠페인위원 공유 링크는 ?ref=위원코드 로 들어옵니다.
-       30일 동안 기억했다가(다시 방문해도 유지) 결제 버튼 주소에 utm 꼬리표로 붙여 넘깁니다. 이름·이메일 등 개인정보는 받지 않습니다. */
-    var REF='';
-    try{
-      var rq=new URLSearchParams(location.search).get('ref');
-      if(rq&&/^[A-Za-z0-9-]{2,40}$/.test(rq)){REF=rq;localStorage.setItem('kaiec_ref',JSON.stringify({v:rq,t:Date.now()}));}
-      else{var st=JSON.parse(localStorage.getItem('kaiec_ref')||'null');if(st&&st.v&&Date.now()-st.t<30*864e5)REF=st.v;}
-    }catch(eRef){}
-    if(REF){
-      var ppl=[].concat((window.KAIEC_MEMBERS||[]).filter(function(m){return m.name&&m.name!=='공석';}),
-        (window.KAIEC_CAMPAIGN_MEMBERS||[]).map(function(m){return {name:m.name,en:m.en,code:m.code,role:'AI 윤리 캠페인위원'};}));
-      var slug=function(e){return String(e||'').toLowerCase().replace(/[^a-z]+/g,'-').replace(/^-+|-+$/g,'');};
-      var hit=ppl.filter(function(m){return (m.code&&m.code.toUpperCase()===REF.toUpperCase())||(m.en&&slug(m.en)===REF.toLowerCase());})[0];
-      var chip=document.getElementById('refChip');
-      if(hit&&chip){
-        chip.innerHTML=CHECK+'<span>한국AI윤리위원회 <b>'+hit.name+'</b> '+String(hit.role||'').split(' · ')[0]+'의 추천으로 방문하셨습니다</span>';
-        chip.hidden=false;
-      }
-      if(PAYLINK){
-        var link=PAYLINK+(PAYLINK.indexOf('?')>=0?'&':'?')+'utm_source=kaiec&utm_medium=referral&utm_campaign='+encodeURIComponent(REF);
-        document.querySelectorAll('.js-pay').forEach(function(a){a.href=link;});
-      }
+    /* 결제 안내 시트 (2026.09.26 밤, 사용자: 성균관컨설팅으로 갑자기 넘어가 어리둥절해 결제를 안 함)
+       [AI윤리전문가 시작하기]를 누르면 바로 넘기지 않고, 누가 무엇을 맡는지 · 다음 화면 모습 · 할 일 3단계를 보여 준 뒤 이동합니다.
+       자바스크립트가 없거나 Ctrl/Cmd 클릭이면 원래 링크대로 바로 이동합니다. */
+    var sheet=document.getElementById('paySheet'),go=document.getElementById('payGo'),lastFocus=null,closeT=null;
+    function openSheet(e){
+      if(!sheet||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button>0)return;
+      e.preventDefault();
+      clearTimeout(closeT);lastFocus=document.activeElement;sheet.hidden=false;
+      document.documentElement.classList.add('ea-lock');
+      requestAnimationFrame(function(){requestAnimationFrame(function(){sheet.classList.add('is-open');});});
+      setTimeout(function(){try{go.focus({preventScroll:true});}catch(eF){go.focus();}},60);
+    }
+    function closeSheet(){
+      if(!sheet||sheet.hidden)return;
+      sheet.classList.remove('is-open');document.documentElement.classList.remove('ea-lock');
+      closeT=setTimeout(function(){sheet.hidden=true;},220);
+      if(lastFocus&&lastFocus.focus){try{lastFocus.focus({preventScroll:true});}catch(eL){}}
+    }
+    document.querySelectorAll('.js-pay').forEach(function(a){a.addEventListener('click',openSheet);});
+    if(sheet){
+      sheet.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeSheet);});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet();});
+      go.addEventListener('click',function(){go.classList.add('is-going');go.setAttribute('aria-busy','true');});
+      /* 결제 페이지에서 뒤로 돌아온 경우(bfcache) 시트와 스크롤 잠금을 정리 */
+      window.addEventListener('pageshow',function(){sheet.classList.remove('is-open');sheet.hidden=true;document.documentElement.classList.remove('ea-lock');go.classList.remove('is-going');go.removeAttribute('aria-busy');});
     }
 
     /* 나에게 필요한 이유: 고른 항목마다 이 과정이 돕는 점을 보여 줍니다 (어디에도 저장·전송하지 않음) */
@@ -4386,7 +4450,7 @@ def build_expert_apply():
     }
   })();
   </script>
-""".replace('__PAY__', PAY_URL)
+"""
 
     page("expert-apply.html", "AI윤리전문가(AIEP) 양성과정 신청",
          "한국AI윤리위원회 주관 AI윤리전문가(AIEP) 양성과정. 가입 없이 결제 한 번으로 시작해 이메일로 학습자료를 받고, 온라인 평가를 통과하면 공식 이수증 발급과 홈페이지 전문가 등록까지 한 번에 완료됩니다. 100% 온라인, 원하는 시간에 자유롭게 이수합니다.",
