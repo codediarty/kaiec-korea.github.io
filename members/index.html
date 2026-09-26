@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=c11e4b3273">
+<link rel="stylesheet" href="/assets/css/style.css?v=8b29077ed3">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -204,10 +204,10 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=c11e4b3273"></script>
-  <script src="/assets/js/members-data.js?v=c11e4b3273"></script>
-  <script src="/assets/js/qrcode.min.js?v=c11e4b3273"></script>
-  <script src="/assets/js/experts-data.js?v=c11e4b3273"></script>
+  <script src="/assets/js/main.js?v=8b29077ed3"></script>
+  <script src="/assets/js/members-data.js?v=8b29077ed3"></script>
+  <script src="/assets/js/qrcode.min.js?v=8b29077ed3"></script>
+  <script src="/assets/js/experts-data.js?v=8b29077ed3"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -249,8 +249,8 @@
     var PEOPLE=[];
     var CHECK='<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
     /* 그룹 제목 오른쪽 배지 (인원수 대신 표기, 2026.09.26) */
-    var BADGE={'위원장':'KAIEC 임원','부위원장':'KAIEC 임원','감사':'KAIEC 임원','고문·자문위원':'KAIEC 자문단','사무국':'KAIEC 운영진',
-      '전문위원':'KAIEC 공식 출강','AI 윤리 캠페인위원':'KAIEC 공식 위촉'};
+    /* 임원진(위원장·부위원장·고문·자문위원·사무국·감사)은 배지 없이 직함만 (2026.09.26 사용자: '임원' 반복이 조잡) */
+    var BADGE={'전문위원':'KAIEC 공식 출강','AI 윤리 캠페인위원':'KAIEC 공식 위촉'};
     var NOTE={
       '전문위원':'대학·기업·공공기관 현장을 직접 찾아가 AI 윤리 교육을 진행하는 위원회 소속 전문 강사진입니다. 외주 강사가 아닌 석·박사 전문위원이 기관의 교육 대상과 목적에 맞춰 커리큘럼을 설계하고 직접 출강합니다. <a href="/lecture/#request">출강 문의 →</a>',
       'AI 윤리 캠페인위원':'위원회 검토를 거쳐 공식 위촉된 위원입니다. 온·오프라인에서 올바른 AI 활용 문화를 알리고 확산합니다.'};
@@ -273,9 +273,10 @@
           +'<div class="member-field">'+(m.field||'위촉 예정')+'</div></div>';
       }
       var i=PEOPLE.push({m:m,g:g})-1;
-      return '<div class="member member--link" role="button" tabindex="0" aria-haspopup="dialog" data-p="'+i+'" aria-label="'+m.name+' '+(m.role||g)+' 디지털 명함 보기">'
+      var roleTxt=(m.cred?m.cred+' · ':'')+(m.role||g);
+      return '<div class="member member--link" role="button" tabindex="0" aria-haspopup="dialog" data-p="'+i+'" aria-label="'+m.name+' '+roleTxt+' 디지털 명함 보기">'
         +avatar(m)
-        +'<div class="member-role">'+(m.role||g)+'</div>'
+        +'<div class="member-role">'+roleTxt+'</div>'
         +'<div class="member-name">'+m.name+'</div>'
         +'<div class="member-field">'+(m.field||'')+'</div>'
         +'<div class="member-more">디지털 명함 보기</div>'
@@ -308,9 +309,9 @@
         +'<div class="member-grid">'+cards+'</div></div>';
     }
     var html='';
-    /* 상단 임원진 (2026.09.26): 위원장 · 부위원장 · 고문·자문위원 / 감사 · 사무국 을 4열 격자 두 줄로.
+    /* 상단 임원진 (2026.09.26): 위원장 · 부위원장 · 고문·자문위원 / 사무국 · 감사 를 4열 격자 두 줄로.
        그룹마다 카드 수만큼 칸을 차지하므로 카드 크기는 아래 전문위원·캠페인위원과 같습니다. */
-    var lead=['위원장','부위원장','고문·자문위원','감사','사무국'].map(function(g){return secHTML(g,'lead')}).join('');
+    var lead=['위원장','부위원장','고문·자문위원','사무국','감사'].map(function(g){return secHTML(g,'lead')}).join('');
     if(lead)html+='<div class="lead-grid">'+lead+'</div>';
     html+=secHTML('전문위원');
     /* AI 윤리 캠페인위원: 전문위원 아래, 같은 크기 카드. 위촉된 인원만 표시 + 모집 카드 1장 */
@@ -329,10 +330,11 @@
         +'<div class="member-grid">'+cards+'</div></div>';
     }
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
-    /* 디지털 명함 (2026.09.26 3차): 실명 카드를 누르면 위원회 로고 · 사진 · 직위 · 영문 이름 · 그룹 인증 문구 · 위원 코드(또는 직위)와
-       취임/선임/위촉 시기 · 확인용 QR · 소속 · 분야 · 대표 연락처. 전문위원은 출강 정보와 [출강 문의하기].
-       명함 머리 로고는 글꼴 텍스트(Archivo · Noto Serif KR)로 그려 1배율 화면에서도 획이 또렷합니다(페이지 열 때 글꼴 미리 불러옴).
-       [명함 이미지 저장]: 진남색 · 금색 증서식 위원증 디자인, 2160×2700 PNG(QR 포함). 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기.
+    /* 디지털 명함 (2026.09.26 4차 · 공식 제출용): 실명 카드를 누르면 위원회 로고 · 사진 · 직위(자격 표기 cred 포함) · 영문 이름 · 인증 문구 ·
+       위원 코드(또는 직위)와 취임/선임/위촉 시기 · QR · 소속 · 분야 · 대표 연락처 · 확인 문구가 담긴 명함이 열립니다. 전문위원은 출강 정보와 [출강 문의하기].
+       디자인 원칙(사용자 지시): 금테·장식 없이 위원회 배지와 같은 진남색 · 흰색의 절제된 기관 스타일.
+       명함 머리 로고는 사이트 푸터와 같은 진남색 배지 + 흰 워드마크를 글꼴 텍스트로 그려 1배율 화면에서도 또렷합니다.
+       [명함 이미지 저장]: 공식 위원증 형식 2160×2700 PNG(QR 포함). 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기.
        [명함 공유]: 모바일 공유 시트, PC는 링크 복사.
        주소 끝 #위원코드(예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다.
        QR · [양성과정 신청하기] 는 https://kaiec.kr/expert-apply/?ref=위원코드 로 연결(위원은 영업 창구, 2026.09.26 사용자 지시).
@@ -342,12 +344,13 @@
     var FONT="'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',sans-serif";
     var SERIF="'Noto Serif KR','Noto Serif CJK KR','Nanum Myeongjo',AppleMyungjo,Batang,serif";
     var LATIN="Archivo,'Pretendard Variable',Pretendard,-apple-system,'Segoe UI',Arial,sans-serif";
-    var GOLD='#C9A96B',GOLD_L='#E3CB94',STEEL='#B3C4DD',MUTED='#8FA3C2';
+    /* 위원회 공식 색 (사이트 배지 · 머리띠와 같은 값) */
+    var INK='#0A1628',NAVY='#0F2A5F',NAVY2='#17325F',BLUE='#1F5FE0',BLUE6='#1749B4',STEEL='#9FB3D1',
+        TXT='#0B1B36',G7='#374151',G6='#4B5563',G5='#6B7280',G4='#9CA3AF',LINE='#E3E8EF';
     var UNIT={'고문·자문위원':'고문·자문위원단','사무국':'사무국','전문위원':'전문위원회','AI 윤리 캠페인위원':'AI 윤리 캠페인위원단'};
     var SINCE={'위원장':'취임','부위원장':'선임','감사':'선임','사무국':'선임'};
-    var CHIP={'위원장':'한국AI윤리위원회 임원','부위원장':'한국AI윤리위원회 임원','감사':'한국AI윤리위원회 임원',
-      '고문·자문위원':'한국AI윤리위원회 고문·자문위원','사무국':'한국AI윤리위원회 사무국',
-      '전문위원':'KAIEC 공식 출강 강사','AI 윤리 캠페인위원':'한국AI윤리위원회 공식 위촉'};
+    var CHIP={'전문위원':'KAIEC 공식 출강 강사','AI 윤리 캠페인위원':'한국AI윤리위원회 공식 위촉'};
+    var CHIP_DEF='한국AI윤리위원회 공식 명단 등재';
     var FIELD={'위원장':'담당','부위원장':'담당','감사':'담당','사무국':'담당','고문·자문위원':'자문 분야','전문위원':'전문 분야'};
     /* 명함 머리 로고 글꼴을 미리 불러 둡니다 (처음 열 때 대체 글꼴이 잠깐 보이지 않도록) */
     if(document.fonts&&document.fonts.load){
@@ -364,10 +367,15 @@
     var ICON_AWARD=ic('<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>');
     var ICON_HOME=ic('<path d="m9 18 6-6-6-6"/>',2.4);
     function titleOf(p){return (p.m.role||p.g).split(' · ')[0]}
+    function roleLine(p){return (p.m.cred?p.m.cred+' · ':'')+titleOf(p)}
     function unitOf(p){
       var parts=(p.m.role||p.g).split(' · '),u=UNIT[p.g]||'';
       if(parts.length>1)u=(u?u+' ':'')+parts.slice(1).join(' · ');
       return u;
+    }
+    function statementOf(p){
+      var pre={'AI 윤리 캠페인위원':'공식 위촉 ','전문위원':unitOf(p)+' ','사무국':'사무국 '}[p.g]||'';
+      return '위 사람은 '+ORG+' '+pre+titleOf(p)+'임을 확인합니다.';
     }
     function pid(p,i){
       if(p.m.code)return p.m.code;
@@ -400,7 +408,7 @@
     }
     function isTouch(){return !!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches)}
 
-    /* ── 명함 이미지 (canvas, 논리 1080×1350 × 2배) ─────────────────── */
+    /* ── 명함 이미지 (canvas, 논리 1080×1350 × 2배) : 공식 위원증 형식 ─────────────────── */
     var SCALE=2;
     function svgData(el){
       var str=new XMLSerializer().serializeToString(el);
@@ -415,7 +423,7 @@
     function wmURL(){
       var ko=document.getElementById('wm-ko');if(!ko||!ko.ownerSVGElement)return '';
       var el=ko.ownerSVGElement.cloneNode(true),ps=el.querySelectorAll('path');el.removeAttribute('class');
-      for(var i=0;i<ps.length;i++){var id=ps[i].getAttribute('id');ps[i].removeAttribute('id');ps[i].setAttribute('style','fill:'+(id==='wm-en'?GOLD_L:'#FFFFFF'))}
+      for(var i=0;i<ps.length;i++){var id=ps[i].getAttribute('id');ps[i].removeAttribute('id');ps[i].setAttribute('style','fill:'+(id==='wm-en'?STEEL:'#FFFFFF'))}
       el.setAttribute('width','1697');el.setAttribute('height','320');return svgData(el);
     }
     function loadImg(src){
@@ -436,112 +444,120 @@
       while(s>16&&ctx.measureText(t).width>max){s-=1;ctx.font=weight+' '+s+'px '+fam}
       return s;
     }
+    function wrapText(ctx,t,max){
+      var ws=t.split(' '),out=[],cur='';
+      ws.forEach(function(w){var nx=cur?cur+' '+w:w;if(!cur||ctx.measureText(nx).width<=max)cur=nx;else{out.push(cur);cur=w}});
+      if(cur)out.push(cur);return out;
+    }
     function drawQR(ctx,url,x,y,size){
       var q=qrObj(url);if(!q)return;
       var n=q.getModuleCount(),c=Math.floor(size/n),off=Math.floor((size-c*n)/2);
-      ctx.fillStyle='#0A1628';
+      ctx.fillStyle=INK;
       for(var r=0;r<n;r++)for(var k=0;k<n;k++)if(q.isDark(r,k))ctx.fillRect(x+off+k*c,y+off+r*c,c,c);
     }
     function paint(ctx,p,id,photo,badge,wm){
-      var m=p.m,W=1080,H=1350,cx=540,title=titleOf(p),unit=unitOf(p),lect=p.g==='전문위원';
-      ctx.textBaseline='alphabetic';ctx.textAlign='left';
-      /* 바탕: 위원회 배지와 같은 진남색 + 가장자리를 살짝 눌러 깊이감 */
-      var bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#17325F');bg.addColorStop(1,'#0B1B36');
-      ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
-      var vg=ctx.createRadialGradient(cx,600,160,cx,680,1000);vg.addColorStop(0,'rgba(255,255,255,.045)');vg.addColorStop(1,'rgba(0,0,0,.30)');
-      ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
-      /* 증서식 이중 테두리 + 모서리 장식 */
-      ctx.strokeStyle='rgba(201,169,107,.95)';ctx.lineWidth=2;ctx.strokeRect(36,36,W-72,H-72);
-      ctx.strokeStyle='rgba(201,169,107,.42)';ctx.lineWidth=1;ctx.strokeRect(47,47,W-94,H-94);
-      [[36,36],[W-36,36],[36,H-36],[W-36,H-36]].forEach(function(c){
-        ctx.save();ctx.translate(c[0],c[1]);ctx.rotate(Math.PI/4);
-        ctx.fillStyle='#10254A';ctx.fillRect(-9,-9,18,18);ctx.strokeStyle=GOLD;ctx.lineWidth=2;ctx.strokeRect(-7,-7,14,14);
-        ctx.restore();
-      });
-      /* 로고: 진남색 배지(금색 테두리 + 안쪽 실선) + 국문·영문 워드마크 */
-      var bw=148,bh=68,gp=26,wh=74,ww=wh*169.68/31.95,lw=bw+gp+ww,lx=Math.round((W-lw)/2),ly=102;
-      var bgr=ctx.createLinearGradient(0,ly,0,ly+bh);bgr.addColorStop(0,'#1E3F75');bgr.addColorStop(1,'#10264D');
-      ctx.fillStyle=bgr;rr(ctx,lx,ly,bw,bh,12);ctx.fill();
-      ctx.strokeStyle=GOLD;ctx.lineWidth=2;rr(ctx,lx,ly,bw,bh,12);ctx.stroke();
-      ctx.strokeStyle='rgba(255,255,255,.30)';ctx.lineWidth=1.5;rr(ctx,lx+7,ly+7,bw-14,bh-14,7);ctx.stroke();
-      if(badge){var kw=96,kh=kw*10.66/59.04;ctx.drawImage(badge,lx+(bw-kw)/2,ly+(bh-kh)/2,kw,kh)}
-      else{ctx.fillStyle='#fff';ctx.font='800 25px '+LATIN;spaced(ctx,'KAIEC',lx+bw/2,ly+bh/2+9,4,'center')}
-      if(wm){ctx.drawImage(wm,lx+bw+gp,ly+(bh-wh)/2,ww,wh)}
-      else{ctx.fillStyle='#fff';ctx.font='900 46px '+SERIF;ctx.fillText(ORG,lx+bw+gp,ly+46);
-        ctx.fillStyle=GOLD_L;ctx.font='700 16px '+LATIN;spaced(ctx,'KOREA AI ETHICS COMMITTEE',lx+bw+gp+2,ly+72,3.4,'left')}
-      /* 제목 줄 */
-      ctx.font='700 18px '+LATIN;var tt='OFFICIAL MEMBER CARD',tsp=7.5,tw=measureSpaced(ctx,tt,tsp),ty=238;
-      ctx.fillStyle=GOLD;spaced(ctx,tt,cx,ty,tsp,'center');
-      ctx.fillStyle='rgba(201,169,107,.55)';
-      ctx.fillRect(100,ty-7,Math.round(cx-tw/2-30-100),1.5);ctx.fillRect(Math.round(cx+tw/2+30),ty-7,Math.round(W-100-(cx+tw/2+30)),1.5);
-      /* 사진 (3:4, 금색 액자선) */
-      var px=100,py=290,pw=360,ph=480;
-      ctx.strokeStyle='rgba(201,169,107,.8)';ctx.lineWidth=1.5;ctx.strokeRect(px-12,py-12,pw+24,ph+24);
-      ctx.save();ctx.shadowColor='rgba(0,0,0,.38)';ctx.shadowBlur=34;ctx.shadowOffsetY=12;ctx.fillStyle='#10254A';ctx.fillRect(px,py,pw,ph);ctx.restore();
+      var m=p.m,W=1080,H=1350,L=80,R=1000,title=titleOf(p),unit=unitOf(p),lect=p.g==='전문위원',HB=216;
+      ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.lineCap='butt';ctx.lineJoin='miter';
+      ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+      /* 머리띠: 위원회 배지와 같은 진남색 + 아주 옅은 보안 물결 선 */
+      var g=ctx.createLinearGradient(0,0,W,0);g.addColorStop(0,INK);g.addColorStop(.62,NAVY);g.addColorStop(1,NAVY2);
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,HB);
+      ctx.save();ctx.beginPath();ctx.rect(0,0,W,HB);ctx.clip();ctx.strokeStyle='rgba(255,255,255,.045)';ctx.lineWidth=1;
+      for(var k=0;k<22;k++){ctx.beginPath();for(var x=0;x<=W;x+=6){var yy=-24+k*12+10*Math.sin(x/58+k*.62);if(x)ctx.lineTo(x,yy);else ctx.moveTo(x,yy)}ctx.stroke()}
+      ctx.restore();
+      ctx.fillStyle=BLUE;ctx.fillRect(0,HB,W,6);
+      /* 로고: 사이트와 같은 진남색 배지(안쪽 실선) + 흰 워드마크 */
+      var bx=L,by=62,bw=148,bh=68;
+      var bgr=ctx.createLinearGradient(0,by,0,by+bh);bgr.addColorStop(0,'#1E3F75');bgr.addColorStop(1,'#10264D');
+      ctx.fillStyle=bgr;rr(ctx,bx,by,bw,bh,12);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1.5;rr(ctx,bx+.75,by+.75,bw-1.5,bh-1.5,11.25);ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,.3)';rr(ctx,bx+7,by+7,bw-14,bh-14,7);ctx.stroke();
+      if(badge){var kw=94,kh=kw*10.66/59.04;ctx.drawImage(badge,bx+(bw-kw)/2,by+(bh-kh)/2,kw,kh)}
+      else{ctx.fillStyle='#fff';ctx.font='800 25px '+LATIN;spaced(ctx,'KAIEC',bx+bw/2+2,by+bh/2+9,4,'center')}
+      var wh=64,ww=wh*169.68/31.95,wx=bx+bw+24;
+      if(wm){ctx.drawImage(wm,wx,by+(bh-wh)/2,ww,wh)}
+      else{ctx.fillStyle='#fff';ctx.font='900 44px '+SERIF;ctx.fillText(ORG,wx,by+44);
+        ctx.fillStyle=STEEL;ctx.font='700 15px '+LATIN;spaced(ctx,'KOREA AI ETHICS COMMITTEE',wx+2,by+68,3.4,'left')}
+      ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='700 26px '+FONT;ctx.fillText('공식 위원증',R,by+33);
+      ctx.fillStyle=STEEL;ctx.font='700 13px '+LATIN;spaced(ctx,'OFFICIAL MEMBER CARD',R,by+61,3.6,'right');ctx.textAlign='left';
+      /* 사진 (3:4, 흰 여백 + 옅은 테두리) */
+      var fx=L,fy=HB-48,fw=340,fh=446,px=fx+10,py=fy+10,pw=320,ph=426;
+      ctx.save();ctx.shadowColor='rgba(10,22,40,.20)';ctx.shadowBlur=26;ctx.shadowOffsetY=10;ctx.fillStyle='#fff';ctx.fillRect(fx,fy,fw,fh);ctx.restore();
+      ctx.strokeStyle='#D5DCE6';ctx.lineWidth=1.5;ctx.strokeRect(fx+.75,fy+.75,fw-1.5,fh-1.5);
       ctx.save();ctx.beginPath();ctx.rect(px,py,pw,ph);ctx.clip();
       if(photo){
         var iw=photo.naturalWidth,ih=photo.naturalHeight,rt=pw/ph,sw,sh,sx,sy;
         if(iw/ih>rt){sh=ih;sw=ih*rt;sx=(iw-sw)/2;sy=0}else{sw=iw;sh=iw/rt;sx=0;sy=0}
         ctx.drawImage(photo,sx,sy,sw,sh,px,py,pw,ph);
       }else{
-        var ig=ctx.createLinearGradient(px,py,px,py+ph);ig.addColorStop(0,'#21406F');ig.addColorStop(1,'#132B52');
+        var ig=ctx.createLinearGradient(px,py,px,py+ph);ig.addColorStop(0,'#EEF3FE');ig.addColorStop(1,'#E6F8F6');
         ctx.fillStyle=ig;ctx.fillRect(px,py,pw,ph);
-        ctx.fillStyle=GOLD_L;ctx.font='900 176px '+SERIF;ctx.textAlign='center';
-        ctx.fillText((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·',px+pw/2,py+ph/2+62);ctx.textAlign='left';
+        ctx.fillStyle=BLUE;ctx.font='800 150px '+FONT;ctx.textAlign='center';
+        ctx.fillText((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·',px+pw/2,py+ph/2+52);ctx.textAlign='left';
       }
       ctx.restore();
-      /* 오른쪽: 직위 · 이름 · 영문 · 위원 코드(또는 취임·선임·위촉 일자) */
-      var rx=508,rw=W-100-rx;
-      ctx.fillStyle=GOLD_L;fitFont(ctx,title,rw,30,700);ctx.fillText(title,rx,346);
-      ctx.fillStyle='#fff';fitFont(ctx,m.name,rw,112,900,SERIF);ctx.fillText(m.name,rx,466);
-      if(m.en){ctx.fillStyle=STEEL;ctx.font='700 23px '+LATIN;spaced(ctx,m.en.toUpperCase(),rx+3,520,4.2,'left')}
-      ctx.fillStyle='rgba(201,169,107,.55)';ctx.fillRect(rx,560,rw,1.5);
-      var lab=m.code?'위원 코드':sinceLabel(p)+' 일자',lab2=m.code?'MEMBER CODE':'SINCE';
-      ctx.fillStyle=MUTED;ctx.font='600 22px '+FONT;ctx.fillText(lab,rx,612);
-      var lw2=ctx.measureText(lab).width;ctx.fillStyle='rgba(201,169,107,.9)';ctx.font='700 15px '+LATIN;spaced(ctx,lab2,rx+lw2+14,611,4.2,'left');
-      var idv=m.code||m.since||'';
-      if(idv){ctx.fillStyle='#fff';ctx.font='800 64px '+LATIN;spaced(ctx,idv,rx-2,690,m.code?6:3,'left')}
-      var sub=m.code?(m.since?'위촉 '+m.since:''):(lect?'AI 윤리 전문 교육 강사':unit);
-      if(sub){ctx.fillStyle=STEEL;fitFont(ctx,sub,rw,26,600);ctx.fillText(sub,rx,740)}
-      /* 아래: 소속 · 분야 · (출강) · 발급 + 확인용 QR */
-      var qs=208,qx=W-100-qs,qy=826;
-      var rows=[['소속',ORG+(unit?' '+unit:'')]];
-      if(m.field)rows.push([FIELD[p.g]||'활동 분야',m.field]);
-      if(lect)rows.push(['출강','기관 맞춤형 현장 강의']);
-      rows.push(['발급',today()]);
-      var gapY=60,y0=Math.round(qy+qs/2-(rows.length-1)*gapY/2+9);
-      rows.forEach(function(r,k){
-        var y=y0+k*gapY;
-        ctx.fillStyle=MUTED;ctx.font='600 23px '+FONT;ctx.fillText(r[0],100,y);
-        ctx.fillStyle='#fff';fitFont(ctx,r[1],qx-40-222,27,600);ctx.fillText(r[1],222,y);
-        if(k<rows.length-1){ctx.fillStyle='rgba(255,255,255,.09)';ctx.fillRect(100,y+22,qx-40-100,1)}
-      });
-      ctx.fillStyle='#fff';rr(ctx,qx,qy,qs,qs,14);ctx.fill();
+      /* 오른쪽: 직위 · 이름 · 영문 · 인증 문구 */
+      var rx=470,rw=R-rx,rl=roleLine(p);
+      ctx.fillStyle=BLUE6;fitFont(ctx,rl,rw,30,700);ctx.fillText(rl,rx,292);
+      ctx.fillStyle=INK;fitFont(ctx,m.name,rw,112,800);ctx.fillText(m.name,rx,396);
+      if(m.en){ctx.fillStyle=G5;ctx.font='700 24px '+LATIN;spaced(ctx,m.en.toUpperCase(),rx+2,446,4,'left')}
+      var chip=CHIP[p.g]||CHIP_DEF;ctx.font='700 23px '+FONT;
+      var cw=Math.min(rw,ctx.measureText(chip).width+80),cy0=478;
+      ctx.fillStyle='#E6F8F6';rr(ctx,rx,cy0,cw,50,25);ctx.fill();
+      ctx.save();ctx.strokeStyle='#00786F';ctx.lineWidth=3.5;ctx.lineCap='round';ctx.lineJoin='round';
+      ctx.beginPath();ctx.moveTo(rx+22,cy0+26);ctx.lineTo(rx+30,cy0+34);ctx.lineTo(rx+44,cy0+17);ctx.stroke();ctx.restore();
+      ctx.fillStyle='#00786F';ctx.fillText(chip,rx+58,cy0+33);
+      ctx.fillStyle=LINE;ctx.fillRect(rx,562,rw,1.5);
+      /* 위원 코드(없으면 직위) · 취임/선임/위촉 */
+      var lab=m.code?'위원 코드':'직위',lab2=m.code?'MEMBER CODE':'POSITION';
+      ctx.fillStyle=G5;ctx.font='600 20px '+FONT;ctx.fillText(lab,rx,604);
+      var lw=ctx.measureText(lab).width;ctx.fillStyle=G4;ctx.font='700 12px '+LATIN;spaced(ctx,lab2,rx+lw+12,603,3,'left');
+      if(m.code){ctx.fillStyle=BLUE6;ctx.font='800 50px '+LATIN;spaced(ctx,m.code,rx-1,662,5,'left')}
+      else{ctx.fillStyle=INK;fitFont(ctx,title,310,44,800);ctx.fillText(title,rx,660)}
+      if(m.since){var tx=810,sl=sinceLabel(p);ctx.fillStyle=G5;ctx.font='600 20px '+FONT;ctx.fillText(sl,tx,604);
+        var slw=ctx.measureText(sl).width;ctx.fillStyle=G4;ctx.font='700 12px '+LATIN;spaced(ctx,'SINCE',tx+slw+12,603,3,'left');
+        ctx.fillStyle=INK;ctx.font='800 40px '+LATIN;ctx.fillText(m.since,tx,660)}
+      ctx.fillStyle=LINE;ctx.fillRect(L,714,R-L,1.5);
+      /* QR: AI윤리전문가 양성과정 신청(?ref=위원 코드) */
+      var qs=208,qx=R-qs,qy=742;
+      ctx.fillStyle='#fff';rr(ctx,qx,qy,qs,qs,14);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=1.5;rr(ctx,qx+.75,qy+.75,qs-1.5,qs-1.5,13);ctx.stroke();
       drawQR(ctx,applyURL(id),qx+16,qy+16,qs-32);
-      ctx.fillStyle=GOLD_L;ctx.font='700 17px '+FONT;ctx.textAlign='center';ctx.fillText('AI윤리전문가 양성과정 신청',qx+qs/2,qy+qs+34);ctx.textAlign='left';
-      ctx.fillStyle=GOLD;ctx.font='700 12px '+LATIN;spaced(ctx,'SCAN TO APPLY',qx+qs/2,qy+qs+58,4,'center');
-      /* 인증 문구 · 홈페이지 · 미세 문자 */
-      ctx.fillStyle='rgba(201,169,107,.5)';ctx.fillRect(100,1126,W-200,1.5);
-      var chip=CHIP[p.g]||'공식 명단 등재';ctx.font='700 29px '+FONT;
-      var chw=ctx.measureText(chip).width,sx2=Math.round(cx-(chw+54)/2),sy2=1186;
-      ctx.strokeStyle=GOLD;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(sx2+18,sy2-10,18,0,Math.PI*2);ctx.stroke();
-      ctx.lineWidth=3.5;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(sx2+10,sy2-10);ctx.lineTo(sx2+16,sy2-4);ctx.lineTo(sx2+27,sy2-17);ctx.stroke();
-      ctx.fillStyle=GOLD_L;ctx.fillText(chip,sx2+54,sy2);
-      ctx.fillStyle=STEEL;ctx.font='600 21px '+FONT;ctx.textAlign='center';ctx.fillText('한국AI윤리위원회 공식 홈페이지  kaiec.kr',cx,1236);ctx.textAlign='left';
-      /* 미세 문자: 테두리 안쪽 폭에 들어가는 만큼만 반복해 가운데 정렬 (단어가 잘리지 않게) */
-      ctx.fillStyle='rgba(201,169,107,.42)';ctx.font='700 11px '+LATIN;
-      var unitT='KOREA AI ETHICS COMMITTEE  ·  KAIEC  ·  OFFICIAL MEMBER CARD',sepT='  ·  ',maxW=W-140,mt=unitT,nx;
-      while(true){nx=mt+sepT+unitT;if(measureSpaced(ctx,nx,2.2)>maxW)break;mt=nx}
-      spaced(ctx,mt,cx,1284,2.2,'center');
+      ctx.textAlign='center';ctx.fillStyle=G7;ctx.font='700 16px '+FONT;ctx.fillText('AI윤리전문가 양성과정 신청',qx+qs/2,qy+qs+32);
+      ctx.fillStyle=G4;ctx.font='700 11px '+LATIN;spaced(ctx,'SCAN TO APPLY',qx+qs/2,qy+qs+54,3,'center');ctx.textAlign='left';
+      /* 소속 · 분야 · (출강) · 발급일 */
+      var y=784,vx=L+150,vmax=qx-40-vx;
+      function row(label,val,sub){
+        ctx.fillStyle=G5;ctx.font='600 21px '+FONT;ctx.fillText(label,L,y);
+        ctx.fillStyle=TXT;fitFont(ctx,val,vmax,26,700);ctx.fillText(val,vx,y);
+        if(sub){ctx.fillStyle=G6;fitFont(ctx,sub,vmax,21,600);ctx.fillText(sub,vx,y+32);y+=32}
+        y+=58;
+      }
+      row('소속',ORG,unit);
+      if(m.field)row(FIELD[p.g]||'활동 분야',m.field);
+      if(lect)row('출강','기관 맞춤형 현장 강의');
+      row('발급일',today());
+      /* 확인 문구 + 명단 확인 주소 */
+      var sy=1040,sh=156;
+      ctx.fillStyle='#F4F6FA';rr(ctx,L,sy,R-L,sh,16);ctx.fill();
+      ctx.fillStyle=G7;ctx.font='600 24px '+FONT;
+      var lines=wrapText(ctx,statementOf(p),R-L-80).slice(0,2),ly=lines.length>1?sy+54:sy+64;
+      lines.forEach(function(t,i){ctx.fillText(t,L+40,ly+i*36)});
+      var vy=lines.length>1?sy+130:sy+112,vt='공식 명단 확인';
+      ctx.fillStyle=G5;ctx.font='600 19px '+FONT;ctx.fillText(vt,L+40,vy);
+      var vw=ctx.measureText(vt).width;ctx.fillStyle=BLUE6;ctx.font='700 19px '+LATIN;ctx.fillText(cardURL(id).replace(/^https?:\/\//,''),L+40+vw+14,vy);
+      /* 바닥띠 */
+      var fb=1262,fg=ctx.createLinearGradient(0,0,W,0);fg.addColorStop(0,INK);fg.addColorStop(1,NAVY);
+      ctx.fillStyle=fg;ctx.fillRect(0,fb,W,H-fb);
+      ctx.textAlign='center';ctx.fillStyle=STEEL;ctx.font='700 14px '+LATIN;spaced(ctx,'KOREA AI ETHICS COMMITTEE',W/2,fb+36,5,'center');
+      ctx.fillStyle='#D5DEEC';ctx.font='600 18px '+FONT;ctx.fillText(ORG+'   ·   kaiec.kr   ·   '+EMAIL,W/2,fb+67);ctx.textAlign='left';
     }
     function makeImage(p,id,photoSrc){
-      var m=p.m,ko=[m.name,titleOf(p),CHIP[p.g]||'',unitOf(p),ORG,m.field||'',
-        '소속 분야 담당 자문 전문 활동 출강 기관 맞춤형 현장 강의 발급 위원 코드 일자 취임 선임 위촉 교육 강사 공식 홈페이지 AI윤리전문가 양성과정 신청 0123456789.'].join(' ');
-      var lat='KAIEC OFFICIAL MEMBER CARD SCAN TO APPLY KOREA AI ETHICS COMMITTEE SINCE 0123456789.-· '+(m.en||'').toUpperCase()+(m.code||'');
+      var m=p.m,ko=[m.name,roleLine(p),CHIP[p.g]||CHIP_DEF,unitOf(p),ORG,m.field||'',statementOf(p),
+        '공식 위원증 소속 분야 담당 자문 전문 활동 출강 기관 맞춤형 현장 강의 발급일 위원 코드 직위 취임 선임 위촉 명단 확인 AI윤리전문가 양성과정 신청 0123456789.'].join(' ');
+      var lat='KAIEC OFFICIAL MEMBER CARD SCAN TO APPLY KOREA AI ETHICS COMMITTEE MEMBER CODE POSITION SINCE kaiec.kr/members/# 0123456789.-· '+(m.en||'').toUpperCase()+(m.code||'')+EMAIL+id;
       var loads=[];
       if(document.fonts&&document.fonts.load){
-        ['700','600'].forEach(function(w){loads.push(document.fonts.load(w+' 40px '+FONT,ko))});
-        loads.push(document.fonts.load('900 40px '+SERIF,m.name+ORG));
+        ['800','700','600'].forEach(function(w){loads.push(document.fonts.load(w+' 40px '+FONT,ko))});
         ['700','800'].forEach(function(w){loads.push(document.fonts.load(w+' 40px '+LATIN,lat))});
       }
       var fonts=Promise.all(loads).catch(function(){});
@@ -569,7 +585,7 @@
     }
     function saveImage(btn){
       if(!curP)return;
-      var name='KAIEC_'+curId+'.png',title=curP.m.name+' · '+ORG+' 디지털 명함';
+      var name='KAIEC_'+curId+'.png',title=curP.m.name+' · '+ORG+' 공식 위원증';
       var img=ov.querySelector('.bc-photo img');
       var rec=prepImage(curP,curId,img?img.src:'');
       function go(blob){
@@ -640,14 +656,15 @@
         '<div class="bc-head"><div class="bc-lockup" aria-hidden="true"><span class="bc-seal"><span>KAIEC</span></span>'
         +'<span class="bc-wm"><b>'+ORG+'</b><i>KOREA AI ETHICS COMMITTEE</i></span></div></div>'
         +bigAvatar(m)
-        +'<div class="bc-role">'+title+'</div>'
+        +'<div class="bc-role">'+roleLine(p)+'</div>'
         +'<div class="bc-name" id="bcName">'+m.name+'</div>'
         +(m.en?'<div class="bc-en">'+m.en.toUpperCase()+'</div>':'')
-        +'<span class="bc-verify">'+ICON_OK+(CHIP[p.g]||'공식 명단 등재')+'</span>'
+        +'<span class="bc-verify">'+ICON_OK+(CHIP[p.g]||CHIP_DEF)+'</span>'
         +idBox
         +(lect?'<a class="bc-cta" href="/lecture/#request">'+ICON_MIC+'출강 문의하기</a>'
               :'<a class="bc-cta" href="/expert-apply/?ref='+encodeURIComponent(curId)+'">'+ICON_AWARD+'AI윤리전문가 양성과정 신청하기</a>')
         +'<dl class="bc-info">'+rows+'</dl>'
+        +'<div class="bc-cert"><p>'+statementOf(p)+'</p><span>'+today()+' · '+ORG+'</span></div>'
         +'<div class="bc-actions"><button type="button" class="bc-btn bc-btn--primary" data-act="img">'+ICON_IMG+'명함 이미지 저장</button>'
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
         +'<p class="bc-note">QR 코드를 스캔하면 AI윤리전문가(AIEP) 양성과정 신청 페이지로 연결됩니다.</p>';
