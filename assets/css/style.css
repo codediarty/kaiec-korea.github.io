@@ -2423,3 +2423,11 @@ table.tbl tbody th{vertical-align:top}
 }
 @media (max-width:560px){.ai-visual img{object-position:60% center}}
 @media (max-width:480px){.ph-lead{font-size:18px!important}}
+
+/* 성균관컨설팅 주문서로 넘어가는 동안 로딩 화면 (main.js 8번, skkc.co.kr Header Code 의 로딩 화면과 같은 모양) */
+.buy-go{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#fff;
+  font:600 16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard Variable","Malgun Gothic",sans-serif;color:#1d2433;padding-bottom:16vh}
+.buy-go[hidden]{display:none}
+.buy-go__spin{width:34px;height:34px;box-sizing:border-box;border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:buyGoSpin .8s linear infinite}
+@keyframes buyGoSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.buy-go__spin{animation-duration:2.4s}}

@@ -31,7 +31,7 @@
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/style.css?v=5720706e39">
+<link rel="stylesheet" href="/assets/css/style.css?v=ee39ab8f80">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -204,10 +204,10 @@
       </div>
     </div>
   </footer>
-  <script src="/assets/js/main.js?v=5720706e39"></script>
-  <script src="/assets/js/members-data.js?v=5720706e39"></script>
-  <script src="/assets/js/qrcode.min.js?v=5720706e39"></script>
-  <script src="/assets/js/experts-data.js?v=5720706e39"></script>
+  <script src="/assets/js/main.js?v=ee39ab8f80"></script>
+  <script src="/assets/js/members-data.js?v=ee39ab8f80"></script>
+  <script src="/assets/js/qrcode.min.js?v=ee39ab8f80"></script>
+  <script src="/assets/js/experts-data.js?v=ee39ab8f80"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -260,7 +260,7 @@
         +(NOTE[g]?'<p class="grp-note">'+NOTE[g]+'</p>':'');
     }
     function avatar(m){
-      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=c9bf5fdd" alt="'+m.name+'" loading="lazy"></div>';
+      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=ebddd5de" alt="'+m.name+'" loading="lazy"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="member-avatar">'+initial+'</div>';
     }
@@ -394,7 +394,7 @@
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
     function bigAvatar(m){
-      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=c9bf5fdd" alt="'+m.name+' 사진"></div>';
+      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=ebddd5de" alt="'+m.name+' 사진"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
     }
@@ -625,6 +625,7 @@
     function openP(i,quiet){
       var p=PEOPLE[i];if(!p)return;
       var m=p.m,title=titleOf(p),unit=unitOf(p);
+      if(m&&m.code&&window.kaiecWarmSkkc)window.kaiecWarmSkkc();  /* 명함을 열면 주문서 사이트에 미리 연결 */
       if(!ov){
         ov=document.createElement('div');ov.className='mp-overlay';ov.hidden=true;
         ov.innerHTML='<div class="mp-wrap"><div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'

@@ -1987,6 +1987,7 @@ def build_members():
     function openP(i,quiet){
       var p=PEOPLE[i];if(!p)return;
       var m=p.m,title=titleOf(p),unit=unitOf(p);
+      if(m&&m.code&&window.kaiecWarmSkkc)window.kaiecWarmSkkc();  /* 명함을 열면 주문서 사이트에 미리 연결 */
       if(!ov){
         ov=document.createElement('div');ov.className='mp-overlay';ov.hidden=true;
         ov.innerHTML='<div class="mp-wrap"><div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'

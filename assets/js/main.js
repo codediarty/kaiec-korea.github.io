@@ -103,5 +103,34 @@
     sync();
   }
 
+  /* 8. 성균관컨설팅 주문서로 가는 버튼(주소에 kaiec_buy=1): 누르는 즉시 로딩 화면 (2026.09.26)
+        상대 사이트가 뜰 때까지 화면이 멈춘 것처럼 보이지 않게 하고, 손가락을 대는 순간 미리 연결해 둡니다.
+        skkc.co.kr 쪽 Header Code(tools/skkc-kaiec-head.html)가 같은 모양의 로딩 화면을 이어서 보여 줍니다. */
+  var warmed = false;
+  function warmSkkc() {
+    if (warmed) return; warmed = true;
+    try { var l = document.createElement('link'); l.rel = 'preconnect'; l.href = 'https://skkc.co.kr'; document.head.appendChild(l); } catch (e) {}
+  }
+  window.kaiecWarmSkkc = warmSkkc;
+  function buyLink(t) {
+    var a = t && t.closest ? t.closest('a[href*="kaiec_buy=1"]') : null;
+    return a && (!a.target || a.target === '_self') ? a : null;
+  }
+  document.addEventListener('pointerdown', function (e) { if (buyLink(e.target)) warmSkkc(); }, true);
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (!buyLink(e.target)) return;
+    var ov = document.getElementById('buyGo');
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.id = 'buyGo'; ov.className = 'buy-go'; ov.setAttribute('role', 'status');
+      ov.innerHTML = '<span class="buy-go__spin" aria-hidden="true"></span><span>주문서를 여는 중입니다</span>';
+      document.body.appendChild(ov);
+    }
+    ov.hidden = false;
+  });
+  /* 뒤로 가기로 돌아오면 로딩 화면을 걷음 */
+  window.addEventListener('pageshow', function () { var ov = document.getElementById('buyGo'); if (ov) ov.hidden = true; });
+
   /* 아이콘은 빌드 시 SVG로 HTML에 직접 삽입되므로 외부 스크립트가 필요 없습니다. */
 })();

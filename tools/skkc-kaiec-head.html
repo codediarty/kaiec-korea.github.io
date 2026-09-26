@@ -1,0 +1,85 @@
+<!-- KAIEC 명함 → 주문서 바로 연결 (성균관컨설팅 아임웹 Header Code 상단 맨 위, 2026.09.26 v4)
+     넣는 곳: 아임웹 관리자 > 설정 > SEO > 고급 설정 > 공통 코드 삽입 > Header Code 상단 (맨 위)
+     하는 일: kaiec.kr 의 [커리어 시작하기] · [구매하기] 주소(shop_view?idx=26&kaiec_buy=1&kaiec_ref=위원코드)로 들어오면
+       1) 상품 화면을 그리기 전에 가려 '주문서를 여는 중입니다' 로딩 화면만 보이게 하고
+       2) 상품 화면이 다 뜨기를 기다리지 않고 주문서를 바로 만들어(/shop/oms/OMS_add_order.cm) 비회원 주문서로 넘김
+       3) 위원 코드는 그 탭에 3시간 기억 → Footer Code(v3)가 주문서 쿠폰 칸에 넣어 할인 적용
+     실패하면(상품 설정이 바뀌었을 때 등) 상품 화면의 [구매하기]를 대신 누르는 예전 방식으로 넘어가고,
+     그것도 안 되면 로딩 화면을 걷어 직접 누를 수 있게 합니다. kaiec_buy 표시가 없는 방문에는 아무 일도 하지 않습니다. -->
+<script>
+(function () {
+  var H = document.documentElement;
+  try {
+    var q = new URLSearchParams(location.search);
+    if (q.get('kaiec_buy') !== '1' || location.pathname.indexOf('/shop_view') !== 0) return;
+    var idx = q.get('idx') || '';
+    var ref = (q.get('kaiec_ref') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (/^[A-Z]{2,4}\d{4}$/.test(ref)) { try { sessionStorage.setItem('kaiec_ref', JSON.stringify({ code: ref, t: Date.now() })); } catch (e) {} }
+
+    /* 1) 로딩 화면 (상품 화면은 그리지 않음) */
+    var st = document.createElement('style');
+    st.textContent = 'html.kaiec-go body{visibility:hidden!important}' +
+      'html.kaiec-go{background:#fff!important}html.kaiec-go #ch-plugin{display:none!important}' +
+      'html.kaiec-go::before{content:"";position:fixed;left:50%;top:42%;width:34px;height:34px;margin:-17px 0 0 -17px;box-sizing:border-box;' +
+      'border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:kaiecGoSpin .8s linear infinite;z-index:2147483647}' +
+      'html.kaiec-go::after{content:"주문서를 여는 중입니다";position:fixed;left:0;right:0;top:calc(42% + 30px);text-align:center;' +
+      'font:600 16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#1d2433;z-index:2147483647}' +
+      '@keyframes kaiecGoSpin{to{transform:rotate(360deg)}}';
+    (document.head || H).appendChild(st);
+    H.classList.add('kaiec-go');
+    var reveal = function () { H.classList.remove('kaiec-go'); };
+    window.addEventListener('pageshow', function (e) { if (e.persisted) reveal(); });
+
+    /* 주소 정리: 표시를 지워 Footer Code 가 [구매하기]를 또 누르지 않게 하고, 뒤로 가기 때 주문서를 다시 만들지 않게 함 */
+    q.delete('kaiec_buy'); q.delete('kaiec_ref');
+    var clean = location.pathname + (q.toString() ? '?' + q.toString() : '') + location.hash;
+    try { history.replaceState(history.state, '', clean); } catch (e) {}
+    var backurl = location.origin + clean;
+
+    /* 예비: 상품 화면이 준비되면 [구매하기]를 대신 누름 (장바구니 확인 창이 뜨면 '이 상품만 구매') */
+    var fellBack = false;
+    var fallback = function () {
+      if (fellBack) return; fellBack = true;
+      var t0 = Date.now();
+      (function tick() {
+        var d = window.SITE_SHOP_DETAIL;
+        if (d && typeof d.confirmOrderWithCartItems === 'function' && document.readyState !== 'loading' &&
+            (typeof d.getOrderCount !== 'function' || d.getOrderCount() > 0)) {
+          try { d.confirmOrderWithCartItems('guest_login', backurl); } catch (e) { reveal(); return; }
+          var t1 = Date.now();
+          (function modal() {
+            var m = document.getElementById('shop_detail_confirm_order_with_cart_alarm'), b = document.getElementById('buy_now');
+            if (m && b && getComputedStyle(m).display !== 'none') { b.click(); return; }
+            if (Date.now() - t1 < 6000) setTimeout(modal, 150);
+          })();
+          setTimeout(reveal, 10000);
+          return;
+        }
+        if (Date.now() - t0 < 15000) setTimeout(tick, 150); else reveal();
+      })();
+    };
+
+    /* 2) 주문서 바로 만들기 (양성과정 idx=26 전용 값: 다운로드 상품 · 배송 템플릿) */
+    if (idx !== '26' || !window.fetch) { fallback(); return; }
+    var body = new URLSearchParams({
+      backurl: backurl, prodIdx: idx, orderCount: '1', type: 'normal',
+      deliv_type: 'download', deliv_pay_type: 'price', deliv_country: 'KR', order_type: '',
+      is_gift_buy: 'false', shipping_template_code: 'T202607089dad04a149b55', infoUrl: location.origin, ace_pid: ''
+    });
+    var ctl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctl) ctl.abort(); fallback(); }, 7000);
+    fetch('/shop/oms/OMS_add_order.cm', {
+      method: 'POST', credentials: 'same-origin', signal: ctl ? ctl.signal : undefined,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest', 'imweb-landing-url': backurl },
+      body: body.toString()
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      clearTimeout(timer);
+      var c = res && res.c3_result;
+      if (res && res.msg === 'SUCCESS' && c && c.orderCode && c.orderNo) {
+        location.replace('/shop_payment/?order_code=' + encodeURIComponent(c.orderCode) + '&order_no=' + encodeURIComponent(c.orderNo) +
+          (c.memberCode ? '&order_member=' + encodeURIComponent(c.memberCode) : ''));
+      } else { fallback(); }
+    })['catch'](function () { clearTimeout(timer); fallback(); });
+  } catch (e) { H.classList.remove('kaiec-go'); }
+})();
+</script>

@@ -285,6 +285,15 @@ if build.PAY_URL and (f"var PAY_BUY='{PAY_BUY_ATTR}'" not in members_page or "ka
     probs.append("디지털 명함 [커리어 시작하기]가 주문서 바로 연결 주소(PAY_BUY_URL + kaiec_ref=위원코드)가 아님")
 if "kaiec_ref" not in skkc_code or "/shop_payment" not in skkc_code or "추천\\s*위원" not in skkc_code:
     probs.append("tools/skkc-kaiec-buy.html 에 위원 코드 기억·주문서 자동 입력(kaiec_ref · shop_payment · 추천 위원 칸)이 없음")
+# 2026.09.26 밤 11차(사용자: 명함에서 누르면 상품 화면을 거치지 말고 바로 결제 페이지로): skkc Header Code 상단에 넣는
+#   tools/skkc-kaiec-head.html 이 상품 화면을 가리고 주문서를 바로 만들어 넘김. 우리 사이트는 누르는 즉시 같은 모양의 로딩 화면
+skkc_head = read(os.path.join(BASE, "tools", "skkc-kaiec-head.html")) if os.path.isfile(os.path.join(BASE, "tools", "skkc-kaiec-head.html")) else ""
+if ("/shop/oms/OMS_add_order.cm" not in skkc_head or "kaiec_buy" not in skkc_head or "sessionStorage.setItem('kaiec_ref'" not in skkc_head
+        or "confirmOrderWithCartItems('guest_login'" not in skkc_head or "location.replace('/shop_payment/" not in skkc_head):
+    probs.append("tools/skkc-kaiec-head.html (주문서 바로 만들기 · 예비 [구매하기] · 위원 코드 기억) 없음 또는 내용 이상")
+main_js = read(os.path.join(BASE, "assets", "js", "main.js"))
+if "kaiec_buy=1" not in main_js or "buyGo" not in main_js or ".buy-go{" not in read(os.path.join(BASE, "assets", "css", "style.css")):
+    probs.append("main.js/style.css: 주문서로 가는 버튼을 누를 때 로딩 화면(buyGo · .buy-go)이 없음")
 if "7일 이내" in re.sub(r"<script[^>]*>.*?</script>", "", expert_html, flags=re.S) or "7일 이내" in read("assets/js/exam.js"):
     probs.append("이수증 발급 '7일 이내' 표기가 남아 있음 (이수 즉시 발급)")
 # 2026.09.26 밤: 추천 위원 코드는 성균관컨설팅 결제 때 입력. 사이트는 ?ref 꼬리표·추천 표시·기억을 하지 않음
@@ -369,6 +378,15 @@ for c in codes:
 dup = sorted({c for c in codes if codes.count(c) > 1})
 if dup:
     probs.append(f"members-data.js: 위원 코드 중복 {', '.join(dup)}")
+# 위원 코드 이니셜이 규칙(tools/member_code.py: 성씨 예외 박P 조C 이·임·림·리L, ㅇ 은 모음으로)과 맞는지
+sys.path.insert(0, os.path.join(BASE, "tools"))
+import member_code as _mc
+for nm, cd in re.findall(r"name:\s*'([^']+)'[^}]*?code:\s*'([A-Z]{2,4}\d{4})'", mjs_nc):
+    try:
+        if _mc.member_code(nm, cd[-4:]) != cd:
+            probs.append(f"members-data.js: {nm} 위원 코드 {cd} 가 규칙과 다름 (규칙대로면 {_mc.member_code(nm, cd[-4:])})")
+    except ValueError as e:
+        probs.append(f"members-data.js: {nm} 위원 코드 확인 실패 ({e})")
 members_html = read(pages["members.html"])
 if "mp-wrap" not in members_html or "mp-bar" not in members_html:
     probs.append("members: 명함 팝업 바깥 스크롤 구조(mp-wrap·mp-bar) 없음")
