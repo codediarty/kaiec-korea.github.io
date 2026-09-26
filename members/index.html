@@ -260,7 +260,7 @@
         +(NOTE[g]?'<p class="grp-note">'+NOTE[g]+'</p>':'');
     }
     function avatar(m){
-      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'" alt="'+m.name+'" loading="lazy"></div>';
+      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=2511bc37" alt="'+m.name+'" loading="lazy"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="member-avatar">'+initial+'</div>';
     }
@@ -388,7 +388,7 @@
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
     function bigAvatar(m){
-      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'" alt="'+m.name+' 사진"></div>';
+      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=2511bc37" alt="'+m.name+' 사진"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
     }

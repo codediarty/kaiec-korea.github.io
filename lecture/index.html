@@ -576,7 +576,7 @@
     box.style.maxWidth='560px';box.style.margin='0 auto';
     box.innerHTML=list.map(function(m){
       var av;
-      if(m.photo){av='<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'" alt="'+m.name+'" loading="lazy"></div>'}
+      if(m.photo){av='<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=2511bc37" alt="'+m.name+'" loading="lazy"></div>'}
       else{var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';av='<div class="member-avatar">'+initial+'</div>'}
       return '<div class="member">'+av
         +'<div class="member-role">'+(m.role||'전문위원')+'</div>'

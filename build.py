@@ -177,6 +177,19 @@ def _asset_version():
 BUILD_V = _asset_version()
 
 
+def _photo_version():
+    """위원 사진(assets/img/members/*)의 내용 해시. 사진 주소에 ?v= 로 붙여, 같은 파일명으로 사진을 바꿔도
+    이미 방문한 브라우저가 옛 사진을 계속 보여 주지 않게 합니다 (2026.09.26)."""
+    import hashlib
+    h = hashlib.sha1()
+    for p in sorted(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "img", "members", "*"))):
+        with open(p, "rb") as f:
+            h.update(os.path.basename(p).encode() + b"\0" + f.read() + b"\0")
+    return h.hexdigest()[:8]
+
+PHOTO_V = _photo_version()
+
+
 def _inline(s):
     """굵게 **텍스트**, 링크 [텍스트](주소) 변환"""
     s = _html.escape(s, quote=False)
@@ -1554,7 +1567,7 @@ def build_members():
         +(NOTE[g]?'<p class="grp-note">'+NOTE[g]+'</p>':'');
     }
     function avatar(m){
-      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+'" loading="lazy"></div>';
+      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'?v=__PV__" alt="'+m.name+'" loading="lazy"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="member-avatar">'+initial+'</div>';
     }
@@ -1682,7 +1695,7 @@ def build_members():
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
     function bigAvatar(m){
-      if(m.photo)return '<div class="bc-photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+' 사진"></div>';
+      if(m.photo)return '<div class="bc-photo"><img src="assets/img/members/'+m.photo+'?v=__PV__" alt="'+m.name+' 사진"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
     }
@@ -2002,7 +2015,7 @@ def build_members():
     }else if(op){op.parentElement.parentElement.style.display='none'}
   })();
   </script>
-""".replace("__EMAIL__", EMAIL).replace("__SITE__", SITE_URL)
+""".replace("__EMAIL__", EMAIL).replace("__SITE__", SITE_URL).replace("__PV__", PHOTO_V)
     page("members.html", "위원 명단",
          "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
          body, extra_script=script)
@@ -3671,7 +3684,7 @@ def build_lecture():
     box.style.maxWidth='560px';box.style.margin='0 auto';
     box.innerHTML=list.map(function(m){
       var av;
-      if(m.photo){av='<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+'" loading="lazy"></div>'}
+      if(m.photo){av='<div class="member-avatar member-avatar--photo"><img src="assets/img/members/'+m.photo+'?v=__PV__" alt="'+m.name+'" loading="lazy"></div>'}
       else{var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';av='<div class="member-avatar">'+initial+'</div>'}
       return '<div class="member">'+av
         +'<div class="member-role">'+(m.role||'전문위원')+'</div>'
@@ -3703,7 +3716,7 @@ def build_lecture():
     });
   })();
   </script>
-""".replace('__LEMAIL__', L_EMAIL)
+""".replace('__LEMAIL__', L_EMAIL).replace("__PV__", PHOTO_V)
 
     page("lecture.html", "AI 윤리교육 · 전문 출강",
          "한국AI윤리위원회 소속 석·박사 전문위원이 학교·기업·공공기관에 직접 출강하는 맞춤형 AI 윤리교육. AI 윤리, 기업 AI 컴플라이언스, 개인정보·보안, 생성형 AI 저작권, 청소년 AI 윤리를 1~4시간 과정으로 제공합니다.",
