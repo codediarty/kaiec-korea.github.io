@@ -27,18 +27,13 @@ window.KAIEC_MEMBERS = [
   // ── 부위원장 ───────────────────────────────────────────────
   { group: '부위원장', role: '부위원장', name: '조현석', en: 'Cho Hyun-seok', since: '2026.07', field: '운영 총괄 · 대외 협력', photo: 'jo-hyunseok.jpg' },
 
-  // ── 감사 ─────────────────────────────────────────────────
-  { group: '감사', role: '감사', name: '윤미정', en: 'Yoon Mi-jeong', since: '2026.07', field: '운영 · 회계 감사', photo: 'yoon-mijeong.jpg' },
-
   // ── 고문·자문위원 ─────────────────────────────────────────
   { group: '고문·자문위원', role: '학술고문', name: '임형택', en: 'Lim Hyung-taek', since: '2026.08', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
   { group: '고문·자문위원', role: '법률고문', cred: '변호사', name: '한수연', en: 'Han Soo-yeon', since: '2026.08', field: 'IT법 · 개인정보 법제 · 저작권', photo: 'han-sooyeon.jpg' },
 
-  // ── 사무국 ───────────────────────────────────────────────
+  // ── 사무국 (감사 포함, 2026.09.26 사용자 지시: 감사는 사무국 안에 표시, 팀장 공석 카드는 표시하지 않음) ──
   { group: '사무국', role: '사무총장', name: '오준호', en: 'Oh Jun-ho', since: '2026.07', field: '사업 기획 · 위원회 운영 총괄', photo: 'oh-junho.jpg' },
-  { group: '사무국', role: '기획운영팀장', name: '공석', field: '위촉 예정' },
-  { group: '사무국', role: '대외협력팀장', name: '공석', field: '위촉 예정' },
-  { group: '사무국', role: '콘텐츠·홍보팀장', name: '공석', field: '위촉 예정' },
+  { group: '사무국', role: '감사', name: '윤미정', en: 'Yoon Mi-jeong', since: '2026.07', field: '운영 · 회계 감사', photo: 'yoon-mijeong.jpg' },
 
   // ── 전문위원 (교육·리터러시 분과 · AI 윤리 교육 담당) ────────
   { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '김동섭', en: 'Kim Dong-seop', since: '2026.08', field: 'AI 윤리 교육 · 성균관대 공학 박사', photo: 'kim-dongseop.jpg' },
