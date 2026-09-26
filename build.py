@@ -5,7 +5,7 @@
   (JS로 헤더를 그리면 네이버 크롤러가 메뉴를 못 읽는 경우가 있어 이렇게 처리)
 - 메뉴나 푸터를 바꾸려면 이 파일을 수정하고 `python3 build.py`를 다시 실행하세요.
 """
-import os, io, re, glob, datetime
+import os, io, re, glob, datetime, json
 import html as _html
 from icons import ICONS
 
@@ -1700,7 +1700,8 @@ def build_members():
        [명함 이미지 저장]: 공식 위원증 형식 2160×2700 PNG(QR 포함). 모바일은 공유 시트로 사진 저장·카톡 전송, PC는 내려받기.
        [명함 공유]: 모바일 공유 시트, PC는 링크 복사.
        주소 끝 #위원코드(예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다.
-       QR('AI윤리전문가 과정 보기')는 https://kaiec.kr/expert-apply/ 로 연결(2026.09.26 사용자 지시).
+       QR: 위원 코드가 있는 캠페인위원은 [커리어 시작하기]와 같은 곳(주문서 + 위원 추천 할인)으로 가는 짧은 주소 kaiec.kr/go/?c=코드
+       ('추천 할인 신청', 2026.09.26 밤 12차 사용자 제안), 코드가 없는 임원 · 전문위원은 과정 소개 kaiec.kr/expert-apply/ ('전문가 과정 보기').
        [AI윤리전문가 커리어 시작하기]는 성균관컨설팅 비회원 주문서로 바로 연결하고 위원 코드를 함께 넘깁니다(2026.09.26 밤 6차 사용자 지시:
        '명함의 구매 링크는 결제 주문서로 연결되고 위원 코드가 자동 적용되면 좋겠다'). 주소 = PAY_BUY_URL + &kaiec_ref=위원코드.
        성균관컨설팅 Footer Code(tools/skkc-kaiec-buy.html)가 [구매하기]를 대신 누르고, 주문서의 '추천 위원 코드' 칸(결제 폼)에 코드를 채웁니다.
@@ -1749,6 +1750,10 @@ def build_members():
     }
     function cardURL(id){return SITE+'/members/#'+id}
     function applyURL(){return SITE+'/expert-apply/'}
+    /* 명함 QR (2026.09.26 밤 12차): 위원 코드가 있으면 [커리어 시작하기]와 같은 곳(주문서 + 위원 추천 할인)으로 가는 짧은 주소,
+       코드가 없는 임원 · 전문위원은 과정 소개 */
+    function qrURL(m){return m&&m.code?SITE+'/go/?c='+encodeURIComponent(m.code):applyURL()}
+    function qrLabel(m){return m&&m.code?'추천 할인 신청':'전문가 과정 보기'}
     /* 명함의 [커리어 시작하기] → 성균관컨설팅 비회원 주문서 (위원 코드가 있으면 함께 넘겨 주문서에 자동 입력) */
     var PAY_BUY='__PAYBUY__';
     function buyURL(m){return PAY_BUY+(m&&m.code?'&amp;kaiec_ref='+encodeURIComponent(m.code):'')}
@@ -1886,12 +1891,12 @@ def build_members():
         var slw=ctx.measureText(sl).width;ctx.fillStyle=G4;ctx.font='700 12px '+LATIN;spaced(ctx,'SINCE',tx+slw+12,603,3,'left');
         ctx.fillStyle=INK;ctx.font='800 40px '+LATIN;ctx.fillText(m.since,tx,660)}
       ctx.fillStyle=LINE;ctx.fillRect(L,714,R-L,1.5);
-      /* QR: AI윤리전문가 과정 신청 페이지(kaiec.kr/expert-apply/) */
+      /* QR: 위원 코드가 있으면 주문서 + 위원 추천 할인(kaiec.kr/go/?c=코드), 없으면 과정 소개(kaiec.kr/expert-apply/) */
       var qs=208,qx=R-qs,qy=742;
       ctx.fillStyle='#fff';rr(ctx,qx,qy,qs,qs,14);ctx.fill();ctx.strokeStyle=LINE;ctx.lineWidth=1.5;rr(ctx,qx+.75,qy+.75,qs-1.5,qs-1.5,13);ctx.stroke();
-      drawQR(ctx,applyURL(),qx+16,qy+16,qs-32);
-      ctx.textAlign='center';ctx.fillStyle=G7;ctx.font='700 16px '+FONT;ctx.fillText('AI윤리전문가 과정 보기',qx+qs/2,qy+qs+32);
-      ctx.fillStyle=G4;ctx.font='700 11px '+LATIN;spaced(ctx,'SCAN TO VIEW',qx+qs/2,qy+qs+54,3,'center');ctx.textAlign='left';
+      drawQR(ctx,qrURL(m),qx+16,qy+16,qs-32);
+      ctx.textAlign='center';ctx.fillStyle=G7;ctx.font='700 16px '+FONT;ctx.fillText(m.code?'위원 추천 할인 신청':'AI윤리전문가 과정 보기',qx+qs/2,qy+qs+32);
+      ctx.fillStyle=G4;ctx.font='700 11px '+LATIN;spaced(ctx,m.code?'SCAN TO APPLY':'SCAN TO VIEW',qx+qs/2,qy+qs+54,3,'center');ctx.textAlign='left';
       /* 소속 · 분야 · (출강) · (이메일) · 발급일 : 줄 수에 맞춰 간격 자동 */
       var rows=[['소속',ORG,unit]];
       if(m.field)rows.push([FIELD[p.g]||'활동 분야',m.field]);
@@ -2009,13 +2014,13 @@ def build_members():
         });
       }
       curP=p;curId=pid(p,i);
-      var lect=p.g==='전문위원',qr=qrSVG(applyURL());
+      var lect=p.g==='전문위원',qr=qrSVG(qrURL(m));
       var idBox='<div class="bc-id"><div class="bc-id-main">'
         +(m.code?'<div class="bc-id-label">위원 코드<span>MEMBER CODE</span></div><div class="bc-id-val bc-id-val--code">'+m.code+'</div>'
                 :'<div class="bc-id-label">직위<span>POSITION</span></div><div class="bc-id-val">'+title+'</div>')
         +(lect?'<div class="bc-id-sub bc-id-sub--em">AI 윤리 전문 교육 강사</div>':'')
         +(m.since?'<div class="bc-id-sub">'+sinceLabel(p)+' '+m.since+'</div>':'')
-        +'</div>'+(qr?'<div class="bc-qr-wrap"><div class="bc-qr" role="img" aria-label="AI윤리전문가 과정 보기 QR 코드">'+qr+'</div><span>전문가 과정 보기</span></div>':'')+'</div>';
+        +'</div>'+(qr?'<div class="bc-qr-wrap"><div class="bc-qr" role="img" aria-label="'+qrLabel(m)+' QR 코드">'+qr+'</div><span>'+qrLabel(m)+'</span></div>':'')+'</div>';
       var rows='<div><dt>소속</dt><dd>'+ORG+(unit?'<span class="bc-unit">'+unit+'</span>':'')+'</dd></div>'
         +(m.field?'<div><dt>'+(FIELD[p.g]||'활동 분야')+'</dt><dd>'+m.field+'</dd></div>':'')
         +(lect?'<div><dt>출강 대상</dt><dd>대학 · 기업 · 공공기관 · 학교</dd></div>'
@@ -5881,6 +5886,55 @@ def build_apply():
                    "AI 윤리위원", "기업 AI 윤리", "AI 윤리 위원회 회원기관 연회비"])
 
 
+def build_go():
+    """명함 QR 전용 짧은 주소 /go/?c=위원코드 (2026.09.26 밤 12차, 사용자: 'QR 도 버튼과 똑같이 들어가서 할인 적용되는 게 낫지 않나')
+    누르는(스캔하는) 즉시 로딩 화면을 보이고 성균관컨설팅 주문서 주소(PAY_BUY_URL + &kaiec_ref=코드)로 넘깁니다.
+    QR 에 성균관컨설팅 주소를 직접 넣지 않는 이유: 저장·공유된 명함 이미지의 QR 은 다시 만들 수 없으므로,
+    결제 주소가 바뀌어도 이 페이지만 고치면 되게 하려고. 주소가 짧아 QR 칸 수도 예전(과정 소개 주소)과 같습니다.
+    검색에는 나오지 않게 noindex, 사이트맵에도 넣지 않습니다."""
+    dest = PAY_BUY_URL or url_for("expert-apply.html")
+    html = f"""<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주문서를 여는 중입니다 | {SITE_NAME}</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://skkc.co.kr">
+<style>
+html,body{{margin:0;height:100%;background:#fff}}
+body{{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding-bottom:16vh;box-sizing:border-box;
+  font:600 16px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#1d2433}}
+.spin{{width:34px;height:34px;box-sizing:border-box;border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:s .8s linear infinite}}
+@keyframes s{{to{{transform:rotate(360deg)}}}}
+a{{color:#1f5fe0;font-weight:500;font-size:14px}}
+[hidden]{{display:none}}
+</style>
+<script>
+(function () {{
+  var DEST = {json.dumps(dest)};
+  var c = '';
+  try {{ c = (new URLSearchParams(location.search).get('c') || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }} catch (e) {{}}
+  var url = DEST + (/^[A-Z]{{2,4}}\\d{{4}}$/.test(c) ? (DEST.indexOf('?') > -1 ? '&' : '?') + 'kaiec_ref=' + c : '');
+  window.__goURL = url;
+  location.replace(url);
+}})();
+</script>
+</head><body>
+<span class="spin" aria-hidden="true"></span>
+<span role="status">주문서를 여는 중입니다</span>
+<a id="go" href="{_html.escape(dest)}" hidden>넘어가지 않으면 여기를 눌러 주세요</a>
+<script>
+setTimeout(function () {{ var a = document.getElementById('go'); if (window.__goURL) a.href = window.__goURL; a.hidden = false; }}, 4000);
+</script>
+<noscript><a href="{_html.escape(dest)}">AI윤리전문가 양성과정 주문서로 이동</a></noscript>
+</body></html>
+"""
+    target = os.path.join(BASE, "go", "index.html")
+    os.makedirs(os.path.dirname(target), exist_ok=True)
+    with io.open(target, "w", encoding="utf-8") as f:
+        f.write(html)
+    print("  ✓ /go/ (명함 QR 짧은 주소)")
+
+
 if __name__ == "__main__":
     print("한국AI윤리위원회 사이트 빌드 중...")
     posts = load_posts()
@@ -5904,6 +5958,7 @@ if __name__ == "__main__":
     build_legal()
     for p in posts:
         build_post(p, posts)
+    build_go()
     build_sitemap(posts)
     build_rss(posts)
     print("완료!")

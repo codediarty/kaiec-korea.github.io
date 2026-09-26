@@ -291,6 +291,15 @@ skkc_head = read(os.path.join(BASE, "tools", "skkc-kaiec-head.html")) if os.path
 if ("/shop/oms/OMS_add_order.cm" not in skkc_head or "kaiec_buy" not in skkc_head or "sessionStorage.setItem('kaiec_ref'" not in skkc_head
         or "confirmOrderWithCartItems('guest_login'" not in skkc_head or "location.replace('/shop_payment/" not in skkc_head):
     probs.append("tools/skkc-kaiec-head.html (주문서 바로 만들기 · 예비 [구매하기] · 위원 코드 기억) 없음 또는 내용 이상")
+# 2026.09.26 밤 12차(사용자: QR 도 버튼처럼 바로 들어가 할인 적용): 명함 QR = kaiec.kr/go/?c=위원코드 → 주문서 + 위원 코드
+go_html = read(os.path.join(BASE, "go", "index.html")) if os.path.isfile(os.path.join(BASE, "go", "index.html")) else ""
+if (not go_html or "noindex" not in go_html or "kaiec_ref=" not in go_html
+        or (build.PAY_URL and json.dumps(build.PAY_BUY_URL) not in go_html)):
+    probs.append("go/index.html (명함 QR 짧은 주소 → 주문서 + 위원 코드) 없음 또는 내용 이상")
+if "SITE+'/go/?c='" not in members_page or "qr=qrSVG(qrURL(m))" not in members_page or "drawQR(ctx,qrURL(m)" not in members_page:
+    probs.append("디지털 명함 QR(화면 · 명함 이미지)이 위원 코드 짧은 주소(/go/?c=)로 연결되지 않음")
+if "kaiec.kr/go/" in read("sitemap.xml"):
+    probs.append("sitemap.xml 에 /go/ (QR 이동 전용, noindex)가 들어감")
 main_js = read(os.path.join(BASE, "assets", "js", "main.js"))
 if "kaiec_buy=1" not in main_js or "buyGo" not in main_js or ".buy-go{" not in read(os.path.join(BASE, "assets", "css", "style.css")):
     probs.append("main.js/style.css: 주문서로 가는 버튼을 누를 때 로딩 화면(buyGo · .buy-go)이 없음")
