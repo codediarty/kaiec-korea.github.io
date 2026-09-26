@@ -2431,3 +2431,23 @@ table.tbl tbody th{vertical-align:top}
 .buy-go__spin{width:34px;height:34px;box-sizing:border-box;border:3px solid #d9e1ee;border-top-color:#1f5fe0;border-radius:50%;animation:buyGoSpin .8s linear infinite}
 @keyframes buyGoSpin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.buy-go__spin{animation-duration:2.4s}}
+
+/* 명함: [커리어 시작하기] 아래 과정 소개 링크 (2026.09.26 밤 13차) */
+.bc-sub{display:inline-flex;align-items:center;gap:4px;margin:10px auto 0;font-size:12.5px;font-weight:700;color:var(--blue-600);text-decoration:none;
+  padding:4px 2px;border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+.bc-sub span{font-size:15px;line-height:1;transform:translateY(-1px)}
+.bc-sub:hover{color:var(--blue);border-bottom-color:currentColor}
+.bc-sub + .bc-info{margin-top:2px}
+/* 휴대폰 인앱 브라우저: 명함 이미지를 띄워 길게 눌러 저장 */
+.bc-save{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(6,14,28,.78)}
+.bc-save[hidden]{display:none}
+.bc-save-box{width:min(420px,100%);max-height:100%;overflow:auto;padding:14px;border-radius:16px;background:#fff;text-align:center}
+.bc-save-box img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--gray-200);background:var(--gray-100);min-height:120px}
+.bc-save-box p{margin:12px 4px 12px;font-size:13px;font-weight:600;line-height:1.6;color:var(--gray-600);word-break:keep-all}
+.bc-save-box p b{display:block;margin-bottom:2px;font-size:14px;color:var(--gray-900)}
+.bc-save-box .bc-btn{width:100%}
+/* 카카오톡에서 기본 브라우저로 넘어왔을 때 저장 버튼 안내 */
+.bc-save-tip{margin:12px 22px -4px;font-size:12.5px;font-weight:700;color:var(--blue-600);word-break:keep-all}
+.bc-btn.is-hint{box-shadow:0 0 0 3px rgba(31,95,224,.35);animation:bcHint 1.6s ease-in-out 3}
+@keyframes bcHint{50%{box-shadow:0 0 0 6px rgba(31,95,224,.18)}}
+@media (prefers-reduced-motion:reduce){.bc-btn.is-hint{animation:none}}

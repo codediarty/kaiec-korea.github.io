@@ -298,6 +298,13 @@ if (not go_html or "noindex" not in go_html or "kaiec_ref=" not in go_html
     probs.append("go/index.html (명함 QR 짧은 주소 → 주문서 + 위원 코드) 없음 또는 내용 이상")
 if "SITE+'/go/?c='" not in members_page or "qr=qrSVG(qrURL(m))" not in members_page or "drawQR(ctx,qrURL(m)" not in members_page:
     probs.append("디지털 명함 QR(화면 · 명함 이미지)이 위원 코드 짧은 주소(/go/?c=)로 연결되지 않음")
+# 2026.09.26 밤 13차(사용자: 명함에 AIEP 과정 링크, 모바일 이미지 저장 '지원하지 않는 형식', 위원증을 공식기관답게):
+#   명함 화면 [커리어 시작하기] 아래 /experts/ 링크, 카카오톡 인앱은 기본 브라우저로 다시 열기, 그 밖의 인앱은 길게 눌러 저장 창,
+#   명함 이미지는 세로 신분증 비율(1000×1600 × 2) '공식 위원증'
+if 'class="bc-sub" href="/experts/"' not in members_page:
+    probs.append("디지털 명함에 AI윤리전문가(AIEP) 과정 안내 링크(/experts/)가 없음")
+if "kakaotalk://web/openExternal" not in members_page or "function showSave(" not in members_page or "CW=1000,CH=1600" not in members_page:
+    probs.append("명함 이미지 저장: 카카오톡 인앱 처리 · 길게 눌러 저장 창 · 공식 위원증(1000×1600) 중 빠진 것이 있음")
 if "kaiec.kr/go/" in read("sitemap.xml"):
     probs.append("sitemap.xml 에 /go/ (QR 이동 전용, noindex)가 들어감")
 main_js = read(os.path.join(BASE, "assets", "js", "main.js"))
