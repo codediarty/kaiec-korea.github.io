@@ -1440,7 +1440,7 @@ def build_members():
     """위원 명단 (2026.09.23: 옛 '조직 · 위원' 페이지. 조직도 · 6개 전문분과 · 운영 개요는 '위원회 소개'(about) 로 옮기고
     이 페이지는 위원 명단과 공식 파트너만 둠. 명단 데이터는 assets/js/members-data.js)"""
     body = hero_sub("위원 명단",
-                    "위원장과 임원진, 고문·자문위원, 사무국, 전문위원, 지역·캠퍼스 조직, AI 윤리 캠페인위원, 그리고 공식 등록된 AI윤리전문가까지 한국AI윤리위원회와 함께하는 분들입니다.",
+                    "위원장과 임원진, 고문·자문위원, 사무국, 전문위원, AI 윤리 캠페인위원, 그리고 공식 등록된 AI윤리전문가까지 한국AI윤리위원회와 함께하는 분들입니다.",
                     "위원 명단") + f"""
 
     <section class="section">
@@ -1591,23 +1591,24 @@ def build_members():
       var l=secHTML(pair[0],true), r=secHTML(pair[1],true);
       if(l||r) html+='<div class="pair-row">'+l+r+'</div>';
     });
-    ['사무국','전문위원','지역 운영위원','캠퍼스 위원장','AI 윤리 앰버서더'].forEach(function(g){
+    ['사무국','전문위원'].forEach(function(g){
       html+=secHTML(g,false);
     });
-    /* AI 윤리 캠페인위원: 총원만큼 카드 표시, 이름 없으면 공석 */
-    var total=window.KAIEC_CAMPAIGN_COUNT||0;
+    /* AI 윤리 캠페인위원: 전문위원 아래, 같은 크기 카드. 위촉된 인원만 표시 + 모집 카드 1장 */
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
-    if(total){
-      var cards='';
-      named.slice(0,total).forEach(function(m){
-        cards+=card({role:'캠페인위원',name:m.name,field:m.field||'캠페인 · 확산 활동',photo:m.photo},'캠페인위원');
-      });
-      var remain=Math.max(0,total-named.length);
-      if(remain) cards+=recruitCard('AI 윤리 캠페인위원',remain,'전공·경력 무관 · 온라인 활동 · 홈페이지 명단 등재');
-      html+='<div style="margin-bottom:10px">'
+    if(named.length){
+      var cards=named.map(function(m){
+        return card({role:'AI 윤리 캠페인위원',name:m.name,field:m.field||'AI 윤리 캠페인 · 확산',photo:m.photo},'AI 윤리 캠페인위원');
+      }).join('');
+      cards+='<a class="member member--recruit" href="join.html#apply">'
+        +'<div class="member-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></div>'
+        +'<div class="member-role">AI 윤리 캠페인위원</div>'
+        +'<div class="member-name">추가 위촉 진행 중</div>'
+        +'<div class="member-field">전공·경력 무관 · 지원하기 →</div></a>';
+      html+='<div style="margin-bottom:44px">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
-        +'<span style="width:4px;height:19px;background:var(--teal);border-radius:2px"></span>AI 윤리 캠페인위원'
-        +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">(총 '+total+'명 · 위촉 '+Math.min(named.length,total)+'명)</span></h3>'
+        +'<span style="width:4px;height:19px;background:var(--blue);border-radius:2px"></span>AI 윤리 캠페인위원'
+        +' <span style="font-size:13px;font-weight:600;color:var(--gray-500)">('+named.length+'명)</span></h3>'
         +'<div class="member-grid">'+cards+'</div></div>';
     }
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
@@ -1626,7 +1627,7 @@ def build_members():
   </script>
 """
     page("members.html", "위원 명단",
-         "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, 지역 운영위원·캠퍼스 위원장, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
+         "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
          body, extra_script=script)
 
 
