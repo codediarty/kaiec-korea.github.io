@@ -10,7 +10,9 @@
      - name  : 성명
      - field : 전문분야 / 담당 (한 줄로 짧게)
      - photo : (선택) assets/img/members/ 폴더에 넣은 사진 파일명. 없으면 이니셜 표시.
-     - code  : (선택) 위원 코드. 적으면 카드를 눌렀을 때 뜨는 프로필 팝업에 표시됩니다.
+     - code  : (선택) 위원 코드. 적으면 카드를 눌렀을 때 뜨는 디지털 명함에 표시됩니다.
+     - en    : (선택) 영문 이름. 디지털 명함에 대문자로 표시되고, 명함 주소(#shin-dong-bok)에도 쓰입니다.
+     - since : (선택) 취임·선임·위촉 시기. 예) '2026.07'  (위원장은 '취임', 부위원장·감사·사무국은 '선임', 그 외는 '위촉'으로 표시)
    ▶ 해당 group에 사람이 한 명도 없으면 그 구분은 화면에 표시되지 않습니다.
    ▶ 전문위원 명단은 '강의 신청' 페이지의 자문 위원단에도 자동으로 표시됩니다.
    ▶ 위원장 항목의 name은 '위원회 소개' 페이지 인사말 서명에도 자동으로 들어갑니다.
@@ -19,27 +21,27 @@
 window.KAIEC_MEMBERS = [
 
   // ── 위원장 ─────────────────────────────────────────────────
-  { group: '위원장', role: '위원장', name: '신동복', field: 'AI 윤리 · 정책', photo: 'shin-dongbok.jpg' },
+  { group: '위원장', role: '위원장', name: '신동복', en: 'Shin Dong-bok', since: '2026.06', field: 'AI 윤리 · 정책', photo: 'shin-dongbok.jpg' },
 
   // ── 부위원장 ───────────────────────────────────────────────
-  { group: '부위원장', role: '부위원장', name: '조현석', field: '운영 총괄 · 대외 협력', photo: 'jo-hyunseok.jpg' },
+  { group: '부위원장', role: '부위원장', name: '조현석', en: 'Cho Hyun-seok', since: '2026.07', field: '운영 총괄 · 대외 협력', photo: 'jo-hyunseok.jpg' },
 
   // ── 감사 ─────────────────────────────────────────────────
-  { group: '감사', role: '감사', name: '윤미정', field: '운영 · 회계 감사' },
+  { group: '감사', role: '감사', name: '윤미정', en: 'Yoon Mi-jeong', since: '2026.07', field: '운영 · 회계 감사' },
 
   // ── 고문·자문위원 ─────────────────────────────────────────
-  { group: '고문·자문위원', role: '학술고문', name: '임형택', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
-  { group: '고문·자문위원', role: '법률고문', name: '한수연', field: 'IT법 · 개인정보 법제 · 저작권' },
+  { group: '고문·자문위원', role: '학술고문', name: '임형택', en: 'Lim Hyung-taek', since: '2026.08', field: '과학기술정책', photo: 'im-hyungtaek.jpg' },
+  { group: '고문·자문위원', role: '법률고문', name: '한수연', en: 'Han Soo-yeon', since: '2026.08', field: 'IT법 · 개인정보 법제 · 저작권' },
 
   // ── 사무국 ───────────────────────────────────────────────
-  { group: '사무국', role: '사무총장', name: '오준호', field: '사업 기획 · 위원회 운영 총괄', photo: 'oh-junho.jpg' },
+  { group: '사무국', role: '사무총장', name: '오준호', en: 'Oh Jun-ho', since: '2026.07', field: '사업 기획 · 위원회 운영 총괄', photo: 'oh-junho.jpg' },
   { group: '사무국', role: '기획운영팀장', name: '공석', field: '위촉 예정' },
   { group: '사무국', role: '대외협력팀장', name: '공석', field: '위촉 예정' },
   { group: '사무국', role: '콘텐츠·홍보팀장', name: '공석', field: '위촉 예정' },
 
   // ── 전문위원 (교육·리터러시 분과 · AI 윤리 교육 담당) ────────
-  { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '김동섭', field: 'AI 윤리 교육 · 성균관대 공학 박사', photo: 'kim-dongseop.jpg' },
-  { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '이재이', field: 'AI 윤리 교육 · 이화여대 이학 석사', photo: 'lee-jaei.jpg' },
+  { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '김동섭', en: 'Kim Dong-seop', since: '2026.08', field: 'AI 윤리 교육 · 성균관대 공학 박사', photo: 'kim-dongseop.jpg' },
+  { group: '전문위원', role: '전문위원 · 교육·리터러시 분과', name: '이재이', en: 'Lee Jae-yi', since: '2026.08', field: 'AI 윤리 교육 · 이화여대 이학 석사', photo: 'lee-jaei.jpg' },
 
   // ↓ 여기에 계속 추가하세요.
 
@@ -49,15 +51,16 @@ window.KAIEC_MEMBERS = [
    위원 명단에서 전문위원 바로 아래, 같은 크기의 카드로 표시됩니다.
    위촉되면 아래에 한 줄씩 추가하세요. 적은 순서대로(위촉 순) 표시됩니다.
      - name  : 성명
+     - en    : 영문 이름 (위원 코드 이니셜과 맞춰 적기, 예: 박근호 → Park Keun-ho)
      - code  : 위원 코드 = 성명 영문 이니셜 + 휴대전화 뒷자리 4개 (예: 박근호, 휴대전화 뒷자리 3185 → PKH3185)
+     - since : 위촉 시기 (예: '2026.09')
      - field : 활동 분야 (한 줄로 짧게)
      - photo : (선택) assets/img/members/ 폴더의 사진 파일명. 없으면 이니셜 표시.
-     - since : (선택) 위촉 시기. 적으면 프로필 팝업에 표시됩니다. 예) '2026.09'
-   ▶ 카드를 누르면 사진·위원 코드·활동 분야가 담긴 프로필 팝업이 열립니다.
-     kaiec.kr/members/#PKH3185 처럼 위원 코드를 붙인 주소로 들어오면 그 위원의 프로필이 바로 열립니다. */
+   ▶ 카드를 누르면 디지털 명함(사진·영문 이름·위원 코드·위촉 시기·소속·활동 분야·QR)이 열립니다.
+     kaiec.kr/members/#PKH3185 처럼 위원 코드를 붙인 주소로 들어오면 그 위원의 명함이 바로 열립니다. */
 window.KAIEC_CAMPAIGN_MEMBERS = [
-  { name: '박근호', code: 'PKH3185', field: 'AI 리터러시 교육·확산', photo: 'park-geunho.jpg' },
-  // 예) { name: '홍길동', code: 'HGD1234', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
+  { name: '박근호', en: 'Park Keun-ho', code: 'PKH3185', since: '2026.09', field: 'AI 리터러시 교육·확산', photo: 'park-geunho.jpg' },
+  // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
 /* ── 공식 파트너 ────────────────────────────────────────────

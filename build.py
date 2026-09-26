@@ -1500,6 +1500,7 @@ def build_members():
     </section>"""
 
     script = """  <script src="assets/js/members-data.js"></script>
+  <script src="assets/js/qrcode.min.js"></script>
   <script src="assets/js/experts-data.js"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
@@ -1554,12 +1555,12 @@ def build_members():
           +'<div class="member-field">'+(m.field||'위촉 예정')+'</div></div>';
       }
       var i=PEOPLE.push({m:m,g:g})-1;
-      return '<div class="member member--link" role="button" tabindex="0" aria-haspopup="dialog" data-p="'+i+'" aria-label="'+m.name+' '+(m.role||g)+' 프로필 보기">'
+      return '<div class="member member--link" role="button" tabindex="0" aria-haspopup="dialog" data-p="'+i+'" aria-label="'+m.name+' '+(m.role||g)+' 디지털 명함 보기">'
         +avatar(m)
         +'<div class="member-role">'+(m.role||g)+'</div>'
         +'<div class="member-name">'+m.name+'</div>'
         +'<div class="member-field">'+(m.field||'')+'</div>'
-        +'<div class="member-more">프로필 보기</div>'
+        +'<div class="member-more">디지털 명함 보기</div>'
         +'</div>';
     }
     /* 공석은 회색 카드 나열 대신 '위촉 진행 중' 요약 카드 1장으로 표시 */
@@ -1601,88 +1602,144 @@ def build_members():
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(named.length){
       var cards=named.map(function(m){
-        return card({role:'AI 윤리 캠페인위원',name:m.name,code:m.code,since:m.since,field:m.field||'AI 윤리 캠페인 · 확산',photo:m.photo},'AI 윤리 캠페인위원');
+        return card({role:'AI 윤리 캠페인위원',name:m.name,en:m.en,code:m.code,since:m.since,field:m.field||'AI 윤리 캠페인 · 확산',photo:m.photo},'AI 윤리 캠페인위원');
       }).join('');
       cards+='<a class="member member--recruit" href="join.html#apply">'
         +'<div class="member-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></div>'
         +'<div class="member-role">AI 윤리 캠페인위원</div>'
-        +'<div class="member-name">함께할 위원을 기다립니다</div>'
-        +'<div class="member-field">전공·경력 무관 · 지원하기 →</div></a>';
+        +'<div class="member-name">위원 위촉 신청</div>'
+        +'<div class="member-field">위원회 검토 후 공식 위촉 →</div></a>';
       html+='<div style="margin-bottom:44px">'
         +'<h3 style="font-size:19px;margin-bottom:18px;display:flex;align-items:center;gap:10px">'
         +'<span style="width:4px;height:19px;background:var(--blue);border-radius:2px"></span>AI 윤리 캠페인위원'
-        +' <span class="grp-badge">상시 위촉</span></h3>'
-        +'<p class="grp-note">온·오프라인에서 올바른 AI 활용 문화를 알리고 확산하는 위원입니다. 연중 상시 위촉하며, 위촉 순으로 게재합니다.</p>'
+        +' <span class="grp-badge"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>KAIEC 공식 위촉</span></h3>'
+        +'<p class="grp-note">위원회 검토를 거쳐 공식 위촉된 위원입니다. 온·오프라인에서 올바른 AI 활용 문화를 알리고 확산합니다.</p>'
         +'<div class="member-grid">'+cards+'</div></div>';
     }
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
-    /* 위원 프로필 팝업: 카드를 누르면 큰 사진 · 직책 · 위원 코드 · 활동 분야 표시.
-       위원 코드가 있으면 주소에 #코드 가 붙어 공유할 수 있고, 그 주소로 들어오면 바로 열립니다. */
-    var ov=null,lastFocus=null,curCode='';
-    var ICON_X='<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
-    var ICON_OK='<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-    var ICON_LINK='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
-    function bigAvatar(m){
-      if(m.photo)return '<div class="mp-photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+' 사진"></div>';
-      var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
-      return '<div class="mp-photo mp-photo--initial">'+initial+'</div>';
+    /* 디지털 명함 (2026.09.26): 실명 카드를 누르면 위원회 로고 · 사진 · 직위 · 영문 이름 · 위원 코드(또는 직위) · 취임/선임/위촉 시기 ·
+       소속 · 활동 분야 · 대표 메일 · 홈페이지 · 확인용 QR 과 [연락처 저장](vCard) · [명함 링크 복사] 를 보여 줍니다.
+       주소 끝 #위원코드(캠페인위원, 예 #PKH3185) 또는 #영문이름(예 #shin-dong-bok) 으로 들어오면 해당 명함이 바로 열립니다. */
+    var ov=null,lastFocus=null,curId='',curP=null;
+    var ORG='한국AI윤리위원회',EMAIL='__EMAIL__';
+    var UNIT={'고문·자문위원':'고문·자문위원단','사무국':'사무국','전문위원':'전문위원회','AI 윤리 캠페인위원':'AI 윤리 캠페인위원단'};
+    var SINCE={'위원장':'취임','부위원장':'선임','감사':'선임','사무국':'선임'};
+    function ic(d,w){return '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(w||2)+'" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'}
+    var ICON_X=ic('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',2.2);
+    var ICON_OK=ic('<path d="M20 6 9 17l-5-5"/>',2.6);
+    var ICON_LINK=ic('<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>');
+    var ICON_SAVE=ic('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>');
+    function titleOf(p){return (p.m.role||p.g).split(' · ')[0]}
+    function unitOf(p){
+      var parts=(p.m.role||p.g).split(' · '),u=UNIT[p.g]||'';
+      if(parts.length>1)u=(u?u+' ':'')+parts.slice(1).join(' · ');
+      return u;
     }
-    function shareURL(){return location.origin+location.pathname+'#'+curCode}
+    function pid(p,i){
+      if(p.m.code)return p.m.code;
+      if(p.m.en)return p.m.en.toLowerCase().replace(/[^a-z]+/g,'-').replace(/^-+|-+$/g,'');
+      return 'm'+i;
+    }
+    function shareURL(){return location.origin+location.pathname+'#'+curId}
+    function bigAvatar(m){
+      if(m.photo)return '<div class="bc-photo"><img src="assets/img/members/'+m.photo+'" alt="'+m.name+' 사진"></div>';
+      var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
+      return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
+    }
+    function qrSVG(url){
+      if(typeof qrcode!=='function')return '';
+      try{var q=qrcode(0,'M');q.addData(url);q.make();
+        return q.createSvgTag({cellSize:4,margin:0,scalable:true}).replace('fill="black"','fill="#0A1628"');}
+      catch(err){return ''}
+    }
+    function vcard(p){
+      var m=p.m,CRLF=String.fromCharCode(13,10);
+      function c(v){return String(v||'').replace(/[,;]/g,' ')}
+      var sur=m.name.slice(0,1),given=m.name.slice(1);
+      if(m.name.length>2&&/^(남궁|선우|제갈|황보|독고|사공|서문|동방)/.test(m.name)){sur=m.name.slice(0,2);given=m.name.slice(2)}
+      var note=[];
+      if(m.code)note.push('위원 코드 '+m.code);
+      if(m.field)note.push('활동 분야 '+c(m.field));
+      if(m.since)note.push((SINCE[p.g]||'위촉')+' '+m.since);
+      var u=unitOf(p);
+      var L=['BEGIN:VCARD','VERSION:3.0','N:'+sur+';'+given+';;;','FN:'+m.name,
+        'ORG:'+ORG+(u?';'+c(u):''),'TITLE:'+c(titleOf(p)),
+        'EMAIL;TYPE=INTERNET,WORK:'+EMAIL,'URL:'+shareURL()];
+      if(note.length)L.push('NOTE:'+note.join(' / '));
+      L.push('END:VCARD');
+      return L.join(CRLF)+CRLF;
+    }
+    function saveContact(){
+      if(!curP)return;
+      var blob=new Blob([vcard(curP)],{type:'text/vcard;charset=utf-8'}),a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);a.download='KAIEC_'+curId+'.vcf';
+      document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(a.href);a.parentNode&&a.parentNode.removeChild(a)},1500);
+    }
     function copyLink(btn){
       var url=shareURL(),label=btn.innerHTML;
-      function done(){btn.innerHTML=ICON_OK+'링크를 복사했습니다';setTimeout(function(){btn.innerHTML=label},1800)}
-      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done,function(){prompt('프로필 주소',url)})}
-      else{prompt('프로필 주소',url)}
+      function done(){btn.innerHTML=ICON_OK+'링크 복사됨';setTimeout(function(){btn.innerHTML=label},1800)}
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done,function(){prompt('디지털 명함 주소',url)})}
+      else{prompt('디지털 명함 주소',url)}
     }
     function closeP(){
       if(!ov||ov.hidden)return;
       ov.classList.remove('is-open');ov.hidden=true;document.documentElement.classList.remove('mp-lock');
-      if(curCode&&history.replaceState)history.replaceState(null,'',location.pathname+location.search);
-      curCode='';
+      if(curId&&history.replaceState)history.replaceState(null,'',location.pathname+location.search);
+      curId='';curP=null;
       if(lastFocus&&lastFocus.focus)lastFocus.focus();
     }
     function openP(i,quiet){
       var p=PEOPLE[i];if(!p)return;
-      var m=p.m,role=m.role||p.g;
+      var m=p.m,title=titleOf(p),unit=unitOf(p);
       if(!ov){
         ov=document.createElement('div');ov.className='mp-overlay';ov.hidden=true;
-        ov.innerHTML='<div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="mpName">'
-          +'<button type="button" class="mp-close" aria-label="닫기">'+ICON_X+'</button><div class="mp-body"></div></div>';
+        ov.innerHTML='<div class="mp-dialog" role="dialog" aria-modal="true" aria-labelledby="bcName">'
+          +'<button type="button" class="mp-close" aria-label="닫기">'+ICON_X+'</button><div class="bc-body"></div></div>';
         document.body.appendChild(ov);
         ov.addEventListener('click',function(e){
           if(e.target===ov||e.target.closest('.mp-close')){closeP();return}
-          var c=e.target.closest('.mp-copy');if(c)copyLink(c);
+          var b=e.target.closest('[data-act]');if(!b)return;
+          if(b.getAttribute('data-act')==='save')saveContact();else copyLink(b);
         });
         document.addEventListener('keydown',function(e){
           if(!ov||ov.hidden)return;
           if(e.key==='Escape'){closeP();return}
           if(e.key==='Tab'){
-            var f=ov.querySelectorAll('button'),first=f[0],last=f[f.length-1];
+            var f=ov.querySelectorAll('button,a[href]'),first=f[0],last=f[f.length-1];
             if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
             else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
           }
         });
       }
-      var rows='';
-      if(m.code)rows+='<div><dt>위원 코드</dt><dd class="mp-code">'+m.code+'</dd></div>';
-      if(m.field)rows+='<div><dt>활동 분야</dt><dd>'+m.field+'</dd></div>';
-      if(m.since)rows+='<div><dt>위촉</dt><dd>'+m.since+'</dd></div>';
-      rows+='<div><dt>소속</dt><dd>한국AI윤리위원회 (KAIEC)</dd></div>';
-      ov.querySelector('.mp-body').innerHTML=
-        '<div class="mp-band"><span class="mp-org">KAIEC</span><span class="mp-org-ko">한국AI윤리위원회</span></div>'
+      curP=p;curId=pid(p,i);
+      var qr=qrSVG(shareURL());
+      var idBox='<div class="bc-id"><div class="bc-id-main">'
+        +(m.code?'<div class="bc-id-label">위원 코드<span>MEMBER CODE</span></div><div class="bc-id-val bc-id-val--code">'+m.code+'</div>'
+                :'<div class="bc-id-label">직위<span>POSITION</span></div><div class="bc-id-val">'+title+'</div>')
+        +(m.since?'<div class="bc-id-sub">'+(SINCE[p.g]||'위촉')+' '+m.since+'</div>':'')
+        +'</div>'+(qr?'<div class="bc-qr" role="img" aria-label="디지털 명함 확인 QR 코드">'+qr+'</div>':'')+'</div>';
+      var rows='<div><dt>소속</dt><dd>'+ORG+(unit?'<span class="bc-unit">'+unit+'</span>':'')+'</dd></div>'
+        +(m.field?'<div><dt>활동 분야</dt><dd>'+m.field+'</dd></div>':'')
+        +'<div><dt>대표 메일</dt><dd><a href="mailto:'+EMAIL+'">'+EMAIL+'</a></dd></div>'
+        +'<div><dt>홈페이지</dt><dd><a href="index.html">kaiec.kr</a></dd></div>';
+      ov.querySelector('.bc-body').innerHTML=
+        '<div class="bc-head"><span class="brand-badge">__BADGE__</span>__WMUSE__</div>'
         +bigAvatar(m)
-        +'<div class="mp-role">'+role+'</div>'
-        +'<div class="mp-name" id="mpName">'+m.name+'</div>'
-        +'<span class="mp-verify">'+ICON_OK+'공식 명단 등재</span>'
-        +'<dl class="mp-info">'+rows+'</dl>'
-        +(m.code?'<div class="mp-actions"><button type="button" class="mp-copy">'+ICON_LINK+'프로필 링크 복사</button></div>'
-          +'<p class="mp-note">위촉 사실 확인은 위원 코드와 함께 __EMAIL__ 로 문의해 주세요.</p>':'');
-      curCode=m.code||'';
+        +'<div class="bc-role">'+title+'</div>'
+        +'<div class="bc-name" id="bcName">'+m.name+'</div>'
+        +(m.en?'<div class="bc-en">'+m.en.toUpperCase()+'</div>':'')
+        +'<span class="bc-verify">'+ICON_OK+ORG+' 공식 명단 등재</span>'
+        +idBox
+        +'<dl class="bc-info">'+rows+'</dl>'
+        +'<div class="bc-actions"><button type="button" class="bc-btn bc-btn--primary" data-act="save">'+ICON_SAVE+'연락처 저장</button>'
+        +'<button type="button" class="bc-btn" data-act="copy">'+ICON_LINK+'명함 링크 복사</button></div>'
+        +'<p class="bc-note">QR 코드를 스캔하면 한국AI윤리위원회 공식 홈페이지에서 이 명함을 확인할 수 있습니다.</p>';
       lastFocus=document.activeElement;
-      ov.hidden=false;document.documentElement.classList.add('mp-lock');
+      ov.hidden=false;ov.querySelector('.mp-dialog').scrollTop=0;document.documentElement.classList.add('mp-lock');
       requestAnimationFrame(function(){ov.classList.add('is-open')});
       if(!quiet)ov.querySelector('.mp-close').focus();
-      if(curCode&&history.replaceState)history.replaceState(null,'','#'+curCode);
+      if(history.replaceState)history.replaceState(null,'','#'+curId);
     }
     box.addEventListener('click',function(e){
       var c=e.target.closest('.member--link');if(c)openP(+c.getAttribute('data-p'));
@@ -1692,12 +1749,12 @@ def build_members():
       var c=e.target.closest('.member--link');if(!c)return;
       e.preventDefault();openP(+c.getAttribute('data-p'));
     });
-    /* kaiec.kr/members/#PKH3185 로 들어오면 해당 위원 프로필을 바로 엽니다 */
+    /* #PKH3185 · #shin-dong-bok 처럼 들어오면 해당 명함을 바로 엽니다 */
     (function(){
-      var h=decodeURIComponent((location.hash||'').slice(1)).toUpperCase();
+      var h=decodeURIComponent((location.hash||'').slice(1)).toLowerCase();
       if(!h)return;
       for(var k=0;k<PEOPLE.length;k++){
-        if((PEOPLE[k].m.code||'').toUpperCase()===h){
+        if(pid(PEOPLE[k],k).toLowerCase()===h){
           var el=box.querySelector('[data-p="'+k+'"]');if(el)el.scrollIntoView({block:'center'});
           openP(k,true);break;
         }
@@ -1716,7 +1773,7 @@ def build_members():
     }else if(op){op.parentElement.parentElement.style.display='none'}
   })();
   </script>
-""".replace("__EMAIL__", EMAIL)
+""".replace("__EMAIL__", EMAIL).replace("__BADGE__", BADGE_SVG).replace("__WMUSE__", WORDMARK_USE)
     page("members.html", "위원 명단",
          "한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.",
          body, extra_script=script)
