@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+Disallow: /assets/docs/
+
+# 네이버 검색로봇
+User-agent: Yeti
+Allow: /
+Disallow: /assets/docs/
+
+# 구글 검색로봇
+User-agent: Googlebot
+Allow: /
+Disallow: /assets/docs/
+
+# 다음(카카오) 검색로봇
+User-agent: daum
+Allow: /
+Disallow: /assets/docs/
+
+Sitemap: https://kaiec.kr/sitemap.xml

@@ -1,0 +1,22 @@
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini
+_qa/
+# tools/collect_site.py 가 만드는 배포용 사이트 묶음(GitHub Actions 에서 만듦)
+_site/
+# Claude 데스크톱 앱이 대화 파일을 내려받는 폴더(평가 정답 등 관리자 자료가 들어올 수 있으니 절대 커밋하지 않음)
+Claude outputs/
+
+# 내부 문서 · 빌드 도구 · 게시글 원문(2026.09.30): 공개 저장소에는 사이트 파일만 올리고, 아래 파일은 운영자 컴퓨터에만 둡니다
+# (사용자 지시: 작업 메모 등이 검색되어 사이트 복제 · 사업 방해에 쓰이면 안 됨). 배포에 필요한 tools/collect_site.py 만 저장소에 남김
+/작업-메모.md
+/배포-가이드.md
+/앱스스크립트-접수시트연동.txt
+/README-내부.md
+/build.py
+/icons.py
+/posts-src/
+/tools/*
+!/tools/collect_site.py
