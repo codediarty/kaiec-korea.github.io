@@ -20,7 +20,7 @@
   var KEY_ADMIN_DASH = 'kaiec_lounge_admin_dash', KEY_ADMIN_TAB = 'kaiec_lounge_admin_tab', ADMIN_TABS = ['insight', 'pay', 'roster', 'notice', 'settings'];
   var TIMEOUT_MS = 60000, HEDGE_MS = 7000;
   var HEDGE_OK = { 'me.dashboard': 1, 'admin.dashboard': 1, 'admin.member': 1, 'auth.login': 1, 'auth.start': 1, 'auth.verify': 1, 'auth.setPassword': 1, 'me.payinfo': 1, 'me.prefs': 1 };   /* 두 번 가도 결과가 같은 요청만(공지 · 정산 · 링크 등록은 제외) */
-  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null } };   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
+  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null }, paying: {} };   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
 
   /* ---------- 작은 도구 ---------- */
   function $(id) { return document.getElementById(id); }
@@ -587,14 +587,20 @@
     if (S.tab === 'notice') return noticeTabHTML(a);
     return settingsTabHTML(a);
   }
-  function payTabHTML(a) {
+  /* 1.4.6 정산표 표만 따로 그림: [지급 완료] 체크 뒤 그 표와 위쪽 숫자만 바꿈(화면 전체를 다시 불러오지 않아 연달아 체크해도 표가 흔들리지 않음) */
+  function payTableHTML(a) {
     var rows = a.payouts.map(function (p) {
       var paid = p.status === '지급완료', hold = p.status === '보류';
       var acct = hold ? '<span class="lg-chip lg-chip--wait">정산 정보 없음</span>' : (p.account ? '<span class="acct">' + esc(p.account) + '</span> <button type="button" class="btn btn-ghost btn-xs" data-copy="' + esc(p.account) + '">복사</button>' : p.acctWait ? '<span class="lg-muted">계좌 불러오는 중…</span>' : '-');
-      var stc = hold ? '<span class="lg-chip lg-chip--x">보류 · 다음 주 이월</span>' : '<label class="cb"><input type="checkbox" data-paid="' + esc(p.id) + '"' + (paid ? ' checked' : '') + '>지급 완료' + (paid ? ' <span class="lg-muted" style="font-weight:500">' + esc(String(p.paidAt).slice(5)) + '</span>' : '') + '</label>';
+      var stc = hold ? '<span class="lg-chip lg-chip--x">보류 · 다음 주 이월</span>' : S.paying[p.id] ? '<span class="ad-paying"><span class="lg-spin"></span> 기록 중</span>' : '<label class="cb"><input type="checkbox" data-paid="' + esc(p.id) + '"' + (paid ? ' checked' : '') + '>지급 완료' + (paid ? ' <span class="lg-muted" style="font-weight:500">' + esc(String(p.paidAt).slice(5)) + '</span>' : '') + '</label>';
       return '<tr class="' + (paid ? 'done' : '') + '"><td><b>' + esc(p.name) + '</b> · ' + esc(p.code) + '</td><td>' + badgeChip(p.tier) + '</td><td class="num">' + p.count + '</td><td class="num">' + won(p.amount) + '</td><td>' + acct + '</td><td>' + stc + '</td><td class="lg-muted" style="font-size:12.5px">' + esc(p.memo || '') + '</td></tr>';
     }).join('');
     var sum = a.payouts.reduce(function (s, p) { s.n += p.count; s.amt += p.amount; if (p.status === '지급완료') { s.paidN++; s.paid += p.amount; } else if (p.status === '보류') { s.holdN++; s.hold += p.amount; } else { s.dueN++; s.due += p.amount; } return s; }, { n: 0, amt: 0, paidN: 0, paid: 0, holdN: 0, hold: 0, dueN: 0, due: 0 });
+    var dueLeft = a.payouts.filter(function (p) { return p.status === '지급예정' && !S.paying[p.id]; }).length;
+    var bar = sum.dueN ? '<div class="ad-paybar"><span>남은 지급 ' + sum.dueN + '명 · ' + won(sum.due) + '</span>' + (dueLeft ? '<button type="button" class="btn btn-primary btn-sm" data-act="payall">' + ic('check') + '지급예정 ' + dueLeft + '명 모두 지급 완료</button>' : '') + '</div>' : '';
+    return '<div id="adPayTbl">' + bar + '<div class="ad-scroll">' + (a.payouts.length ? '<table class="lg-tbl"><thead><tr><th>위원</th><th>등급</th><th class="num">확정 건수</th><th class="num">지원금</th><th>계좌</th><th>상태</th><th>메모</th></tr></thead><tbody>' + rows + '</tbody><tfoot><tr><td colspan="2">합계</td><td class="num">' + sum.n + '</td><td class="num">' + won(sum.amt) + '</td><td colspan="3" style="padding-left:16px;font-weight:600">지급 완료 ' + sum.paidN + '명 ' + won(sum.paid) + ' · 남은 ' + sum.dueN + '명 ' + won(sum.due) + ' · 보류 ' + sum.holdN + '명 ' + won(sum.hold) + '</td></tr></tfoot></table>' : '<p class="lg-empty">아직 정산표가 없습니다. 목요일 00:05에 자동으로 만들어지고, 아래 [정산표 지금 만들기]로 미리 만들 수도 있습니다.</p>') + '</div></div>';
+  }
+  function payTabHTML(a) {
     var weekly = a.roster.slice().sort(function (x, y) { return (y.weeks[3] - x.weeks[3]) || (y.weeks[2] - x.weeks[2]) || (y.credits - x.credits); });
     var top = weekly.filter(function (r) { return r.weeks.some(function (w) { return w > 0; }); }).slice(0, 15);
     var rest = weekly.length - top.length, restSum = weekly.slice(top.length).reduce(function (s, r) { s.w1 += r.weeks[3]; s.w2 += r.weeks[2]; s.c += r.credits; return s; }, { w1: 0, w2: 0, c: 0 });
@@ -605,8 +611,8 @@
     var changes = a.changes.map(function (c) { return '<li>' + esc(c) + '<span>이번 주</span></li>'; }).join('') + a.newbies.map(function (c) { return '<li>신규 위촉 ' + esc(c) + '<span>이번 주</span></li>'; }).join('');
     var links = a.links.map(function (l) { return '<li><a href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.code) + ' · ' + esc(short(l.url).slice(0, 48)) + '</a><span>' + fmtMD(l.at) + '</span></li>'; }).join('');
     var coupons = a.endedCoupons.length ? '<div class="lg-card lg-card--warn"><h2>' + ic('x') + '쿠폰 삭제 대기 <span class="sub">위촉이 종료된 위원의 아임웹 쿠폰은 직접 지워야 합니다</span></h2><p><b>' + a.endedCoupons.map(esc).join(' · ') + '</b></p><p style="margin-top:8px"><a class="btn btn-ghost btn-sm" href="' + esc(a.couponAdminUrl || '#') + '" target="_blank" rel="noopener">아임웹 쿠폰 관리 열기</a></p></div>' : '';
-    return '<div class="lg-card"><h2>' + ic('credit-card') + (a.isPayoutToday ? '오늘 정산표' : '최근 정산표') + (a.payoutDay ? ' · ' + fmtMD(a.payoutDay, true) : '') + '<span class="sub">송금 뒤 [지급 완료]를 체크하면 위원에게 안내 메일이 나가고 기록됩니다</span></h2>' +
-      '<div class="ad-scroll">' + (a.payouts.length ? '<table class="lg-tbl"><thead><tr><th>위원</th><th>등급</th><th class="num">확정 건수</th><th class="num">지원금</th><th>계좌</th><th>상태</th><th>메모</th></tr></thead><tbody>' + rows + '</tbody><tfoot><tr><td colspan="2">합계</td><td class="num">' + sum.n + '</td><td class="num">' + won(sum.amt) + '</td><td colspan="3" style="padding-left:16px;font-weight:600">지급 완료 ' + sum.paidN + '명 ' + won(sum.paid) + ' · 남은 ' + sum.dueN + '명 ' + won(sum.due) + ' · 보류 ' + sum.holdN + '명 ' + won(sum.hold) + '</td></tr></tfoot></table>' : '<p class="lg-empty">아직 정산표가 없습니다. 목요일 00:05에 자동으로 만들어지고, 아래 [정산표 지금 만들기]로 미리 만들 수도 있습니다.</p>') + '</div>' +
+    return '<div class="lg-card"><h2>' + ic('credit-card') + (a.isPayoutToday ? '오늘 정산표' : '최근 정산표') + (a.payoutDay ? ' · ' + fmtMD(a.payoutDay, true) : '') + '<span class="sub">송금 뒤 [지급 완료]를 체크하면 정산관리 · 활동내역(정산상태)에 지급완료로 기록되고 위원에게 안내 메일이 나갑니다. 잘못 체크했으면 풀면 되고, 아직 안 나간 안내 메일도 함께 취소됩니다</span></h2>' +
+      payTableHTML(a) +
       '<div class="ad-actions"><button type="button" class="btn btn-ghost" data-act="settle">정산표 지금 만들기</button><button type="button" class="btn btn-ghost" data-act="poll">아임웹 주문 지금 확인</button><button type="button" class="btn btn-ghost" data-act="mailq">대기 메일 지금 보내기</button><button type="button" class="btn btn-ghost" data-act="sync">파트너 시트에서 위원 가져오기</button></div></div>' +
       coupons + taxCardHTML() +
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('bar-chart-3') + '주간 실적 <span class="sub">확정 기준 · 이번 주 · 지난주 · 4주 흐름 · 누적</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">이번 주</th><th class="num">지난주</th><th style="padding-left:16px">4주</th><th class="num">누적</th></tr></thead><tbody>' + (wrows || '<tr><td colspan="5" class="lg-empty">최근 4주 확정 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
@@ -882,13 +888,50 @@
       call('admin.settings', { set: set }).then(function () { toast('설정을 저장했습니다', 'ok'); loadAdmin(true); }, function (e2) { busy(b, false); er.textContent = e2.message; er.classList.add('is-on'); });
     });
   }
+  /* 1.4.6 지급 완료 관리(사용자 2026.09.30 '이게 관리가 편해야 돼') */
+  var payRefreshT = null;
+  function payLater() { if (payRefreshT) clearTimeout(payRefreshT); payRefreshT = setTimeout(function () { payRefreshT = null; if (!Object.keys(S.paying).length) loadAdmin(); }, 5000); }
+  function payApply(id, status, paidAt) {
+    var a = S.admin; if (!a || !status) return;
+    a.payouts.forEach(function (p) {
+      if (p.id !== id || p.status === status) return;
+      var t = a.tiles || {};
+      if (status === '지급완료') { t.paidN = (t.paidN || 0) + 1; if (p.status === '지급예정') { t.dueN = Math.max(0, (t.dueN || 0) - 1); t.dueSum = (t.dueSum || 0) - p.amount; } }
+      else if (p.status === '지급완료') { t.paidN = Math.max(0, (t.paidN || 0) - 1); if (status === '지급예정') { t.dueN = (t.dueN || 0) + 1; t.dueSum = (t.dueSum || 0) + p.amount; } }
+      p.status = status; p.paidAt = paidAt || '';
+    });
+  }
+  function payRedraw() { var a = S.admin; if (!a) return; var w = $('adPayTbl'); if (w) w.outerHTML = payTableHTML(a); renderAdminTop(); }
+  function payAll() {
+    var due = (S.admin && S.admin.payouts || []).filter(function (p) { return p.status === '지급예정' && !S.paying[p.id]; });
+    if (!due.length) return;
+    var total = due.reduce(function (x, p) { return x + p.amount; }, 0), names = due.slice(0, 10).map(function (p) { return p.name; }).join(', ') + (due.length > 10 ? ' 외 ' + (due.length - 10) + '명' : '');
+    confirmBox('지급예정 ' + due.length + '명을 모두 지급 완료로 기록할까요?', '합계 ' + won(total) + ' · ' + names + '. 송금을 모두 마친 뒤에 눌러 주세요. 위원마다 지급 완료 안내 메일이 나가고, 잘못 기록한 줄은 체크를 풀면 됩니다(아직 안 나간 메일도 취소).', '모두 지급 완료').then(function (ok) {
+      if (!ok) return;
+      var ids = due.map(function (p) { return p.id; }), chunks = [], doneN = 0, failN = 0;
+      ids.forEach(function (x) { S.paying[x] = 1; }); payRedraw();
+      for (var i = 0; i < ids.length; i += 20) chunks.push(ids.slice(i, i + 20));
+      (function next(k) {
+        if (k >= chunks.length) { refreshing(false); toast('지급 완료 ' + doneN + '명 기록' + (failN ? ' · ' + failN + '명은 기록하지 못했습니다(그 줄만 다시 체크해 주세요)' : ' · 위원에게 안내 메일이 나갑니다'), failN ? 'warn' : 'ok'); loadAdmin(true); return; }
+        refreshing(true, '지급 완료 기록 중 ' + doneN + '/' + ids.length);
+        call('admin.paid', { ids: chunks[k] }).then(function (j) {
+          (j.results || []).forEach(function (r) { payApply(r.id, r.status, r.paidAt); if (r.status === '지급완료') doneN++; });
+          failN += (j.failed || []).length; chunks[k].forEach(function (x) { delete S.paying[x]; }); payRedraw(); next(k + 1);
+        }, function (er) { chunks[k].forEach(function (x) { delete S.paying[x]; }); failN += chunks[k].length; payRedraw(); toast(er.message, 'danger'); next(k + 1); });
+      })(0);
+    });
+  }
   function onAdminChange(e) {
     var cb = e.target;
     if (cb.id === 'adRankAll') { S.rank.all = cb.checked; $('adTab').innerHTML = adminTabHTML(); bindAdminForms(); return; }
     if (cb.id === 'adTaxMonth') { S.tax.month = String(cb.value || '').trim(); return; }
     if (!cb.hasAttribute || !cb.hasAttribute('data-paid')) return;
-    var id = cb.getAttribute('data-paid'), undo = !cb.checked; cb.disabled = true;
-    call('admin.paid', { id: id, undo: undo }).then(function (j) { toast(undo ? '지급 완료를 취소했습니다' : '지급 완료로 기록하고 위원에게 안내 메일을 넣었습니다', 'ok'); loadAdmin(true); }, function (er) { cb.checked = !cb.checked; cb.disabled = false; toast(er.message, 'danger'); });
+    var id = cb.getAttribute('data-paid'), undo = !cb.checked;
+    S.paying[id] = 1; payRedraw();
+    call('admin.paid', { id: id, undo: undo }).then(function (j) {
+      delete S.paying[id]; payApply(id, j.status, j.paidAt); payRedraw(); payLater();
+      toast(undo ? '지급 완료를 취소했습니다' + (j.mailCanceled ? ' · 아직 안 나간 안내 메일도 취소했습니다' : '') : '지급 완료로 기록했습니다 · 위원에게 안내 메일이 나갑니다', 'ok');
+    }, function (er) { delete S.paying[id]; payRedraw(); toast(er.message, 'danger'); });
   }
   function onAdminClick(e) {
     var b = e.target.closest('button,a,tr'); if (!b) return;
@@ -902,6 +945,7 @@
     if (b.tagName === 'TR' && b.hasAttribute('data-code')) { if (e.target.closest('button,input,label,a')) return; openMember(b.getAttribute('data-code')); return; }
     var act = b.getAttribute('data-act'); if (!act) return;
     if (act === 'taxload') { loadTax(b); return; }
+    if (act === 'payall') { payAll(); return; }
     if (act === 'taxcsv') { taxCSV(); return; }
     if (act === 'mailschedule') { scheduleMailResume(); return; }
     if (act === 'mailresume' || act === 'mailpause') {
