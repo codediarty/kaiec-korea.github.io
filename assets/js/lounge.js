@@ -16,6 +16,8 @@
   var KEY_TOKEN = 'kaiec_lounge_token', KEY_ADMIN = 'kaiec_lounge_admin';
   var NET_MSG = '서버 응답이 늦어 연결하지 못했습니다. 잠시 뒤 [다시 시도]를 눌러 주세요(인터넷 연결도 확인).';
   var KEY_DASH = 'kaiec_lounge_dash';
+  /* 1.4.4 운영자 화면: 마지막 대시보드 · 보던 탭을 이 탭(sessionStorage)에만 둠. 창을 닫으면 로그인과 함께 사라짐 */
+  var KEY_ADMIN_DASH = 'kaiec_lounge_admin_dash', KEY_ADMIN_TAB = 'kaiec_lounge_admin_tab', ADMIN_TABS = ['insight', 'pay', 'roster', 'notice', 'settings'];
   var TIMEOUT_MS = 60000, HEDGE_MS = 7000;
   var HEDGE_OK = { 'me.dashboard': 1, 'admin.dashboard': 1, 'admin.member': 1, 'auth.login': 1, 'auth.start': 1, 'auth.verify': 1, 'auth.setPassword': 1, 'me.payinfo': 1, 'me.prefs': 1 };   /* 두 번 가도 결과가 같은 요청만(공지 · 정산 · 링크 등록은 제외) */
   var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null } };   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
@@ -123,11 +125,11 @@
     el.textContent = '위원 라운지를 여는 중입니다';
     bootTimer = setTimeout(function () { el.textContent = '서버를 깨우는 중입니다. 처음 열 때는 20~30초까지 걸릴 수 있어요. 잠시만 기다려 주세요.'; }, 6000);
   }
-  function refreshing(on) {
+  function refreshing(on, note) {
     var box = $('lgToasts'); if (!box) return;
     var old = box.querySelector('.lg-toast--sticky'); if (old) old.parentNode.removeChild(old);
     if (!on) return;
-    var t = document.createElement('div'); t.className = 'lg-toast lg-toast--sticky'; t.innerHTML = '<span class="lg-spin" style="width:14px;height:14px;border-width:2px;vertical-align:-2px;margin-right:6px"></span>최신 정보를 불러오는 중'; box.appendChild(t);
+    var t = document.createElement('div'); t.className = 'lg-toast lg-toast--sticky'; t.innerHTML = '<span class="lg-spin" style="width:14px;height:14px;border-width:2px;vertical-align:-2px;margin-right:6px"></span>최신 정보를 불러오는 중' + (note ? ' <small class="lg-toast-note">' + esc(note) + '</small>' : ''); box.appendChild(t);
   }
   function heroHTML(crumb, h1, sub, right) {
     return '<div class="wrap lg-hero-inner"><div><p class="crumb"><a href="' + SITE + '/">홈</a> &nbsp;›&nbsp; ' + crumb + '</p><h1>' + h1 + '</h1><p>' + sub + '</p></div>' + (right || '') + '</div>';
@@ -193,7 +195,7 @@
       var pw0 = ($('lgPw') && $('lgPw').value) || '';
       if (!pw0) { L.purpose = 'first'; startOtp(btn); return; }   /* 비밀번호가 비어 있으면 첫 로그인(이메일 인증)으로 */
       busy(btn, true);
-      call('auth.login', { code: L.code, password: pw0 }).then(function (j) { store(KEY_DASH, null); store(KEY_TOKEN, j.token); loadDash(); }, function (e4) { busy(btn, false); if (e4.code === 'NEED_SETUP') { L.purpose = 'first'; startOtp(btn); return; } err(e4.message); if ($('lgPw')) { $('lgPw').value = ''; $('lgPw').focus(); } });
+      call('auth.login', { code: L.code, password: pw0, withDash: 1 }).then(function (j) { store(KEY_DASH, null); store(KEY_TOKEN, j.token); if (!takeDash(j)) loadDash(); }, function (e4) { busy(btn, false); if (e4.code === 'NEED_SETUP') { L.purpose = 'first'; startOtp(btn); return; } err(e4.message); if ($('lgPw')) { $('lgPw').value = ''; $('lgPw').focus(); } });
       return;
     }
     if (L.step === 'otp') {
@@ -208,13 +210,15 @@
       if (p1.length < 6) { err('비밀번호는 6자 이상으로 정해 주세요.'); return; }
       if (p1 !== p2) { err('비밀번호 확인이 다릅니다.'); return; }
       busy(btn, true);
-      call('auth.setPassword', { setupToken: L.setupToken, password: p1 }).then(function (j) { store(KEY_DASH, null); store(KEY_TOKEN, j.token); toast('환영합니다! 비밀번호가 저장되었습니다', 'ok'); loadDash(); }, function (e3) { busy(btn, false); err(e3.message); if (e3.code === 'BAD_TOKEN') { L.step = 'code'; setTimeout(renderLogin, 1200); } });
+      call('auth.setPassword', { setupToken: L.setupToken, password: p1, withDash: 1 }).then(function (j) { store(KEY_DASH, null); store(KEY_TOKEN, j.token); toast('환영합니다! 비밀번호가 저장되었습니다', 'ok'); if (!takeDash(j)) loadDash(); }, function (e3) { busy(btn, false); err(e3.message); if (e3.code === 'BAD_TOKEN') { L.step = 'code'; setTimeout(renderLogin, 1200); } });
       return;
     }
     L.step = 'code'; renderLogin();
   }
 
   /* ---------- 위원: 대시보드 ---------- */
+  /* 1.4.4 로그인 응답에 함께 온 대시보드(withDash)를 바로 씀: 로그인 → 대시보드 두 번 오가던 것을 한 번에 */
+  function takeDash(j) { var d = j && j.dash; if (!(d && d.ok && d.member && d.member.code)) return false; S.data = d; store(KEY_DASH, JSON.stringify(d)); renderDash(); return true; }
   function cachedDash() { try { var j = JSON.parse(read(KEY_DASH) || 'null'); return j && j.ok && j.member && j.member.code ? j : null; } catch (e) { return null; } }
   function loadDash() {
     var shown = false;
@@ -437,14 +441,64 @@
     $('lgAForm').addEventListener('submit', function (e) {
       e.preventDefault(); var pw = $('lgAPw').value; if (!pw) { err('비밀번호를 입력해 주세요.'); return; }
       var b = $('lgGo'); busy(b, true);
-      call('admin.login', { password: pw }).then(function (j) { store(KEY_ADMIN, j.adminToken, true); loadAdmin(); }, function (er) { busy(b, false); err(er.message); });
+      call('admin.login', { password: pw, withDash: 1 }).then(function (j) { store(KEY_ADMIN, j.adminToken, true); var d = j.dash; if (d && d.ok && d.tiles && d.roster) { adSeq++; setAdmin(d, false); } else loadAdmin(); }, function (er) { busy(b, false); err(er.message); });
     });
   }
-  function loadAdmin(quiet) {
-    if (!quiet) show('boot');
-    return call('admin.dashboard').then(function (j) { S.admin = j; renderAdmin(); }, function (e) { if (e.relogin || e.code === 'AUTH') { renderAdminLogin(e.code === 'AUTH' && read(KEY_ADMIN, true) ? '' : ''); return; } toast(e.message, 'danger'); if (!S.admin) renderAdminLogin(e.message); });
+  /* 1.4.4 운영자 화면 속도(사용자 2026.09.30 '관리자 모드 원래 이렇게 오래 걸려? 접속도 새로 고침도'): 위원 라운지처럼 마지막 대시보드를 이 탭에 두었다가
+     새로 고침 · 다시 열 때 바로 그리고, 최신 숫자는 뒤에서 받아 바꿈(그동안 화면은 그대로 쓸 수 있음). 계좌번호는 저장하지 않음(새 응답이 오면 채워짐).
+     입력 중인 칸이 있는 탭은 다시 그리지 않고 위쪽 타일만 바꿈. 로그인이 끝났거나 12시간 넘은 것은 쓰지 않음 */
+  var adSeq = 0;
+  function tokenLeft(tok) { try { var b = String(tok || '').split('.')[0].replace(/-/g, '+').replace(/_/g, '/'); while (b.length % 4) b += '='; var e = Number(JSON.parse(atob(b)).e); return isFinite(e) ? e - Date.now() : null; } catch (x) { return null; } }
+  function cachedAdmin() {
+    try {
+      var j = JSON.parse(read(KEY_ADMIN_DASH, true) || 'null'); if (!(j && j.ok && j.tiles && j.roster && j.cachedAt)) return null;
+      var left = tokenLeft(read(KEY_ADMIN, true)); if ((left !== null && left < 60000) || Date.now() - j.cachedAt > 12 * 3600000) { store(KEY_ADMIN_DASH, null, true); return null; }
+      return j;
+    } catch (e) { return null; }
   }
-  function adminLogout() { store(KEY_ADMIN, null, true); S.admin = null; renderAdminLogin(); }
+  function saveAdmin(j) {
+    try {
+      var c = {}; for (var k in j) if (Object.prototype.hasOwnProperty.call(j, k)) c[k] = j[k];
+      c.payouts = (j.payouts || []).map(function (p) { var q = {}; for (var x in p) if (Object.prototype.hasOwnProperty.call(p, x)) q[x] = p[x]; if (q.account) { q.account = ''; q.acctWait = 1; } return q; });
+      c.cachedAt = Date.now(); store(KEY_ADMIN_DASH, JSON.stringify(c), true);
+    } catch (e) { /* 못 두어도 화면은 그대로 */ }
+  }
+  function hhmm(ms) { var d = new Date(ms); return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
+  /* 탭 안에서 글자를 입력 중이거나 고친 칸이 있으면 true(체크 상자는 누르면 곧바로 처리되므로 보지 않음) */
+  function adTabEditing() {
+    var t = $('adTab'); if (!t) return false;
+    var txt = function (el) { return el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || (el.tagName === 'INPUT' && !/^(checkbox|radio|button|submit|reset|hidden|file)$/i.test(el.type || '')); };
+    var a = document.activeElement; if (a && t.contains(a) && txt(a)) return true;
+    var els = t.querySelectorAll('input, textarea, select');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i]; if (!txt(el)) continue;
+      if (el.tagName === 'SELECT') { var def = 0; for (var k = 0; k < el.options.length; k++) if (el.options[k].defaultSelected) def = k; if (el.options.length && el.selectedIndex !== def) return true; }
+      else if (el.value !== el.defaultValue) return true;
+    }
+    return false;
+  }
+  function setAdmin(j, soft) {
+    S.admin = j; saveAdmin(j);
+    if (soft && !main.hidden && main.querySelector('#adTab') && adTabEditing()) { renderAdminTop(); return; }
+    renderAdmin();
+  }
+  function loadAdmin(force) {   /* force: 공지 · 설정 · 지급 같은 작업 뒤라 입력 칸까지 모두 새로 그림 */
+    var shown = !!S.admin && !main.hidden;
+    if (!shown) { var c = cachedAdmin(); if (c) { S.admin = c; renderAdmin(); shown = true; } }
+    if (shown) refreshing(true, S.admin.cachedAt ? '지금 화면은 ' + hhmm(S.admin.cachedAt) + ' 기준' : ''); else show('boot');
+    var my = ++adSeq;
+    return call('admin.dashboard').then(function (j) {
+      if (my !== adSeq) return;
+      refreshing(false); setAdmin(j, shown && !force);
+    }, function (e) {
+      if (my !== adSeq) return;
+      refreshing(false);
+      if (e.relogin || e.code === 'AUTH') { store(KEY_ADMIN_DASH, null, true); S.admin = null; renderAdminLogin(shown ? '로그인 시간이 지났습니다. 다시 로그인해 주세요.' : ''); return; }
+      if (shown && S.admin) { renderAdminTop(); toast('최신 정보를 불러오지 못했습니다' + (S.admin.cachedAt ? '(지금 화면은 ' + hhmm(S.admin.cachedAt) + ' 기준)' : '') + ' · ' + e.message, 'danger'); return; }
+      renderAdminLogin(e.message);
+    });
+  }
+  function adminLogout() { store(KEY_ADMIN, null, true); store(KEY_ADMIN_DASH, null, true); store(KEY_ADMIN_TAB, null, true); adSeq++; refreshing(false); S.admin = null; S.tab = 'insight'; renderAdminLogin(); }
   function fmtResumeAt(s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() + '(' + DAYS[d.getDay()] + ') ' + String(s).slice(11, 16) : String(s || ''); }
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
   /* 발송 시작 예약: 기본값 내일 10:00. 그때까지 대기열은 멈춰 있고, 시각이 지나면 위촉 메일부터 보냄 */
@@ -471,12 +525,17 @@
     if (r.status === '휴면') return '<span class="lg-chip lg-chip--x">휴면' + why + '</span>';
     return '<span class="lg-chip lg-chip--x">종료 ' + fmtMD(r.ended || r.changed) + '</span>';
   }
-  function renderAdmin() {
-    var a = S.admin, t = a.tiles, stt = t.status || {};
+  function adHeroHTML(a) {
     var todayD = dateOf(a.today), todayTxt = todayD ? todayD.getFullYear() + '년 ' + (todayD.getMonth() + 1) + '월 ' + todayD.getDate() + '일 ' + DAYS[todayD.getDay()] + '요일' : a.today;
-    hero.innerHTML = heroHTML('위원 라운지 &nbsp;›&nbsp; 운영자', '운영자 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''),
+    return heroHTML('위원 라운지 &nbsp;›&nbsp; 운영자', '운영자 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''),
       '<div class="lg-tools"><span class="lg-mode">' + ic('shield-check') + '관리자 모드</span>' + (a.sheetUrl ? '<a class="btn btn-light btn-sm" href="' + esc(a.sheetUrl) + '" target="_blank" rel="noopener">운영 시트 열기</a>' : '') + '<button type="button" class="btn btn-light btn-sm" data-act="reload">새로 고침</button><button type="button" class="btn btn-light btn-sm" data-act="logout">로그아웃</button></div>');
+  }
+  function adTabsBarHTML(a) {
     var tabs = [['insight', '분석 대시보드'], ['pay', '정산 · 실적'], ['roster', '위원 명단 (' + a.roster.length + ')'], ['notice', '공지 보내기'], ['settings', '설정']];
+    return '<div class="ad-tabs">' + tabs.map(function (x) { return '<button type="button" class="' + (S.tab === x[0] ? 'on' : '') + '" data-tab="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '<span class="sub">v' + esc(a.version) + '</span></div>';
+  }
+  function adTilesHTML(a) {
+    var t = a.tiles, stt = t.status || {};
     /* 1.4.3 상단 타일(사용자 2026.09.30 '누적 건수도 나와야지, 세액 위원회 부담 0원 이런 건 불필요, 전체적으로 가독성 좋게'):
        ① 정산: 정산일이면 오늘 정산표, 아니면 다음 정산 미리 보기(정산표에 아직 없는 확정 실적 + 미지급 정산표) ② 누적 추천 결제 ③ 최근 7일 ④ 위원 ⑤ 메일 */
     var nx = t.next || null, payTile;
@@ -488,19 +547,34 @@
       payTile = '<div class="ad-tile hi"><span>다음 정산 · ' + fmtKo(nx.day, true) + '</span><b>' + won(nx.amount) + '</b><i>' + (nx.members ? nx.members + '명 · 추천 ' + num(nx.credits) + '건 · ' + cutTxt + '까지 결제분' : '아직 없음 · ' + cutTxt + '까지 결제분이 모입니다') + (nx.holdN ? ' · 정산 정보 미등록 ' + nx.holdN + '명' : '') + (nx.overdueN ? '<br><strong>지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum) + '</strong> <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') + '</i></div>';
     } else payTile = '<div class="ad-tile hi"><span>최근 정산</span><b>' + t.dueN + '명 · ' + won(t.dueSum) + '</b><i>지급 완료 ' + t.paidN + '명 · 보류 ' + t.holdN + '명</i></div>';
     var p7 = t.paid7 || 0, pp7 = t.paidPrev7 || 0, d7 = p7 - pp7, stTxt = ['활동', '휴면예정', '휴면', '종료'].filter(function (x) { return x === '활동' || stt[x]; }).map(function (x) { return (x === '휴면예정' ? '휴면 예정' : x) + ' ' + (stt[x] || 0); }).join(' · ');
-    var html = '<div class="ad-tiles">' + payTile +
+    return '<div class="ad-tiles">' + payTile +
       '<div class="ad-tile"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b><i>이번 달 ' + num(t.creditsMonth || 0) + '건 · 실적 있는 위원 ' + num(t.creditedN || 0) + '명</i></div>' +
       '<div class="ad-tile"><span>최근 7일 추천 결제</span><b>' + num(p7) + '건' + (d7 ? ' <small class="ad-tile-d ' + (d7 > 0 ? 'up' : 'down') + '">' + (d7 > 0 ? '▲' : '▼') + num(Math.abs(d7)) + '</small>' : '') + '</b><i>그 전 7일 ' + num(pp7) + '건 · 취소 · 환불 ' + num(t.canc7) + '건</i></div>' +
       '<div class="ad-tile"><span>위원</span><b>' + num(t.members) + '명</b><i>' + stTxt + (t.loggedInN != null ? ' · 라운지 로그인 ' + num(t.loggedInN) + '명' : '') + '</i></div>' +
-      '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '"><span>메일' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span><b>' + t.mailToday + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘</small></b><i>대기 ' + t.mailWait + '통 · 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 한도' + (t.mailPaused ? ' · 결제 · 정산 알림은 바로 나감 <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>') + '</i></div></div>' +
-      '<div class="ad-tabs">' + tabs.map(function (x) { return '<button type="button" class="' + (S.tab === x[0] ? 'on' : '') + '" data-tab="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '<span class="sub">v' + esc(a.version) + '</span></div>' +
+      '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '"><span>메일' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span><b>' + t.mailToday + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘</small></b><i>대기 ' + t.mailWait + '통 · 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 한도' + (t.mailPaused ? ' · 결제 · 정산 알림은 바로 나감 <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>') + '</i></div></div>';
+  }
+  function renderAdmin() {
+    var a = S.admin;
+    hero.innerHTML = adHeroHTML(a);
+    main.innerHTML = adTilesHTML(a) + adTabsBarHTML(a) +
       '<div id="adTab">' + adminTabHTML() + '</div>' +
-      '<p class="lg-foot">계좌 · 주민등록번호는 운영자에게만 보이며 위원 화면에는 다른 위원의 정보가 나오지 않습니다. 이 창을 닫으면 자동으로 로그아웃됩니다.</p>';
-    main.innerHTML = html; show('main');
-    hero.onclick = function (e) { var b = e.target.closest('[data-act]'); if (!b) return; if (b.getAttribute('data-act') === 'logout') adminLogout(); if (b.getAttribute('data-act') === 'reload') { busy(b, true); loadAdmin(true); } };
+      '<p class="lg-foot">계좌 · 주민등록번호는 운영자에게만 보이며 위원 화면에는 다른 위원의 정보가 나오지 않습니다. 이 창을 닫으면 자동으로 로그아웃됩니다. 새로 고침할 때는 마지막 화면을 먼저 보여 드리고 최신 숫자로 바꿉니다(계좌번호는 이 컴퓨터에 두지 않음).</p>';
+    show('main');
+    hero.onclick = onAdminHero;
     main.onclick = onAdminClick;
     main.onchange = onAdminChange;
     bindAdminForms();
+  }
+  /* 위쪽만 다시 그림(머리 · 타일 · 탭 줄): 입력 중인 탭은 그대로 두고 숫자만 바꿀 때 */
+  function renderAdminTop() {
+    var a = S.admin; hero.innerHTML = adHeroHTML(a);
+    var tl = main.querySelector(':scope > .ad-tiles'), tb = main.querySelector(':scope > .ad-tabs');
+    if (tl) tl.outerHTML = adTilesHTML(a); if (tb) tb.outerHTML = adTabsBarHTML(a);
+  }
+  function onAdminHero(e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    if (b.getAttribute('data-act') === 'logout') { adminLogout(); return; }
+    if (b.getAttribute('data-act') === 'reload') { b.disabled = true; b.classList.add('is-busy'); b.innerHTML = '<span class="lg-spin"></span> 불러오는 중'; loadAdmin(); }
   }
   function adminTabHTML() {
     var a = S.admin;
@@ -513,7 +587,7 @@
   function payTabHTML(a) {
     var rows = a.payouts.map(function (p) {
       var paid = p.status === '지급완료', hold = p.status === '보류';
-      var acct = hold ? '<span class="lg-chip lg-chip--wait">정산 정보 없음</span>' : (p.account ? '<span class="acct">' + esc(p.account) + '</span> <button type="button" class="btn btn-ghost btn-xs" data-copy="' + esc(p.account) + '">복사</button>' : '-');
+      var acct = hold ? '<span class="lg-chip lg-chip--wait">정산 정보 없음</span>' : (p.account ? '<span class="acct">' + esc(p.account) + '</span> <button type="button" class="btn btn-ghost btn-xs" data-copy="' + esc(p.account) + '">복사</button>' : p.acctWait ? '<span class="lg-muted">계좌 불러오는 중…</span>' : '-');
       var stc = hold ? '<span class="lg-chip lg-chip--x">보류 · 다음 주 이월</span>' : '<label class="cb"><input type="checkbox" data-paid="' + esc(p.id) + '"' + (paid ? ' checked' : '') + '>지급 완료' + (paid ? ' <span class="lg-muted" style="font-weight:500">' + esc(String(p.paidAt).slice(5)) + '</span>' : '') + '</label>';
       return '<tr class="' + (paid ? 'done' : '') + '"><td><b>' + esc(p.name) + '</b> · ' + esc(p.code) + '</td><td>' + badgeChip(p.tier) + '</td><td class="num">' + p.count + '</td><td class="num">' + won(p.amount) + '</td><td>' + acct + '</td><td>' + stc + '</td><td class="lg-muted" style="font-size:12.5px">' + esc(p.memo || '') + '</td></tr>';
     }).join('');
@@ -816,7 +890,7 @@
     var b = e.target.closest('button,a,tr'); if (!b) return;
     if (b.tagName === 'A') return;
     if (b.hasAttribute('data-copy')) { e.preventDefault(); copyText(b.getAttribute('data-copy'), b); return; }
-    if (b.hasAttribute('data-tab')) { S.tab = b.getAttribute('data-tab'); renderAdmin(); return; }
+    if (b.hasAttribute('data-tab')) { S.tab = b.getAttribute('data-tab'); store(KEY_ADMIN_TAB, S.tab, true); renderAdmin(); return; }
     if (b.hasAttribute('data-member')) { openMember(b.getAttribute('data-member')); return; }
     if (b.hasAttribute('data-sort')) { var sk = b.getAttribute('data-sort'); if (S.rank.key === sk) S.rank.dir = -S.rank.dir; else { S.rank.key = sk; S.rank.dir = 1; } var tb = $('adTab'); tb.innerHTML = adminTabHTML(); bindAdminForms(); var tbl = tb.querySelector('.ad-ranktbl'); if (tbl) tbl.scrollIntoView({ block: 'nearest' }); return; }
     if (b.hasAttribute('data-st')) { S.roster.st = b.getAttribute('data-st'); $('adTab').innerHTML = rosterTabHTML(S.admin); bindAdminForms(); return; }
@@ -892,7 +966,7 @@
   /* ---------- 시작 ---------- */
   if (!hero || !login || !main) return;
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('lgModal').hidden) closeModal(); });
-  if (ADMIN) { if (read(KEY_ADMIN, true) && API) loadAdmin(); else renderAdminLogin(); }
+  if (ADMIN) { var tab0 = read(KEY_ADMIN_TAB, true); if (ADMIN_TABS.indexOf(tab0) >= 0) S.tab = tab0; if (read(KEY_ADMIN, true) && API) loadAdmin(); else renderAdminLogin(); }
   else if (read(KEY_TOKEN) && API) loadDash();
   else renderLogin();
 })();

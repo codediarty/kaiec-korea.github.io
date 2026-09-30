@@ -425,6 +425,7 @@ html:not(.js) .lg-boot{display:none}
 .lg-toast.is-out{opacity:0;transform:translateY(4px)}
 .lg-toast--sticky{background:#0F2A5F;font-weight:600;display:inline-flex;align-items:center}
 .lg-toast--sticky .lg-spin{border-color:rgba(255,255,255,.35);border-top-color:#fff}
+.lg-toast-note{font-size:12px;font-weight:500;opacity:.78;margin-left:6px}
 
 /* ---------- 반응형 ---------- */
 @media(max-width:1100px){.ad-kpis{grid-template-columns:repeat(3,1fr)}.ad-risks{grid-template-columns:repeat(2,1fr)}.ad-mini--pay{grid-template-columns:repeat(3,1fr)}}
