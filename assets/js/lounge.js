@@ -281,7 +281,7 @@
      더 유의미하고 기분 좋은 시각화로): 최근 8주 추천 성과 막대 + 'AI 윤리 확산'(2026.09.30 전 이름 'AI 윤리 확산 도달')(30일 동안 명함 · 링크로 AI 윤리를 접한 사람, 주별 물결 그림, 이번 주 · 지난주)
      + 확산 단계(누적 확산 이정표 10 · 50 · 100 · 300 · 1,000명). 확산은 같은 브라우저를 하루 한 번만 세므로 '명'으로 읽어도 무리가 없음 */
   /* 2026.09.30 이름 변경(사용자: '리치(도달)'는 표현이 이상하다, 자연스럽고 자긍심 느껴지게): 위원 화면은 '누적 확산'(명함 · 링크로 접한 사람, 누적) · 'AI 윤리 확산'(30일). 결제한 사람은 '임팩트'(크레딧)로 따로(같은 날 사용자: '누적 임팩트' 같은 말 → 임팩트는 결제 실적이라 '확산'으로),
-     운영자 화면 · 로그 표시는 '확산'. 서버 · 시트 이름(reach · 누적리치)은 그대로 */
+     위원장 화면은 1.4.7 부터 '명함 · 링크 열람(회)' · '명함 · 링크 방문(명)'(사용자: '확산은 확 와닿지 않는데'). 서버 · 시트 이름(reach · 누적리치)은 그대로 */
   var REACH_STAGES = [[10, '첫 물결'], [50, '퍼지는 물결'], [100, '큰 물결'], [300, '넓은 물결'], [1000, '사회적 물결']];
   function reachStage(total) {
     var idx = -1, next = null;
@@ -698,7 +698,7 @@
      사용자: 전체 위원 관리 · 정산 연동 · 누가 활동을 많이/안 하는지 시각화 · 수치화된 데이터 · 통계 · 순위 · 더 모을 데이터.
      서버가 admin.dashboard 에 함께 보내는 analytics(활동 점수 · 순위 · KPI · 12주 · 6개월 · 퍼널 · 분포 · 채널 · 히트맵 · 통계 · 코호트 · 점검 · 메일 · 타임라인)를 그림.
      차트는 외부 라이브러리 없이 인라인 SVG */
-  var KIND_KO = { reach: '확산', '로그인': '로그인', '라운지': '라운지 방문', link: '활동 링크', '링크등록': '링크 등록', kit: '도구 사용', save: '명함 저장', share: '명함 공유', payinfo: '정산 정보 등록', cert: '증명서 요청', '결제': '결제', '확정': '확정', '리치': '확산 신호', '위촉': '위촉', '활동확인': '활동 확인', '복귀링크': '복귀', '운영자복귀': '위원장 복귀' };
+  var KIND_KO = { reach: '명함 · 링크 열람', '로그인': '로그인', '라운지': '라운지 방문', link: '활동 링크', '링크등록': '링크 등록', kit: '도구 사용', save: '명함 저장', share: '명함 공유', payinfo: '정산 정보 등록', cert: '증명서 요청', '결제': '결제', '확정': '확정', '리치': '열람 신호', '위촉': '위촉', '활동확인': '활동 확인', '복귀링크': '복귀', '운영자복귀': '위원장 복귀' };
   var KIT_KO = { 'copy:card': '위원 명함 링크 복사', 'copy:go': '바로 결제 링크 복사', 'copy:intro': '소개 페이지 링크 복사', 'copy:experts': 'AIEP 안내 링크 복사', 'open:qr': '명함 · QR 열기', manual: '매뉴얼 내려받기' };
   var CHANNEL_KO = { card: ['위원 명함', '#1F5FE0'], go: ['바로 결제 링크', '#0B8F84'], intro: ['소개 페이지', '#7C3AED'], experts: ['AIEP 안내 페이지', '#F0A24A'], other: ['기타', '#A0AEC0'] };
   var SCORE_BANDS = [[80, '매우 활발', '#0B8F84'], [50, '활발', '#1F5FE0'], [20, '보통', '#7FA6EE'], [1, '저조', '#C9D8F5'], [0, '무활동', '#E5EAF2']];
@@ -714,8 +714,8 @@
     if (d === 0) return '<span class="ad-delta flat">' + span + '과 같음</span>';
     return '<span class="ad-delta ' + (d > 0 ? 'up' : 'down') + '">' + (d > 0 ? '▲' : '▼') + ' ' + num(Math.abs(d)) + (unit || '') + ' <small>' + span + ' ' + num(prev) + (unit || '') + '</small></span>';
   }
-  function kpiTile(label, value, unit, deltaHtml, sub, cls) { return '<div class="ad-kpi' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><b>' + num(value) + '<small>' + (unit || '') + '</small></b>' + (deltaHtml || '') + (sub ? '<i>' + sub + '</i>' : '') + '</div>'; }
-  /* 막대 + 꺾은선 겹친 12주 차트. bars: 실적(건, 왼쪽 축), line: 확산(명, 오른쪽 축) */
+  function kpiTile(label, value, unit, deltaHtml, sub, cls, tip) { return '<div class="ad-kpi' + (cls ? ' ' + cls : '') + '"' + (tip ? ' title="' + esc(tip) + '"' : '') + '><span>' + label + '</span><b>' + num(value) + '<small>' + (unit || '') + '</small></b>' + (deltaHtml || '') + (sub ? '<i>' + sub + '</i>' : '') + '</div>'; }
+  /* 막대 + 꺾은선 겹친 12주 차트. bars: 실적(건, 왼쪽 축), line: 명함 · 링크 열람(회, 오른쪽 축) */
   function niceMax(v) { v = Math.max(1, v); if (v <= 4) return 4; var step = Math.pow(10, Math.floor(Math.log(v / 4) / Math.LN10)), c = [1, 2, 2.5, 5, 10]; for (var i = 0; i < c.length; i++) if (4 * c[i] * step >= v) return 4 * c[i] * step; return 40 * step; }   /* 눈금 4칸이 정수가 되게 */
   function comboChart(weeks, bars, line, opts) {
     opts = opts || {}; var vw = document.documentElement.clientWidth || 640, W = Math.max(320, Math.min(640, vw - 76)), Hh = 180, padL = 30, padR = 36, padT = 14, padB = 26, n = weeks.length, iw = (W - padL - padR) / n, skip = W < 420 ? 3 : n > 8 ? 2 : 1;   /* 좁은 화면에서는 viewBox 를 화면 폭에 맞춰 글자가 작아지지 않게 */
@@ -724,12 +724,12 @@
     for (var g = 0; g <= 4; g++) { var y = padT + (Hh - padT - padB) * g / 4; out += '<line class="grid" x1="' + padL + '" y1="' + y.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + y.toFixed(1) + '"/>'; out += '<text class="ax" x="' + (padL - 6) + '" y="' + (y + 4).toFixed(1) + '" text-anchor="end">' + Math.round(bmax * (1 - g / 4)) + '</text>'; out += '<text class="ax ax2" x="' + (W - padR + 6) + '" y="' + (y + 4).toFixed(1) + '">' + Math.round(lmax * (1 - g / 4)) + '</text>'; }
     for (var i = 0; i < n; i++) {
       var x = padL + i * iw, bw = Math.max(6, iw * 0.46), bx = x + (iw - bw) / 2, bh = bars[i] ? Math.max(3, (Hh - padT - padB) * bars[i] / bmax) : 0;
-      out += '<rect class="bar' + (i === n - 1 ? ' now' : '') + '" x="' + bx.toFixed(1) + '" y="' + (Hh - padB - bh).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3"><title>' + esc(fmtMD(weeks[i])) + ' 주 · 추천 실적 ' + bars[i] + '건 · 확산 ' + line[i] + '명</title></rect>';
+      out += '<rect class="bar' + (i === n - 1 ? ' now' : '') + '" x="' + bx.toFixed(1) + '" y="' + (Hh - padB - bh).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="3"><title>' + esc(fmtMD(weeks[i])) + ' 주 · 추천 실적 ' + bars[i] + '건 · 명함 · 링크 열람 ' + line[i] + '회</title></rect>';
       if ((n - 1 - i) % skip === 0) out += '<text class="ax" x="' + (x + iw / 2).toFixed(1) + '" y="' + (Hh - 8) + '" text-anchor="middle">' + esc(fmtMD(weeks[i])) + '</text>';
     }
     var pts = line.map(function (v, i) { return (padL + i * iw + iw / 2).toFixed(1) + ',' + gy(v, lmax).toFixed(1); });
     out += '<polyline class="ln" points="' + pts.join(' ') + '"/>';
-    line.forEach(function (v, i) { out += '<circle class="dot' + (i === n - 1 ? ' now' : '') + '" cx="' + (padL + i * iw + iw / 2).toFixed(1) + '" cy="' + gy(v, lmax).toFixed(1) + '" r="3.2"><title>' + esc(fmtMD(weeks[i])) + ' 주 · 확산 ' + v + '명</title></circle>'; });
+    line.forEach(function (v, i) { out += '<circle class="dot' + (i === n - 1 ? ' now' : '') + '" cx="' + (padL + i * iw + iw / 2).toFixed(1) + '" cy="' + gy(v, lmax).toFixed(1) + '" r="3.2"><title>' + esc(fmtMD(weeks[i])) + ' 주 · 명함 · 링크 열람 ' + v + '회</title></circle>'; });
     return '<svg class="ad-combo" viewBox="0 0 ' + W + ' ' + Hh + '" preserveAspectRatio="none" role="img" aria-label="' + esc(opts.label || '12주 추이') + '">' + out + '</svg>';
   }
   function sparkline(vals, color) {
@@ -743,15 +743,15 @@
   }
   function legend(parts, total) { var t = total || parts.reduce(function (a, p) { return a + p[1]; }, 0); return '<div class="ad-legend">' + parts.map(function (p) { return '<span><i style="background:' + p[2] + '"></i>' + esc(p[0]) + ' <b>' + num(p[1]) + '</b>' + (t ? ' <small>' + pct(p[1], t) + '%</small>' : '') + '</span>'; }).join('') + '</div>'; }
   function scoreBar(r) {
-    var p = r.parts || {}, segs = [['실적', p.credit || 0, '#0B8F84'], ['확산', p.reach || 0, '#1F5FE0'], ['라운지 이용', p.visit || 0, '#7C3AED'], ['활동 링크', p.link || 0, '#F0A24A'], ['도구 사용', p.kit || 0, '#E06B8A']];
+    var p = r.parts || {}, segs = [['실적', p.credit || 0, '#0B8F84'], ['열람', p.reach || 0, '#1F5FE0'], ['라운지 이용', p.visit || 0, '#7C3AED'], ['활동 링크', p.link || 0, '#F0A24A'], ['도구 사용', p.kit || 0, '#E06B8A']];
     return '<div class="ad-score"><b>' + r.score + '</b><div class="ad-seg ad-seg--score">' + segs.filter(function (s) { return s[1] > 0; }).map(function (s) { return '<i style="width:' + s[1] + '%;background:' + s[2] + '"><title>' + s[0] + ' ' + s[1] + '점</title></i>'; }).join('') + '</div></div>';
   }
   function trendIcon(t) { return t === 'up' ? '<span class="ad-tr up" title="최근 4주 실적이 그 전 4주보다 많음">▲</span>' : t === 'down' ? '<span class="ad-tr down" title="최근 4주 실적이 그 전 4주보다 적음">▼</span>' : t === 'flat' ? '<span class="ad-tr flat" title="최근 4주와 그 전 4주가 같음">━</span>' : '<span class="ad-tr none">·</span>'; }
   function who(r) { return '<button type="button" class="ad-who" data-member="' + esc(r.code) + '"><b>' + esc(r.name) + '</b><small>' + esc(r.code) + '</small>' + (r.badge ? '<em class="lg-chip lg-chip--gold">' + esc(r.badge) + '</em>' : '') + '</button>'; }
   function funnelHTML(f) {
-    var steps = [['위촉', f.members], ['첫 로그인', f.loggedIn], ['확산 시작', f.spread], ['첫 실적', f.credited], ['확정 실적', f.confirmed], ['지급 받음', f.paid]];
+    var steps = [['위촉', f.members], ['첫 로그인', f.loggedIn], ['공유 시작', f.spread], ['첫 실적', f.credited], ['확정 실적', f.confirmed], ['지급 받음', f.paid]];
     var max = Math.max(1, f.members);
-    return '<div class="ad-funnel">' + steps.map(function (s, i) { var prev = i ? steps[i - 1][1] : s[1]; return '<div class="ad-fstep"><span>' + s[0] + '</span><div class="ad-fbar"><i style="width:' + Math.max(2, 100 * s[1] / max).toFixed(1) + '%"></i></div><b>' + num(s[1]) + '<small>명 · ' + pct(s[1], max) + '%</small></b>' + (i ? '<em>' + (prev ? pct(s[1], prev) : 0) + '%</em>' : '<em>기준</em>') + '</div>'; }).join('') + '</div><p class="ad-fnote">막대는 전체 위원(종료 제외) 대비 비율, 오른쪽 %는 바로 앞 단계에서 넘어온 비율. 확산 시작 = 명함 · 링크가 한 번이라도 열렸거나 도구 · 활동 링크를 쓴 위원</p>';
+    return '<div class="ad-funnel">' + steps.map(function (s, i) { var prev = i ? steps[i - 1][1] : s[1]; return '<div class="ad-fstep"><span>' + s[0] + '</span><div class="ad-fbar"><i style="width:' + Math.max(2, 100 * s[1] / max).toFixed(1) + '%"></i></div><b>' + num(s[1]) + '<small>명 · ' + pct(s[1], max) + '%</small></b>' + (i ? '<em>' + (prev ? pct(s[1], prev) : 0) + '%</em>' : '<em>기준</em>') + '</div>'; }).join('') + '</div><p class="ad-fnote">막대는 전체 위원(종료 제외) 대비 비율, 오른쪽 %는 바로 앞 단계에서 넘어온 비율. 공유 시작 = 명함 · 링크가 한 번이라도 열렸거나 도구 · 활동 링크를 쓴 위원</p>';
   }
   function heatmapHTML(heat) {
     var days = ['일', '월', '화', '수', '목', '금', '토'], max = 1, total = 0, blocks = [];
@@ -781,32 +781,36 @@
     /* 1.4.3 KPI(사용자: '누적 건수도 나와야지 · 라운지 이용도 9회가 아니고 9명이어야지'): 결제 즉시 확정이라 '확정' 칸은 뺌(추천 결제와 같음),
        '활동 위원(7일 안 활동 신호)'은 위촉 · 로그인만으로도 100%가 돼 뜻이 약해 '실적 있는 위원'으로 바꿈 */
     var kv = k.visitors || { now: 0, prev: 0, m30: 0, loggedIn: 0, of: 0 }, kc = k.credited || { all: 0, m30: 0, of: 0 }, kcr = pct(kc.all, kc.of);
+    var rpp = k.reach.people || null, c7 = k.reach.ch7 || null;
     var kpis = '<div class="ad-kpis">' +
       kpiTile('누적 추천 결제', k.credits.all, '건', '<span class="ad-delta ' + (k.credits.now ? 'up' : 'flat') + '">' + (k.credits.now ? '▲ ' + num(k.credits.now) + '건 <small>최근 7일</small>' : '최근 7일 추천 없음') + '</span>', '이번 달 ' + num(k.credits.month || 0) + '건 · 지난달 ' + num(k.credits.prevMonth || 0) + '건', 'hi') +
       kpiTile('최근 7일 추천 결제', k.credits.now, '건', delta(k.credits.now, k.credits.prev, '건'), '30일 ' + num(k.credits.m30) + '건 · 취소 · 환불 30일 ' + num(k.canceled.m30) + '건') +
-      kpiTile('최근 7일 확산', k.reach.now, '명', delta(k.reach.now, k.reach.prev, '명'), '30일 ' + num(k.reach.m30) + '명 · 누적 ' + num(k.reach.all || 0) + '명') +
+      /* 1.4.7 사용자 '최근 7일 확산은 뭐야? 확 와닿지 않는데': 위원 명함 · 추천 링크 · QR 을 연 사람(같은 브라우저는 한 사람)으로, 열람 횟수와 경로를 아래에 */
+      kpiTile('최근 7일 명함 · 링크 방문', rpp ? rpp.now : k.reach.now, '명', delta(rpp ? rpp.now : k.reach.now, rpp ? rpp.prev : k.reach.prev, '명'),
+        '열람 ' + num(k.reach.now) + '회' + (c7 ? '(명함 ' + num(c7.card || 0) + ' · 링크 ' + num(Math.max(0, k.reach.now - (c7.card || 0))) + ')' : '') + ' · 누적 ' + num(k.reach.all || 0) + '회', '',
+        '위원 명함 페이지와 추천 링크(신청 페이지 · 바로 결제 QR)를 열어 본 사람 수입니다. 같은 브라우저는 한 사람으로 세고, 열람 횟수는 같은 사람이라도 날이 다르거나 다른 위원 것을 열면 따로 셉니다. 로그인한 위원 본인 열람은 빠지고, 위원 라운지에서는 확산으로 보입니다') +
       kpiTile('라운지 이용 위원', kv.now, '명', delta(kv.now, kv.prev, '명'), '최근 7일 라운지를 연 위원 · 30일 ' + num(kv.m30) + '명 · 첫 로그인 ' + num(kv.loggedIn) + '/' + num(kv.of) + '명') +
       kpiTile('실적 있는 위원', kc.all, '명', '<span class="ad-delta ' + (kcr >= 30 ? 'up' : 'flat') + '">' + kcr + '% <small>' + num(kc.of) + '명 중</small></span>', '최근 30일 실적 ' + num(kc.m30) + '명') +
       kpiTile('신규 위촉', k.joined.m30, '명', delta(k.joined.m30, k.joined.prev30, '명', '그 전 30일'), '최근 30일 · 7일 ' + num(k.joined.now) + '명') +
       '</div>';
     /* 2) 추이 */
-    var trend = '<div class="lg-card"><h2>' + ic('line-chart') + '12주 활동 추이<span class="sub">막대 추천 결제(건) · 선 확산(명함 · 링크로 AI 윤리를 접한 사람, 명) · 월요일 시작 주</span></h2>' +
-      comboChart(sr.weeks, sr.credits, sr.reach, { label: '12주 추천 실적과 확산' }) +
-      '<div class="ad-legend ad-legend--chart"><span><i style="background:#1F5FE0"></i>추천 결제 <b>' + num(sr.credits.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span><i style="background:#0B8F84;border-radius:2px;height:3px"></i>확산 <b>' + num(sr.reach.reduce(function (x, y) { return x + y; }, 0)) + '명</b></span><span><i style="background:#F0A24A"></i>취소 · 환불 <b>' + num(sr.canceled.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span class="lg-muted" style="font-weight:500">마지막 막대 · 점은 진행 중인 이번 주</span></div>' +
+    var trend = '<div class="lg-card"><h2>' + ic('line-chart') + '12주 활동 추이<span class="sub">막대 추천 결제(건) · 선 명함 · 링크 열람(회) · 월요일 시작 주</span></h2>' +
+      comboChart(sr.weeks, sr.credits, sr.reach, { label: '12주 추천 실적과 명함 · 링크 열람' }) +
+      '<div class="ad-legend ad-legend--chart"><span><i style="background:#1F5FE0"></i>추천 결제 <b>' + num(sr.credits.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span><i style="background:#0B8F84;border-radius:2px;height:3px"></i>명함 · 링크 열람 <b>' + num(sr.reach.reduce(function (x, y) { return x + y; }, 0)) + '회</b></span><span><i style="background:#F0A24A"></i>취소 · 환불 <b>' + num(sr.canceled.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span class="lg-muted" style="font-weight:500">마지막 막대 · 점은 진행 중인 이번 주</span></div>' +
       '<div class="ad-sparks">' + sparkTile('라운지 이용 위원', sr.visitors || sr.visits, '명', '#7C3AED') + sparkTile('도구 사용 · 저장', sr.kit, '회', '#E06B8A') + sparkTile('활동 링크', sr.links, '건', '#F0A24A') + sparkTile('신규 위촉', sr.joined, '명', '#0B8F84') + '</div></div>';
     /* 3) 순위 */
     var top3 = an.rank.filter(function (r) { return r.status !== '종료' && r.score > 0; }).slice(0, 3);
-    var podium = top3.length ? '<div class="ad-podium">' + top3.map(function (r, i) { var b = scoreBand(r.score); return '<button type="button" class="ad-pod p' + (i + 1) + '" data-member="' + esc(r.code) + '"><span class="medal">' + (i + 1) + '</span><b>' + esc(r.name) + '</b><small>' + esc(r.code) + (r.badge ? ' · ' + esc(TIER_WORD[r.badge] || r.badge) : '') + '</small><em style="color:' + b[2] + '">' + r.score + '점 · ' + b[1] + '</em><i>30일 실적 ' + r.credits30 + ' · 확산 ' + num(r.reach30) + ' · 이용 ' + r.visits30 + '일</i></button>'; }).join('') + '</div>' : '<p class="lg-empty" style="text-align:center;padding:14px 0">아직 활동 점수가 있는 위원이 없습니다. 확산 · 실적 · 라운지 이용이 기록되면 순위가 생깁니다.</p>';
+    var podium = top3.length ? '<div class="ad-podium">' + top3.map(function (r, i) { var b = scoreBand(r.score); return '<button type="button" class="ad-pod p' + (i + 1) + '" data-member="' + esc(r.code) + '"><span class="medal">' + (i + 1) + '</span><b>' + esc(r.name) + '</b><small>' + esc(r.code) + (r.badge ? ' · ' + esc(TIER_WORD[r.badge] || r.badge) : '') + '</small><em style="color:' + b[2] + '">' + r.score + '점 · ' + b[1] + '</em><i>30일 실적 ' + r.credits30 + ' · 열람 ' + num(r.reach30) + ' · 이용 ' + r.visits30 + '일</i></button>'; }).join('') + '</div>' : '<p class="lg-empty" style="text-align:center;padding:14px 0">아직 활동 점수가 있는 위원이 없습니다. 명함 · 링크 열람 · 실적 · 라운지 이용이 기록되면 순위가 생깁니다.</p>';
     var list = rankRows(an), rk = S.rank;
     function th(key, label, cls) { var on = rk.key === key, sign = (RANK_KEYS[key] || RANK_KEYS.score)[1] * (rk.dir || 1); return '<th class="' + (cls || '') + (on ? ' on' : '') + '"><button type="button" data-sort="' + key + '">' + label + (on ? (sign < 0 ? ' ▼' : ' ▲') : '') + '</button></th>'; }
     var rows = list.map(function (r, i) {
       var band = scoreBand(r.score), ended = r.status === '종료';
       return '<tr class="ad-row' + (ended ? ' done' : '') + '" data-code="' + esc(r.code) + '"><td class="num"><span class="ad-rank r' + (r.rank <= 3 && !ended && r.score > 0 ? r.rank : 0) + '">' + (ended ? '-' : r.rank) + '</span></td><td>' + who(r) + (r.status !== '활동' ? ' ' + statusChip(r.status) : '') + '</td><td>' + (ended ? '<span class="lg-muted">-</span>' : scoreBar(r)) + '</td><td class="num">' + r.credits30 + (r.pending ? ' <small class="lg-muted">(대기 ' + r.pending + ')</small>' : '') + '</td><td class="num">' + r.credits + ' ' + trendIcon(r.trend) + '</td><td class="num">' + num(r.reach30) + (r.reachPrev30 !== undefined && r.reach30 !== r.reachPrev30 ? ' <small class="' + (r.reach30 > r.reachPrev30 ? 'up' : 'down') + '">' + (r.reach30 > r.reachPrev30 ? '▲' : '▼') + num(Math.abs(r.reach30 - r.reachPrev30)) + '</small>' : '') + '</td><td class="num">' + r.visits30 + '</td><td class="num">' + (r.kitDays30 + r.links30) + (r.saves30 ? ' <small class="lg-muted">저장 ' + r.saves30 + '</small>' : '') + '</td><td>' + agoTxt(r.silentDays) + (r.lastKind ? ' <small class="lg-muted">' + esc(kindLabel(r.lastKind)) + '</small>' : '') + '</td><td><span class="ad-band" style="background:' + band[2] + (band[0] >= 50 ? ';color:#fff' : '') + '">' + band[1] + '</span></td></tr>';
     }).join('');
-    var ranking = '<div class="lg-card"><h2>' + ic('trophy') + '위원 활동 순위<span class="sub">활동 점수 100점: 최근 30일 실적 ' + an.scoreRule.credit + '점/건(최대 ' + an.scoreRule.creditMax + ') · 확산 ' + an.scoreRule.reach + '점/명(최대 ' + an.scoreRule.reachMax + ') · 라운지 이용 ' + an.scoreRule.visit + '점/일(최대 ' + an.scoreRule.visitMax + ') · 활동 링크 ' + an.scoreRule.link + '점/건(최대 ' + an.scoreRule.linkMax + ') · 도구 사용 ' + an.scoreRule.kit + '점/일(최대 ' + an.scoreRule.kitMax + ')</span></h2>' + podium +
+    var ranking = '<div class="lg-card"><h2>' + ic('trophy') + '위원 활동 순위<span class="sub">활동 점수 100점: 최근 30일 실적 ' + an.scoreRule.credit + '점/건(최대 ' + an.scoreRule.creditMax + ') · 명함 · 링크 열람 ' + an.scoreRule.reach + '점/회(최대 ' + an.scoreRule.reachMax + ') · 라운지 이용 ' + an.scoreRule.visit + '점/일(최대 ' + an.scoreRule.visitMax + ') · 활동 링크 ' + an.scoreRule.link + '점/건(최대 ' + an.scoreRule.linkMax + ') · 도구 사용 ' + an.scoreRule.kit + '점/일(최대 ' + an.scoreRule.kitMax + ')</span></h2>' + podium +
       '<div class="ad-filter" style="margin-top:14px"><span class="lg-muted" style="font-size:12.5px">' + list.length + '명 · 열 제목을 누르면 정렬</span><label class="lg-toggle" style="margin-left:auto"><input type="checkbox" id="adRankAll"' + (rk.all ? ' checked' : '') + '> 종료 위원 포함</label></div>' +
-      '<div class="ad-scroll"><table class="lg-tbl ad-ranktbl"><thead><tr>' + th('score', '순위', 'num') + '<th>위원</th>' + th('score', '활동 점수') + th('credits30', '30일 실적', 'num') + th('credits', '누적 확정', 'num') + th('reach30', '30일 확산', 'num') + th('visits30', '이용일', 'num') + th('kit', '도구 · 링크', 'num') + th('recent', '마지막 활동') + '<th>활동 온도</th></tr></thead><tbody>' + (rows || '<tr><td colspan="10" class="lg-empty">위원이 없습니다</td></tr>') + '</tbody></table></div>' +
-      '<p class="ad-fnote">누적 확정 옆 ▲▼ 는 최근 4주 실적을 그 전 4주와 비교. 30일 확산 옆 ▲▼ 는 그 전 30일과 비교. 행을 누르면 위원 상세 · 조치</p></div>';
+      '<div class="ad-scroll"><table class="lg-tbl ad-ranktbl"><thead><tr>' + th('score', '순위', 'num') + '<th>위원</th>' + th('score', '활동 점수') + th('credits30', '30일 실적', 'num') + th('credits', '누적 확정', 'num') + th('reach30', '30일 열람', 'num') + th('visits30', '이용일', 'num') + th('kit', '도구 · 링크', 'num') + th('recent', '마지막 활동') + '<th>활동 온도</th></tr></thead><tbody>' + (rows || '<tr><td colspan="10" class="lg-empty">위원이 없습니다</td></tr>') + '</tbody></table></div>' +
+      '<p class="ad-fnote">누적 확정 옆 ▲▼ 는 최근 4주 실적을 그 전 4주와 비교. 30일 열람 옆 ▲▼ 는 그 전 30일과 비교. 행을 누르면 위원 상세 · 조치</p></div>';
     /* 4) 활동 온도 격자 */
     var grid = an.rank.filter(function (r) { return r.status !== '종료'; }).slice().sort(function (x, y) { return y.score - x.score || x.name.localeCompare(y.name, 'ko'); });
     var tiles = grid.map(function (r) { var b = scoreBand(r.score), paused = r.status !== '활동'; return '<button type="button" class="ad-tile-m' + (paused ? ' paused' : '') + '" data-member="' + esc(r.code) + '" style="background:' + b[2] + (b[0] >= 50 ? ';color:#fff' : '') + '" title="' + esc(r.name) + ' · ' + r.score + '점 · ' + b[1] + (paused ? ' · ' + esc(r.status) : '') + ' · 마지막 활동 ' + agoTxt(r.silentDays) + '"><b>' + esc(r.name) + '</b><small>' + r.score + '</small></button>'; }).join('');
@@ -824,12 +828,12 @@
     /* 6) 퍼널 · 통계 */
     var statsGrid = '<div class="ad-stats">' +
       statCell('위원당 확정 실적', num(s.creditsMean) + '<small>건</small>', '중앙값 ' + num(s.creditsMedian) + '건 · 0건 위원 ' + s.zeroShare + '%') +
-      statCell('위원당 누적 확산', num(s.reachMean) + '<small>명</small>', '중앙값 ' + num(s.reachMedian) + '명') +
+      statCell('위원당 누적 열람', num(s.reachMean) + '<small>회</small>', '중앙값 ' + num(s.reachMedian) + '회') +
       statCell('활동 점수 평균', num(s.scoreMean) + '<small>점</small>', '중앙값 ' + num(s.scoreMedian) + '점') +
       statCell('상위 20% 실적 점유율', s.top20Share + '<small>%</small>', '상위 ' + s.top20N + '명이 낸 확정 실적 비율') +
       statCell('첫 실적까지', (s.firstCreditN ? num(s.firstCreditMean) + '<small>일</small>' : '-'), s.firstCreditN ? '중앙값 ' + num(s.firstCreditMedian) + '일 · ' + s.firstCreditN + '명 기준' : '아직 첫 실적이 없습니다') +
       statCell('첫 로그인까지', (s.firstLoginN ? num(s.firstLoginMean) + '<small>일</small>' : '-'), s.firstLoginN ? '중앙값 ' + num(s.firstLoginMedian) + '일 · ' + s.firstLoginN + '명 기준' : '아직 로그인한 위원이 없습니다') +
-      statCell('확산 → 실적 전환(90일)', (s.reachToCredit90 === null ? '-' : s.reachToCredit90 + '<small>%</small>'), '명함 · 링크가 열린 수 대비 결제') +
+      statCell('열람 → 추천 결제(90일)', (s.reachToCredit90 === null ? '-' : s.reachToCredit90 + '<small>%</small>'), '명함 · 링크가 열린 수 대비 결제') +
       statCell('취소 · 환불율', s.cancelRate + '<small>%</small>', '본인 결제 비율 ' + s.selfRate + '%') +
       '</div>';
     var funnelCard = '<div class="ad-two"><div class="lg-card"><h2>' + ic('filter') + '위원 여정 퍼널<span class="sub">전체 ' + f.members + '명</span></h2>' + funnelHTML(f) + '</div>' +
@@ -839,29 +843,29 @@
     var hm = heatmapHTML(an.heat);
     var kitKeys = Object.keys(an.kit).sort(function (x, y) { return an.kit[y] - an.kit[x]; }), kitMax = Math.max(1, kitKeys.length ? an.kit[kitKeys[0]] : 1);
     var kitRows = kitKeys.map(function (kk) { return '<div class="ad-hrow"><span>' + esc(kitLabel(kk)) + '</span><div class="ad-hbar"><i style="width:' + (100 * an.kit[kk] / kitMax).toFixed(1) + '%"></i></div><b>' + num(an.kit[kk]) + '</b></div>'; }).join('');
-    var channelCard = '<div class="ad-two"><div class="lg-card"><h2>' + ic('radar') + '어디서 닿았나<span class="sub">최근 30일 확산 ' + num(chTotal) + '명의 경로</span></h2>' + segBar(chParts, chTotal) + legend(chParts, chTotal) +
-      '<h3 class="ad-h3">언제 열리나 <small>요일 × 2시간 · 30일 확산' + (hm.best ? ' · 가장 많이 열린 때 <b>' + esc(hm.best) + '</b>' : '') + '</small></h3>' + hm.html + '</div>' +
+    var channelCard = '<div class="ad-two"><div class="lg-card"><h2>' + ic('radar') + '어디서 열렸나<span class="sub">최근 30일 명함 · 링크 열람 ' + num(chTotal) + '회의 경로</span></h2>' + segBar(chParts, chTotal) + legend(chParts, chTotal) +
+      '<h3 class="ad-h3">언제 열리나 <small>요일 × 2시간 · 30일 열람' + (hm.best ? ' · 가장 많이 열린 때 <b>' + esc(hm.best) + '</b>' : '') + '</small></h3>' + hm.html + '</div>' +
       '<div class="lg-card"><h2>' + ic('mouse-pointer-click') + '확산 도구 사용<span class="sub">최근 30일 · 위원이 라운지에서 복사 · 연 횟수(항목별 하루 1회)</span></h2>' + (kitRows || '<p class="lg-empty">아직 기록이 없습니다. 위원이 라운지에서 링크 · 문안을 복사하면 여기에 쌓입니다.</p>') +
       '<div class="ad-mini"><div><span>명함 이미지 저장</span><b>' + num(k.tools.saves30) + '</b></div><div><span>명함 공유</span><b>' + num(k.tools.shares30) + '</b></div><div><span>활동 링크 등록</span><b>' + num(k.tools.links30) + '</b></div><div><span>증명서 요청</span><b>' + num(k.tools.cert30) + '</b></div></div></div></div>';
     /* 8) 월별 · 코호트 · 분포 · 정산 */
     var moMax = { c: Math.max(1, Math.max.apply(null, mo.credits)), r: Math.max(1, Math.max.apply(null, mo.reach)), p: Math.max(1, Math.max.apply(null, mo.paid)) };
     var moRows = mo.months.map(function (m, i) { var isNow = i === mo.months.length - 1; return '<tr' + (isNow ? ' class="now"' : '') + '><td>' + esc(m.replace('-', '.')) + (isNow ? ' <small class="lg-muted">진행 중</small>' : '') + '</td><td class="num">' + num(mo.joined[i]) + '</td><td><div class="ad-cell"><i style="width:' + (100 * mo.credits[i] / moMax.c).toFixed(1) + '%"></i><b>' + num(mo.credits[i]) + '</b></div></td><td><div class="ad-cell teal"><i style="width:' + (100 * mo.reach[i] / moMax.r).toFixed(1) + '%"></i><b>' + num(mo.reach[i]) + '</b></div></td><td class="num">' + num(mo.visitors ? mo.visitors[i] : mo.visits[i]) + '</td><td><div class="ad-cell gold"><i style="width:' + (100 * mo.paid[i] / moMax.p).toFixed(1) + '%"></i><b>' + won(mo.paid[i]) + (mo.paidN[i] ? ' <small>' + mo.paidN[i] + '건</small>' : '') + '</b></div></td></tr>'; }).join('');
     var payKpi = '<div class="ad-mini ad-mini--pay"><div><span>누적 지급</span><b>' + won(k.pay.paidTotal) + '</b><i>' + k.pay.paidMembers + '명 · ' + k.pay.paidRows + '회</i></div><div><span>최근 30일 지급</span><b>' + won(k.pay.paid30) + '</b><i>그 전 30일 ' + won(k.pay.paidPrev30) + '</i></div><div><span>지급 예정</span><b>' + won(k.pay.dueTotal) + '</b><i>' + k.pay.dueN + '건</i></div><div><span>보류(정산 정보 없음)</span><b>' + won(k.pay.holdTotal) + '</b><i>' + k.pay.holdN + '건</i></div><div><span>지급 위원당 평균</span><b>' + won(k.pay.avgPerPaidMember) + '</b><i>지급 위원 ' + num(k.pay.paidMembers) + '명 기준</i></div></div>';
-    var monthlyCard = '<div class="lg-card"><h2>' + ic('calendar') + '월별 흐름과 정산<span class="sub">최근 ' + an.months + '개월</span></h2>' + payKpi + '<div class="ad-scroll"><table class="lg-tbl ad-motbl"><thead><tr><th>월</th><th class="num">신규 위촉</th><th>추천 결제</th><th>확산</th><th class="num">라운지 이용 위원</th><th>지급액</th></tr></thead><tbody>' + moRows + '</tbody></table></div></div>';
+    var monthlyCard = '<div class="lg-card"><h2>' + ic('calendar') + '월별 흐름과 정산<span class="sub">최근 ' + an.months + '개월</span></h2>' + payKpi + '<div class="ad-scroll"><table class="lg-tbl ad-motbl"><thead><tr><th>월</th><th class="num">신규 위촉</th><th>추천 결제</th><th>명함 · 링크 열람</th><th class="num">라운지 이용 위원</th><th>지급액</th></tr></thead><tbody>' + moRows + '</tbody></table></div></div>';
     var cohortRows = an.cohorts.slice().reverse().map(function (c) { return '<tr><td>' + esc(c.month.replace('-', '.')) + '</td><td class="num">' + c.n + '</td><td class="num">' + c.active + '</td><td class="num">' + c.loggedInRate + '%</td><td class="num">' + c.creditedRate + '%</td><td class="num">' + num(c.creditsAvg) + '</td><td class="num">' + num(c.reachAvg) + '</td></tr>'; }).join('');
     var tierParts = [['캠페인위원', dist.tier.base || 0, '#C9D8F5'], ['선임위원', dist.tier['선임'] || 0, '#7FA6EE'], ['책임위원', dist.tier['책임'] || 0, '#7C3AED'], ['수석위원', dist.tier['수석'] || 0, '#F0A24A']];
     var stParts = [['활동', dist.status['활동'] || 0, '#0B8F84'], ['휴면 예정', dist.status['휴면예정'] || 0, '#F0A24A'], ['휴면', dist.status['휴면'] || 0, '#E06B8A'], ['종료', dist.status['종료'] || 0, '#A0AEC0']];
     var crParts = [['0건', dist.credits[0], '#E5EAF2'], ['1~2건', dist.credits[1], '#C9D8F5'], ['3~9건', dist.credits[2], '#7FA6EE'], ['10~29건', dist.credits[3], '#1F5FE0'], ['30건+', dist.credits[4], '#0F2A5F']];
     var gaParts = [['0~30%', dist.gauge[0], '#E06B8A'], ['31~60%', dist.gauge[1], '#F0A24A'], ['61~100%', dist.gauge[2], '#0B8F84']];
-    var distCard = '<div class="ad-two"><div class="lg-card"><h2>' + ic('users-round') + '위촉 월별 정착<span class="sub">코호트 · 종료 제외</span></h2><div class="ad-scroll"><table class="lg-tbl ad-fit"><thead><tr><th>위촉 월</th><th class="num">인원</th><th class="num">활동 중</th><th class="num">로그인율</th><th class="num">실적 보유율</th><th class="num">평균 확정</th><th class="num">평균 확산</th></tr></thead><tbody>' + (cohortRows || '<tr><td colspan="7" class="lg-empty">아직 없음</td></tr>') + '</tbody></table></div></div>' +
+    var distCard = '<div class="ad-two"><div class="lg-card"><h2>' + ic('users-round') + '위촉 월별 정착<span class="sub">코호트 · 종료 제외</span></h2><div class="ad-scroll"><table class="lg-tbl ad-fit"><thead><tr><th>위촉 월</th><th class="num">인원</th><th class="num">활동 중</th><th class="num">로그인율</th><th class="num">실적 보유율</th><th class="num">평균 확정</th><th class="num">평균 열람</th></tr></thead><tbody>' + (cohortRows || '<tr><td colspan="7" class="lg-empty">아직 없음</td></tr>') + '</tbody></table></div></div>' +
       '<div class="lg-card"><h2>' + ic('pie-chart') + '분포</h2><div class="ad-dist"><div><span>등급(직함)</span>' + segBar(tierParts) + legend(tierParts) + '</div><div><span>상태(전체 ' + a.roster.length + '명)</span>' + segBar(stParts) + legend(stParts) + '</div><div><span>누적 확정 실적 구간</span>' + segBar(crParts) + legend(crParts) + '</div><div><span>활동 게이지(활동 중)</span>' + segBar(gaParts) + legend(gaParts) + '</div></div></div></div>';
     /* 9) 메일 · 타임라인 */
     var mk = Object.keys(an.mail.byKind).sort(function (x, y) { return (an.mail.byKind[y].sent + an.mail.byKind[y].wait) - (an.mail.byKind[x].sent + an.mail.byKind[x].wait); });
     var mailRows = mk.map(function (kk) { var b = an.mail.byKind[kk]; return '<tr><td>' + esc(mailKind(kk)) + '</td><td class="num">' + num(b.sent) + '</td><td class="num">' + (b.failed ? '<b style="color:#991B12">' + num(b.failed) + '</b>' : '0') + '</td><td class="num">' + num(b.wait) + '</td></tr>'; }).join('');
     var tl = an.timeline.map(function (t) { return '<li><span class="at">' + esc(String(t.at).slice(5, 16)) + '</span>' + (t.name ? '<button type="button" class="lg-link" data-member="' + esc(t.code) + '">' + esc(t.name) + '</button>' : '<span>' + esc(t.code) + '</span>') + ' <b>' + esc(kindLabel(t.kind)) + '</b>' + (t.kind === 'kit' ? ' <small>' + esc(kitLabel(t.path)) + '</small>' : t.kind === 'link' ? ' <small><a href="' + esc(t.path) + '" target="_blank" rel="noopener">' + esc(short(t.path).slice(0, 40)) + '</a></small>' : t.detail && t.kind !== 'save' && t.kind !== 'share' && t.kind !== '라운지' ? ' <small>' + esc(String(t.detail).slice(0, 40)) + '</small>' : '') + '</li>'; }).join('');
     var tailCards = '<div class="ad-two"><div class="lg-card"><h2>' + ic('mail') + '메일 30일<span class="sub">대기 ' + num(an.mail.wait) + '통 · 발송 ' + num(an.mail.sent30) + ' · 실패 ' + num(an.mail.failed30) + '</span></h2>' + (mailRows ? '<table class="lg-tbl ad-fit"><thead><tr><th>종류</th><th class="num">발송</th><th class="num">실패</th><th class="num">대기</th></tr></thead><tbody>' + mailRows + '</tbody></table>' : '<p class="lg-empty">최근 30일에 만들어진 메일이 없습니다</p>') +
-      '<h3 class="ad-h3">무엇을 모으나</h3><ul class="ad-collect"><li><b>확산</b> 명함 · 바로 결제 · 소개 · AIEP 링크가 열린 수(브라우저당 하루 1회, 경로 · 시각)</li><li><b>라운지 이용</b> 위원이 라운지를 연 날(하루 1회 활동 신호로도 인정)</li><li><b>도구 사용</b> 링크 · 문안 복사, QR 열기, 매뉴얼 내려받기(항목별 하루 1회)</li><li><b>명함 저장 · 공유</b> 명단의 명함 이미지 저장 · 공유 버튼</li><li><b>실적 · 정산</b> 결제 · 확정 · 취소 · 지급(아임웹 5분 폴링)</li><li><b>상태 · 메일</b> 게이지 · 휴면 · 종료 · 발송 결과</li></ul></div>' +
-      '<div class="lg-card"><h2>' + ic('clock') + '최근 활동 타임라인<span class="sub">확산 제외 · 최근 ' + an.timeline.length + '건</span></h2><ul class="ad-tl">' + (tl || '<li class="lg-muted">아직 기록이 없습니다</li>') + '</ul></div></div>';
+      '<h3 class="ad-h3">무엇을 모으나</h3><ul class="ad-collect"><li><b>명함 · 링크 열람</b> 위원 명함 · 바로 결제 · 소개 · AIEP 링크가 열린 수(같은 브라우저는 위원마다 하루 1회, 경로 · 시각 · 방문자 표식으로 사람 수도 셈). 위원 라운지에서는 같은 기록이 &lsquo;확산&rsquo;으로 보임</li><li><b>라운지 이용</b> 위원이 라운지를 연 날(하루 1회 활동 신호로도 인정)</li><li><b>도구 사용</b> 링크 · 문안 복사, QR 열기, 매뉴얼 내려받기(항목별 하루 1회)</li><li><b>명함 저장 · 공유</b> 명단의 명함 이미지 저장 · 공유 버튼</li><li><b>실적 · 정산</b> 결제 · 확정 · 취소 · 지급(아임웹 5분 폴링)</li><li><b>상태 · 메일</b> 게이지 · 휴면 · 종료 · 발송 결과</li></ul></div>' +
+      '<div class="lg-card"><h2>' + ic('clock') + '최근 활동 타임라인<span class="sub">명함 · 링크 열람 제외 · 최근 ' + an.timeline.length + '건</span></h2><ul class="ad-tl">' + (tl || '<li class="lg-muted">아직 기록이 없습니다</li>') + '</ul></div></div>';
     return payAlert + kpis + trend + ranking + heatGrid + risks + funnelCard + channelCard + monthlyCard + distCard + tailCards +
       '<p class="lg-foot">계산 시각 ' + esc(an.at) + ' · 이 화면의 숫자는 운영 시트의 위원명단 · 활동내역 · 정산관리 · 활동_로그(120일 보관) · 활동_메일에서 요청 때마다 다시 셉니다. 개인정보(계좌 · 주민등록번호)는 이 탭에 나오지 않습니다.</p>';
   }
@@ -996,7 +1000,7 @@
       var last = j.last ? String(j.last).slice(0, 16) : '', gap = Number(j.gapDays) || 7, wait = Number(j.waitDays) || 0;   /* 남은 날은 서버가 계산(시간대 차이 없게) */
       var body = '<div class="ad-mailmeta"><div><span>받는 사람</span><b>' + esc(j.to) + '</b></div><div><span>제목</span><b>' + esc(j.subject) + '</b></div>' + (last ? '<div><span>지난 응원 메일</span><b>' + esc(last) + '</b></div>' : '') + '</div>' +
         '<iframe class="ad-mailframe" sandbox="" title="응원 메일 미리 보기" srcdoc="' + esc('<!doctype html><meta charset="utf-8"><body style="margin:0">' + j.html + '</body>') + '"></iframe>' +
-        '<p class="ad-note">위원의 실적 · 확산 · 라운지 로그인 여부에 맞춰 문장이 달라집니다. 실적 부족 · 기한 · 휴면 같은 말은 넣지 않았고, 같은 위원에게는 ' + gap + '일에 한 번만 보낼 수 있습니다. 메일 대기열이 멈춰 있어도 바로 나갑니다.</p>';
+        '<p class="ad-note">위원의 실적 · 명함 · 링크 열람 · 라운지 로그인 여부에 맞춰 문장이 달라집니다. 실적 부족 · 기한 · 휴면 같은 말은 넣지 않았고, 같은 위원에게는 ' + gap + '일에 한 번만 보낼 수 있습니다. 메일 대기열이 멈춰 있어도 바로 나갑니다.</p>';
       var foot = '<button type="button" class="btn btn-ghost btn-sm" data-act="close">닫기</button>' + (wait > 0 ? '<button type="button" class="btn btn-primary btn-sm" disabled>' + wait + '일 뒤에 다시 보낼 수 있음</button>' : '<button type="button" class="btn btn-primary btn-sm" data-act="send">이 메일 보내기</button>');
       var md2 = modal('응원 메일 미리 보기', m.name + ' 위원 · ' + m.code, body, foot);
       md2.onclick = function (e) {
