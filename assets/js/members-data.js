@@ -106,6 +106,7 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '배윤주', en: 'Bae Yun-ju', code: 'BYJ8478', email: 'globalcode77@gmail.com', since: '2026.09', field: 'AI 디지털 교육 · 역량 강화', photo: 'bae-yunju.jpg' },
   { name: '김진영', en: 'Kim Jin-young', code: 'KJY0902', email: 'jin00902@gmail.com', since: '2026.09', field: 'AI 공익 · 사회적 가치 확산', photo: 'kim-jinyoung.jpg' },
   { name: '이채연', en: 'Lee Chae-yeon', code: 'LCY3431', email: 'chaeyeon4898@naver.com', since: '2026.09', field: 'AI 서비스 · 기획 실무', photo: 'lee-chaeyeon.jpg' },
+  { name: '김은혜', en: 'Kim Eun-hye', code: 'KEH1225', email: 'eh44mo@naver.com', since: '2026.09', field: 'AI 윤리 교육 · 디지털 리터러시', photo: 'kim-eunhye.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
