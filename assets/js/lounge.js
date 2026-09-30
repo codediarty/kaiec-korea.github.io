@@ -218,9 +218,10 @@
 
   /* ---------- 위원: 대시보드 ---------- */
   /* 1.4.4 로그인 응답에 함께 온 대시보드(withDash)를 바로 씀: 로그인 → 대시보드 두 번 오가던 것을 한 번에 */
-  function takeDash(j) { var d = j && j.dash; if (!(d && d.ok && d.member && d.member.code)) return false; S.data = d; store(KEY_DASH, JSON.stringify(d)); renderDash(); return true; }
+  function takeDash(j) { var d = j && j.dash; if (!(d && d.ok && d.member && d.member.code)) return false; S.data = d; store(KEY_DASH, JSON.stringify(d)); lastLoadAt = Date.now(); renderDash(); return true; }
   function cachedDash() { try { var j = JSON.parse(read(KEY_DASH) || 'null'); return j && j.ok && j.member && j.member.code ? j : null; } catch (e) { return null; } }
   function loadDash() {
+    lastLoadAt = Date.now();
     var shown = false;
     if (S.data) { shown = true; }                                   /* 이미 열려 있으면 그대로 두고 뒤에서 새로 고침 */
     else { var c = cachedDash(); if (c) { S.data = c; renderDash(); shown = true; } }
@@ -243,14 +244,14 @@
     ['블로그 · 커뮤니티', '[추천] 한국AI윤리위원회 AI윤리전문가(AIEP) 양성과정\n생성형 AI를 쓰는 학생 · 직장인이라면 한 번은 정리해 둘 만한 내용입니다. 표준교재로 자율 학습하고 온라인 이수 평가를 통과하면 위원회 공식 명단에 등록됩니다.\n아래 링크(AI 윤리 캠페인위원 추천)로 신청하면 위원 추천 할인이 적용됩니다.\n{intro}']
   ];
   /* 직함(등급, 2026.09.29 사용자 결정): 확정 크레딧 0~2 AI 윤리 캠페인위원 · 3 선임 · 10 책임 · 30 수석.
-     2026.09.30 사용자: 승급하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원(명단 · 명함 · 라운지 · 메일 모두). 옛 이름 'AI 윤리 선임위원'도 새 이름으로 읽음 */
+     2026.09.30 사용자: 승격하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원(명단 · 명함 · 라운지 · 메일 모두). 옛 이름 'AI 윤리 선임위원'도 새 이름으로 읽음 */
   var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원' };
   function tierFull(name) { name = String(name || '').replace(/^AI 윤리 (선임|책임|수석)위원$/, 'AI $1위원'); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
   function shortTier(name) { return tierFull(name).replace(/^AI (윤리 )?/, ''); }
   function tierBadgeOf(name) { var f = tierFull(name); for (var k in TIER_WORD) if (TIER_WORD[k] === f) return k; return ''; }
   /* 라운지 머리 카드의 직함: '한국AI윤리위원회(KAIEC)' 아래 직함을 등급별 색으로(선임 은청색 · 책임 자주 · 수석 금색) */
   function tierChip(badge, tier, hero) { var b = badge || tierBadgeOf(tier), full = hero ? heroTier(tier) : tierFull(tier); return '<span class="lg-tier' + (b ? ' lg-tier--' + b : ' lg-tier--base') + '">' + (b ? ic('award') : '') + esc(full) + '</span>'; }
-  /* 라운지 머리 카드는 기본 직함도 '윤리'를 뺀 'AI 캠페인위원'(2026.09.29 사용자: 이 화면에서는 윤리를 빼 달라). 승급 직함은 1.4.1 부터 어디서나 'AI 선임위원' 식 */
+  /* 라운지 머리 카드는 기본 직함도 '윤리'를 뺀 'AI 캠페인위원'(2026.09.29 사용자: 이 화면에서는 윤리를 빼 달라). 승격 직함은 1.4.1 부터 어디서나 'AI 선임위원' 식 */
   function heroTier(name) { return tierFull(name).replace(/^AI 윤리 /, 'AI '); }
   function statusChip(st) { var map = { '활동': ['ok', '활동 중'], '휴면예정': ['wait', '휴면 예정'], '휴면': ['x', '휴면'], '종료': ['x', '종료'] }; var m = map[st] || ['x', st]; return '<span class="lg-chip lg-chip--' + m[0] + '">' + esc(m[1]) + '</span>'; }
   function creditRow(r) {
@@ -355,7 +356,7 @@
       (d.cert.eligible ? '<button type="button" class="btn btn-ghost btn-sm" data-act="cert" style="margin-top:10px">활동증명서 발급 요청</button>' : '<button type="button" class="btn btn-ghost btn-sm" disabled style="margin-top:10px;color:var(--gray-400);border-color:#E5E9F0">활동증명서 발급 요청</button> <span style="font-size:12px;color:var(--gray-500);margin-left:6px">' + esc(d.cert.from) + '부터 발급됩니다</span>') + '</div></div>';
     var notices = (d.notices || []).map(function (n) { return '<div class="lg-notice"><b>' + esc(n.title) + '</b><p>' + esc(n.body) + (n.link ? ' <a href="' + esc(n.link) + '" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">자세히 →</a>' : '') + '</p><small>공지 · ' + fmtMD(n.at) + '</small></div>'; }).join('');
     // 2026.09.30 운영자 미리보기(백엔드 1.3.2 preview): 위원 화면을 읽기 전용으로 볼 때 맨 위에 띠
-    var pvBar = d.preview ? '<div class="lg-preview" role="note">' + ic('eye') + '<span><b>운영자 미리보기</b> · ' + esc(d.preview.name || m.name) + ' 위원(' + esc(d.preview.code || code) + ') 화면입니다. 읽기 전용이라 바꿀 수 없고, 위원 활동 기록과 통계에 남지 않습니다.</span></div>' : '';
+    var pvBar = d.preview ? '<div class="lg-preview" role="note">' + ic('eye') + '<span><b>위원장 미리보기</b> · ' + esc(d.preview.name || m.name) + ' 위원(' + esc(d.preview.code || code) + ') 화면입니다. 읽기 전용이라 바꿀 수 없고, 위원 활동 기록과 통계에 남지 않습니다.</span></div>' : '';
     main.innerHTML = pvBar +
       '<div class="lg-grid">' +
       '<div class="lg-card"><h2>' + ic('trending-up') + '나의 임팩트</h2><div class="lg-big">당신의 추천으로 AI 윤리를 배우기 시작한 사람<strong>' + num(m.credits) + '<small>명</small></strong><span class="lg-sub">누적 임팩트 크레딧 ' + num(m.credits) + (m.pending ? ' · 확정 대기 ' + m.pending : '') + (m.canceled ? ' · 취소 ' + m.canceled : '') + '</span></div>' +
@@ -434,7 +435,7 @@
   /* ---------- 운영자 ---------- */
   function renderAdminLogin(msg) {
     hero.hidden = true;
-    login.innerHTML = '<div class="lg-lbox"><div class="lg-lhead"><div class="lg-eyebrow">KAIEC ADMIN</div><h1>운영자 대시보드</h1><p>위원 활동 시스템 · 정산 · 명단 · 공지</p></div><div class="lg-lbody"><form id="lgAForm" novalidate><div class="lg-field"><label for="lgAPw">운영자 비밀번호</label><input class="lg-input" id="lgAPw" type="password" autocomplete="current-password" maxlength="64"></div><p class="lg-err' + (msg ? ' is-on' : '') + '" id="lgErr">' + esc(msg || '') + '</p><div class="lg-btnrow"><button type="submit" class="btn btn-primary" id="lgGo">로그인</button></div><p class="lg-help" style="margin-top:12px"><a href="' + SITE + '/lounge/" style="color:var(--blue);font-weight:700">위원 라운지로</a></p></form></div><div class="lg-lfoot">운영자 전용 화면입니다(아이디 없이 비밀번호만). 위원 정보와 계좌가 보이므로 공용 컴퓨터에서는 쓰지 마세요.<br>비밀번호를 잊으셨으면 파트너 관리 시트 메뉴 [위원 활동 시스템] → [운영자 비밀번호 바꾸기…]에서 새로 정할 수 있습니다.</div></div>';
+    login.innerHTML = '<div class="lg-lbox"><div class="lg-lhead"><div class="lg-eyebrow">KAIEC CHAIR</div><h1>위원장 대시보드</h1><p>위원 활동 시스템 · 정산 · 명단 · 공지</p></div><div class="lg-lbody"><form id="lgAForm" novalidate><div class="lg-field"><label for="lgAPw">위원장 비밀번호</label><input class="lg-input" id="lgAPw" type="password" autocomplete="current-password" maxlength="64"></div><p class="lg-err' + (msg ? ' is-on' : '') + '" id="lgErr">' + esc(msg || '') + '</p><div class="lg-btnrow"><button type="submit" class="btn btn-primary" id="lgGo">로그인</button></div><p class="lg-help" style="margin-top:12px"><a href="' + SITE + '/lounge/" style="color:var(--blue);font-weight:700">위원 라운지로</a></p></form></div><div class="lg-lfoot">위원장 전용 화면입니다(아이디 없이 비밀번호만). 위원 정보와 계좌가 보이므로 공용 컴퓨터에서는 쓰지 마세요.<br>비밀번호를 잊으셨으면 파트너 관리 시트 메뉴 [위원 활동 시스템] → [위원장 비밀번호 바꾸기…]에서 새로 정할 수 있습니다.</div></div>';
     show('login');
     if (!API) { login.innerHTML = loginBox('<div class="lg-ready">' + ic('clock') + '<div><b>연결 준비 중</b><br>웹 앱 주소를 사이트에 넣은 뒤 열립니다.</div></div>'); return; }
     setTimeout(function () { $('lgAPw').focus(); }, 50);
@@ -464,9 +465,10 @@
     } catch (e) { /* 못 두어도 화면은 그대로 */ }
   }
   function hhmm(ms) { var d = new Date(ms); return pad2(d.getHours()) + ':' + pad2(d.getMinutes()); }
-  /* 탭 안에서 글자를 입력 중이거나 고친 칸이 있으면 true(체크 상자는 누르면 곧바로 처리되므로 보지 않음) */
-  function adTabEditing() {
-    var t = $('adTab'); if (!t) return false;
+  /* 그 영역 안에서 글자를 입력 중이거나 고친 칸이 있으면 true(체크 상자는 누르면 곧바로 처리되므로 보지 않음) */
+  function adTabEditing() { return editingIn($('adTab')); }
+  function editingIn(t) {
+    if (!t) return false;
     var txt = function (el) { return el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || (el.tagName === 'INPUT' && !/^(checkbox|radio|button|submit|reset|hidden|file)$/i.test(el.type || '')); };
     var a = document.activeElement; if (a && t.contains(a) && txt(a)) return true;
     var els = t.querySelectorAll('input, textarea, select');
@@ -478,11 +480,12 @@
     return false;
   }
   function setAdmin(j, soft) {
-    S.admin = j; saveAdmin(j);
+    S.admin = j; saveAdmin(j); lastLoadAt = Date.now();
     if (soft && !main.hidden && main.querySelector('#adTab') && adTabEditing()) { renderAdminTop(); return; }
     renderAdmin();
   }
   function loadAdmin(force) {   /* force: 공지 · 설정 · 지급 같은 작업 뒤라 입력 칸까지 모두 새로 그림 */
+    lastLoadAt = Date.now();
     var shown = !!S.admin && !main.hidden;
     if (!shown) { var c = cachedAdmin(); if (c) { S.admin = c; renderAdmin(); shown = true; } }
     if (shown) refreshing(true, S.admin.cachedAt ? '지금 화면은 ' + hhmm(S.admin.cachedAt) + ' 기준' : ''); else show('boot');
@@ -505,7 +508,7 @@
   function scheduleMailResume() {
     var d = new Date(); d.setDate(d.getDate() + 1); d.setHours(10, 0, 0, 0);
     var v = d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + 'T10:00';
-    var m = modal('위원 메일 발송 시작 예약', '그 시각까지는 위촉 · 안내 · 공지 메일을 보내지 않고, 시각이 지나면 위촉 메일부터 하루 한도 안에서 순서대로 보냅니다. 결제 · 정산 알림과 운영자 메일은 그동안에도 바로 나갑니다.',
+    var m = modal('위원 메일 발송 시작 예약', '그 시각까지는 위촉 · 안내 · 공지 메일을 보내지 않고, 시각이 지나면 위촉 메일부터 하루 한도 안에서 순서대로 보냅니다. 결제 · 정산 알림과 위원장 알림 메일은 그동안에도 바로 나갑니다.',
       '<div class="lg-field"><label for="adResumeAt">시작 시각</label><input class="lg-input" id="adResumeAt" type="datetime-local" value="' + v + '" step="600"></div>',
       '<button type="button" class="btn btn-ghost btn-sm" data-act="close">취소</button><button type="button" class="btn btn-primary btn-sm" data-act="ok">예약</button>');
     m.onclick = function (e) {
@@ -527,8 +530,8 @@
   }
   function adHeroHTML(a) {
     var todayD = dateOf(a.today), todayTxt = todayD ? todayD.getFullYear() + '년 ' + (todayD.getMonth() + 1) + '월 ' + todayD.getDate() + '일 ' + DAYS[todayD.getDay()] + '요일' : a.today;
-    return heroHTML('위원 라운지 &nbsp;›&nbsp; 운영자', '운영자 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''),
-      '<div class="lg-tools"><span class="lg-mode">' + ic('shield-check') + '관리자 모드</span>' + (a.sheetUrl ? '<a class="btn btn-light btn-sm" href="' + esc(a.sheetUrl) + '" target="_blank" rel="noopener">운영 시트 열기</a>' : '') + '<button type="button" class="btn btn-light btn-sm" data-act="reload">새로 고침</button><button type="button" class="btn btn-light btn-sm" data-act="logout">로그아웃</button></div>');
+    return heroHTML('위원 라운지 &nbsp;›&nbsp; 위원장', '위원장 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''),
+      '<div class="lg-tools"><span class="lg-mode">' + ic('shield-check') + '위원장 모드</span>' + (a.sheetUrl ? '<a class="btn btn-light btn-sm" href="' + esc(a.sheetUrl) + '" target="_blank" rel="noopener">운영 시트 열기</a>' : '') + '<button type="button" class="btn btn-light btn-sm" data-act="reload">새로 고침</button><button type="button" class="btn btn-light btn-sm" data-act="logout">로그아웃</button></div>');
   }
   function adTabsBarHTML(a) {
     var tabs = [['insight', '분석 대시보드'], ['pay', '정산 · 실적'], ['roster', '위원 명단 (' + a.roster.length + ')'], ['notice', '공지 보내기'], ['settings', '설정']];
@@ -558,7 +561,7 @@
     hero.innerHTML = adHeroHTML(a);
     main.innerHTML = adTilesHTML(a) + adTabsBarHTML(a) +
       '<div id="adTab">' + adminTabHTML() + '</div>' +
-      '<p class="lg-foot">계좌 · 주민등록번호는 운영자에게만 보이며 위원 화면에는 다른 위원의 정보가 나오지 않습니다. 이 창을 닫으면 자동으로 로그아웃됩니다. 새로 고침할 때는 마지막 화면을 먼저 보여 드리고 최신 숫자로 바꿉니다(계좌번호는 이 컴퓨터에 두지 않음).</p>';
+      '<p class="lg-foot">계좌 · 주민등록번호는 위원장에게만 보이며 위원 화면에는 다른 위원의 정보가 나오지 않습니다. 이 창을 닫으면 자동으로 로그아웃됩니다. 새로 고침할 때는 마지막 화면을 먼저 보여 드리고 최신 숫자로 바꿉니다(계좌번호는 이 컴퓨터에 두지 않음).</p>';
     show('main');
     hero.onclick = onAdminHero;
     main.onclick = onAdminClick;
@@ -609,7 +612,7 @@
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('bar-chart-3') + '주간 실적 <span class="sub">확정 기준 · 이번 주 · 지난주 · 4주 흐름 · 누적</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">이번 주</th><th class="num">지난주</th><th style="padding-left:16px">4주</th><th class="num">누적</th></tr></thead><tbody>' + (wrows || '<tr><td colspan="5" class="lg-empty">최근 4주 확정 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
       '<div class="lg-card"><h2>' + ic('users') + '위원 상태 <span class="sub">이번 주 변경</span></h2><div class="st"><div><span>활동 중</span><b>' + (a.tiles.status['활동'] || 0) + '</b></div><div><span>휴면 예정</span><b>' + (a.tiles.status['휴면예정'] || 0) + '</b></div><div><span>휴면</span><b>' + (a.tiles.status['휴면'] || 0) + '</b></div><div><span>종료</span><b>' + (a.tiles.status['종료'] || 0) + '</b></div></div><ul class="lg-list">' + (changes || '<li class="lg-muted">이번 주 상태 변경 없음</li>') + '</ul></div></div>' +
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('trending-up') + '누적 <span class="sub">전체 크레딧 ' + a.totals.credits + ' · 지급 ' + won(a.totals.paid) + ' · 미지급 ' + won(a.totals.unpaid) + '</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">누적 크레딧</th><th class="num">지급 완료</th><th class="num">미지급</th><th class="num">취소</th></tr></thead><tbody>' + (crows || '<tr><td colspan="5" class="lg-empty">아직 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
-      '<div class="lg-card"><h2>' + ic('external-link') + '활동 링크 · 자동 작업</h2><ul class="lg-list">' + (links || '<li class="lg-muted">등록된 활동 링크 없음</li>') + '</ul><p style="margin-top:12px;font-size:12.5px;line-height:1.8">자동: 5분마다 아임웹 주문 확인(결제 즉시 확정 · 결제마다 운영자 알림) · 매시간 새 위원 가져오기 · 매일 03:00 게이지 · 상태 계산(리마인드 · 휴면 예정 · 휴면 · 종료 메일) · 추천 결제 10일 재대조 · 목요일 00:05 정산표(수요일 24시까지 결제분) · 08:00 운영자 요약 메일 · 대기열 메일 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 · 매월 1일 임팩트 리포트</p></div></div>';
+      '<div class="lg-card"><h2>' + ic('external-link') + '활동 링크 · 자동 작업</h2><ul class="lg-list">' + (links || '<li class="lg-muted">등록된 활동 링크 없음</li>') + '</ul><p style="margin-top:12px;font-size:12.5px;line-height:1.8">자동: 5분마다 아임웹 주문 확인(결제 즉시 확정 · 결제마다 위원장 알림) · 매시간 새 위원 가져오기 · 매일 03:00 게이지 · 상태 계산(리마인드 · 휴면 예정 · 휴면 · 종료 메일) · 추천 결제 10일 재대조 · 목요일 00:05 정산표(수요일 24시까지 결제분) · 08:00 위원장 요약 메일 · 대기열 메일 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 · 매월 1일 임팩트 리포트</p></div></div>';
   }
   /* 세금 신고용 목록(1.4.2, 2026.09.30 사용자 '주민등록번호는 왜 수집 안 돼? 시트에 수집되어야 원천징수 3.3% 세금 신고 가능한 거 아니야?'):
      주민등록번호는 법에 따라 시트(활동_정산정보)에 암호화되어 있어 시트에서는 읽히지 않음 → 운영자 화면에서 지급 월을 골라 불러오면 서버가 풀어서 위원별로 합쳐 줌.
@@ -683,19 +686,20 @@
     var keys = Object.keys(s);
     var inputs = keys.map(function (k) { return '<label>' + esc(k) + '<span>' + esc(desc[k] || '') + '</span><input class="lg-input" name="' + esc(k) + '" value="' + esc(s[k]) + '" inputmode="decimal"></label>'; }).join('');
     return '<div class="lg-card"><h2>' + ic('database') + '설정 <span class="sub">운영 시트 \'설정\' 탭과 같은 값 · 바꾸면 다음 자동 작업부터 적용</span></h2><form id="adSettings" novalidate><div class="ad-set">' + inputs + '</div><p class="lg-err" id="sErr" style="margin-top:12px"></p><div class="lg-btnrow" style="margin-top:14px"><button type="submit" class="btn btn-primary btn-sm" style="flex:0 1 auto">저장</button></div></form>' +
-      '<p style="margin-top:16px;font-size:12.5px;line-height:1.8">PAYOUT_WEEKDAY 는 0 일 · 1 월 · 2 화 · 3 수 · 4 목 · 5 금 · 6 토. 정산 요일을 바꾸면 앱스 스크립트 편집기에서 setup 을 한 번 더 실행해 트리거를 다시 만들어야 합니다. 운영자 비밀번호는 파트너 관리 시트 메뉴 [위원 활동 시스템] → [운영자 비밀번호 바꾸기…]에서 바꿉니다(바꾸면 열려 있던 운영자 화면은 다시 로그인).</p></div>';
+      '<p style="margin-top:16px;font-size:12.5px;line-height:1.8">PAYOUT_WEEKDAY 는 0 일 · 1 월 · 2 화 · 3 수 · 4 목 · 5 금 · 6 토. 정산 요일을 바꾸면 앱스 스크립트 편집기에서 setup 을 한 번 더 실행해 트리거를 다시 만들어야 합니다. 위원장 비밀번호는 파트너 관리 시트 메뉴 [위원 활동 시스템] → [위원장 비밀번호 바꾸기…]에서 바꿉니다(바꾸면 열려 있던 위원장 화면은 다시 로그인).</p></div>';
   }
   /* ---------- 운영자 · 분석 대시보드(2026.09.29 밤, 백엔드 1.3.0 analytics) ----------
      사용자: 전체 위원 관리 · 정산 연동 · 누가 활동을 많이/안 하는지 시각화 · 수치화된 데이터 · 통계 · 순위 · 더 모을 데이터.
      서버가 admin.dashboard 에 함께 보내는 analytics(활동 점수 · 순위 · KPI · 12주 · 6개월 · 퍼널 · 분포 · 채널 · 히트맵 · 통계 · 코호트 · 점검 · 메일 · 타임라인)를 그림.
      차트는 외부 라이브러리 없이 인라인 SVG */
-  var KIND_KO = { reach: '확산', '로그인': '로그인', '라운지': '라운지 방문', link: '활동 링크', '링크등록': '링크 등록', kit: '도구 사용', save: '명함 저장', share: '명함 공유', payinfo: '정산 정보 등록', cert: '증명서 요청', '결제': '결제', '확정': '확정', '리치': '확산 신호', '위촉': '위촉', '활동확인': '활동 확인', '복귀링크': '복귀', '운영자복귀': '운영자 복귀' };
+  var KIND_KO = { reach: '확산', '로그인': '로그인', '라운지': '라운지 방문', link: '활동 링크', '링크등록': '링크 등록', kit: '도구 사용', save: '명함 저장', share: '명함 공유', payinfo: '정산 정보 등록', cert: '증명서 요청', '결제': '결제', '확정': '확정', '리치': '확산 신호', '위촉': '위촉', '활동확인': '활동 확인', '복귀링크': '복귀', '운영자복귀': '위원장 복귀' };
   var KIT_KO = { 'copy:card': '위원 명함 링크 복사', 'copy:go': '바로 결제 링크 복사', 'copy:intro': '소개 페이지 링크 복사', 'copy:experts': 'AIEP 안내 링크 복사', 'open:qr': '명함 · QR 열기', manual: '매뉴얼 내려받기' };
   var CHANNEL_KO = { card: ['위원 명함', '#1F5FE0'], go: ['바로 결제 링크', '#0B8F84'], intro: ['소개 페이지', '#7C3AED'], experts: ['AIEP 안내 페이지', '#F0A24A'], other: ['기타', '#A0AEC0'] };
   var SCORE_BANDS = [[80, '매우 활발', '#0B8F84'], [50, '활발', '#1F5FE0'], [20, '보통', '#7FA6EE'], [1, '저조', '#C9D8F5'], [0, '무활동', '#E5EAF2']];
   function scoreBand(score) { for (var i = 0; i < SCORE_BANDS.length; i++) if (score >= SCORE_BANDS[i][0]) return SCORE_BANDS[i]; return SCORE_BANDS[SCORE_BANDS.length - 1]; }
   function kitLabel(k) { k = String(k || ''); if (KIT_KO[k]) return KIT_KO[k]; if (k.indexOf('copy:msg:') === 0) return k.slice(9) + ' 문안 복사'; return k; }
   function kindLabel(k) { return KIND_KO[k] || k; }
+  function mailKind(k) { return k === '승급' ? '승격' : k === '관리자' ? '위원장 알림' : k; }   /* 1.4.5 사용자 '승급이 아니라 승격' · '운영자 말고 위원장' */
   function pct(a, b) { return b > 0 ? Math.round(1000 * a / b) / 10 : 0; }
   function agoTxt(days) { days = Number(days); if (!isFinite(days) || days >= 999) return '기록 없음'; if (days <= 0) return '오늘'; if (days === 1) return '어제'; return days + '일 전'; }
   function delta(now, prev, unit, span) {
@@ -847,7 +851,7 @@
       '<div class="lg-card"><h2>' + ic('pie-chart') + '분포</h2><div class="ad-dist"><div><span>등급(직함)</span>' + segBar(tierParts) + legend(tierParts) + '</div><div><span>상태(전체 ' + a.roster.length + '명)</span>' + segBar(stParts) + legend(stParts) + '</div><div><span>누적 확정 실적 구간</span>' + segBar(crParts) + legend(crParts) + '</div><div><span>활동 게이지(활동 중)</span>' + segBar(gaParts) + legend(gaParts) + '</div></div></div></div>';
     /* 9) 메일 · 타임라인 */
     var mk = Object.keys(an.mail.byKind).sort(function (x, y) { return (an.mail.byKind[y].sent + an.mail.byKind[y].wait) - (an.mail.byKind[x].sent + an.mail.byKind[x].wait); });
-    var mailRows = mk.map(function (kk) { var b = an.mail.byKind[kk]; return '<tr><td>' + esc(kk) + '</td><td class="num">' + num(b.sent) + '</td><td class="num">' + (b.failed ? '<b style="color:#991B12">' + num(b.failed) + '</b>' : '0') + '</td><td class="num">' + num(b.wait) + '</td></tr>'; }).join('');
+    var mailRows = mk.map(function (kk) { var b = an.mail.byKind[kk]; return '<tr><td>' + esc(mailKind(kk)) + '</td><td class="num">' + num(b.sent) + '</td><td class="num">' + (b.failed ? '<b style="color:#991B12">' + num(b.failed) + '</b>' : '0') + '</td><td class="num">' + num(b.wait) + '</td></tr>'; }).join('');
     var tl = an.timeline.map(function (t) { return '<li><span class="at">' + esc(String(t.at).slice(5, 16)) + '</span>' + (t.name ? '<button type="button" class="lg-link" data-member="' + esc(t.code) + '">' + esc(t.name) + '</button>' : '<span>' + esc(t.code) + '</span>') + ' <b>' + esc(kindLabel(t.kind)) + '</b>' + (t.kind === 'kit' ? ' <small>' + esc(kitLabel(t.path)) + '</small>' : t.kind === 'link' ? ' <small><a href="' + esc(t.path) + '" target="_blank" rel="noopener">' + esc(short(t.path).slice(0, 40)) + '</a></small>' : t.detail && t.kind !== 'save' && t.kind !== 'share' && t.kind !== '라운지' ? ' <small>' + esc(String(t.detail).slice(0, 40)) + '</small>' : '') + '</li>'; }).join('');
     var tailCards = '<div class="ad-two"><div class="lg-card"><h2>' + ic('mail') + '메일 30일<span class="sub">대기 ' + num(an.mail.wait) + '통 · 발송 ' + num(an.mail.sent30) + ' · 실패 ' + num(an.mail.failed30) + '</span></h2>' + (mailRows ? '<table class="lg-tbl ad-fit"><thead><tr><th>종류</th><th class="num">발송</th><th class="num">실패</th><th class="num">대기</th></tr></thead><tbody>' + mailRows + '</tbody></table>' : '<p class="lg-empty">최근 30일에 만들어진 메일이 없습니다</p>') +
       '<h3 class="ad-h3">무엇을 모으나</h3><ul class="ad-collect"><li><b>확산</b> 명함 · 바로 결제 · 소개 · AIEP 링크가 열린 수(브라우저당 하루 1회, 경로 · 시각)</li><li><b>라운지 이용</b> 위원이 라운지를 연 날(하루 1회 활동 신호로도 인정)</li><li><b>도구 사용</b> 링크 · 문안 복사, QR 열기, 매뉴얼 내려받기(항목별 하루 1회)</li><li><b>명함 저장 · 공유</b> 명단의 명함 이미지 저장 · 공유 버튼</li><li><b>실적 · 정산</b> 결제 · 확정 · 취소 · 지급(아임웹 5분 폴링)</li><li><b>상태 · 메일</b> 게이지 · 휴면 · 종료 · 발송 결과</li></ul></div>' +
@@ -902,7 +906,7 @@
     if (act === 'mailschedule') { scheduleMailResume(); return; }
     if (act === 'mailresume' || act === 'mailpause') {
       var pause = act === 'mailpause';
-      confirmBox(pause ? '위원 메일 발송을 잠시 멈출까요?' : '위원 메일 발송을 시작할까요?', pause ? '대기열의 위촉 · 안내 · 리마인드 · 공지 메일을 보내지 않습니다(인증번호 · 결제 · 정산 알림 · 운영자 메일은 계속 바로 나감). 다시 시작할 때까지 대기열에 쌓입니다.' : '대기열의 메일을 10분마다 조금씩, 하루 ' + S.admin.settings.MAIL_DAILY_LIMIT + '통까지 보냅니다. 처음이라면 사이트에 라운지가 열렸는지 먼저 확인하세요.', pause ? '멈춤' : '시작').then(function (ok) {
+      confirmBox(pause ? '위원 메일 발송을 잠시 멈출까요?' : '위원 메일 발송을 시작할까요?', pause ? '대기열의 위촉 · 안내 · 리마인드 · 공지 메일을 보내지 않습니다(인증번호 · 결제 · 정산 알림 · 위원장 알림 메일은 계속 바로 나감). 다시 시작할 때까지 대기열에 쌓입니다.' : '대기열의 메일을 10분마다 조금씩, 하루 ' + S.admin.settings.MAIL_DAILY_LIMIT + '통까지 보냅니다. 처음이라면 사이트에 라운지가 열렸는지 먼저 확인하세요.', pause ? '멈춤' : '시작').then(function (ok) {
         if (!ok) return; call('admin.mailResume', { pause: pause }).then(function (j) { toast(j.result || '처리했습니다', 'ok'); loadAdmin(true); }, function (er) { toast(er.message, 'danger'); });
       });
       return;
@@ -919,8 +923,8 @@
     var m = j.member, pi = j.payinfo;
     var rrnMasked = pi ? String(pi.rrn).slice(0, 6) + '-' + String(pi.rrn).charAt(6) + '******' : '';
     var credits = j.credits.slice(0, 20).map(function (c) { return '<div>' + esc(String(c.at).slice(0, 10)) + ' · ' + esc(c.status) + (c.pay ? ' · ' + won(c.pay) : '') + (c.payStatus ? ' · ' + esc(c.payStatus) : '') + (c.self === 'Y' ? ' · 본인' : '') + (c.note ? ' · ' + esc(c.note) : '') + (c.status === '확정' && c.payStatus !== '지급완료' ? ' <button type="button" class="lg-link" data-cancel="' + esc(c.id) + '">취소</button>' : c.status === '대기' ? ' <button type="button" class="lg-link" data-cancel="' + esc(c.id) + '">취소</button>' : '') + '</div>'; }).join('');
-    var logs = j.logs.slice(0, 30).map(function (l) { return '<div>' + esc(l.at) + ' · ' + esc(l.kind) + (l.path ? ' · ' + esc(String(l.path).slice(0, 60)) : '') + (l.detail ? ' · ' + esc(l.detail) : '') + '</div>'; }).join('');
-    var mails = j.mails.slice(0, 15).map(function (x) { return '<div>' + esc(x.at) + ' · ' + esc(x.kind) + ' · ' + esc(x.subject) + ' · ' + esc(x.status) + '</div>'; }).join('');
+    var logs = j.logs.slice(0, 30).map(function (l) { return '<div>' + esc(l.at) + ' · ' + esc(l.kind) + (l.path ? ' · ' + esc(mailKind(String(l.path)).slice(0, 60)) : '') + (l.detail ? ' · ' + esc(l.detail) : '') + '</div>'; }).join('');
+    var mails = j.mails.slice(0, 15).map(function (x) { return '<div>' + esc(x.at) + ' · ' + esc(mailKind(x.kind)) + ' · ' + esc(x.subject) + ' · ' + esc(x.status) + '</div>'; }).join('');
     var body = '<div class="ad-detail"><dl><dt>성명 · 코드</dt><dd><b>' + esc(m.name) + '</b> · ' + esc(m.code) + ' ' + badgeChip(j.member.badge || tierBadgeOf(j.member.tier)) + '</dd><dt>상태</dt><dd>' + esc(m.status) + (m.changed ? ' (' + esc(m.changed) + ')' : '') + (m.ended ? ' · 종료 ' + esc(m.ended) : '') + '</dd><dt>이메일</dt><dd>' + esc(m.email || '-') + '</dd><dt>휴대전화</dt><dd>' + esc(m.phone || '-') + '</dd><dt>위촉일</dt><dd>' + esc(m.since) + '</dd><dt>마지막 활동</dt><dd>' + esc(m.lastSignal || '-') + ' ' + esc(m.lastKind || '') + '</dd><dt>크레딧</dt><dd>확정 ' + m.credits + ' · 대기 ' + m.pending + ' · 취소 ' + m.canceled + ' · 누적 지급 ' + won(m.paid) + '</dd><dt>라운지</dt><dd>' + (m.firstLogin ? '첫 로그인 ' + esc(m.firstLogin) : '첫 로그인 전') + '</dd><dt>정산 정보</dt><dd>' + (pi ? esc(pi.bank) + ' ' + esc(pi.account) + ' (' + esc(pi.holder) + ')<br><span id="adRrn">' + esc(rrnMasked) + '</span> <button type="button" class="lg-link" data-rrn="' + esc(pi.rrn) + '">전체 보기</button><br><small class="lg-muted">동의 ' + esc(pi.consentAt) + '</small>' : '미등록') + '</dd><dt>메모</dt><dd><input class="lg-input" id="adMemo" value="' + esc(m.memo || '') + '" maxlength="300" style="padding:7px 10px;font-size:13.5px"></dd></dl>' +
       '<div class="ad-actions">' + (m.status !== '종료' && m.email ? '<button type="button" class="btn btn-ghost ad-cheer" data-mact="cheer" title="부담 없는 응원과 바로 쓸 수 있는 확산 팁을 보냅니다(미리 보기 뒤 발송)">' + ic('send') + '응원 메일</button>' : '') + '<button type="button" class="btn btn-ghost" data-mact="memo">메모 저장</button><button type="button" class="btn btn-ghost" data-mact="credit_add">크레딧 +1 (수동)</button>' + (m.status === '활동' || m.status === '휴면예정' ? '<button type="button" class="btn btn-ghost" data-mact="dormant">휴면 처리</button>' : '') + (m.status !== '활동' ? '<button type="button" class="btn btn-ghost" data-mact="restore">활동으로 복귀</button>' : '') + (m.status !== '종료' ? '<button type="button" class="btn btn-ghost" data-mact="end" style="color:#991B12;border-color:#EEC3BF">위촉 종료</button>' : '') + '<button type="button" class="btn btn-ghost" data-mact="resend_welcome">위촉 메일 다시</button><button type="button" class="btn btn-ghost" data-mact="reset_pw">비밀번호 초기화</button></div>' +
       '<h3 style="font-size:14px;margin:16px 0 4px">실적 ' + j.credits.length + '건</h3><div class="ad-log">' + (credits || '<div class="lg-muted">없음</div>') + '</div>' +
@@ -963,10 +967,21 @@
     call('admin.memberAction', p).then(function () { toast('처리했습니다', 'ok'); closeModal(); loadAdmin(true).then(function () { if (act !== 'end') openMember(code); }); }, function (er) { toast(er.message, 'danger'); });
   }
 
+  /* 1.4.5 다른 창 · 탭에 5분 넘게 있다가 돌아오면 최신 숫자를 뒤에서 받아 바꿈(사용자 2026.09.30 '새로 고침 안 해도 숫자 바뀌는 거야?').
+     운영자 화면은 입력 중인 탭은 두고 위쪽 숫자만, 위원 화면은 입력 중인 칸이 있으면(정산 정보 등록 등) 건너뜀 */
+  var lastLoadAt = 0, BACK_REFRESH_MS = 5 * 60000;
+  function backRefresh() {
+    if (document.hidden || !API || main.hidden || Date.now() - lastLoadAt < BACK_REFRESH_MS) return;
+    if (ADMIN) { if (S.admin && read(KEY_ADMIN, true)) loadAdmin(); return; }
+    if (S.data && read(KEY_TOKEN) && !editingIn(main) && $('lgModal').hidden) loadDash();
+  }
+  document.addEventListener('visibilitychange', backRefresh);
+  window.addEventListener('focus', backRefresh);
+
   /* ---------- 시작 ---------- */
   if (!hero || !login || !main) return;
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('lgModal').hidden) closeModal(); });
-  if (ADMIN) { var tab0 = read(KEY_ADMIN_TAB, true); if (ADMIN_TABS.indexOf(tab0) >= 0) S.tab = tab0; if (read(KEY_ADMIN, true) && API) loadAdmin(); else renderAdminLogin(); }
+  if (ADMIN) { try { document.title = '위원장 대시보드 | 한국AI윤리위원회'; } catch (e) { /* 무시 */ } var tab0 = read(KEY_ADMIN_TAB, true); if (ADMIN_TABS.indexOf(tab0) >= 0) S.tab = tab0; if (read(KEY_ADMIN, true) && API) loadAdmin(); else renderAdminLogin(); }
   else if (read(KEY_TOKEN) && API) loadDash();
   else renderLogin();
 })();
