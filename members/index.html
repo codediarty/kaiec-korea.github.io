@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=a796d7a86a">
+<link rel="stylesheet" href="/assets/css/style.css?v=8a81a501ee">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -210,11 +210,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec";</script>
-  <script src="/assets/js/main.js?v=a796d7a86a"></script>
+  <script src="/assets/js/main.js?v=8a81a501ee"></script>
   <script>window.KAIEC_LOUNGE_STATUS="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec?action=status";</script>
-  <script src="/assets/js/members-data.js?v=a796d7a86a"></script>
-  <script src="/assets/js/qrcode.min.js?v=a796d7a86a"></script>
-  <script src="/assets/js/experts-data.js?v=a796d7a86a"></script>
+  <script src="/assets/js/members-data.js?v=8a81a501ee"></script>
+  <script src="/assets/js/qrcode.min.js?v=8a81a501ee"></script>
+  <script src="/assets/js/experts-data.js?v=8a81a501ee"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -274,7 +274,7 @@
       return a.map(function(t,k){return '<span class="mf-item">'+t+(k<a.length-1?' ·':'')+'</span>'}).join(' ');
     }
     function avatar(m){
-      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=9ed799f8" alt="'+m.name+'" loading="lazy"></div>';
+      if(m.photo)return '<div class="member-avatar member-avatar--photo"><img src="/assets/img/members/'+m.photo+'?v=d2a2ce88" alt="'+m.name+'" loading="lazy"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="member-avatar">'+initial+'</div>';
     }
@@ -346,13 +346,14 @@
     }
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
     /* 위원 활동 시스템(2026.09.29): 라운지 서버의 status(코드별 직함 배지 · 휴면 여부 · 종료 목록)를 받아
-       캠페인위원 카드 · 디지털 명함 · 명함 이미지의 직함을 확정 크레딧에 따라 'AI 윤리 선임위원(3건) · 책임위원(10건) · 수석위원(30건)'으로 바꾸고
+       캠페인위원 카드 · 디지털 명함 · 명함 이미지의 직함을 확정 크레딧에 따라 'AI 선임위원(3건) · AI 책임위원(10건) · AI 수석위원(30건)'으로 바꾸고
+       (2026.09.30 사용자: 승급하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원. 기본 직함 AI 윤리 캠페인위원은 그대로)
        (3건 미만은 'AI 윤리 캠페인위원' 그대로, 2026.09.29 사용자 결정 · '앰버서더' 명칭 폐지), 휴면 · 종료 위원은 숨깁니다.
        2026.09.30(사용자: '선임위원이 됐으면 캠페인위원 명단에서도 상단으로 배치돼야 하지 않나'): 직함을 받은 위원을 수석 → 책임 → 선임 순으로 맨 앞에 두고
        (나머지는 원래 순서), 서버 응답(느릴 때 수십 초)을 기다리지 않도록 ① 이 브라우저가 전에 받은 status(7일 안) 또는 ② 빌드 때 넣은 직함 힌트
        (build.py TIER_HINT, 둘 중 새것)로 먼저 그린 뒤 서버 응답이 오면 다시 맞춥니다. 서버가 없거나 실패해도 명단은 그대로 보입니다.
        종료 위원의 데이터 삭제는 2단계 자동 작업이 맡습니다. */
-    var TIERS={},TIER_WORD={'선임':'AI 윤리 선임위원','책임':'AI 윤리 책임위원','수석':'AI 윤리 수석위원'},TIER_RANK={'수석':0,'책임':1,'선임':2};
+    var TIERS={},TIER_WORD={'선임':'AI 선임위원','책임':'AI 책임위원','수석':'AI 수석위원'},TIER_RANK={'수석':0,'책임':1,'선임':2};
     function tierTitle(m){return m&&m.code&&TIERS[m.code]?(TIER_WORD[TIERS[m.code]]||''):''}
     function tierBadge(m){return ''}
     (function(){
@@ -459,7 +460,7 @@
     function sinceLabel(p){return SINCE[p.g]||'위촉'}
     function today(){var d=new Date();return d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2)}
     function bigAvatar(m){
-      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=9ed799f8" alt="'+m.name+' 사진"></div>';
+      if(m.photo)return '<div class="bc-photo"><img src="/assets/img/members/'+m.photo+'?v=d2a2ce88" alt="'+m.name+' 사진"></div>';
       var initial=(m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·';
       return '<div class="bc-photo bc-photo--initial">'+initial+'</div>';
     }

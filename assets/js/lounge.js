@@ -238,14 +238,15 @@
     ['쓰레드', 'AI를 쓰는 건 이제 기본. 그런데 바르게 쓰는 기준은 배운 적 있나요?\n한국AI윤리위원회 AI윤리전문가(AIEP) 과정은 진도율 채우는 강의 대신 위원회 표준교재로 내 속도에 맞춰 공부하고 온라인 평가로 이수하는 과정이고, 이수하면 위원회 공식 명단에 이름이 올라갑니다.\n아래 링크로 신청하면 위원 추천 할인이 자동 적용돼요 🧵\n{intro}'],
     ['블로그 · 커뮤니티', '[추천] 한국AI윤리위원회 AI윤리전문가(AIEP) 양성과정\n생성형 AI를 쓰는 학생 · 직장인이라면 한 번은 정리해 둘 만한 내용입니다. 표준교재로 자율 학습하고 온라인 이수 평가를 통과하면 위원회 공식 명단에 등록됩니다.\n아래 링크(AI 윤리 캠페인위원 추천)로 신청하면 위원 추천 할인이 적용됩니다.\n{intro}']
   ];
-  /* 직함(등급, 2026.09.29 사용자 결정): 확정 크레딧 0~2 AI 윤리 캠페인위원 · 3 AI 윤리 선임위원 · 10 AI 윤리 책임위원 · 30 AI 윤리 수석위원 */
-  var TIER_WORD = { '선임': 'AI 윤리 선임위원', '책임': 'AI 윤리 책임위원', '수석': 'AI 윤리 수석위원' };
-  function tierFull(name) { name = String(name || ''); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
-  function shortTier(name) { return tierFull(name).replace('AI 윤리 ', ''); }
+  /* 직함(등급, 2026.09.29 사용자 결정): 확정 크레딧 0~2 AI 윤리 캠페인위원 · 3 선임 · 10 책임 · 30 수석.
+     2026.09.30 사용자: 승급하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원(명단 · 명함 · 라운지 · 메일 모두). 옛 이름 'AI 윤리 선임위원'도 새 이름으로 읽음 */
+  var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원' };
+  function tierFull(name) { name = String(name || '').replace(/^AI 윤리 (선임|책임|수석)위원$/, 'AI $1위원'); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
+  function shortTier(name) { return tierFull(name).replace(/^AI (윤리 )?/, ''); }
   function tierBadgeOf(name) { var f = tierFull(name); for (var k in TIER_WORD) if (TIER_WORD[k] === f) return k; return ''; }
   /* 라운지 머리 카드의 직함: '한국AI윤리위원회(KAIEC)' 아래 직함을 등급별 색으로(선임 은청색 · 책임 자주 · 수석 금색) */
   function tierChip(badge, tier, hero) { var b = badge || tierBadgeOf(tier), full = hero ? heroTier(tier) : tierFull(tier); return '<span class="lg-tier' + (b ? ' lg-tier--' + b : ' lg-tier--base') + '">' + (b ? ic('award') : '') + esc(full) + '</span>'; }
-  /* 라운지 머리 카드에서만 'AI 윤리 선임위원' 대신 'AI 선임위원'(2026.09.29 사용자: 이 화면에서는 윤리를 빼 달라). 명단 · 명함 · 메일은 그대로 */
+  /* 라운지 머리 카드는 기본 직함도 '윤리'를 뺀 'AI 캠페인위원'(2026.09.29 사용자: 이 화면에서는 윤리를 빼 달라). 승급 직함은 1.4.1 부터 어디서나 'AI 선임위원' 식 */
   function heroTier(name) { return tierFull(name).replace(/^AI 윤리 /, 'AI '); }
   function statusChip(st) { var map = { '활동': ['ok', '활동 중'], '휴면예정': ['wait', '휴면 예정'], '휴면': ['x', '휴면'], '종료': ['x', '종료'] }; var m = map[st] || ['x', st]; return '<span class="lg-chip lg-chip--' + m[0] + '">' + esc(m[1]) + '</span>'; }
   function creditRow(r) {
