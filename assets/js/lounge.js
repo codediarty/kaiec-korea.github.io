@@ -307,8 +307,14 @@
     var d = S.data, m = d.member, st = d.stats, set = d.settings, code = m.code;
     var first = (m.name || '?').replace(/[^가-힣A-Za-z]/g, '').slice(0, 1) || '·';
     var title = heroTier(m.title || m.tier), org = m.org || '한국AI윤리위원회(KAIEC)';
+    /* 머리 카드 동그라미: 위원 본인 사진(명단과 같은 사진, 2026.09.30 사용자 '최가 아니라 각각 위원 본인의 사진'). 사진이 없거나 못 불러오면 이름 첫 글자 */
+    var photo = (CFG.photos || {})[code];
+    var avatar = '<div class="lg-avatar' + (m.badge ? ' lg-avatar--' + esc(m.badge) : '') + (photo ? ' lg-avatar--photo' : '') + '" data-first="' + esc(first) + '">' +
+      (photo ? '<img src="/assets/img/members/' + encodeURIComponent(photo) + (CFG.photoV ? '?v=' + encodeURIComponent(CFG.photoV) : '') + '" alt="' + esc(m.name) + ' 위원 사진" width="64" height="64" decoding="async">' : esc(first)) + '</div>';
     hero.innerHTML = heroHTML('위원 라운지', esc(m.name) + ' 위원님, 반갑습니다', esc(title) + ' · 위촉 ' + esc(m.since) + ' · 위원 코드 ' + esc(code),
-      '<div class="lg-who"><div class="lg-avatar' + (m.badge ? ' lg-avatar--' + esc(m.badge) : '') + '">' + esc(first) + '</div><div><b>' + esc(m.name) + '</b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
+      '<div class="lg-who">' + avatar + '<div><b>' + esc(m.name) + '</b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
+    var avImg = hero.querySelector('.lg-avatar img');
+    if (avImg) avImg.addEventListener('error', function () { var a = avImg.parentNode; if (!a) return; a.classList.remove('lg-avatar--photo'); a.textContent = a.getAttribute('data-first') || ''; });
     var gaugeCls = m.status !== '활동' ? 'is-off' : m.gauge <= 30 ? 'is-low' : '';
     var gaugeTxt = m.status === '활동' ? m.gauge + '% · 활동 중' : m.status === '휴면예정' ? '휴면 예정 · 로그인으로 다시 채워졌습니다' : m.status === '휴면' ? '휴면 · 로그인으로 복귀' : '종료';
     var nt = st.next, tiers = set.tiers, cur = m.credits;
