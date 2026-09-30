@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=4d0f222975">
+<link rel="stylesheet" href="/assets/css/style.css?v=a796d7a86a">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -210,11 +210,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec";</script>
-  <script src="/assets/js/main.js?v=4d0f222975"></script>
+  <script src="/assets/js/main.js?v=a796d7a86a"></script>
   <script>window.KAIEC_LOUNGE_STATUS="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec?action=status";</script>
-  <script src="/assets/js/members-data.js?v=4d0f222975"></script>
-  <script src="/assets/js/qrcode.min.js?v=4d0f222975"></script>
-  <script src="/assets/js/experts-data.js?v=4d0f222975"></script>
+  <script src="/assets/js/members-data.js?v=a796d7a86a"></script>
+  <script src="/assets/js/qrcode.min.js?v=a796d7a86a"></script>
+  <script src="/assets/js/experts-data.js?v=a796d7a86a"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -347,28 +347,46 @@
     box.innerHTML=html||'<p style="text-align:center;color:var(--gray-500);padding:40px 0">위원 명단은 준비 중입니다.</p>';
     /* 위원 활동 시스템(2026.09.29): 라운지 서버의 status(코드별 직함 배지 · 휴면 여부 · 종료 목록)를 받아
        캠페인위원 카드 · 디지털 명함 · 명함 이미지의 직함을 확정 크레딧에 따라 'AI 윤리 선임위원(3건) · 책임위원(10건) · 수석위원(30건)'으로 바꾸고
-       (3건 미만은 'AI 윤리 캠페인위원' 그대로, 2026.09.29 사용자 결정 · '앰버서더' 명칭 폐지), 휴면 · 종료 위원은 숨기며, 수석 · 책임만 맨 앞으로 옮깁니다.
-       서버가 없거나 응답이 늦어도 명단은 그대로 보입니다(직함만 기본값). 종료 위원의 데이터 삭제는 2단계 자동 작업이 맡습니다. */
-    var TIERS={},TIER_WORD={'선임':'AI 윤리 선임위원','책임':'AI 윤리 책임위원','수석':'AI 윤리 수석위원'};
+       (3건 미만은 'AI 윤리 캠페인위원' 그대로, 2026.09.29 사용자 결정 · '앰버서더' 명칭 폐지), 휴면 · 종료 위원은 숨깁니다.
+       2026.09.30(사용자: '선임위원이 됐으면 캠페인위원 명단에서도 상단으로 배치돼야 하지 않나'): 직함을 받은 위원을 수석 → 책임 → 선임 순으로 맨 앞에 두고
+       (나머지는 원래 순서), 서버 응답(느릴 때 수십 초)을 기다리지 않도록 ① 이 브라우저가 전에 받은 status(7일 안) 또는 ② 빌드 때 넣은 직함 힌트
+       (build.py TIER_HINT, 둘 중 새것)로 먼저 그린 뒤 서버 응답이 오면 다시 맞춥니다. 서버가 없거나 실패해도 명단은 그대로 보입니다.
+       종료 위원의 데이터 삭제는 2단계 자동 작업이 맡습니다. */
+    var TIERS={},TIER_WORD={'선임':'AI 윤리 선임위원','책임':'AI 윤리 책임위원','수석':'AI 윤리 수석위원'},TIER_RANK={'수석':0,'책임':1,'선임':2};
     function tierTitle(m){return m&&m.code&&TIERS[m.code]?(TIER_WORD[TIERS[m.code]]||''):''}
     function tierBadge(m){return ''}
     (function(){
+      var grid=box.querySelector('.camp-grid');if(!grid)return;
+      var cards=Array.prototype.slice.call(grid.querySelectorAll('.member--link[data-p]')),tail=grid.querySelector('.member--recruit');
+      function codeOf(el){var p=PEOPLE[+el.getAttribute('data-p')];return p&&p.m.code?p.m.code:''}
+      function apply(j){
+        if(!j||!j.m)return;
+        var ended={};(j.ended||[]).forEach(function(c){ended[c]=1});
+        cards.forEach(function(el){
+          var p=PEOPLE[+el.getAttribute('data-p')];if(!p||!p.m.code)return;
+          var code=p.m.code,st=j.m[code]||{},t=TIER_WORD[st.t]?st.t:'',hide=!!(ended[code]||st.h);
+          el.classList.toggle('is-hidden',hide);p.hidden=hide;
+          if(t)TIERS[code]=t;else delete TIERS[code];
+          var role=el.querySelector('.member-role');
+          if(role){if(!role.hasAttribute('data-base'))role.setAttribute('data-base',role.textContent);
+            role.textContent=t?TIER_WORD[t]:role.getAttribute('data-base');role.className='member-role'+(t?' member-role--tier member-role--'+t:'')}
+          if(!el.hasAttribute('data-aria'))el.setAttribute('data-aria',el.getAttribute('aria-label')||'');
+          el.setAttribute('aria-label',t?p.m.name+' '+TIER_WORD[t]+' 디지털 명함 보기':el.getAttribute('data-aria'));
+        });
+        cards.slice().sort(function(a,b){
+          var ra=TIER_RANK[TIERS[codeOf(a)]],rb=TIER_RANK[TIERS[codeOf(b)]];ra=ra===undefined?9:ra;rb=rb===undefined?9:rb;
+          return ra-rb||(+a.getAttribute('data-p'))-(+b.getAttribute('data-p'));
+        }).forEach(function(el){grid.insertBefore(el,tail)});   /* 수석 → 책임 → 선임 → 나머지(원래 순서), 맨 끝은 위촉 신청 카드 */
+        var rbx=ov&&ov.querySelector('.bc-role');if(rbx&&curP&&curP.m.code)rbx.textContent=roleLine(curP);
+      }
+      var KEY='kaiec_status_v1',HINT={"at": 1790746200000, "m": {"LSR6527": {"t": "선임"}}},c=null;
+      try{c=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){c=null}
+      if(!(c&&c.j&&c.at&&Date.now()-c.at<7*864e5))c=null;
+      if(c&&(!HINT||c.at>=HINT.at))apply(c.j);else if(HINT)apply(HINT);
       var url=window.KAIEC_LOUNGE_STATUS||'';if(!url||!window.fetch)return;
       fetch(url,{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){
-        if(!j||!j.m)return;
-        var grid=box.querySelector('.camp-grid');if(!grid)return;
-        var ended={};(j.ended||[]).forEach(function(c){ended[c]=1});
-        var first=[],second=[];
-        Array.prototype.forEach.call(grid.querySelectorAll('.member--link[data-p]'),function(el){
-          var p=PEOPLE[+el.getAttribute('data-p')];if(!p||!p.m.code)return;
-          var code=p.m.code,st=j.m[code];
-          if(ended[code]||(st&&st.h)){el.classList.add('is-hidden');p.hidden=true;return}
-          if(st&&st.t&&TIER_WORD[st.t]){TIERS[code]=st.t;var role=el.querySelector('.member-role');if(role){role.textContent=TIER_WORD[st.t];role.classList.add('member-role--tier','member-role--'+st.t)}
-            el.setAttribute('aria-label',p.m.name+' '+TIER_WORD[st.t]+' 디지털 명함 보기');
-            if(st.t==='수석')first.push(el);else if(st.t==='책임')second.push(el);}
-        });
-        first.concat(second).reverse().forEach(function(el){grid.insertBefore(el,grid.firstChild)});   /* 수석 → 책임 → 나머지(원래 순서) */
-        var rb=ov&&ov.querySelector('.bc-role');if(rb&&curP&&curP.m.code&&TIERS[curP.m.code])rb.textContent=roleLine(curP);
+        if(!j||!j.m)return;apply(j);
+        try{localStorage.setItem(KEY,JSON.stringify({at:Date.now(),j:{m:j.m,ended:j.ended||[]}}))}catch(e){}
       }).catch(function(){});
     })();
     /* 디지털 명함 (2026.09.26 4차 · 공식 제출용): 실명 카드를 누르면 위원회 로고 · 사진 · 직위(자격 표기 cred 포함) · 영문 이름 · 인증 문구 ·
