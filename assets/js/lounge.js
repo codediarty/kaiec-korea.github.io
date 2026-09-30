@@ -451,7 +451,7 @@
   function scheduleMailResume() {
     var d = new Date(); d.setDate(d.getDate() + 1); d.setHours(10, 0, 0, 0);
     var v = d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + 'T10:00';
-    var m = modal('위원 메일 발송 시작 예약', '그 시각까지는 보내지 않고, 시각이 지나면 위촉 메일부터 하루 한도 안에서 순서대로 보냅니다.',
+    var m = modal('위원 메일 발송 시작 예약', '그 시각까지는 위촉 · 안내 · 공지 메일을 보내지 않고, 시각이 지나면 위촉 메일부터 하루 한도 안에서 순서대로 보냅니다. 결제 · 정산 알림과 운영자 메일은 그동안에도 바로 나갑니다.',
       '<div class="lg-field"><label for="adResumeAt">시작 시각</label><input class="lg-input" id="adResumeAt" type="datetime-local" value="' + v + '" step="600"></div>',
       '<button type="button" class="btn btn-ghost btn-sm" data-act="close">취소</button><button type="button" class="btn btn-primary btn-sm" data-act="ok">예약</button>');
     m.onclick = function (e) {
@@ -815,7 +815,7 @@
     if (act === 'mailschedule') { scheduleMailResume(); return; }
     if (act === 'mailresume' || act === 'mailpause') {
       var pause = act === 'mailpause';
-      confirmBox(pause ? '위원 메일 발송을 잠시 멈출까요?' : '위원 메일 발송을 시작할까요?', pause ? '대기열의 안내 · 리마인드 · 공지 메일을 보내지 않습니다(인증번호 · 운영자 메일은 계속). 다시 시작할 때까지 대기열에 쌓입니다.' : '대기열의 메일을 10분마다 조금씩, 하루 ' + S.admin.settings.MAIL_DAILY_LIMIT + '통까지 보냅니다. 처음이라면 사이트에 라운지가 열렸는지 먼저 확인하세요.', pause ? '멈춤' : '시작').then(function (ok) {
+      confirmBox(pause ? '위원 메일 발송을 잠시 멈출까요?' : '위원 메일 발송을 시작할까요?', pause ? '대기열의 위촉 · 안내 · 리마인드 · 공지 메일을 보내지 않습니다(인증번호 · 결제 · 정산 알림 · 운영자 메일은 계속 바로 나감). 다시 시작할 때까지 대기열에 쌓입니다.' : '대기열의 메일을 10분마다 조금씩, 하루 ' + S.admin.settings.MAIL_DAILY_LIMIT + '통까지 보냅니다. 처음이라면 사이트에 라운지가 열렸는지 먼저 확인하세요.', pause ? '멈춤' : '시작').then(function (ok) {
         if (!ok) return; call('admin.mailResume', { pause: pause }).then(function (j) { toast(j.result || '처리했습니다', 'ok'); loadAdmin(true); }, function (er) { toast(er.message, 'danger'); });
       });
       return;
