@@ -30,6 +30,11 @@
   function dateOf(s) { var m = String(s || '').match(/(\d{4})-(\d{2})-(\d{2})/); if (m) return new Date(+m[1], +m[2] - 1, +m[3], 12); var d = s ? new Date(s) : null; return d && !isNaN(d.getTime()) ? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12) : null; }   /* 'yyyy-MM-dd…' 또는 자바스크립트 Date 문자열 · ISO 도 받음 */
   function fmtMD(s, wd) { var d = dateOf(s); if (!d) return String(s || ''); return (d.getMonth() + 1) + '.' + ('0' + d.getDate()).slice(-2) + (wd ? '(' + DAYS[d.getDay()] + ')' : ''); }
   function fmtKo(s, wd) { var d = dateOf(s); if (!d) return String(s || ''); return (d.getMonth() + 1) + '월 ' + d.getDate() + '일' + (wd ? '(' + DAYS[d.getDay()] + ')' : ''); }
+  /* 1.3.3 정산 규칙: 결제 즉시 확정(confirmDays 0) · 정산 요일(기본 목) 0시 마감. 결제일 다음 날부터 처음 오는 정산 요일이 지급일(수요일 결제 → 다음 날 목요일, 목요일 결제 → 다음 주 목요일) */
+  var PAY_WD = 4, CONFIRM_D = 0;
+  function payDayFor(s) { var d = dateOf(s); if (!d) return null; for (var i = 1; i <= 7; i++) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i, 12); if (x.getDay() === PAY_WD) return x; } return null; }
+  function cutDay() { return DAYS[(PAY_WD + 6) % 7]; }
+  function ruleShort() { return CONFIRM_D > 0 ? '결제 뒤 ' + CONFIRM_D + '일 확정 · ' + DAYS[PAY_WD] + '요일 정산' : '결제 즉시 확정 · ' + cutDay() + '요일 24시 마감 · ' + DAYS[PAY_WD] + '요일 정산'; }
   function fmtDot(s) { var d = dateOf(s); if (!d) return String(s || ''); return d.getFullYear() + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + ('0' + d.getDate()).slice(-2); }
   function store(k, v, session) { var st = session ? sessionStorage : localStorage; try { if (v === null) st.removeItem(k); else st.setItem(k, v); } catch (e) { /* 저장 불가 */ } }
   function read(k, session) { try { return (session ? sessionStorage : localStorage).getItem(k) || ''; } catch (e) { return ''; } }
@@ -244,7 +249,7 @@
   function creditRow(r) {
     var chip = { '대기': ['wait', '확정 대기'], '확정': ['ok', '확정'], '취소': ['x', '취소'], '차감': ['red', '차감(환불)'], '미인정': ['x', '미인정'] }[r.status] || ['x', r.status];
     var pay = r.status === '확정' || r.status === '차감' ? won(r.pay) : '-';
-    var when = r.status === '대기' ? fmtMD(r.confirmAt) + ' 확정 예정' : r.status === '확정' ? (r.payStatus === '지급완료' ? fmtMD(r.payDay) + ' 지급 완료' : r.payStatus === '보류' ? '정산 정보 등록 후' : r.payStatus === '지급예정' ? fmtMD(r.payDay, true) + ' 지급 예정' : '다음 목요일') : r.status === '차감' ? '다음 정산에서 차감' : '-';
+    var when = r.status === '대기' ? fmtMD(r.confirmAt) + ' 확정 예정' : r.status === '확정' ? (r.payStatus === '지급완료' ? fmtMD(r.payDay) + ' 지급 완료' : r.payStatus === '보류' ? '정산 정보 등록 후' : r.payStatus === '지급예정' ? fmtMD(r.payDay, true) + ' 지급 예정' : (payDayFor(r.day) ? fmtMD(payDayFor(r.day), true) + ' 정산 예정' : '다음 ' + DAYS[PAY_WD] + '요일')) : r.status === '차감' ? '다음 정산에서 차감' : '-';
     return '<tr><td>' + fmtDot(r.day) + (r.self ? ' <span class="lg-chip lg-chip--blue">본인</span>' : '') + '</td><td><span class="lg-chip lg-chip--' + chip[0] + '">' + chip[1] + '</span></td><td class="num">' + pay + '</td><td class="num">' + when + '</td></tr>';
   }
   /* 기간 문구: 30 → '30일', 60 이상 30의 배수 → 'N개월' */
@@ -299,12 +304,13 @@
     for (var i = 0; i < 8; i++) { var h = weeks[i] ? Math.max(6, Math.round(weeks[i] / max * 44)) : 2; bars += '<rect x="' + (4 + i * 30) + '" y="' + (50 - h) + '" width="22" height="' + h + '" rx="3" class="' + (weeks[i] ? (i === 7 ? 'on now' : 'on') : 'off') + '"><title>' + (7 - i === 0 ? '이번 주' : (7 - i) + '주 전') + ' ' + weeks[i] + '건</title></rect>'; }
     return '<div class="lg-trend"><div class="lg-trend-box"><div class="lg-trend-h"><span>최근 8주 추천 성과</span><em>' + num(wsum) + '건</em></div>' +
       '<svg class="lg-bars" viewBox="0 0 240 56" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="50.5" x2="240" y2="50.5"/>' + bars + '</svg><div class="lg-trend-x"><span>8주 전</span><span>이번 주</span></div>' +
-      (wsum ? '<p class="lg-trend-empty">추천으로 시작한 사람 · 결제 뒤 ' + (d.settings.confirmDays || 7) + '일 확정</p>' : '<p class="lg-trend-empty">첫 추천 성과가 생기면 여기에 쌓입니다</p>') + '</div>' +
+      (wsum ? '<p class="lg-trend-empty">추천으로 시작한 사람 · ' + (CONFIRM_D > 0 ? '결제 뒤 ' + CONFIRM_D + '일 확정' : '결제 즉시 확정') + '</p>' : '<p class="lg-trend-empty">첫 추천 성과가 생기면 여기에 쌓입니다</p>') + '</div>' +
       reachHTML(d) +
-      '<div class="lg-trend-kpis"><span>위촉 ' + num(tr.joinedDays || 0) + '일째</span><span>확정 대기 ' + num(m.pending || 0) + '건</span><span>7일 도달 ' + num(st.reach7 || 0) + '명</span><span>다음 정산 ' + (st.nextPayDay ? fmtKo(st.nextPayDay, true) : '목요일') + '</span></div></div>';
+      '<div class="lg-trend-kpis"><span>위촉 ' + num(tr.joinedDays || 0) + '일째</span>' + (CONFIRM_D > 0 || m.pending ? '<span>확정 대기 ' + num(m.pending || 0) + '건</span>' : '<span>확정 ' + num(m.credits || 0) + '건</span>') + '<span>7일 도달 ' + num(st.reach7 || 0) + '명</span><span>다음 정산 ' + (st.nextPayDay ? fmtKo(st.nextPayDay, true) : '목요일') + '</span></div></div>';
   }
   function renderDash() {
     var d = S.data, m = d.member, st = d.stats, set = d.settings, code = m.code;
+    PAY_WD = set && set.payWeekday != null && !isNaN(+set.payWeekday) ? +set.payWeekday : 4; CONFIRM_D = set && set.confirmDays != null && !isNaN(+set.confirmDays) ? +set.confirmDays : 0;   /* 1.3.3 */
     var first = (m.name || '?').replace(/[^가-힣A-Za-z]/g, '').slice(0, 1) || '·';
     var title = heroTier(m.title || m.tier), org = m.org || '한국AI윤리위원회(KAIEC)';
     /* 머리 카드 동그라미: 위원 본인 사진(명단과 같은 사진, 2026.09.30 사용자 '최가 아니라 각각 위원 본인의 사진'). 사진이 없거나 못 불러오면 이름 첫 글자 */
@@ -327,7 +333,7 @@
     var payNeeded = d.payinfo.needed && !d.payinfo.registered;
     var payCard = payNeeded ? payinfoFormHTML(d, true) :
       '<div class="lg-card" id="lgPayCard"><h2>' + ic('credit-card') + '정산</h2><div class="lg-pay"><div><span>다음 정산 예정</span><b>' + won(st.nextPay) + '</b><i>' + (st.nextPay > 0 ? fmtKo(st.nextPayDay, true) : '확정 실적이 생기면 표시') + '</i></div><div><span>누적 지급</span><b>' + won(st.totalPaid) + '</b><i>' + (st.lastPaid ? st.lastPaid.count + '건 · 마지막 ' + fmtKo(st.lastPaid.day, true) : '아직 없음') + '</i></div></div>' +
-      '<p style="margin-top:14px">' + (d.payinfo.registered ? '정산 정보 <b>' + esc(d.payinfo.bankMasked) + '</b> 등록됨 · <button type="button" class="lg-link" data-act="payinfo-edit">변경</button><br>' : '') + '결제 뒤 ' + set.confirmDays + '일이 지나고 취소가 없으면 확정되며, 확정 건은 <b>매주 목요일</b>에 지급됩니다. 활동지원금은 건당 ' + won(st.payRate) + (m.badge === '앰버서더' ? '(앰버서더)' : '') + '입니다.</p>' +
+      '<p style="margin-top:14px">' + (d.payinfo.registered ? '정산 정보 <b>' + esc(d.payinfo.bankMasked) + '</b> 등록됨 · <button type="button" class="lg-link" data-act="payinfo-edit">변경</button><br>' : '') + (CONFIRM_D > 0 ? '결제 뒤 ' + CONFIRM_D + '일이 지나고 취소가 없으면 확정되며, 확정 건은 <b>매주 ' + DAYS[PAY_WD] + '요일</b>에 지급됩니다. ' : '위원 코드로 결제가 들어오면 <b>그 자리에서 확정</b>되고, <b>' + cutDay() + '요일 24시</b>까지 결제된 건을 모아 <b>매주 ' + DAYS[PAY_WD] + '요일</b>에 지급합니다. 환불된 건은 지급에서 빠집니다. ') + '활동지원금은 건당 ' + won(st.payRate) + (m.badge === '앰버서더' ? '(앰버서더)' : '') + '입니다.</p>' +
       '<span class="lg-note">활동지원금은 세금 없이 그대로 받습니다. 소득 처리 · 신고 · 원천징수는 성균관컨설팅이 맡고 세액도 위원회가 부담합니다. 활동에만 집중하세요.</span>' +
       '<div id="lgPayForm" hidden></div>' +
       '<div class="lg-cert"><h2>' + ic('file-check') + '활동증명서</h2><p>위촉 뒤 ' + Math.round(set.certDays / 30) + '개월 이상 활동한 위원에게 위원장 명의 · 위원장 직인의 활동증명서를 발급합니다.</p>' +
@@ -349,11 +355,11 @@
       '<div class="row"><span class="lab">위원 명함 · QR</span><code>명단의 내 명함에서 [명함 이미지 저장]</code><a class="btn btn-primary" href="' + esc(card.replace('#', '?save=1#')) + '" target="_blank" rel="noopener" data-track="open:qr">열기</a></div>' +
       '<div class="lg-tabs" id="lgKitTabs">' + MSG_TPL.map(function (t, i) { return '<button type="button" class="' + (i === S.kitTab ? 'on' : '') + '" data-tab="' + i + '">' + t[0] + '</button>'; }).join('') + '</div>' +
       '<div class="lg-msg" id="lgMsg"><button type="button" class="btn btn-ghost" data-copy-msg="1">복사</button>' + esc(tpl) + '</div></div></div>' +
-      '<div class="lg-two"><div class="lg-card"><h2>' + ic('clipboard-list') + '실적 내역<span class="sub">결제 시 메일 알림 · 결제 뒤 ' + set.confirmDays + '일 확정 · 목요일 정산</span></h2>' +
+      '<div class="lg-two"><div class="lg-card"><h2>' + ic('clipboard-list') + '실적 내역<span class="sub">결제 시 메일 알림 · ' + ruleShort() + '</span></h2>' +
       (d.credits.length ? '<table class="lg-tbl"><thead><tr><th>결제일</th><th>상태</th><th class="num">활동지원금</th><th class="num">정산</th></tr></thead><tbody>' + d.credits.map(creditRow).join('') + '</tbody></table>' : '<p class="lg-empty" style="text-align:center;padding:26px 0">아직 실적이 없습니다. 명함이나 추천 링크를 공유해 보세요. 첫 결제가 들어오면 이메일로 알려 드립니다.</p>') + '</div>' + payCard + '</div>' +
       '<div class="lg-two"><div class="lg-card"><h2>' + ic('external-link') + '활동 공유 <span style="font-size:12px;color:var(--gray-500);font-weight:600">(선택)</span></h2><p>AI 윤리와 관련해 올리신 글 · 영상 링크를 남겨 주세요. 활동 게이지가 채워지고, 위원회 소식에 인용될 수 있습니다.</p><form class="lg-share-in" id="lgShare"><input class="lg-input" id="lgShareUrl" type="url" placeholder="https://" maxlength="300"><button type="submit" class="btn btn-ghost btn-sm">등록</button></form></div>' +
       '<div class="lg-card"><h2>' + ic('help-circle') + '안내 · 공지</h2>' + (notices || '<p class="lg-muted" style="font-size:13px">새 공지가 없습니다.</p>') +
-      '<ul class="lg-list" style="margin-top:10px"><li><a href="' + MANUAL_URL + '" target="_blank" rel="noopener" data-track="manual">캠페인위원 활동 매뉴얼(PDF) 내려받기</a> · 라운지 사용법 · 활동 · 정산 · 자격 기준을 한 권에<span>매뉴얼</span></li><li>위원 코드로 결제가 들어오면 바로 이메일로 알려 드리고, 확정 · 지급 때도 메일이 갑니다<span>안내</span></li><li>매주 목요일 정산되며, 세금은 위원회에서 부담하여 전액 지급됩니다.<span>안내</span></li><li>위원 자격 · 활동 기준은 이 화면 맨 아래에 있습니다<span>기준</span></li><li>문의는 <a href="mailto:' + EMAIL + '">' + EMAIL + '</a><span>1일 안 회신</span></li></ul>' +
+      '<ul class="lg-list" style="margin-top:10px"><li><a href="' + MANUAL_URL + '" target="_blank" rel="noopener" data-track="manual">캠페인위원 활동 매뉴얼(PDF) 내려받기</a> · 라운지 사용법 · 활동 · 정산 · 자격 기준을 한 권에<span>매뉴얼</span></li><li>위원 코드로 결제가 들어오면 바로 확정되고 이메일로 알려 드리며, 지급 때도 메일이 갑니다<span>안내</span></li><li>' + cutDay() + '요일 24시까지 결제된 건을 매주 ' + DAYS[PAY_WD] + '요일에 정산하며, 세금은 위원회에서 부담하여 전액 지급됩니다.<span>안내</span></li><li>위원 자격 · 활동 기준은 이 화면 맨 아래에 있습니다<span>기준</span></li><li>문의는 <a href="mailto:' + EMAIL + '">' + EMAIL + '</a><span>1일 안 회신</span></li></ul>' +
       '<label class="lg-toggle" style="margin-top:14px"><input type="checkbox" id="lgLetter"' + (m.letter ? ' checked' : '') + '> 월간 임팩트 리포트 메일 받기</label></div></div>' +
       rulesHTML(d) +
       '<p class="lg-foot">이 화면의 숫자는 본인에게만 보입니다. 다른 위원의 실적 · 정산은 서로 볼 수 없습니다.</p>';
@@ -508,7 +514,7 @@
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('bar-chart-3') + '주간 실적 <span class="sub">확정 기준 · 이번 주 · 지난주 · 4주 흐름 · 누적</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">이번 주</th><th class="num">지난주</th><th style="padding-left:16px">4주</th><th class="num">누적</th></tr></thead><tbody>' + (wrows || '<tr><td colspan="5" class="lg-empty">최근 4주 확정 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
       '<div class="lg-card"><h2>' + ic('users') + '위원 상태 <span class="sub">이번 주 변경</span></h2><div class="st"><div><span>활동 중</span><b>' + (a.tiles.status['활동'] || 0) + '</b></div><div><span>휴면 예정</span><b>' + (a.tiles.status['휴면예정'] || 0) + '</b></div><div><span>휴면</span><b>' + (a.tiles.status['휴면'] || 0) + '</b></div><div><span>종료</span><b>' + (a.tiles.status['종료'] || 0) + '</b></div></div><ul class="lg-list">' + (changes || '<li class="lg-muted">이번 주 상태 변경 없음</li>') + '</ul></div></div>' +
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('trending-up') + '누적 <span class="sub">전체 크레딧 ' + a.totals.credits + ' · 지급 ' + won(a.totals.paid) + ' · 미지급 ' + won(a.totals.unpaid) + '</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">누적 크레딧</th><th class="num">지급 완료</th><th class="num">미지급</th><th class="num">취소</th></tr></thead><tbody>' + (crows || '<tr><td colspan="5" class="lg-empty">아직 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
-      '<div class="lg-card"><h2>' + ic('external-link') + '활동 링크 · 자동 작업</h2><ul class="lg-list">' + (links || '<li class="lg-muted">등록된 활동 링크 없음</li>') + '</ul><p style="margin-top:12px;font-size:12.5px;line-height:1.8">자동: 5분마다 아임웹 주문 확인 · 매시간 새 위원 가져오기 · 매일 03:00 게이지 · 상태 계산(리마인드 · 휴면 예정 · 휴면 · 종료 메일) · 목요일 00:05 정산표 · 08:00 운영자 요약 메일 · 대기열 메일 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 · 매월 1일 임팩트 리포트</p></div></div>';
+      '<div class="lg-card"><h2>' + ic('external-link') + '활동 링크 · 자동 작업</h2><ul class="lg-list">' + (links || '<li class="lg-muted">등록된 활동 링크 없음</li>') + '</ul><p style="margin-top:12px;font-size:12.5px;line-height:1.8">자동: 5분마다 아임웹 주문 확인(결제 즉시 확정 · 결제마다 운영자 알림) · 매시간 새 위원 가져오기 · 매일 03:00 게이지 · 상태 계산(리마인드 · 휴면 예정 · 휴면 · 종료 메일) · 추천 결제 10일 재대조 · 목요일 00:05 정산표(수요일 24시까지 결제분) · 08:00 운영자 요약 메일 · 대기열 메일 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 · 매월 1일 임팩트 리포트</p></div></div>';
   }
   function rosterTabHTML(a) {
     var q = S.roster.q.toLowerCase().replace(/\s+/g, ''), stf = S.roster.st;
@@ -753,7 +759,7 @@
       });
       return;
     }
-    var map = { settle: ['admin.settle', '정산표를 지금 만들까요?', '확정됐지만 아직 정산에 안 들어간 실적을 오늘 날짜 정산표로 묶습니다. 목요일에는 자동으로 됩니다.'], poll: ['admin.poll', '아임웹 주문을 지금 확인할까요?', '최근 주문에서 위원 쿠폰이 쓰인 결제를 실적으로 기록하고, 확정 기한이 지난 건을 확정합니다.'], mailq: ['admin.mailQueue', '대기 메일을 지금 보낼까요?', '하루 한도 안에서 우선순위 순으로 보냅니다.'], sync: ['admin.sync', '파트너 시트에서 위원을 가져올까요?', '위원등록_응답 탭의 새 코드를 들여오고 환영 메일을 대기열에 넣습니다. 매시간 자동으로도 됩니다.'] };
+    var map = { settle: ['admin.settle', '정산표를 지금 만들까요?', '정산 요일 0시(수요일 24시) 전에 결제된 확정 실적 중 아직 정산표에 없는 것을 위원별 미지급 정산표에 합칩니다(지급 완료된 줄은 그대로). 목요일 0시에 자동으로 됩니다.'], poll: ['admin.poll', '아임웹 주문을 지금 확인할까요?', '최근 주문에서 위원 쿠폰이 쓰인 결제를 실적으로 기록하고(결제 즉시 확정), 환불된 건을 확인합니다.'], mailq: ['admin.mailQueue', '대기 메일을 지금 보낼까요?', '하루 한도 안에서 우선순위 순으로 보냅니다.'], sync: ['admin.sync', '파트너 시트에서 위원을 가져올까요?', '위원등록_응답 탭의 새 코드를 들여오고 환영 메일을 대기열에 넣습니다. 매시간 자동으로도 됩니다.'] };
     if (map[act]) { confirmBox(map[act][1], map[act][2], '실행').then(function (ok) { if (!ok) return; busy(b, true); call(map[act][0]).then(function (j) { busy(b, false); var r = j.result || j; toast(typeof r === 'string' ? r : (r.added ? '새 위원 ' + r.added.length + '명' : r.created != null ? '정산 ' + r.created + '건' : '완료'), 'ok'); loadAdmin(true); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); }); }
   }
   function openMember(code) {
