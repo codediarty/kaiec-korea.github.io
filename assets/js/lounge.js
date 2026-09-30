@@ -18,7 +18,7 @@
   var KEY_DASH = 'kaiec_lounge_dash';
   var TIMEOUT_MS = 60000, HEDGE_MS = 7000;
   var HEDGE_OK = { 'me.dashboard': 1, 'admin.dashboard': 1, 'admin.member': 1, 'auth.login': 1, 'auth.start': 1, 'auth.verify': 1, 'auth.setPassword': 1, 'me.payinfo': 1, 'me.prefs': 1 };   /* 두 번 가도 결과가 같은 요청만(공지 · 정산 · 링크 등록은 제외) */
-  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false } };   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
+  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null } };   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
 
   /* ---------- 작은 도구 ---------- */
   function $(id) { return document.getElementById(id); }
@@ -324,7 +324,7 @@
     var avatar = '<div class="lg-avatar' + (m.badge ? ' lg-avatar--' + esc(m.badge) : '') + (photo ? ' lg-avatar--photo' : '') + '" data-first="' + esc(first) + '">' +
       (photo ? '<img src="/assets/img/members/' + encodeURIComponent(photo) + (CFG.photoV ? '?v=' + encodeURIComponent(CFG.photoV) : '') + '" alt="' + esc(m.name) + ' 위원 사진" width="64" height="64" decoding="async">' : esc(first)) + '</div>';
     hero.innerHTML = heroHTML('위원 라운지', esc(m.name) + ' 위원님, 반갑습니다', esc(title) + ' · 위촉 ' + esc(m.since) + ' · 위원 코드 ' + esc(code),
-      '<div class="lg-who">' + avatar + '<div><b>' + esc(m.name) + '</b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
+      '<div class="lg-who">' + avatar + '<div><b>' + esc(m.name) + ' <small class="lg-who-t">위원</small></b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
     var avImg = hero.querySelector('.lg-avatar img');
     if (avImg) avImg.addEventListener('error', function () { var a = avImg.parentNode; if (!a) return; a.classList.remove('lg-avatar--photo'); a.textContent = a.getAttribute('data-first') || ''; });
     /* 활동 게이지(2026.09.30 사용자: 30일 0건 → 휴면 → 10일 뒤 자동 해제에 맞추되 너무 조급한 느낌은 없게): 서버가 자격 기준 날짜로 계산(추천 결제 뒤 처음 10일은 100%,
@@ -521,11 +521,58 @@
     return '<div class="lg-card"><h2>' + ic('credit-card') + (a.isPayoutToday ? '오늘 정산표' : '최근 정산표') + (a.payoutDay ? ' · ' + fmtMD(a.payoutDay, true) : '') + '<span class="sub">송금 뒤 [지급 완료]를 체크하면 위원에게 안내 메일이 나가고 기록됩니다</span></h2>' +
       '<div class="ad-scroll">' + (a.payouts.length ? '<table class="lg-tbl"><thead><tr><th>위원</th><th>등급</th><th class="num">확정 건수</th><th class="num">지원금</th><th>계좌</th><th>상태</th><th>메모</th></tr></thead><tbody>' + rows + '</tbody><tfoot><tr><td colspan="2">합계</td><td class="num">' + sum.n + '</td><td class="num">' + won(sum.amt) + '</td><td colspan="3" style="padding-left:16px;font-weight:600">지급 완료 ' + sum.paidN + '명 ' + won(sum.paid) + ' · 남은 ' + sum.dueN + '명 ' + won(sum.due) + ' · 보류 ' + sum.holdN + '명 ' + won(sum.hold) + '</td></tr></tfoot></table>' : '<p class="lg-empty">아직 정산표가 없습니다. 목요일 00:05에 자동으로 만들어지고, 아래 [정산표 지금 만들기]로 미리 만들 수도 있습니다.</p>') + '</div>' +
       '<div class="ad-actions"><button type="button" class="btn btn-ghost" data-act="settle">정산표 지금 만들기</button><button type="button" class="btn btn-ghost" data-act="poll">아임웹 주문 지금 확인</button><button type="button" class="btn btn-ghost" data-act="mailq">대기 메일 지금 보내기</button><button type="button" class="btn btn-ghost" data-act="sync">파트너 시트에서 위원 가져오기</button></div></div>' +
-      coupons +
+      coupons + taxCardHTML() +
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('bar-chart-3') + '주간 실적 <span class="sub">확정 기준 · 이번 주 · 지난주 · 4주 흐름 · 누적</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">이번 주</th><th class="num">지난주</th><th style="padding-left:16px">4주</th><th class="num">누적</th></tr></thead><tbody>' + (wrows || '<tr><td colspan="5" class="lg-empty">최근 4주 확정 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
       '<div class="lg-card"><h2>' + ic('users') + '위원 상태 <span class="sub">이번 주 변경</span></h2><div class="st"><div><span>활동 중</span><b>' + (a.tiles.status['활동'] || 0) + '</b></div><div><span>휴면 예정</span><b>' + (a.tiles.status['휴면예정'] || 0) + '</b></div><div><span>휴면</span><b>' + (a.tiles.status['휴면'] || 0) + '</b></div><div><span>종료</span><b>' + (a.tiles.status['종료'] || 0) + '</b></div></div><ul class="lg-list">' + (changes || '<li class="lg-muted">이번 주 상태 변경 없음</li>') + '</ul></div></div>' +
       '<div class="ad-two"><div class="lg-card"><h2>' + ic('trending-up') + '누적 <span class="sub">전체 크레딧 ' + a.totals.credits + ' · 지급 ' + won(a.totals.paid) + ' · 미지급 ' + won(a.totals.unpaid) + '</span></h2><div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th class="num">누적 크레딧</th><th class="num">지급 완료</th><th class="num">미지급</th><th class="num">취소</th></tr></thead><tbody>' + (crows || '<tr><td colspan="5" class="lg-empty">아직 실적이 없습니다</td></tr>') + '</tbody></table></div></div>' +
       '<div class="lg-card"><h2>' + ic('external-link') + '활동 링크 · 자동 작업</h2><ul class="lg-list">' + (links || '<li class="lg-muted">등록된 활동 링크 없음</li>') + '</ul><p style="margin-top:12px;font-size:12.5px;line-height:1.8">자동: 5분마다 아임웹 주문 확인(결제 즉시 확정 · 결제마다 운영자 알림) · 매시간 새 위원 가져오기 · 매일 03:00 게이지 · 상태 계산(리마인드 · 휴면 예정 · 휴면 · 종료 메일) · 추천 결제 10일 재대조 · 목요일 00:05 정산표(수요일 24시까지 결제분) · 08:00 운영자 요약 메일 · 대기열 메일 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 · 매월 1일 임팩트 리포트</p></div></div>';
+  }
+  /* 세금 신고용 목록(1.4.2, 2026.09.30 사용자 '주민등록번호는 왜 수집 안 돼? 시트에 수집되어야 원천징수 3.3% 세금 신고 가능한 거 아니야?'):
+     주민등록번호는 법에 따라 시트(활동_정산정보)에 암호화되어 있어 시트에서는 읽히지 않음 → 운영자 화면에서 지급 월을 골라 불러오면 서버가 풀어서 위원별로 합쳐 줌.
+     화면에는 뒷자리를 가리고, [CSV 내려받기] 파일에만 전체 번호. 위원 지급액은 그대로 두고 세금은 위원회가 부담하므로 신고 지급액(세전)은 서버가 거꾸로 계산 */
+  function taxMonthNow() { var d = new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2); }
+  function rrnFmt(v) { v = String(v || '').replace(/\D/g, ''); return v.length === 13 ? v.slice(0, 6) + '-' + v.slice(6) : v; }
+  function rrnMask(v) { v = String(v || '').replace(/\D/g, ''); return v.length === 13 ? v.slice(0, 6) + '-' + v.charAt(6) + '******' : ''; }
+  function taxCardHTML() {
+    var t = S.tax; if (!t.month) t.month = taxMonthNow();
+    return '<div class="lg-card" id="adTax"><h2>' + ic('file-check') + '세금 신고용 목록 <span class="sub">원천징수 3.3% · 지급 완료 기준 · 위원별 월 합계</span></h2>' +
+      '<div class="ad-taxbar"><label for="adTaxMonth">지급 월</label><input type="month" class="lg-input" id="adTaxMonth" value="' + esc(t.month) + '" max="' + esc(taxMonthNow()) + '">' +
+      '<button type="button" class="btn btn-ghost btn-sm" data-act="taxload">불러오기</button>' + (t.data && t.data.rows.length ? '<button type="button" class="btn btn-primary btn-sm" data-act="taxcsv">CSV 내려받기</button>' : '') + '</div>' +
+      taxBodyHTML() + '</div>';
+  }
+  function taxBodyHTML() {
+    var t = S.tax.data;
+    if (!t) return '<p class="ad-note">월을 고르고 [불러오기]를 누르면 그 달에 [지급 완료]로 체크한 활동지원금이 위원별로 합쳐져 나옵니다. 주민등록번호는 시트에 암호화되어 있어 시트에서는 읽히지 않고, 여기서 불러올 때만 풀립니다.</p>';
+    var mo = t.month.split('-'), moTxt = mo[0] + '년 ' + Number(mo[1]) + '월';
+    if (!t.rows.length) return '<p class="lg-empty">' + moTxt + '에 지급 완료한 활동지원금이 없습니다. 정산표에서 [지급 완료]를 체크한 뒤 다시 불러오세요.</p>';
+    var sum = { n: 0, net: 0, gross: 0, it: 0, lt: 0 };
+    var rows = t.rows.map(function (r) {
+      sum.n += r.count; sum.net += r.net; sum.gross += r.gross; sum.it += r.incomeTax; sum.lt += r.localTax;
+      return '<tr><td><b>' + esc(r.name) + '</b> · ' + esc(r.code) + '</td><td>' + (r.rrn ? '<span class="acct">' + esc(rrnMask(r.rrn)) + '</span>' : '<span class="lg-chip lg-chip--wait">정산 정보 없음</span>') + '</td><td class="num">' + r.count + '</td><td class="num">' + won(r.net) + '</td><td class="num"><b>' + won(r.gross) + '</b></td><td class="num">' + won(r.incomeTax) + '</td><td class="num">' + won(r.localTax) + '</td><td class="lg-muted" style="font-size:12.5px">' + esc(String(r.dates || '').split(' ').map(function (x) { return x.slice(5).replace('-', '.'); }).join(' · ')) + '</td></tr>';
+    }).join('');
+    return '<div class="ad-scroll"><table class="lg-tbl"><thead><tr><th>위원</th><th>주민등록번호</th><th class="num">건수</th><th class="num">위원 수령액</th><th class="num">신고 지급액(세전)</th><th class="num">소득세 3%</th><th class="num">지방소득세 0.3%</th><th>지급일</th></tr></thead><tbody>' + rows + '</tbody>' +
+      '<tfoot><tr><td colspan="2">' + moTxt + ' 합계 · ' + t.rows.length + '명</td><td class="num">' + sum.n + '</td><td class="num">' + won(sum.net) + '</td><td class="num">' + won(sum.gross) + '</td><td class="num">' + won(sum.it) + '</td><td class="num">' + won(sum.lt) + '</td><td style="padding-left:16px;font-weight:600">세액 합계 ' + won(sum.it + sum.lt) + '</td></tr></tfoot></table></div>' +
+      '<p class="ad-note">위원 수령액은 그대로 두고 세금은 위원회가 부담하는 방식이라, 신고 지급액(세전)은 수령액에서 거꾸로 계산한 금액입니다(소득세 · 지방소득세는 10원 미만 절사). 화면에는 주민등록번호 뒷자리를 가렸고, 전체 번호는 [CSV 내려받기] 파일에만 들어 있습니다. 신고를 마치면 내려받은 파일은 지워 주세요. 신고 · 납부 방식은 세무 담당자와 한 번 확인하세요.</p>';
+  }
+  function loadTax(b) {
+    var inp = $('adTaxMonth'), mo = inp ? String(inp.value || '').trim() : S.tax.month;
+    if (!/^\d{4}-\d{2}$/.test(mo)) { toast('지급 월을 2026-10 처럼 골라 주세요', 'danger'); return; }
+    S.tax.month = mo; busy(b, true);
+    call('admin.taxList', { month: mo }).then(function (j) {
+      S.tax.data = { month: j.month, rate: j.rate, rows: j.rows || [] };
+      var box = $('adTax'); if (box) box.outerHTML = taxCardHTML();
+      toast(j.rows && j.rows.length ? j.month + ' · ' + j.rows.length + '명 불러왔습니다' : j.month + ' 지급 완료 내역이 없습니다', j.rows && j.rows.length ? 'ok' : undefined);
+    }, function (er) { busy(b, false); toast(er.message, 'danger'); });
+  }
+  function taxCSV() {
+    var t = S.tax.data; if (!t || !t.rows.length) return;
+    var q = function (v) { v = String(v == null ? '' : v); return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var head = ['지급월', '위원코드', '성명', '주민등록번호', '지급건수', '위원수령액', '신고지급액(세전)', '세율', '소득세', '지방소득세', '세액합계', '지급일'];
+    var lines = [head.join(',')].concat(t.rows.map(function (r) { return [t.month, r.code, r.name, rrnFmt(r.rrn), r.count, r.net, r.gross, (Math.round(t.rate * 1000) / 10) + '%', r.incomeTax, r.localTax, r.incomeTax + r.localTax, String(r.dates || '').replace(/ /g, ' · ')].map(q).join(','); }));
+    var blob = new Blob(['﻿' + lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'), url = URL.createObjectURL(blob); a.href = url; a.download = '원천징수_목록_' + t.month + '.csv'; a.style.display = 'none';
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(url); if (a.parentNode) a.parentNode.removeChild(a); }, 1500);
+    toast('원천징수_목록_' + t.month + '.csv 를 내려받았습니다', 'ok');
   }
   function rosterTabHTML(a) {
     var q = S.roster.q.toLowerCase().replace(/\s+/g, ''), stf = S.roster.st;
@@ -747,6 +794,7 @@
   function onAdminChange(e) {
     var cb = e.target;
     if (cb.id === 'adRankAll') { S.rank.all = cb.checked; $('adTab').innerHTML = adminTabHTML(); bindAdminForms(); return; }
+    if (cb.id === 'adTaxMonth') { S.tax.month = String(cb.value || '').trim(); return; }
     if (!cb.hasAttribute || !cb.hasAttribute('data-paid')) return;
     var id = cb.getAttribute('data-paid'), undo = !cb.checked; cb.disabled = true;
     call('admin.paid', { id: id, undo: undo }).then(function (j) { toast(undo ? '지급 완료를 취소했습니다' : '지급 완료로 기록하고 위원에게 안내 메일을 넣었습니다', 'ok'); loadAdmin(true); }, function (er) { cb.checked = !cb.checked; cb.disabled = false; toast(er.message, 'danger'); });
@@ -762,6 +810,8 @@
     if (b.hasAttribute('data-hide')) { var id = b.getAttribute('data-hide'); confirmBox('공지를 내릴까요?', '라운지 공지 칸에서 사라집니다(이미 보낸 메일은 그대로).', '내리기').then(function (ok) { if (ok) call('admin.noticeHide', { id: id }).then(function () { toast('공지를 내렸습니다', 'ok'); loadAdmin(true); }, function (er) { toast(er.message, 'danger'); }); }); return; }
     if (b.tagName === 'TR' && b.hasAttribute('data-code')) { if (e.target.closest('button,input,label,a')) return; openMember(b.getAttribute('data-code')); return; }
     var act = b.getAttribute('data-act'); if (!act) return;
+    if (act === 'taxload') { loadTax(b); return; }
+    if (act === 'taxcsv') { taxCSV(); return; }
     if (act === 'mailschedule') { scheduleMailResume(); return; }
     if (act === 'mailresume' || act === 'mailpause') {
       var pause = act === 'mailpause';
