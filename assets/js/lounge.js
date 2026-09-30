@@ -474,15 +474,25 @@
   function renderAdmin() {
     var a = S.admin, t = a.tiles, stt = t.status || {};
     var todayD = dateOf(a.today), todayTxt = todayD ? todayD.getFullYear() + '년 ' + (todayD.getMonth() + 1) + '월 ' + todayD.getDate() + '일 ' + DAYS[todayD.getDay()] + '요일' : a.today;
-    hero.innerHTML = heroHTML('위원 라운지 &nbsp;›&nbsp; 운영자', '운영자 대시보드', todayTxt + (a.isPayoutToday ? ' · 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + ' · 최근 정산표 ' + (a.payoutDay ? fmtMD(a.payoutDay, true) : '없음'),
+    hero.innerHTML = heroHTML('위원 라운지 &nbsp;›&nbsp; 운영자', '운영자 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''),
       '<div class="lg-tools"><span class="lg-mode">' + ic('shield-check') + '관리자 모드</span>' + (a.sheetUrl ? '<a class="btn btn-light btn-sm" href="' + esc(a.sheetUrl) + '" target="_blank" rel="noopener">운영 시트 열기</a>' : '') + '<button type="button" class="btn btn-light btn-sm" data-act="reload">새로 고침</button><button type="button" class="btn btn-light btn-sm" data-act="logout">로그아웃</button></div>');
     var tabs = [['insight', '분석 대시보드'], ['pay', '정산 · 실적'], ['roster', '위원 명단 (' + a.roster.length + ')'], ['notice', '공지 보내기'], ['settings', '설정']];
-    var html = '<div class="ad-tiles">' +
-      '<div class="ad-tile hi"><span>' + (a.isPayoutToday ? '오늘' : '최근') + ' 정산 대상</span><b>' + t.dueN + '명 · ' + won(t.dueSum) + '</b><i>지급 완료 ' + t.paidN + '명 · 보류 ' + t.holdN + '명 · 세액(위원회 부담) ' + won(t.dueTax) + '</i></div>' +
-      '<div class="ad-tile"><span>지난 7일 결제</span><b>' + t.paid7 + '건</b><i>확정 대기 ' + t.pending + '건</i></div>' +
-      '<div class="ad-tile"><span>지난 7일 확정</span><b>' + t.conf7 + '건</b><i>취소 · 환불 ' + t.canc7 + '건</i></div>' +
-      '<div class="ad-tile"><span>위원</span><b>' + t.members + '명</b><i>활동 ' + (stt['활동'] || 0) + ' · 휴면 예정 ' + (stt['휴면예정'] || 0) + ' · 휴면 ' + (stt['휴면'] || 0) + ' · 종료 ' + (stt['종료'] || 0) + '</i></div>' +
-      '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '"><span>메일' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span><b>' + t.mailToday + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘</small></b><i>대기 ' + t.mailWait + '통 · 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 한도' + (t.mailPaused ? ' <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>') + '</i></div></div>' +
+    /* 1.4.3 상단 타일(사용자 2026.09.30 '누적 건수도 나와야지, 세액 위원회 부담 0원 이런 건 불필요, 전체적으로 가독성 좋게'):
+       ① 정산: 정산일이면 오늘 정산표, 아니면 다음 정산 미리 보기(정산표에 아직 없는 확정 실적 + 미지급 정산표) ② 누적 추천 결제 ③ 최근 7일 ④ 위원 ⑤ 메일 */
+    var nx = t.next || null, payTile;
+    if (a.isPayoutToday) {
+      var totSum = a.payouts.reduce(function (x, p) { return x + (Number(p.amount) || 0); }, 0);
+      payTile = '<div class="ad-tile hi"><span>오늘 정산 · ' + fmtKo(a.today, true) + '</span><b>' + won(totSum) + '</b><i>' + a.payouts.length + '명 · 지급 완료 ' + t.paidN + '명 · 남은 ' + t.dueN + '명' + (t.holdN ? ' · 정산 정보 미등록 ' + t.holdN + '명' : '') + ' · <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표 열기</button></i></div>';
+    } else if (nx) {
+      var nd = dateOf(nx.day), cutTxt = nd ? DAYS[(nd.getDay() + 6) % 7] + '요일 24시' : '전날 24시';
+      payTile = '<div class="ad-tile hi"><span>다음 정산 · ' + fmtKo(nx.day, true) + '</span><b>' + won(nx.amount) + '</b><i>' + (nx.members ? nx.members + '명 · 추천 ' + num(nx.credits) + '건 · ' + cutTxt + '까지 결제분' : '아직 없음 · ' + cutTxt + '까지 결제분이 모입니다') + (nx.holdN ? ' · 정산 정보 미등록 ' + nx.holdN + '명' : '') + (nx.overdueN ? '<br><strong>지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum) + '</strong> <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') + '</i></div>';
+    } else payTile = '<div class="ad-tile hi"><span>최근 정산</span><b>' + t.dueN + '명 · ' + won(t.dueSum) + '</b><i>지급 완료 ' + t.paidN + '명 · 보류 ' + t.holdN + '명</i></div>';
+    var p7 = t.paid7 || 0, pp7 = t.paidPrev7 || 0, d7 = p7 - pp7, stTxt = ['활동', '휴면예정', '휴면', '종료'].filter(function (x) { return x === '활동' || stt[x]; }).map(function (x) { return (x === '휴면예정' ? '휴면 예정' : x) + ' ' + (stt[x] || 0); }).join(' · ');
+    var html = '<div class="ad-tiles">' + payTile +
+      '<div class="ad-tile"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b><i>이번 달 ' + num(t.creditsMonth || 0) + '건 · 실적 있는 위원 ' + num(t.creditedN || 0) + '명</i></div>' +
+      '<div class="ad-tile"><span>최근 7일 추천 결제</span><b>' + num(p7) + '건' + (d7 ? ' <small class="ad-tile-d ' + (d7 > 0 ? 'up' : 'down') + '">' + (d7 > 0 ? '▲' : '▼') + num(Math.abs(d7)) + '</small>' : '') + '</b><i>그 전 7일 ' + num(pp7) + '건 · 취소 · 환불 ' + num(t.canc7) + '건</i></div>' +
+      '<div class="ad-tile"><span>위원</span><b>' + num(t.members) + '명</b><i>' + stTxt + (t.loggedInN != null ? ' · 라운지 로그인 ' + num(t.loggedInN) + '명' : '') + '</i></div>' +
+      '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '"><span>메일' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span><b>' + t.mailToday + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘</small></b><i>대기 ' + t.mailWait + '통 · 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 한도' + (t.mailPaused ? ' · 결제 · 정산 알림은 바로 나감 <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>') + '</i></div></div>' +
       '<div class="ad-tabs">' + tabs.map(function (x) { return '<button type="button" class="' + (S.tab === x[0] ? 'on' : '') + '" data-tab="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '<span class="sub">v' + esc(a.version) + '</span></div>' +
       '<div id="adTab">' + adminTabHTML() + '</div>' +
       '<p class="lg-foot">계좌 · 주민등록번호는 운영자에게만 보이며 위원 화면에는 다른 위원의 정보가 나오지 않습니다. 이 창을 닫으면 자동으로 로그아웃됩니다.</p>';
@@ -614,11 +624,11 @@
   function kindLabel(k) { return KIND_KO[k] || k; }
   function pct(a, b) { return b > 0 ? Math.round(1000 * a / b) / 10 : 0; }
   function agoTxt(days) { days = Number(days); if (!isFinite(days) || days >= 999) return '기록 없음'; if (days <= 0) return '오늘'; if (days === 1) return '어제'; return days + '일 전'; }
-  function delta(now, prev, unit) {
-    now = Number(now) || 0; prev = Number(prev) || 0; var d = now - prev;
+  function delta(now, prev, unit, span) {
+    span = span || '이전 7일'; now = Number(now) || 0; prev = Number(prev) || 0; var d = now - prev;
     if (!now && !prev) return '<span class="ad-delta flat">아직 없음</span>';
-    if (d === 0) return '<span class="ad-delta flat">이전 7일과 같음</span>';
-    return '<span class="ad-delta ' + (d > 0 ? 'up' : 'down') + '">' + (d > 0 ? '▲' : '▼') + ' ' + num(Math.abs(d)) + (unit || '') + ' <small>이전 7일 ' + num(prev) + (unit || '') + '</small></span>';
+    if (d === 0) return '<span class="ad-delta flat">' + span + '과 같음</span>';
+    return '<span class="ad-delta ' + (d > 0 ? 'up' : 'down') + '">' + (d > 0 ? '▲' : '▼') + ' ' + num(Math.abs(d)) + (unit || '') + ' <small>' + span + ' ' + num(prev) + (unit || '') + '</small></span>';
   }
   function kpiTile(label, value, unit, deltaHtml, sub, cls) { return '<div class="ad-kpi' + (cls ? ' ' + cls : '') + '"><span>' + label + '</span><b>' + num(value) + '<small>' + (unit || '') + '</small></b>' + (deltaHtml || '') + (sub ? '<i>' + sub + '</i>' : '') + '</div>'; }
   /* 막대 + 꺾은선 겹친 12주 차트. bars: 실적(건, 왼쪽 축), line: 확산(명, 오른쪽 축) */
@@ -684,19 +694,22 @@
     var k = an.kpi, s = an.stats, f = an.funnel, sr = an.series, mo = an.monthly, risk = an.risk, dist = an.dist;
     /* 1) KPI */
     var payAlert = a.isPayoutToday && a.tiles.dueN > 0 ? '<div class="ad-alert">' + ic('credit-card') + '<b>오늘 정산일</b> 지급 대상 ' + a.tiles.dueN + '명 · ' + won(a.tiles.dueSum) + ' <button type="button" class="lg-link" data-tab="pay">정산표 열기</button></div>' : '';
+    /* 1.4.3 KPI(사용자: '누적 건수도 나와야지 · 라운지 이용도 9회가 아니고 9명이어야지'): 결제 즉시 확정이라 '확정' 칸은 뺌(추천 결제와 같음),
+       '활동 위원(7일 안 활동 신호)'은 위촉 · 로그인만으로도 100%가 돼 뜻이 약해 '실적 있는 위원'으로 바꿈 */
+    var kv = k.visitors || { now: 0, prev: 0, m30: 0, loggedIn: 0, of: 0 }, kc = k.credited || { all: 0, m30: 0, of: 0 }, kcr = pct(kc.all, kc.of);
     var kpis = '<div class="ad-kpis">' +
-      kpiTile('최근 7일 추천 실적', k.credits.now, '건', delta(k.credits.now, k.credits.prev, '건'), '30일 ' + num(k.credits.m30) + '건 · 확정 대기 ' + num(k.credits.pending) + ' · 누적 ' + num(k.credits.all), 'hi') +
-      kpiTile('최근 7일 확정', k.confirmed.now, '건', delta(k.confirmed.now, k.confirmed.prev, '건'), '취소 · 환불 30일 ' + num(k.canceled.m30) + '건 (취소율 ' + s.cancelRate + '%)') +
-      kpiTile('최근 7일 확산', k.reach.now, '명', delta(k.reach.now, k.reach.prev, '명'), '30일 ' + num(k.reach.m30) + '명 · 고유 방문 ' + num(k.reach.unique30) + '명') +
-      kpiTile('라운지 이용', k.visits.now, '회', delta(k.visits.now, k.visits.prev, '회'), '위원이 라운지를 연 날 수의 합(위원당 하루 1회) · 30일 ' + num(k.visits.m30) + '회') +
-      kpiTile('활동 위원', k.active.n7, '명', '<span class="ad-delta ' + (k.active.rate7 >= 60 ? 'up' : k.active.rate7 >= 30 ? 'flat' : 'down') + '">' + k.active.rate7 + '% <small>' + num(k.active.of) + '명 중 7일 안 활동 신호</small></span>', '30일 기준 ' + num(k.active.n30) + '명 (' + k.active.rate30 + '%)') +
-      kpiTile('신규 위촉', k.joined.now, '명', delta(k.joined.now, k.joined.prev, '명'), '30일 ' + num(k.joined.m30) + '명 · 그 전 30일 ' + num(k.joined.prev30) + '명') +
+      kpiTile('누적 추천 결제', k.credits.all, '건', '<span class="ad-delta ' + (k.credits.now ? 'up' : 'flat') + '">' + (k.credits.now ? '▲ ' + num(k.credits.now) + '건 <small>최근 7일</small>' : '최근 7일 추천 없음') + '</span>', '이번 달 ' + num(k.credits.month || 0) + '건 · 지난달 ' + num(k.credits.prevMonth || 0) + '건', 'hi') +
+      kpiTile('최근 7일 추천 결제', k.credits.now, '건', delta(k.credits.now, k.credits.prev, '건'), '30일 ' + num(k.credits.m30) + '건 · 취소 · 환불 30일 ' + num(k.canceled.m30) + '건') +
+      kpiTile('최근 7일 확산', k.reach.now, '명', delta(k.reach.now, k.reach.prev, '명'), '30일 ' + num(k.reach.m30) + '명 · 누적 ' + num(k.reach.all || 0) + '명') +
+      kpiTile('라운지 이용 위원', kv.now, '명', delta(kv.now, kv.prev, '명'), '최근 7일 라운지를 연 위원 · 30일 ' + num(kv.m30) + '명 · 첫 로그인 ' + num(kv.loggedIn) + '/' + num(kv.of) + '명') +
+      kpiTile('실적 있는 위원', kc.all, '명', '<span class="ad-delta ' + (kcr >= 30 ? 'up' : 'flat') + '">' + kcr + '% <small>' + num(kc.of) + '명 중</small></span>', '최근 30일 실적 ' + num(kc.m30) + '명') +
+      kpiTile('신규 위촉', k.joined.m30, '명', delta(k.joined.m30, k.joined.prev30, '명', '그 전 30일'), '최근 30일 · 7일 ' + num(k.joined.now) + '명') +
       '</div>';
     /* 2) 추이 */
-    var trend = '<div class="lg-card"><h2>' + ic('line-chart') + '12주 활동 추이<span class="sub">막대 추천 실적(결제 기준, 건) · 선 확산(명함 · 링크로 AI 윤리를 접한 사람, 명) · 월요일 시작 주</span></h2>' +
+    var trend = '<div class="lg-card"><h2>' + ic('line-chart') + '12주 활동 추이<span class="sub">막대 추천 결제(건) · 선 확산(명함 · 링크로 AI 윤리를 접한 사람, 명) · 월요일 시작 주</span></h2>' +
       comboChart(sr.weeks, sr.credits, sr.reach, { label: '12주 추천 실적과 확산' }) +
-      '<div class="ad-legend ad-legend--chart"><span><i style="background:#1F5FE0"></i>추천 실적 <b>' + num(sr.credits.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span><i style="background:#0B8F84;border-radius:2px;height:3px"></i>확산 <b>' + num(sr.reach.reduce(function (x, y) { return x + y; }, 0)) + '명</b></span><span><i style="background:#F0A24A"></i>확정 <b>' + num(sr.confirmed.reduce(function (x, y) { return x + y; }, 0)) + '건</b> · 취소 <b>' + num(sr.canceled.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span class="lg-muted" style="font-weight:500">마지막 막대 · 점은 진행 중인 이번 주</span></div>' +
-      '<div class="ad-sparks">' + sparkTile('라운지 이용', sr.visits, '회', '#7C3AED') + sparkTile('도구 사용 · 저장', sr.kit, '회', '#E06B8A') + sparkTile('활동 링크', sr.links, '건', '#F0A24A') + sparkTile('신규 위촉', sr.joined, '명', '#0B8F84') + '</div></div>';
+      '<div class="ad-legend ad-legend--chart"><span><i style="background:#1F5FE0"></i>추천 결제 <b>' + num(sr.credits.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span><i style="background:#0B8F84;border-radius:2px;height:3px"></i>확산 <b>' + num(sr.reach.reduce(function (x, y) { return x + y; }, 0)) + '명</b></span><span><i style="background:#F0A24A"></i>취소 · 환불 <b>' + num(sr.canceled.reduce(function (x, y) { return x + y; }, 0)) + '건</b></span><span class="lg-muted" style="font-weight:500">마지막 막대 · 점은 진행 중인 이번 주</span></div>' +
+      '<div class="ad-sparks">' + sparkTile('라운지 이용 위원', sr.visitors || sr.visits, '명', '#7C3AED') + sparkTile('도구 사용 · 저장', sr.kit, '회', '#E06B8A') + sparkTile('활동 링크', sr.links, '건', '#F0A24A') + sparkTile('신규 위촉', sr.joined, '명', '#0B8F84') + '</div></div>';
     /* 3) 순위 */
     var top3 = an.rank.filter(function (r) { return r.status !== '종료' && r.score > 0; }).slice(0, 3);
     var podium = top3.length ? '<div class="ad-podium">' + top3.map(function (r, i) { var b = scoreBand(r.score); return '<button type="button" class="ad-pod p' + (i + 1) + '" data-member="' + esc(r.code) + '"><span class="medal">' + (i + 1) + '</span><b>' + esc(r.name) + '</b><small>' + esc(r.code) + (r.badge ? ' · ' + esc(TIER_WORD[r.badge] || r.badge) : '') + '</small><em style="color:' + b[2] + '">' + r.score + '점 · ' + b[1] + '</em><i>30일 실적 ' + r.credits30 + ' · 확산 ' + num(r.reach30) + ' · 이용 ' + r.visits30 + '일</i></button>'; }).join('') + '</div>' : '<p class="lg-empty" style="text-align:center;padding:14px 0">아직 활동 점수가 있는 위원이 없습니다. 확산 · 실적 · 라운지 이용이 기록되면 순위가 생깁니다.</p>';
@@ -719,7 +732,7 @@
     var risks = '<div class="lg-card"><h2>' + ic('alert-triangle') + '점검이 필요한 위원<span class="sub">누르면 상세 · 조치(메모 · 위촉 메일 다시 · 휴면 · 복귀 · 종료)</span></h2><div class="ad-risks">' +
       riskList('실적 기한 임박 · 경과', risk.deadline, function (it) { return it.daysLeft < 0 ? '<b class="bad">기한 ' + Math.abs(it.daysLeft) + '일 지남</b>' : it.daysLeft === 0 ? '<b class="bad">오늘까지</b>' : '<b>D-' + it.daysLeft + '</b>' + ' · ' + fmtMD(it.deadline) + (it.first ? ' · 첫 실적' : ''); }, 'clock', '기한 7일 안에 든 위원 없음') +
       riskList('활동 게이지 낮음(30% 이하)', risk.lowGauge, function (it) { return '<b>' + it.gauge + '%</b> · 마지막 신호 ' + agoTxt(it.silentDays); }, 'gauge') +
-      riskList('첫 로그인 전', risk.noLogin, function (it) { return '위촉 ' + it.sinceDays + '일째 · 라운지를 한 번도 열지 않음'; }, 'user-check', '모든 위원이 라운지에 들어왔습니다') +
+      riskList('첫 로그인 전', risk.noLogin, function (it) { return '위촉 ' + it.sinceDays + '일째 · 아직 로그인 전'; }, 'user-check', '모든 위원이 라운지에 들어왔습니다') +
       riskList(an.silentDays + '일 이상 무신호(활동 중)', risk.silent, function (it) { return '<b>' + it.silentDays + '일</b>' + (it.lastKind ? ' · 마지막 ' + esc(kindLabel(it.lastKind)) : ''); }, 'clock') +
       riskList('정산 정보 미등록(실적 있음)', risk.noPayinfo, function (it) { var xs = []; if (it.unpaid) xs.push('<b>' + won(it.unpaid) + '</b> 보류'); if (it.pending) xs.push('확정 대기 ' + it.pending + '건'); return xs.join(' · ') || '실적 있음'; }, 'credit-card') +
       riskList('휴면 예정 · 휴면', risk.paused, function (it) { return statusChip(it.status) + (it.reason ? ' <small>' + esc(it.reason) + '</small>' : '') + (it.changed ? ' · ' + fmtMD(it.changed) + '부터' : ''); }, 'users') +
@@ -748,9 +761,9 @@
       '<div class="ad-mini"><div><span>명함 이미지 저장</span><b>' + num(k.tools.saves30) + '</b></div><div><span>명함 공유</span><b>' + num(k.tools.shares30) + '</b></div><div><span>활동 링크 등록</span><b>' + num(k.tools.links30) + '</b></div><div><span>증명서 요청</span><b>' + num(k.tools.cert30) + '</b></div></div></div></div>';
     /* 8) 월별 · 코호트 · 분포 · 정산 */
     var moMax = { c: Math.max(1, Math.max.apply(null, mo.credits)), r: Math.max(1, Math.max.apply(null, mo.reach)), p: Math.max(1, Math.max.apply(null, mo.paid)) };
-    var moRows = mo.months.map(function (m, i) { var isNow = i === mo.months.length - 1; return '<tr' + (isNow ? ' class="now"' : '') + '><td>' + esc(m.replace('-', '.')) + (isNow ? ' <small class="lg-muted">진행 중</small>' : '') + '</td><td class="num">' + num(mo.joined[i]) + '</td><td><div class="ad-cell"><i style="width:' + (100 * mo.credits[i] / moMax.c).toFixed(1) + '%"></i><b>' + num(mo.credits[i]) + '</b></div></td><td><div class="ad-cell teal"><i style="width:' + (100 * mo.reach[i] / moMax.r).toFixed(1) + '%"></i><b>' + num(mo.reach[i]) + '</b></div></td><td class="num">' + num(mo.visits[i]) + '</td><td><div class="ad-cell gold"><i style="width:' + (100 * mo.paid[i] / moMax.p).toFixed(1) + '%"></i><b>' + won(mo.paid[i]) + (mo.paidN[i] ? ' <small>' + mo.paidN[i] + '건</small>' : '') + '</b></div></td></tr>'; }).join('');
-    var payKpi = '<div class="ad-mini ad-mini--pay"><div><span>누적 지급</span><b>' + won(k.pay.paidTotal) + '</b><i>' + k.pay.paidMembers + '명 · ' + k.pay.paidRows + '회</i></div><div><span>최근 30일 지급</span><b>' + won(k.pay.paid30) + '</b><i>그 전 30일 ' + won(k.pay.paidPrev30) + '</i></div><div><span>지급 예정</span><b>' + won(k.pay.dueTotal) + '</b><i>' + k.pay.dueN + '건</i></div><div><span>보류(정산 정보 없음)</span><b>' + won(k.pay.holdTotal) + '</b><i>' + k.pay.holdN + '건</i></div><div><span>지급 위원당 평균</span><b>' + won(k.pay.avgPerPaidMember) + '</b><i>세액(위원회 부담) 누적 ' + won(k.pay.taxPaid) + '</i></div></div>';
-    var monthlyCard = '<div class="lg-card"><h2>' + ic('calendar') + '월별 흐름과 정산<span class="sub">최근 ' + an.months + '개월</span></h2>' + payKpi + '<div class="ad-scroll"><table class="lg-tbl ad-motbl"><thead><tr><th>월</th><th class="num">신규 위촉</th><th>추천 실적</th><th>확산</th><th class="num">라운지 이용</th><th>지급액</th></tr></thead><tbody>' + moRows + '</tbody></table></div></div>';
+    var moRows = mo.months.map(function (m, i) { var isNow = i === mo.months.length - 1; return '<tr' + (isNow ? ' class="now"' : '') + '><td>' + esc(m.replace('-', '.')) + (isNow ? ' <small class="lg-muted">진행 중</small>' : '') + '</td><td class="num">' + num(mo.joined[i]) + '</td><td><div class="ad-cell"><i style="width:' + (100 * mo.credits[i] / moMax.c).toFixed(1) + '%"></i><b>' + num(mo.credits[i]) + '</b></div></td><td><div class="ad-cell teal"><i style="width:' + (100 * mo.reach[i] / moMax.r).toFixed(1) + '%"></i><b>' + num(mo.reach[i]) + '</b></div></td><td class="num">' + num(mo.visitors ? mo.visitors[i] : mo.visits[i]) + '</td><td><div class="ad-cell gold"><i style="width:' + (100 * mo.paid[i] / moMax.p).toFixed(1) + '%"></i><b>' + won(mo.paid[i]) + (mo.paidN[i] ? ' <small>' + mo.paidN[i] + '건</small>' : '') + '</b></div></td></tr>'; }).join('');
+    var payKpi = '<div class="ad-mini ad-mini--pay"><div><span>누적 지급</span><b>' + won(k.pay.paidTotal) + '</b><i>' + k.pay.paidMembers + '명 · ' + k.pay.paidRows + '회</i></div><div><span>최근 30일 지급</span><b>' + won(k.pay.paid30) + '</b><i>그 전 30일 ' + won(k.pay.paidPrev30) + '</i></div><div><span>지급 예정</span><b>' + won(k.pay.dueTotal) + '</b><i>' + k.pay.dueN + '건</i></div><div><span>보류(정산 정보 없음)</span><b>' + won(k.pay.holdTotal) + '</b><i>' + k.pay.holdN + '건</i></div><div><span>지급 위원당 평균</span><b>' + won(k.pay.avgPerPaidMember) + '</b><i>지급 위원 ' + num(k.pay.paidMembers) + '명 기준</i></div></div>';
+    var monthlyCard = '<div class="lg-card"><h2>' + ic('calendar') + '월별 흐름과 정산<span class="sub">최근 ' + an.months + '개월</span></h2>' + payKpi + '<div class="ad-scroll"><table class="lg-tbl ad-motbl"><thead><tr><th>월</th><th class="num">신규 위촉</th><th>추천 결제</th><th>확산</th><th class="num">라운지 이용 위원</th><th>지급액</th></tr></thead><tbody>' + moRows + '</tbody></table></div></div>';
     var cohortRows = an.cohorts.slice().reverse().map(function (c) { return '<tr><td>' + esc(c.month.replace('-', '.')) + '</td><td class="num">' + c.n + '</td><td class="num">' + c.active + '</td><td class="num">' + c.loggedInRate + '%</td><td class="num">' + c.creditedRate + '%</td><td class="num">' + num(c.creditsAvg) + '</td><td class="num">' + num(c.reachAvg) + '</td></tr>'; }).join('');
     var tierParts = [['캠페인위원', dist.tier.base || 0, '#C9D8F5'], ['선임위원', dist.tier['선임'] || 0, '#7FA6EE'], ['책임위원', dist.tier['책임'] || 0, '#7C3AED'], ['수석위원', dist.tier['수석'] || 0, '#F0A24A']];
     var stParts = [['활동', dist.status['활동'] || 0, '#0B8F84'], ['휴면 예정', dist.status['휴면예정'] || 0, '#F0A24A'], ['휴면', dist.status['휴면'] || 0, '#E06B8A'], ['종료', dist.status['종료'] || 0, '#A0AEC0']];
@@ -835,7 +848,7 @@
     var logs = j.logs.slice(0, 30).map(function (l) { return '<div>' + esc(l.at) + ' · ' + esc(l.kind) + (l.path ? ' · ' + esc(String(l.path).slice(0, 60)) : '') + (l.detail ? ' · ' + esc(l.detail) : '') + '</div>'; }).join('');
     var mails = j.mails.slice(0, 15).map(function (x) { return '<div>' + esc(x.at) + ' · ' + esc(x.kind) + ' · ' + esc(x.subject) + ' · ' + esc(x.status) + '</div>'; }).join('');
     var body = '<div class="ad-detail"><dl><dt>성명 · 코드</dt><dd><b>' + esc(m.name) + '</b> · ' + esc(m.code) + ' ' + badgeChip(j.member.badge || tierBadgeOf(j.member.tier)) + '</dd><dt>상태</dt><dd>' + esc(m.status) + (m.changed ? ' (' + esc(m.changed) + ')' : '') + (m.ended ? ' · 종료 ' + esc(m.ended) : '') + '</dd><dt>이메일</dt><dd>' + esc(m.email || '-') + '</dd><dt>휴대전화</dt><dd>' + esc(m.phone || '-') + '</dd><dt>위촉일</dt><dd>' + esc(m.since) + '</dd><dt>마지막 활동</dt><dd>' + esc(m.lastSignal || '-') + ' ' + esc(m.lastKind || '') + '</dd><dt>크레딧</dt><dd>확정 ' + m.credits + ' · 대기 ' + m.pending + ' · 취소 ' + m.canceled + ' · 누적 지급 ' + won(m.paid) + '</dd><dt>라운지</dt><dd>' + (m.firstLogin ? '첫 로그인 ' + esc(m.firstLogin) : '첫 로그인 전') + '</dd><dt>정산 정보</dt><dd>' + (pi ? esc(pi.bank) + ' ' + esc(pi.account) + ' (' + esc(pi.holder) + ')<br><span id="adRrn">' + esc(rrnMasked) + '</span> <button type="button" class="lg-link" data-rrn="' + esc(pi.rrn) + '">전체 보기</button><br><small class="lg-muted">동의 ' + esc(pi.consentAt) + '</small>' : '미등록') + '</dd><dt>메모</dt><dd><input class="lg-input" id="adMemo" value="' + esc(m.memo || '') + '" maxlength="300" style="padding:7px 10px;font-size:13.5px"></dd></dl>' +
-      '<div class="ad-actions"><button type="button" class="btn btn-ghost" data-mact="memo">메모 저장</button><button type="button" class="btn btn-ghost" data-mact="credit_add">크레딧 +1 (수동)</button>' + (m.status === '활동' || m.status === '휴면예정' ? '<button type="button" class="btn btn-ghost" data-mact="dormant">휴면 처리</button>' : '') + (m.status !== '활동' ? '<button type="button" class="btn btn-ghost" data-mact="restore">활동으로 복귀</button>' : '') + (m.status !== '종료' ? '<button type="button" class="btn btn-ghost" data-mact="end" style="color:#991B12;border-color:#EEC3BF">위촉 종료</button>' : '') + '<button type="button" class="btn btn-ghost" data-mact="resend_welcome">위촉 메일 다시</button><button type="button" class="btn btn-ghost" data-mact="reset_pw">비밀번호 초기화</button></div>' +
+      '<div class="ad-actions">' + (m.status !== '종료' && m.email ? '<button type="button" class="btn btn-ghost ad-cheer" data-mact="cheer" title="부담 없는 응원과 바로 쓸 수 있는 확산 팁을 보냅니다(미리 보기 뒤 발송)">' + ic('send') + '응원 메일</button>' : '') + '<button type="button" class="btn btn-ghost" data-mact="memo">메모 저장</button><button type="button" class="btn btn-ghost" data-mact="credit_add">크레딧 +1 (수동)</button>' + (m.status === '활동' || m.status === '휴면예정' ? '<button type="button" class="btn btn-ghost" data-mact="dormant">휴면 처리</button>' : '') + (m.status !== '활동' ? '<button type="button" class="btn btn-ghost" data-mact="restore">활동으로 복귀</button>' : '') + (m.status !== '종료' ? '<button type="button" class="btn btn-ghost" data-mact="end" style="color:#991B12;border-color:#EEC3BF">위촉 종료</button>' : '') + '<button type="button" class="btn btn-ghost" data-mact="resend_welcome">위촉 메일 다시</button><button type="button" class="btn btn-ghost" data-mact="reset_pw">비밀번호 초기화</button></div>' +
       '<h3 style="font-size:14px;margin:16px 0 4px">실적 ' + j.credits.length + '건</h3><div class="ad-log">' + (credits || '<div class="lg-muted">없음</div>') + '</div>' +
       '<h3 style="font-size:14px;margin:14px 0 4px">활동 기록</h3><div class="ad-log">' + (logs || '<div class="lg-muted">없음</div>') + '</div>' +
       '<h3 style="font-size:14px;margin:14px 0 4px">보낸 메일</h3><div class="ad-log">' + (mails || '<div class="lg-muted">없음</div>') + '</div></div>';
@@ -848,9 +861,28 @@
       var act = b.getAttribute('data-mact'); if (!act) return;
       var memo = $('adMemo').value.trim();
       if (act === 'memo') { memberAct(m.code, 'memo', { memo: memo }); return; }
+      if (act === 'cheer') { openCheer(m); return; }
       var ask = { credit_add: ['크레딧을 1 더할까요?', '수동 실적(확정)으로 기록되고 다음 정산에 들어갑니다. 메모 칸의 내용이 사유로 남습니다.'], dormant: ['휴면 처리할까요?', '명단에서 숨겨지고 위원이 로그인하면 다시 활동으로 돌아옵니다.'], restore: ['활동으로 복귀시킬까요?', '게이지가 100%로 채워지고 명단에 다시 보입니다.'], end: ['위촉을 종료할까요?', '명단에서 내려가고 안내 메일이 나갑니다. 아임웹 쿠폰은 삭제 대기 목록에 오릅니다.'], resend_welcome: ['위촉 안내 메일을 다시 보낼까요?', '대기열에 넣어 곧 발송합니다.'], reset_pw: ['비밀번호를 초기화할까요?', '위원이 다음 로그인 때 이메일 인증으로 다시 정하게 됩니다.'] }[act];
       confirmBox(ask[0], ask[1], '실행', act === 'end').then(function (ok) { if (ok) memberAct(m.code, act, { memo: memo, mail: act === 'end' }); });
     };
+  }
+  /* 1.4.3 응원 메일(사용자 2026.09.30 '저성과자 독려 메일 보내기 같은 것, 거부감 없이 적절하게'): 서버가 만든 메일을 그대로 미리 보여 주고 [보내기]를 눌러야 발송. 같은 위원 7일에 한 번 */
+  function openCheer(m) {
+    var md = modal('응원 메일 미리 보기', m.name + ' 위원 · ' + m.code, '<p class="lg-muted">메일을 만드는 중…</p>');
+    md.onclick = function (e) { if (e.target === md || e.target.closest('[data-act="close"]')) closeModal(); };
+    call('admin.memberAction', { code: m.code, act: 'cheer_preview' }).then(function (j) {
+      var last = j.last ? String(j.last).slice(0, 16) : '', gap = Number(j.gapDays) || 7, wait = Number(j.waitDays) || 0;   /* 남은 날은 서버가 계산(시간대 차이 없게) */
+      var body = '<div class="ad-mailmeta"><div><span>받는 사람</span><b>' + esc(j.to) + '</b></div><div><span>제목</span><b>' + esc(j.subject) + '</b></div>' + (last ? '<div><span>지난 응원 메일</span><b>' + esc(last) + '</b></div>' : '') + '</div>' +
+        '<iframe class="ad-mailframe" sandbox="" title="응원 메일 미리 보기" srcdoc="' + esc('<!doctype html><meta charset="utf-8"><body style="margin:0">' + j.html + '</body>') + '"></iframe>' +
+        '<p class="ad-note">위원의 실적 · 확산 · 라운지 로그인 여부에 맞춰 문장이 달라집니다. 실적 부족 · 기한 · 휴면 같은 말은 넣지 않았고, 같은 위원에게는 ' + gap + '일에 한 번만 보낼 수 있습니다. 메일 대기열이 멈춰 있어도 바로 나갑니다.</p>';
+      var foot = '<button type="button" class="btn btn-ghost btn-sm" data-act="close">닫기</button>' + (wait > 0 ? '<button type="button" class="btn btn-primary btn-sm" disabled>' + wait + '일 뒤에 다시 보낼 수 있음</button>' : '<button type="button" class="btn btn-primary btn-sm" data-act="send">이 메일 보내기</button>');
+      var md2 = modal('응원 메일 미리 보기', m.name + ' 위원 · ' + m.code, body, foot);
+      md2.onclick = function (e) {
+        if (e.target === md2 || e.target.closest('[data-act="close"]')) { closeModal(); openMember(m.code); return; }
+        var b = e.target.closest('[data-act="send"]'); if (!b) return; busy(b, true);
+        call('admin.memberAction', { code: m.code, act: 'cheer' }).then(function (r) { toast(r.sent ? m.name + ' 위원에게 응원 메일을 보냈습니다' : '응원 메일을 대기열에 넣었습니다(오늘 메일 한도가 적어 곧 이어서 발송)', 'ok'); closeModal(); openMember(m.code); }, function (er) { busy(b, false); toast(er.message, 'danger'); });
+      };
+    }, function (er) { closeModal(); toast(er.message, 'danger'); });
   }
   function memberAct(code, act, extra) {
     var p = { code: code, act: act }; if (extra) for (var k in extra) p[k] = extra[k];
