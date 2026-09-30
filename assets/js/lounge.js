@@ -327,7 +327,9 @@
       '<div class="lg-cert"><h2>' + ic('file-check') + '활동증명서</h2><p>위촉 뒤 ' + Math.round(set.certDays / 30) + '개월 이상 활동한 위원에게 위원장 명의 · 위원장 직인의 활동증명서를 발급합니다.</p>' +
       (d.cert.eligible ? '<button type="button" class="btn btn-ghost btn-sm" data-act="cert" style="margin-top:10px">활동증명서 발급 요청</button>' : '<button type="button" class="btn btn-ghost btn-sm" disabled style="margin-top:10px;color:var(--gray-400);border-color:#E5E9F0">활동증명서 발급 요청</button> <span style="font-size:12px;color:var(--gray-500);margin-left:6px">' + esc(d.cert.from) + '부터 발급됩니다</span>') + '</div></div>';
     var notices = (d.notices || []).map(function (n) { return '<div class="lg-notice"><b>' + esc(n.title) + '</b><p>' + esc(n.body) + (n.link ? ' <a href="' + esc(n.link) + '" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">자세히 →</a>' : '') + '</p><small>공지 · ' + fmtMD(n.at) + '</small></div>'; }).join('');
-    main.innerHTML =
+    // 2026.09.30 운영자 미리보기(백엔드 1.3.2 preview): 위원 화면을 읽기 전용으로 볼 때 맨 위에 띠
+    var pvBar = d.preview ? '<div class="lg-preview" role="note">' + ic('eye') + '<span><b>운영자 미리보기</b> · ' + esc(d.preview.name || m.name) + ' 위원(' + esc(d.preview.code || code) + ') 화면입니다. 읽기 전용이라 바꿀 수 없고, 위원 활동 기록과 통계에 남지 않습니다.</span></div>' : '';
+    main.innerHTML = pvBar +
       '<div class="lg-grid">' +
       '<div class="lg-card"><h2>' + ic('trending-up') + '나의 임팩트</h2><div class="lg-big">당신의 추천으로 AI 윤리를 배우기 시작한 사람<strong>' + num(m.credits) + '<small>명</small></strong><span class="lg-sub">임팩트 크레딧 ' + num(m.credits) + (m.pending ? ' · 확정 대기 ' + m.pending : '') + (m.canceled ? ' · 취소 ' + m.canceled : '') + '</span></div>' +
       '<div class="lg-stats"><div class="lg-stat"><span>이달 크레딧</span><b>' + num(st.thisMonth) + '</b><i>' + (m.credits === 0 ? '첫 임팩트를 기다립니다' : '확정 기준') + '</i></div><div class="lg-stat"><span>리치(도달)</span><b>' + num(st.reachAll) + '</b><i>명함 · 링크로 닿은 사람 · 7일 ' + num(st.reach7) + '</i></div><div class="lg-stat"><span>다음 등급까지</span><b>' + (nt ? num(nt.need) : '-') + '</b><i>' + (nt ? esc(shortTier(nt.name)) + ' (' + nt.at + ')' : '최고 등급입니다') + '</i></div></div>' +
