@@ -1026,7 +1026,7 @@
       '<ul class="ex-vid-grid">' + cards + '</ul></section>';
   }
   function vidCard(v, lg) {
-    var pct = lg.done ? 0 : (lg.t && v.dur ? Math.min(98, lg.t / v.dur * 100) : 0);
+    var pct = lg.done || !(lg.t > 5) || !v.dur ? 0 : Math.min(98, lg.t / v.dur * 100);   // 5초 넘게 본 영상만 '이어 보기'
     return '<li class="ex-vid' + (lg.done ? ' is-done' : '') + '">' +
       '<button type="button" class="ex-vid-btn" data-act="vid-open" data-vid="' + esc(v.id) + '">' +
         '<span class="ex-vid-thumb">' +
@@ -1301,9 +1301,11 @@
     video.src = list[0].src;
     vpPlay();
   }
-  // 커먼즈 파일 고르기: 재생 가능한 webm(VP9) 먼저, 안 되면 mov. 큰 화면은 높은 화질부터, 작은 화면 · 데이터 절약 모드는 480p 가까운 것부터
+  // 커먼즈 파일 고르기: 재생 가능한 webm(VP9) 먼저, 안 되면 mov. 재생 창이 넓으면(가로 화소 900 초과) 높은 화질부터,
+  // 좁은 창 · 휴대전화(720px 미만) · 데이터 절약 모드는 480p 가까운 것부터
   function vpFiles(files, video) {
-    var small = (VP.stage.clientWidth || window.innerWidth) < 720 || !!(navigator.connection && navigator.connection.saveData);
+    var w = VP.stage.clientWidth || window.innerWidth;
+    var small = w < 720 || w * (window.devicePixelRatio || 1) <= 900 || !!(navigator.connection && navigator.connection.saveData);
     var ok = files.filter(function (f) { return !f.type || video.canPlayType(f.type); });
     function rank(a, b) { return small ? (Math.abs(a.h - 480) - Math.abs(b.h - 480)) || (a.h - b.h) : b.h - a.h; }
     var webm = ok.filter(function (f) { return /webm/.test(f.type || ''); }).sort(rank);
@@ -1448,7 +1450,7 @@
     var P = VP, video = P && P.video, v = P && P.cur;
     if (!video || !v || P.failed) return;
     var t = video.currentTime || 0, d = vpDur();
-    if (t < 3 || !d) return;
+    if (t < 5 || !d) return;
     if (t / d >= 0.92) vlogSet(v.id, { done: true, t: 0, at: Date.now() });
     else vlogSet(v.id, { t: Math.floor(t), at: Date.now() });
   }
