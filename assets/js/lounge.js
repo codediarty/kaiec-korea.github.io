@@ -502,16 +502,22 @@
     });
   }
   function adminLogout() { store(KEY_ADMIN, null, true); store(KEY_ADMIN_DASH, null, true); store(KEY_ADMIN_TAB, null, true); adSeq++; refreshing(false); S.admin = null; S.tab = 'insight'; renderAdminLogin(); }
-  /* 1.4.9 메일 칸(사용자 2026.10.01 '여기 20통이라는 게 20통이 남았다는 거야 20통을 사용했다는 거야? 잔여가 안 나와서'): 큰 숫자는 지메일 잔여(남음),
-     아래 줄에 오늘 보낸 수 · 대기 · 다음으로 다시 차는 때. 무료 지메일은 24시간 100통, 보낸 지 24시간이 지나면 그만큼 다시 생김 */
+  /* 1.4.9 메일 칸(사용자 2026.10.01 '여기 20통이라는 게 20통이 남았다는 거야 20통을 사용했다는 거야? 잔여가 안 나와서'): 큰 숫자는 지메일 잔여(남음).
+     1.4.11 짧게(사용자 '글씨가 너무 길어져서 못생겨졌잖아'): 아래 한 줄은 오늘 보냄 · 대기, 그 아래 다시 차는 때 · 멈춤 버튼. 자세한 설명은 마우스를 올리면(title).
+     무료 지메일은 24시간 100통, 보낸 지 24시간이 지나면 그만큼 다시 생김 */
   function mailTileHTML(a, t) {
     var q = t.mailQuota != null && t.mailQuota >= 0 ? t.mailQuota : null, rf = t.mailRefill, today = a.today || '';
-    var head = '<span>메일 발송' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span>';
-    var btn = t.mailPaused ? ' · 결제 · 정산 알림은 바로 나감 <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>';
-    var refill = rf && rf.at ? ' · ' + (String(rf.at).slice(0, 10) === today ? '' : '내일 ') + esc(String(rf.at).slice(11, 16)) + '에 ' + num(rf.n) + '통 다시 생김' : '';
-    var tip = '무료 지메일은 24시간 동안 100통까지 보낼 수 있고, 보낸 지 24시간이 지나면 그만큼 다시 생깁니다(0시에 한꺼번에 초기화되지 않음). 오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수, 대기는 아직 안 나간 메일입니다';
-    if (q == null) return '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '" title="' + esc(tip) + '">' + head + '<b>' + num(t.mailToday) + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘 보냄</small></b><i>대기 ' + num(t.mailWait) + '통' + btn + '</i></div>';
-    return '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + (q <= 10 ? ' is-low' : '') + '" title="' + esc(tip) + '">' + head + '<b>' + num(q) + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">남음</small></b><i>오늘 ' + num(t.mailToday) + '통 보냄 · 대기 ' + num(t.mailWait) + '통' + refill + btn + '</i></div>';
+    var refill = rf && rf.at ? String(rf.at).slice(11, 16) : '', refillTxt = refill ? (String(rf.at).slice(0, 10) === today ? '' : '내일 ') + refill + '에 ' + num(rf.n) + '통 다시 생김' : '';
+    var tip = '무료 지메일은 24시간 동안 100통까지 보낼 수 있고, 보낸 지 24시간이 지나면 그만큼 다시 생깁니다(0시에 한꺼번에 초기화되지 않음).' + (refillTxt ? '\n다음: ' + refillTxt : '') +
+      '\n오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수, 대기는 아직 안 나간 메일입니다.' + (t.mailPaused ? '\n일시정지 중에도 결제 · 정산 알림과 위원장 알림은 바로 나갑니다.' : '');
+    var head = '<span>메일 발송' + (t.mailPaused ? ' · <strong class="ad-tile-pause">일시정지</strong>' : '') + '</span>';
+    var big = q == null ? num(t.mailToday) + '통 <small class="ad-tile-unit">오늘 보냄</small>' : num(q) + '통 <small class="ad-tile-unit">남음</small>';
+    var l1 = q == null ? '대기 ' + num(t.mailWait) + '통' : '오늘 ' + num(t.mailToday) + '통 보냄 · 대기 ' + num(t.mailWait) + '통';
+    var acts = t.mailPaused ?
+      (t.mailResumeAt ? '<button type="button" class="lg-link" data-act="mailschedule">' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작</button> · <button type="button" class="lg-link" data-act="mailresume">지금 시작</button>'
+        : '<button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>') :
+      (refill && q != null ? refill + ' +' + num(rf.n) + '통 · ' : '') + '<button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>';
+    return '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + (q != null && q <= 10 ? ' is-low' : '') + '" title="' + esc(tip) + '">' + head + '<b>' + big + '</b><i>' + l1 + '</i><i class="ad-tile-acts">' + acts + '</i></div>';
   }
   function fmtResumeAt(s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() + '(' + DAYS[d.getDay()] + ') ' + String(s).slice(11, 16) : String(s || ''); }
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
@@ -550,28 +556,48 @@
   }
   function adTilesHTML(a) {
     var t = a.tiles, stt = t.status || {};
-    /* 1.4.3 상단 타일(사용자 2026.09.30 '누적 건수도 나와야지, 세액 위원회 부담 0원 이런 건 불필요, 전체적으로 가독성 좋게'):
-       ① 정산: 정산일이면 오늘 정산표, 아니면 다음 정산 미리 보기(정산표에 아직 없는 확정 실적 + 미지급 정산표) ② 누적 추천 결제 ③ 최근 7일 ④ 위원 ⑤ 메일 */
-    /* 1.4.10 사용자 2026.10.01 '정산 완료되었으니까 다시 0원으로 되어 다시 수집되는 게 올라가는 형식(지급 예정 금액)으로 되어야 하는 거 아니야?
-       다음 주 목요일에는 정산 금액 얼마고 지금 얼마 정도 팔렸구나 볼 수 있게': 정산일이어도 오늘 지급예정을 모두 지급 완료하면 다음 정산(모이는 금액)으로,
-       오늘 정산은 아래 줄에 '지급 완료'로. 지급 전에는 오늘 정산을 크게 보이고 아래 줄에 다음 정산 모이는 금액 */
-    var nx = t.next || null, payTile, md = function (s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() : String(s || ''); };
+    /* 1.4.3 상단 타일: ① 정산(정산일이면 오늘 정산표, 아니면 다음 정산 미리 보기) ② 누적 추천 결제 ③ 최근 7일 ④ 위원 ⑤ 메일.
+       1.4.10 오늘 지급예정을 모두 지급 완료하면 첫 칸은 다음 정산(모이는 금액)으로.
+       1.4.11 사용자 2026.10.01 '글씨가 너무 길어져서 못생겨졌잖아. 정산표 보기 이건 늘리고 … 잘 요약해서 해 줘. 하단은 누적 추천 결제, 맨 하단은 지금까지 추천으로
+       한 사람 금액, 우측에는 추천 아니고도 전체 아임웹 결제 금액(양성과정) 적어 주고 99,000원짜리도 포함해서 … 디자인이 밑으로 너무 길어졌어':
+       칸마다 큰 숫자 + 짧은 한두 줄, 자세한 설명은 마우스를 올리면(title). 정산 칸 오른쪽 위에 [정산표 보기] 버튼, 누적 칸 아래에 추천 결제 | 전체 양성과정 결제 */
+    var nx = t.next || null, payTile, tip, lines;
+    var md = function (s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() : String(s || ''); };
+    var mdw = function (s) { var d = dateOf(s); return d ? md(s) + '(' + DAYS[d.getDay()] + ')' : String(s || ''); };
+    var line = function (txt, cls) { return '<i' + (cls ? ' class="' + cls + '"' : '') + '>' + txt + '</i>'; };
+    var tileHi = function (label, big, body, title) {
+      return '<div class="ad-tile hi"' + (title ? ' title="' + esc(title) + '"' : '') + '><div class="ad-tile-head"><span>' + label + '</span><button type="button" class="ad-tile-go" data-tab="pay">' + ic('clipboard-list') + '정산표 보기</button></div><b>' + big + '</b>' + body + '</div>';
+    };
     var totSum = a.isPayoutToday ? a.payouts.reduce(function (x, p) { return x + (Number(p.amount) || 0); }, 0) : 0, todayDone = a.isPayoutToday && !t.dueN;
     var paidSum = a.isPayoutToday ? a.payouts.reduce(function (x, p) { return x + (p.status === '지급완료' ? Number(p.amount) || 0 : 0); }, 0) : 0;
     if (a.isPayoutToday && !todayDone) {
-      payTile = '<div class="ad-tile hi"><span>오늘 정산 · ' + fmtKo(a.today, true) + '</span><b>' + won(totSum) + '</b><i>' + a.payouts.length + '명 · 지급 완료 ' + t.paidN + '명 · 남은 ' + t.dueN + '명' + (t.holdN ? ' · 정산 정보 미등록 ' + t.holdN + '명' : '') + ' · <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표 열기</button>' + (nx ? '<br>다음 정산 ' + md(nx.day) + '(목)까지 모이는 중 ' + won(nx.amount) : '') + '</i></div>';
+      tip = '오늘 ' + fmtKo(a.today, true) + ' 정산 ' + a.payouts.length + '명 ' + won(totSum) + ' · 지급 완료 ' + t.paidN + '명 · 남은 ' + t.dueN + '명' + (t.holdN ? ' · 정산 정보 미등록(보류) ' + t.holdN + '명' : '') + (nx ? '\n다음 정산 ' + fmtKo(nx.day, true) + '까지 모이는 금액 ' + won(nx.amount) : '');
+      lines = line(a.payouts.length + '명 · 지급 완료 ' + t.paidN + ' · 남은 ' + t.dueN + (t.holdN ? ' · 보류 ' + t.holdN : '')) + (nx ? line('다음 ' + md(nx.day) + ' 정산 모이는 중 ' + won(nx.amount)) : '');
+      payTile = tileHi('오늘 정산 · ' + mdw(a.today), won(totSum), lines, tip);
     } else if (nx) {
       var nd = dateOf(nx.day), cutTxt = nd ? DAYS[(nd.getDay() + 6) % 7] + '요일 24시' : '전날 24시';
-      payTile = '<div class="ad-tile hi"><span>다음 정산 · ' + fmtKo(nx.day, true) + ' · 지급 예정</span><b>' + won(nx.amount) + '</b><i>' + (nx.members ? nx.members + '명 · 추천 ' + num(nx.credits) + '건 · ' + cutTxt + '까지 결제분' : '아직 없음 · ' + cutTxt + '까지 결제분이 모입니다') + (nx.holdN ? ' · 정산 정보 미등록 ' + nx.holdN + '명' : '') + (nx.overdueN ? '<br><strong>지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum) + '</strong> <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') +
-        (todayDone ? '<br>오늘 ' + md(a.today) + ' 정산 ' + won(paidSum) + ' · ' + t.paidN + '명 지급 완료' + (t.holdN ? ' · 보류 ' + t.holdN + '명(' + won(totSum - paidSum) + ')은 다음 정산에 합쳐짐' : '') + ' <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') + '</i></div>';
-    } else payTile = '<div class="ad-tile hi"><span>최근 정산</span><b>' + t.dueN + '명 · ' + won(t.dueSum) + '</b><i>지급 완료 ' + t.paidN + '명 · 보류 ' + t.holdN + '명</i></div>';
-    var p7 = t.paid7 || 0, pp7 = t.paidPrev7 || 0, d7 = p7 - pp7, stTxt = ['활동', '휴면예정', '휴면', '종료'].filter(function (x) { return x === '활동' || stt[x]; }).map(function (x) { return (x === '휴면예정' ? '휴면 예정' : x) + ' ' + (stt[x] || 0); }).join(' · ');
-    return '<div class="ad-tiles">' + payTile +
-      /* 1.4.10 사용자 '누적 추천 결제에서 누적 금액도 적혀 있어야 하고': 결제 금액 합계(실결제액) · 이번 달 금액 · 활동지원금 누적 · 지급 완료 */
-      '<div class="ad-tile"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b>' + (t.amountAll != null ? '<em class="ad-tile-amt">결제 ' + won(t.amountAll) + '</em>' : '') +
-        '<i>이번 달 ' + num(t.creditsMonth || 0) + '건' + (t.amountMonth != null ? ' ' + won(t.amountMonth) : '') + ' · 실적 있는 위원 ' + num(t.creditedN || 0) + '명' + (t.supportAll != null ? '<br>활동지원금 누적 ' + won(t.supportAll) + (t.paidAll != null ? ' · 지급 완료 ' + won(t.paidAll) : '') : '') + '</i></div>' +
-      '<div class="ad-tile"><span>최근 7일 추천 결제</span><b>' + num(p7) + '건' + (d7 ? ' <small class="ad-tile-d ' + (d7 > 0 ? 'up' : 'down') + '">' + (d7 > 0 ? '▲' : '▼') + num(Math.abs(d7)) + '</small>' : '') + '</b><i>그 전 7일 ' + num(pp7) + '건 · 취소 · 환불 ' + num(t.canc7) + '건</i></div>' +
-      '<div class="ad-tile"><span>위원</span><b>' + num(t.members) + '명</b><i>' + stTxt + (t.loggedInN != null ? ' · 라운지 로그인 ' + num(t.loggedInN) + '명' : '') + '</i></div>' +
+      tip = '다음 정산 ' + fmtKo(nx.day, true) + ' 지급 예정 ' + won(nx.amount) + ' · ' + cutTxt + '까지 결제된 추천 실적' + (nx.members ? '(' + nx.members + '명 · 추천 ' + num(nx.credits) + '건)' : '') +
+        (nx.holdN ? '\n정산 정보 미등록 ' + nx.holdN + '명(' + won(nx.holdAmount) + ')은 등록하면 지급' : '') + (nx.overdueN ? '\n지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum) : '') +
+        (todayDone ? '\n오늘 ' + fmtKo(a.today, true) + ' 정산 ' + won(paidSum) + ' · ' + t.paidN + '명 지급 완료' + (t.holdN ? ' · 보류 ' + t.holdN + '명(' + won(totSum - paidSum) + ')은 다음 정산에 합쳐짐' : '') : '');
+      lines = line(nx.members ? nx.members + '명 · 추천 ' + num(nx.credits) + '건' + (nx.holdN ? ' · 미등록 ' + nx.holdN + '명' : '') : '아직 없음 · ' + cutTxt + ' 마감') +
+        (nx.overdueN ? line('지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum), 'ad-tile-warn') : '') +
+        (todayDone ? line(ic('check') + '오늘 ' + won(paidSum) + ' 지급 완료(' + t.paidN + '명)', 'ad-tile-ok') : '');   // 보류는 위 줄 '미등록'과 title 에
+      payTile = tileHi('다음 정산 · ' + mdw(nx.day), won(nx.amount), lines, tip);
+    } else payTile = tileHi('최근 정산', won(t.dueSum), line(t.dueN + '명 · 지급 완료 ' + t.paidN + ' · 보류 ' + t.holdN), '');
+    /* 누적 추천 결제: 큰 숫자 건수, 아래 왼쪽 추천 결제 금액(실결제액) · 오른쪽 전체 양성과정 결제(추천 아닌 99,000원 결제 포함, 백엔드 1.4.11 결제 장부) */
+    var sa = t.sales || null, refAmt = t.amountAll != null ? t.amountAll : null;
+    var sumTip = '추천 결제: 위원 코드(쿠폰)로 들어온 양성과정 결제 ' + num(t.creditsAll) + '건' + (refAmt != null ? ' ' + won(refAmt) : '') + ' · 이번 달 ' + num(t.creditsMonth || 0) + '건' + (t.amountMonth != null ? ' ' + won(t.amountMonth) : '') + ' · 실적 있는 위원 ' + num(t.creditedN || 0) + '명' +
+      (t.supportAll != null ? '\n활동지원금 누적 ' + won(t.supportAll) + (t.paidAll != null ? ' · 지급 완료 ' + won(t.paidAll) : '') : '') +
+      (sa ? '\n전체 양성과정: 추천이 아닌 결제(99,000원)까지 아임웹 양성과정 결제 ' + num(sa.n) + '건' + (sa.from ? '(' + fmtKo(sa.from) + '부터)' : '') + ' · 이번 달 ' + num(sa.monthN) + '건 ' + won(sa.monthSum) + ' · 환불 ' + num(sa.refundN) + '건 제외' + (sa.ready ? '' : '\n지난 주문을 모으는 중이라 곧 채워집니다') : '');
+    var allTxt = !sa ? '-' : sa.ready ? won(sa.sum) : '집계 중';
+    var sumTile = '<div class="ad-tile" title="' + esc(sumTip) + '"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b>' +
+      '<div class="ad-split"><div><small>추천 결제</small><strong>' + (refAmt != null ? won(refAmt) : '-') + '</strong></div><div><small>전체 양성과정</small><strong>' + allTxt + '</strong></div></div></div>';
+    var p7 = t.paid7 || 0, pp7 = t.paidPrev7 || 0, d7 = p7 - pp7;
+    var restN = (stt['휴면예정'] || 0) + (stt['휴면'] || 0), endN = stt['종료'] || 0;
+    var memTip = ['활동', '휴면예정', '휴면', '종료'].map(function (x) { return (x === '휴면예정' ? '휴면 예정' : x) + ' ' + (stt[x] || 0) + '명'; }).join(' · ') + (t.loggedInN != null ? '\n라운지에 로그인한 적이 있는 위원 ' + num(t.loggedInN) + '명' : '');
+    return '<div class="ad-tiles">' + payTile + sumTile +
+      '<div class="ad-tile" title="' + esc('최근 7일(오늘 포함) 추천 결제 ' + p7 + '건 · 그 전 7일 ' + pp7 + '건 · 최근 7일 취소 · 환불 ' + (t.canc7 || 0) + '건') + '"><span>최근 7일 추천 결제</span><b>' + num(p7) + '건' + (d7 ? ' <small class="ad-tile-d ' + (d7 > 0 ? 'up' : 'down') + '">' + (d7 > 0 ? '▲' : '▼') + num(Math.abs(d7)) + '</small>' : '') + '</b>' + line('그 전 7일 ' + num(pp7) + '건 · 환불 ' + num(t.canc7) + '건') + '</div>' +
+      '<div class="ad-tile" title="' + esc(memTip) + '"><span>위원</span><b>' + num(t.members) + '명</b>' + line('활동 ' + num(stt['활동'] || 0) + (restN ? ' · 휴면 ' + restN : '') + (endN && !restN ? ' · 종료 ' + endN : '') + (t.loggedInN != null ? ' · 로그인 ' + num(t.loggedInN) : '')) + '</div>' +
       mailTileHTML(a, t) + '</div>';
   }
   function renderAdmin() {

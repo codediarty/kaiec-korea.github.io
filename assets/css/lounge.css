@@ -214,18 +214,38 @@ html:not(.js) .lg-boot{display:none}
 .lg-toggle input{width:16px;height:16px;accent-color:var(--blue)}
 
 /* ---------- 운영자 ---------- */
-.ad-tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-.ad-tile{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:16px 18px;box-shadow:0 10px 30px rgba(10,22,40,.06)}
+.ad-tiles{display:grid;grid-template-columns:1.3fr 1.3fr 1fr 1fr 1fr;gap:14px}   /* 1.4.11 정산 · 누적 칸을 조금 넓게 */
+.ad-tile{background:#fff;border:1px solid var(--gray-200);border-radius:16px;padding:14px 16px;box-shadow:0 10px 30px rgba(10,22,40,.06);min-width:0}
 .ad-tile span{display:block;font-size:12.5px;color:var(--gray-500);font-weight:700}
 .ad-tile b{display:block;font-size:24px;letter-spacing:-.03em;margin-top:4px;line-height:1.2}
 .ad-tile i{font-style:normal;font-size:12px;color:var(--gray-500);display:block;margin-top:4px}
-.ad-tile .ad-tile-amt{display:block;font-style:normal;font-size:15px;font-weight:800;letter-spacing:-.02em;color:#1F3B73;margin-top:2px}   /* 1.4.10 누적 결제 금액 */
-.ad-tile.hi .ad-tile-amt{color:#fff}
 .ad-tile.hi{background:linear-gradient(135deg,#1F5FE0,#173F9E);border:0;color:#fff}
 .ad-tile.is-paused{border-color:#F0A24A;background:#FFF9EE}
 .ad-tile.is-low b{color:#B42318}   /* 1.4.9 지메일 잔여 10통 이하 */
 .ad-tile .lg-link{font-size:12px}
 .ad-tile.hi span,.ad-tile.hi i{color:#C9D8F5}
+/* 1.4.11 타일 줄이기(사용자 2026.10.01 '글씨가 너무 길어져서 못생겨졌잖아 … 정산표 보기 이건 늘리고 … 디자인이 밑으로 너무 길어졌어'):
+   큰 숫자 + 짧은 한두 줄, 정산 칸 오른쪽 위 [정산표 보기] 버튼, 누적 칸 아래 추천 결제 | 전체 양성과정 두 칸 */
+.ad-tile i{line-height:1.5}
+.ad-tile i+i{margin-top:1px}
+.ad-tile small.ad-tile-unit{font-size:13px;font-weight:600;color:var(--gray-500);letter-spacing:0}
+.ad-tile-head{display:flex;align-items:center;justify-content:space-between;gap:6px 8px;flex-wrap:wrap}
+.ad-tile-head span{min-width:0}
+.ad-tile-go{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:13px;font-weight:800;letter-spacing:-.01em;line-height:1;border:0;border-radius:999px;padding:8px 14px 8px 11px;cursor:pointer;background:#fff;color:#1F4FC4;box-shadow:0 3px 10px rgba(6,20,60,.22);white-space:nowrap;transition:transform .12s,box-shadow .12s}
+.ad-tile-go svg{width:15px;height:15px;flex:none}
+.ad-tile-go:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(6,20,60,.3)}
+.ad-tile-go:focus-visible{outline:2px solid #FFE3A3;outline-offset:2px}
+.ad-tile.hi .ad-tile-head{margin:-2px -4px 0 0}
+.ad-tile.hi i.ad-tile-ok{color:#fff;font-weight:700}
+.ad-tile.hi i.ad-tile-ok svg{width:13px;height:13px;vertical-align:-2px;margin-right:3px;stroke-width:3}
+.ad-tile.hi i.ad-tile-warn{color:#FFE3A3;font-weight:700}
+.ad-tile .ad-tile-pause{color:#B26A00}
+.ad-split{display:grid;grid-template-columns:1fr 1fr;margin-top:9px;padding-top:9px;border-top:1px solid var(--gray-200)}
+.ad-split>div{min-width:0}
+.ad-split>div+div{border-left:1px solid var(--gray-200);padding-left:10px;margin-left:10px}
+.ad-split small{display:block;font-size:11.5px;font-weight:700;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ad-split strong{display:block;font-size:15px;font-weight:800;letter-spacing:-.02em;color:#1F3B73;white-space:nowrap;margin-top:1px}
+.ad-split>div+div strong{color:#0B6E66}
 .ad-tabs{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;align-items:center}
 .ad-tabs button{font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;background:#F0F3F8;color:var(--gray-600);border:0;cursor:pointer}
 .ad-tabs button.on{background:var(--ink);color:#fff}
@@ -438,7 +458,8 @@ html:not(.js) .lg-boot{display:none}
 
 /* ---------- 반응형 ---------- */
 @media(max-width:1100px){.ad-kpis{grid-template-columns:repeat(3,1fr)}.ad-risks{grid-template-columns:repeat(2,1fr)}.ad-mini--pay{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:900px){.ad-tiles{grid-template-columns:repeat(2,1fr)}.ad-two{grid-template-columns:1fr}.ad-set{grid-template-columns:repeat(2,1fr)}.st{grid-template-columns:repeat(2,1fr)}.ad-sparks{grid-template-columns:repeat(2,1fr)}.ad-podium{grid-template-columns:1fr}.ad-hrow{grid-template-columns:120px 1fr 36px}}
+@media(max-width:1199px) and (min-width:901px){.ad-tiles{grid-template-columns:repeat(6,1fr)}.ad-tiles>.ad-tile{grid-column:span 2}.ad-tiles>.ad-tile:nth-child(-n+2){grid-column:span 3}}   /* 1.4.11 노트북 폭: 정산 · 누적 두 칸 위, 나머지 세 칸 아래(한 줄에 다섯 칸이면 글자가 넘침) */
+@media(max-width:900px){.ad-tiles{grid-template-columns:repeat(2,1fr)}.ad-tiles>.ad-tile.hi{grid-column:1/-1}.ad-two{grid-template-columns:1fr}.ad-set{grid-template-columns:repeat(2,1fr)}.st{grid-template-columns:repeat(2,1fr)}.ad-sparks{grid-template-columns:repeat(2,1fr)}.ad-podium{grid-template-columns:1fr}.ad-hrow{grid-template-columns:120px 1fr 36px}}
 @media(max-width:800px){
   .lg-grid,.lg-two,.lg-pay,.lg-form-grid,.lg-rules-grid{grid-template-columns:1fr}
   .lg-trend{grid-template-columns:1fr;gap:10px}
@@ -474,7 +495,8 @@ html:not(.js) .lg-boot{display:none}
 }
 @media(max-width:480px){
   .ad-kpis{grid-template-columns:1fr 1fr}.ad-stats{grid-template-columns:1fr}.ad-sparks{grid-template-columns:1fr}
-  .ad-tiles{grid-template-columns:1fr 1fr}.ad-tile b{font-size:20px}.ad-set{grid-template-columns:1fr}
+  .ad-tiles{grid-template-columns:1fr 1fr;gap:10px}.ad-tile{padding:12px 14px}.ad-tile b{font-size:20px}.ad-set{grid-template-columns:1fr}
+  .ad-tiles>.ad-tile:nth-child(2),.ad-tiles>.ad-tile:nth-child(5){grid-column:1/-1}   /* 1.4.11 누적(두 금액) · 메일 칸은 한 줄 전체 */
   .lg-stats{gap:6px}.lg-stat{padding:10px 9px}.lg-stat span{font-size:11.5px;min-height:2.7em}.lg-stat b{font-size:20px}.lg-stat i{font-size:11px}   /* 2026.09.30: 'AI 윤리를 전한 사람'이 두 줄이 되어도 세 칸의 숫자 높이를 맞춤 */
   .lg-hero h1{font-size:24px}
 }
