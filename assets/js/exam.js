@@ -10,7 +10,8 @@
         파일별 [내려받기] 버튼과 [전체 한 번에 내려받기]로 그리며, 백엔드가 지원하지 않으면(1.5.5 이하) 패널을 아예 그리지 않습니다.
         /exam/?go=materials 로 들어오면 로그인 뒤 그 패널로 바로 이동합니다.
    체험 모드: /exam/?demo=1 로만 진입 (브라우저 안 모의 API, 기록이 남지 않음)
-   외부 라이브러리 없이 동작하며, 아이콘은 페이지 안 SVG 스프라이트(#exi-이름)를 씁니다. */
+   AIEP 참고 영상관(2026.10.01): 대시보드의 선택 시청 자료. 공개 라이선스 영상 + 위원회 한국어 자막, 자체 재생 창(8-1절)
+   외부 라이브러리 없이 동작하며(참고 영상 중 HLS 영상만 사이트에 둔 hls.js 를 그때 불러옴), 아이콘은 페이지 안 SVG 스프라이트(#exi-이름)를 씁니다. */
 (function () {
   'use strict';
 
@@ -529,6 +530,7 @@
     el.boot.lastElementChild.textContent = msg || '평가 시스템을 불러오는 중입니다';
   }
   function setView(html, name, head) {
+    if (name !== 'dashboard') vpClose();   // 참고 영상 재생 창은 대시보드에서만
     hideAll();
     S.view = name;
     showHead(head);
@@ -602,6 +604,7 @@
 
   function showLogin(msg) {
     if (S.demo) exitDemoUrl();
+    vpClose();
     hideAll();
     S.view = 'login';
     el.head.hidden = true;
@@ -929,6 +932,629 @@
     });
   }
 
+  /* ---------------------------------------------------------------- 8-1. AIEP 참고 영상관 (2026.10.01)
+     해외 공공·연구기관이 공개 라이선스(CC BY 4.0 · CC BY-SA 4.0)로 배포한 짧은 영상에 위원회가 한국어 자막을 입혀,
+     대시보드에서 골라 보는 선택 자료입니다(이수 · 평가와 관계없음).
+     - 영상 목록 · 한국어 자막 · 출처는 assets/js/exam-videos.js(window.KAIEC_EXAM_VIDEOS). 대시보드를 처음 그릴 때 한 번 불러옵니다(CFG.videos.data).
+     - 영상 파일은 사이트에 올리지 않고 원 제공처 서버에서 재생합니다(위키미디어 커먼즈 webm · mov, EU 집행위원회 시청각 서비스 HLS).
+       EU 영상(HLS)은 애플 기기에서는 브라우저 기본 재생, 그 밖의 브라우저는 assets/js/vendor/hls.light.min.js(CFG.videos.hls)를 그때 불러와 재생합니다.
+     - 자막은 영상 위 자막 층으로 그리고(켜기/끄기), 아이폰 전체 화면(기본 플레이어)에서는 같은 자막을 텍스트 트랙으로 보여 줍니다.
+     - 출처 · 라이선스 · 변경 사항(한국어 자막 추가)은 재생 창과 '영상 출처와 이용 조건'에 늘 보이게 둡니다(라이선스 조건).
+     - 어디까지 봤는지 · 다 본 영상은 이 기기 브라우저에만 저장합니다(localStorage kaiecExamVideos · 재생 설정 kaiecExamVideoPref). */
+  var VID = { data: null, busy: false };
+  var VKEY = 'kaiecExamVideos', VPREF = 'kaiecExamVideoPref';
+  var RATES = [1, 1.25, 1.5, 0.75];
+  var VP = null, hlsLoad = null;
+
+  function vids() { return (VID.data && VID.data.items) || []; }
+  function vidAt(id) {
+    var l = vids();
+    for (var i = 0; i < l.length; i++) if (l[i].id === id) return i;
+    return -1;
+  }
+  // 0:42 형식. 영상 길이는 반올림, 재생 위치는 내림
+  function fmtSec(sec, round) {
+    sec = Math.max(0, round ? Math.round(+sec || 0) : Math.floor(+sec || 0));
+    return Math.floor(sec / 60) + ':' + pad(sec % 60);
+  }
+  function vlog() { var v = sget(VKEY, true); return v && typeof v === 'object' ? v : {}; }
+  function vlogSet(id, o) {
+    var all = vlog(), cur = all[id] || {};
+    for (var k in o) cur[k] = o[k];
+    all[id] = cur;
+    sset(VKEY, all, true);
+  }
+  function vpref() { var p = sget(VPREF, true); return p && typeof p === 'object' ? p : {}; }
+  function vprefSet(o) { var p = vpref(); for (var k in o) p[k] = o[k]; sset(VPREF, p, true); }
+  function loadScript(src) {
+    return new Promise(function (ok, no) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = function () { ok(); };
+      s.onerror = function () { if (s.parentNode) s.parentNode.removeChild(s); no(new Error('load')); };
+      document.head.appendChild(s);
+    });
+  }
+  function loadVideos() {
+    if (VID.data || VID.busy) return;
+    if (window.KAIEC_EXAM_VIDEOS) { VID.data = window.KAIEC_EXAM_VIDEOS; return; }
+    var src = CFG.videos && CFG.videos.data;
+    if (!src) return;
+    VID.busy = true;
+    loadScript(src).then(function () {
+      VID.busy = false;
+      VID.data = window.KAIEC_EXAM_VIDEOS || null;
+      repaintVids();
+    }, function () { VID.busy = false; repaintVids(); });   // 못 불러오면 패널을 그리지 않고, 다음에 대시보드를 그릴 때 다시 시도
+  }
+  // 패널 자리(빈 칸이면 CSS 로 감춤). 데이터가 오면 여기에 패널을 그려 넣는다
+  function videosSlot() { loadVideos(); return '<div class="ex-vids-slot" id="exVidsSlot">' + videosPanel() + '</div>'; }
+  function repaintVids() {
+    var slot = $('exVidsSlot');
+    if (slot && S.view === 'dashboard') slot.innerHTML = videosPanel();
+  }
+  function videosPanel() {
+    var items = vids();
+    if (!items.length) return VID.busy ? vidsSkeleton() : '';
+    var log = vlog(), seen = 0, total = 0;
+    items.forEach(function (v) { total += +v.dur || 0; if (log[v.id] && log[v.id].done) seen++; });
+    return '<section class="ex-panel ex-vids" id="exVids" aria-labelledby="exVidsTitle">' +
+      vidsHead(items.length, Math.round(total / 60)) +
+      '<div class="ex-vids-prog"><span class="ex-vids-prog-t">내 시청 기록 <b class="ex-num">' + seen + '</b> / ' + items.length + '편</span>' +
+        '<span class="ex-vids-bar" role="progressbar" aria-label="참고 영상 시청" aria-valuemin="0" aria-valuemax="' + items.length + '" aria-valuenow="' + seen + '">' +
+          '<i style="width:' + Math.round(seen / items.length * 100) + '%"></i></span>' +
+        '<small>이수 · 평가와 관계없는 선택 자료입니다. 시청 기록은 이 기기에만 남습니다.</small></div>' +
+      '<ul class="ex-vid-grid">' + items.map(function (v) { return vidCard(v, log[v.id] || {}); }).join('') + '</ul>' +
+      vidsCredits(items) + '</section>';
+  }
+  function vidsHead(n, mins) {
+    return '<header class="ex-vids-head"><div class="ex-vids-hd">' +
+        '<p class="ex-vids-en">AIEP REFERENCE LIBRARY</p>' +
+        '<h2 class="ex-vids-title" id="exVidsTitle">' + ico('film') + '<span>AIEP 참고 영상관</span><em class="ex-vids-opt">선택 시청</em></h2>' +
+        '<p class="ex-vids-lead">교재 장별 핵심을 짧은 영상으로 짚어 봅니다. 해외 공공·연구기관이 공개한 영상에 위원회가 한국어 자막을 입혔습니다.</p>' +
+      '</div>' +
+      (n ? '<dl class="ex-vids-stats"><div><dt>영상</dt><dd>' + n + '<small>편</small></dd></div>' +
+        '<div><dt>전체 길이</dt><dd>' + mins + '<small>분</small></dd></div>' +
+        '<div><dt>한국어 자막</dt><dd>전 편</dd></div></dl>' : '') +
+      '</header>';
+  }
+  function vidsSkeleton() {
+    var cards = '';
+    for (var i = 0; i < 4; i++) cards += '<li class="ex-vid is-skel" aria-hidden="true"><span class="ex-vid-thumb"></span><span class="ex-skel"></span><span class="ex-skel is-short"></span></li>';
+    return '<section class="ex-panel ex-vids is-loading" aria-busy="true" aria-label="AIEP 참고 영상관 불러오는 중">' + vidsHead(0, 0) +
+      '<ul class="ex-vid-grid">' + cards + '</ul></section>';
+  }
+  function vidCard(v, lg) {
+    var pct = lg.done ? 0 : (lg.t && v.dur ? Math.min(98, lg.t / v.dur * 100) : 0);
+    return '<li class="ex-vid' + (lg.done ? ' is-done' : '') + '">' +
+      '<button type="button" class="ex-vid-btn" data-act="vid-open" data-vid="' + esc(v.id) + '">' +
+        '<span class="ex-vid-thumb">' +
+          (v.poster ? '<img src="' + esc(v.poster) + '" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">' : '') +
+          '<span class="ex-vid-ch">제' + esc(v.ch) + '장</span>' +
+          '<span class="ex-vid-dur ex-num">' + fmtSec(v.dur, true) + '</span>' +
+          '<span class="ex-vid-play" aria-hidden="true">' + ico('play') + '</span>' +
+          (lg.done ? '<span class="ex-vid-done">' + ico('check') + '시청함</span>' : '') +
+          (pct > 1 ? '<span class="ex-vid-at" aria-hidden="true"><i style="width:' + pct.toFixed(1) + '%"></i></span>' : '') +
+        '</span>' +
+        '<span class="ex-vid-t">' + esc(v.title) + '</span>' +
+        '<span class="ex-vid-d">' + esc(v.lead) + '</span>' +
+        '<span class="ex-vid-src">' + esc(v.org) + ' · 한국어 자막' + (pct > 1 ? ' · <b>' + fmtSec(lg.t) + '부터 이어 보기</b>' : '') + '</span>' +
+      '</button></li>';
+  }
+  // 출처 표기(TASL: 제목 · 저작자 · 출처 · 라이선스 + 변경 사항)
+  function creditLine(v) {
+    var c = v.credit || {};
+    return '영상 <a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.title) + '</a> · ' + esc(c.by) +
+      ' · <a href="' + esc(c.licenseUrl) + '" target="_blank" rel="noopener">' + esc(c.license) + '</a> · ' + esc(c.host) +
+      ' · 변경: 한국어 자막 추가(한국AI윤리위원회 번역' + (c.sub ? ', 자막 ' + esc(c.sub) : '') + ')';
+  }
+  function vidsCredits(items) {
+    return '<details class="ex-vids-credit"><summary>' + ico('info') + '영상 출처와 이용 조건</summary>' +
+      '<ol>' + items.map(function (v) { return '<li><b>' + esc(v.title) + '</b><span>' + creditLine(v) + '</span></li>'; }).join('') + '</ol>' +
+      '<p>각 영상은 원저작자가 위 라이선스로 공개한 것이며, 원저작자는 한국AI윤리위원회와 이 과정에 관여하거나 이를 보증하지 않습니다. ' +
+      '한국어 자막은 위원회가 원본 영어 자막을 번역해 덧붙인 것으로 원문 표현과 다를 수 있고, EU 영상은 원본 그대로 처음부터 끝까지 재생합니다. ' +
+      '영상은 원 제공처(위키미디어 커먼즈 · EU 집행위원회 시청각 서비스) 서버에서 재생되며, 이때 접속 정보(IP 주소 등)가 해당 서버에 전달될 수 있습니다.</p>' +
+      '</details>';
+  }
+
+  /* 재생 창: 페이지 맨 끝에 한 번 만들어 두고(대시보드를 다시 그려도 재생이 끊기지 않음) 영상마다 video 요소를 새로 만듭니다 */
+  function vpBuild() {
+    if (VP) return VP;
+    var box = document.createElement('div');
+    box.className = 'ex-vp';
+    box.hidden = true;
+    box.innerHTML =
+      '<div class="ex-vp-dialog" role="dialog" aria-modal="true" aria-labelledby="exVpTitle" tabindex="-1">' +
+        '<header class="ex-vp-head"><div class="ex-vp-hd"><p class="ex-vp-ch"></p><h2 class="ex-vp-title" id="exVpTitle"></h2></div>' +
+          '<button type="button" class="ex-vp-x" data-vp="close" aria-label="영상 닫기 (Esc)">' + ico('x') + '</button></header>' +
+        '<div class="ex-vp-stage">' +
+          '<div class="ex-vp-surface" data-vp="surface"></div>' +
+          '<div class="ex-vp-cc" aria-hidden="true"><span></span></div>' +
+          '<span class="ex-vp-spin" aria-hidden="true"></span>' +
+          '<button type="button" class="ex-vp-big" data-vp="toggle" aria-label="재생">' + ico('play') + '</button>' +
+          '<div class="ex-vp-note" hidden><span></span><button type="button" data-vp="restart">처음부터</button></div>' +
+          '<div class="ex-vp-card ex-vp-end" hidden></div>' +
+          '<div class="ex-vp-card ex-vp-msg" role="alert" hidden></div>' +
+          '<div class="ex-vp-ctrl">' +
+            '<input type="range" class="ex-vp-seek" min="0" max="1000" step="1" value="0" aria-label="재생 위치">' +
+            '<div class="ex-vp-row">' +
+              '<button type="button" class="ex-vp-b ex-vp-pp" data-vp="toggle" aria-label="재생">' + ico('play', 'ex-vp-i-play') + ico('pause', 'ex-vp-i-pause') + '</button>' +
+              '<button type="button" class="ex-vp-b" data-vp="back" aria-label="10초 뒤로">' + ico('rotate-ccw') + '</button>' +
+              '<span class="ex-vp-time ex-num"><span class="ex-vp-cur">0:00</span> / <span class="ex-vp-dur">0:00</span></span>' +
+              '<span class="ex-vp-gap"></span>' +
+              '<button type="button" class="ex-vp-b ex-vp-tb ex-vp-ccb" data-vp="cc" aria-pressed="true" title="자막 켜기/끄기 (C)">' + ico('captions') + '<span>자막</span></button>' +
+              '<button type="button" class="ex-vp-b ex-vp-tb ex-vp-rate" data-vp="rate" title="재생 속도" aria-label="재생 속도 1배">1×</button>' +
+              '<button type="button" class="ex-vp-b ex-vp-mute" data-vp="mute" aria-label="소리 끄기">' + ico('volume-2', 'ex-vp-i-vol') + ico('volume-x', 'ex-vp-i-mute') + '</button>' +
+              '<input type="range" class="ex-vp-vol" min="0" max="100" step="1" value="100" aria-label="음량">' +
+              '<button type="button" class="ex-vp-b ex-vp-fsb" data-vp="fs" aria-label="전체 화면">' + ico('maximize', 'ex-vp-i-fs') + ico('minimize', 'ex-vp-i-fsx') + '</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="ex-vp-info"></div>' +
+      '</div>';
+    document.body.appendChild(box);
+    var q = function (s) { return box.querySelector(s); };
+    VP = {
+      box: box, dialog: q('.ex-vp-dialog'), stage: q('.ex-vp-stage'), chEl: q('.ex-vp-ch'), titleEl: q('.ex-vp-title'),
+      cc: q('.ex-vp-cc span'), note: q('.ex-vp-note'), end: q('.ex-vp-end'), msg: q('.ex-vp-msg'), info: q('.ex-vp-info'),
+      seek: q('.ex-vp-seek'), vol: q('.ex-vp-vol'), curEl: q('.ex-vp-cur'), durEl: q('.ex-vp-dur'),
+      ppBtn: q('.ex-vp-pp'), bigBtn: q('.ex-vp-big'), ccBtn: q('.ex-vp-ccb'), rateBtn: q('.ex-vp-rate'), muteBtn: q('.ex-vp-mute'), fsBtn: q('.ex-vp-fsb'),
+      cur: null, video: null, track: null, hls: null, ccOn: true, ccText: '', rate: 1
+    };
+    var P = VP;
+    box.addEventListener('click', function (ev) {
+      if (ev.target === box) { vpClose(); return; }
+      var t = ev.target.closest ? ev.target.closest('[data-vp]') : null;
+      if (!t || !box.contains(t)) return;
+      switch (t.getAttribute('data-vp')) {
+        case 'close': vpClose(); break;
+        case 'toggle': vpToggle(); break;
+        case 'surface': vpSurface(); break;
+        case 'back': vpSeekBy(-10); break;
+        case 'cc': vpCc(!P.ccOn); break;
+        case 'rate': vpRate(RATES[(RATES.indexOf(P.rate) + 1) % RATES.length]); break;
+        case 'mute': if (P.video) { P.video.muted = !P.video.muted; if (!P.video.muted && P.video.volume === 0) P.video.volume = 1; } break;
+        case 'fs': vpFs(); break;
+        case 'restart': P.note.hidden = true; if (P.video) { P.video.currentTime = 0; vpPlay(); } break;
+        case 'replay': P.end.hidden = true; if (P.video) { P.video.currentTime = 0; vpPlay(); } break;
+        case 'go': vpOpen(t.getAttribute('data-vid')); break;
+        case 'retry': if (P.cur) vpOpen(P.cur.id); break;
+      }
+    });
+    P.stage.addEventListener('dblclick', function (ev) { if (ev.target.getAttribute('data-vp') === 'surface') vpFs(); });
+    P.stage.addEventListener('pointerdown', function (ev) { P.ptr = ev.pointerType || 'mouse'; });
+    P.stage.addEventListener('mousemove', function (ev) { if (P.ptr !== 'touch') vpWake(!!(ev.target.closest && ev.target.closest('.ex-vp-ctrl'))); });
+    P.stage.addEventListener('mouseleave', function () { if (P.video && !P.video.paused) P.stage.classList.add('is-idle'); });
+    P.seek.addEventListener('input', function () {
+      var d = vpDur(), t = P.seek.value / 1000 * d;
+      P.dragging = true;
+      P.curEl.textContent = fmtSec(t);
+      P.seek.style.setProperty('--p', (P.seek.value / 10).toFixed(1) + '%');
+      if (P.video && d) { try { P.video.currentTime = t; } catch (e) { /* 무시 */ } }
+      vpWake(true);
+    });
+    P.seek.addEventListener('change', function () { P.dragging = false; vpTime(); vpWake(); });
+    P.vol.addEventListener('input', function () {
+      if (!P.video) return;
+      P.video.volume = P.vol.value / 100;
+      P.video.muted = P.vol.value === '0';
+    });
+    function fsChange() { vpFsUI(); }
+    document.addEventListener('fullscreenchange', fsChange);
+    document.addEventListener('webkitfullscreenchange', fsChange);
+    document.addEventListener('keydown', vpKey);
+    return P;
+  }
+
+  function vpOpen(id) {
+    if (E) return;
+    var i = vidAt(id);
+    if (i < 0) return;
+    var v = vids()[i], P = vpBuild(), first = P.box.hidden;
+    if (first) P.back = document.activeElement;
+    vpTeardown();
+    P.cur = v;
+    P.failed = false; P.resumed = false; P.recovered = false; P.retried = false;
+    P.files = null; P.fileIdx = 0; P.dragging = false; P.lastSave = 0;
+    var lg = vlog()[v.id] || {};
+    P.resumeAt = !lg.done && lg.t > 5 && lg.t < (+v.dur || 0) - 8 ? +lg.t : 0;
+    P.chEl.textContent = '제' + v.ch + '장 · ' + v.chTitle;
+    P.titleEl.textContent = v.title;
+    P.info.innerHTML = vpInfo(v, i);
+    P.durEl.textContent = fmtSec(v.dur, true);
+    P.curEl.textContent = '0:00';
+    P.seek.value = 0;
+    P.seek.style.setProperty('--p', '0%');
+    P.seek.style.setProperty('--b', '0%');
+    P.end.hidden = true; P.msg.hidden = true; P.note.hidden = true;
+    P.cc.textContent = ''; P.ccText = '';
+    P.stage.classList.remove('is-playing', 'is-idle', 'is-ended');
+    var video = vpMake(v), pr = vpref();
+    vpCc(pr.cc !== false, true);
+    vpRate(RATES.indexOf(pr.rate) >= 0 ? pr.rate : 1, true);
+    if (pr.muted) video.muted = true;
+    if (pr.vol >= 0 && pr.vol <= 1) video.volume = pr.vol;
+    vpVolUI();
+    if (first) {
+      P.box.hidden = false;
+      document.documentElement.classList.add('ex-vp-on');
+    }
+    P.box.scrollTop = 0;
+    vpSpin(true);
+    vpSource(v);
+    try { P.dialog.focus({ preventScroll: true }); } catch (e) { P.dialog.focus(); }
+  }
+
+  function vpClose() {
+    var P = VP;
+    if (!P || P.box.hidden) return;
+    var id = P.cur && P.cur.id;
+    if (vpFsEl()) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) { /* 무시 */ } }
+    vpTeardown();
+    P.cur = null;
+    P.box.hidden = true;
+    document.documentElement.classList.remove('ex-vp-on');
+    repaintVids();
+    var b = P.back;
+    P.back = null;
+    if (!b || !document.body.contains(b)) b = id ? document.querySelector('.ex-vid-btn[data-vid="' + id + '"]') : null;
+    if (b && b.focus) { try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); } }
+  }
+
+  function vpMake(v) {
+    var P = VP, video = document.createElement('video');
+    video.className = 'ex-vp-video';
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.preload = 'auto';
+    if (v.poster) video.poster = v.poster;
+    P.stage.insertBefore(video, P.stage.firstChild);
+    P.video = video;
+    P.track = null;
+    // 한국어 자막 트랙: 평소에는 숨김(자막 층이 그림), 아이폰 기본 전체 화면에서만 표시
+    if (typeof video.addTextTrack === 'function' && typeof window.VTTCue === 'function') {
+      try {
+        var tt = video.addTextTrack('subtitles', '한국어', 'ko');
+        (v.cues || []).forEach(function (c) { tt.addCue(new window.VTTCue(c[0], c[1], c[2])); });
+        tt.mode = 'hidden';
+        tt.addEventListener('cuechange', vpCue);
+        P.track = tt;
+      } catch (e) { P.track = null; }
+    }
+    ['play', 'pause', 'playing', 'waiting', 'canplay', 'loadedmetadata', 'durationchange', 'timeupdate', 'progress',
+      'seeked', 'ended', 'error', 'volumechange'].forEach(function (t) { video.addEventListener(t, vpMedia); });
+    video.addEventListener('webkitbeginfullscreen', function () { vpNativeFs(true); });
+    video.addEventListener('webkitendfullscreen', function () { vpNativeFs(false); });
+    return video;
+  }
+
+  function vpTeardown() {
+    var P = VP;
+    if (!P) return;
+    clearTimeout(P.idleT);
+    clearTimeout(P.noteT);
+    vpSave();
+    if (P.hls) { try { P.hls.destroy(); } catch (e) { /* 무시 */ } P.hls = null; }
+    var video = P.video;
+    P.video = null;
+    P.track = null;
+    if (!video) return;
+    try { video.pause(); } catch (e) { /* 무시 */ }
+    video.removeAttribute('src');
+    try { video.load(); } catch (e) { /* 무시 */ }
+    if (video.parentNode) video.parentNode.removeChild(video);
+  }
+
+  function isAppleWebKit() {
+    var ua = navigator.userAgent || '';
+    if (/iP(hone|ad|od)/.test(ua)) return true;
+    if (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) return true;   // iPadOS 데스크톱 모드
+    return /Safari\//.test(ua) && /Apple/.test(navigator.vendor || '') && !/(Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg)\//.test(ua);
+  }
+  function loadHls() {
+    if (window.Hls) return Promise.resolve(window.Hls);
+    var src = CFG.videos && CFG.videos.hls;
+    if (!src) return Promise.reject(new Error('hls'));
+    if (!hlsLoad) {
+      hlsLoad = loadScript(src).then(function () {
+        if (!window.Hls) throw new Error('hls');
+        return window.Hls;
+      }, function (e) { hlsLoad = null; throw e; });
+    }
+    return hlsLoad;
+  }
+  function vpSource(v) {
+    var P = VP, video = P.video, m = v.media || {};
+    if (m.hls) {
+      var native = !!video.canPlayType('application/vnd.apple.mpegurl');
+      if (native && isAppleWebKit()) { video.src = m.hls; vpPlay(); return; }
+      loadHls().then(function (Hls) {
+        if (P.cur !== v || P.video !== video) return;
+        if (!Hls.isSupported()) {
+          if (native) { video.src = m.hls; vpPlay(); } else vpFail();
+          return;
+        }
+        var h = new Hls({ capLevelToPlayerSize: true, startPosition: P.resumeAt > 0 ? P.resumeAt : -1, maxBufferLength: 30, backBufferLength: 30 });
+        P.hls = h;
+        if (P.resumeAt > 0) { P.resumed = true; vpNote(P.resumeAt); }
+        h.on(Hls.Events.MANIFEST_PARSED, function () { if (P.hls === h) vpPlay(); });
+        h.on(Hls.Events.ERROR, function (e, d) {
+          if (!d || !d.fatal || P.hls !== h) return;
+          if (d.type === Hls.ErrorTypes.MEDIA_ERROR && !P.recovered) { P.recovered = true; h.recoverMediaError(); return; }
+          // 재생 목록을 이미 받은 뒤의 조각 오류만 한 번 다시 받기(목록 자체를 못 받으면 바로 안내)
+          if (d.type === Hls.ErrorTypes.NETWORK_ERROR && !P.retried && h.levels && h.levels.length) { P.retried = true; h.startLoad(); return; }
+          vpFail();
+        });
+        h.loadSource(m.hls);
+        h.attachMedia(video);
+      }, function () {
+        if (P.cur !== v || P.video !== video) return;
+        if (native) { video.src = m.hls; vpPlay(); } else vpFail();
+      });
+      return;
+    }
+    var list = vpFiles(m.files || [], video);
+    if (!list.length) { vpFail(); return; }
+    P.files = list;
+    P.fileIdx = 0;
+    video.src = list[0].src;
+    vpPlay();
+  }
+  // 커먼즈 파일 고르기: 재생 가능한 webm(VP9) 먼저, 안 되면 mov. 큰 화면은 높은 화질부터, 작은 화면 · 데이터 절약 모드는 480p 가까운 것부터
+  function vpFiles(files, video) {
+    var small = (VP.stage.clientWidth || window.innerWidth) < 720 || !!(navigator.connection && navigator.connection.saveData);
+    var ok = files.filter(function (f) { return !f.type || video.canPlayType(f.type); });
+    function rank(a, b) { return small ? (Math.abs(a.h - 480) - Math.abs(b.h - 480)) || (a.h - b.h) : b.h - a.h; }
+    var webm = ok.filter(function (f) { return /webm/.test(f.type || ''); }).sort(rank);
+    return webm.concat(ok.filter(function (f) { return !/webm/.test(f.type || ''); }).sort(rank));
+  }
+  function vpPlay() {
+    var video = VP && VP.video;
+    if (!video) return;
+    video.defaultPlaybackRate = VP.rate;
+    video.playbackRate = VP.rate;
+    var p = video.play();
+    if (p && p.catch) p.catch(function () { if (VP.video === video) { vpSpin(false); vpWake(true); } });   // 자동 재생이 막히면 큰 재생 버튼
+  }
+  function vpToggle() {
+    var video = VP.video;
+    if (!video || VP.failed) return;
+    if (video.paused || video.ended) { VP.end.hidden = true; vpPlay(); }
+    else video.pause();
+  }
+  function vpSurface() {
+    var P = VP, video = P.video;
+    if (!video) return;
+    // 터치: 재생 중 한 번 누르면 조작 막대만 보였다 숨김(멈추려면 재생 버튼), 마우스: 누르면 재생/일시정지
+    if (P.ptr === 'touch' && !video.paused) {
+      if (P.stage.classList.contains('is-idle')) vpWake(); else { clearTimeout(P.idleT); P.stage.classList.add('is-idle'); }
+      return;
+    }
+    vpToggle();
+  }
+  function vpSeekBy(s) {
+    var video = VP.video, d = vpDur();
+    if (!video || !d) return;
+    video.currentTime = Math.max(0, Math.min(d - 0.2, (video.currentTime || 0) + s));
+    vpWake();
+  }
+  function vpDur() {
+    var d = VP && VP.video && VP.video.duration;
+    return isFinite(d) && d > 0 ? d : (+(VP && VP.cur && VP.cur.dur) || 0);
+  }
+  function vpCc(on, quiet) {
+    var P = VP;
+    P.ccOn = !!on;
+    P.ccBtn.setAttribute('aria-pressed', String(P.ccOn));
+    P.stage.classList.toggle('is-cc-off', !P.ccOn);
+    if (!quiet) vprefSet({ cc: P.ccOn });
+    vpCue();
+  }
+  function vpRate(r, quiet) {
+    var P = VP;
+    P.rate = r;
+    P.rateBtn.textContent = r + '×';
+    P.rateBtn.setAttribute('aria-label', '재생 속도 ' + r + '배');
+    if (P.video) { P.video.defaultPlaybackRate = r; P.video.playbackRate = r; }
+    if (!quiet) vprefSet({ rate: r });
+  }
+  function vpVolUI() {
+    var P = VP, video = P.video;
+    if (!video) return;
+    var off = video.muted || video.volume === 0;
+    P.muteBtn.classList.toggle('is-off', off);
+    P.muteBtn.setAttribute('aria-label', off ? '소리 켜기' : '소리 끄기');
+    P.vol.value = off ? 0 : Math.round(video.volume * 100);
+    P.vol.style.setProperty('--p', P.vol.value + '%');
+  }
+  function vpCueText() {
+    var P = VP, v = P.cur, video = P.video;
+    if (!v || !video) return '';
+    if (P.track && P.track.activeCues) {
+      var a = P.track.activeCues;
+      return a.length ? a[a.length - 1].text : '';
+    }
+    var t = video.currentTime, cs = v.cues || [];
+    for (var i = 0; i < cs.length; i++) {
+      if (cs[i][0] > t) break;
+      if (t < cs[i][1]) return cs[i][2];
+    }
+    return '';
+  }
+  function vpCue() {
+    var P = VP;
+    if (!P) return;
+    var txt = P.ccOn ? vpCueText() : '';
+    if (P.ccText !== txt) { P.ccText = txt; P.cc.textContent = txt; }
+  }
+  function vpNativeFs(on) { if (VP && VP.track) VP.track.mode = on && VP.ccOn ? 'showing' : 'hidden'; }
+  function vpFsEl() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
+  function vpFs() {
+    var P = VP, st = P.stage, video = P.video;
+    if (vpFsEl()) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) { /* 무시 */ } return; }
+    var req = st.requestFullscreen || st.webkitRequestFullscreen;
+    if (req) {
+      try { var r = req.call(st); if (r && r.catch) r.catch(function () { /* 무시 */ }); } catch (e) { /* 무시 */ }
+    } else if (video && video.webkitEnterFullscreen) {
+      try { video.webkitEnterFullscreen(); } catch (e) { /* 무시 */ }   // 아이폰: 기본 플레이어 전체 화면(자막은 텍스트 트랙으로)
+    }
+  }
+  function vpFsUI() {
+    if (!VP) return;
+    var on = vpFsEl() === VP.stage;
+    VP.stage.classList.toggle('is-fs', on);
+    VP.fsBtn.setAttribute('aria-label', on ? '전체 화면 끝내기' : '전체 화면');
+  }
+  function vpSpin(on) { if (VP) VP.stage.classList.toggle('is-loading', !!on); }
+  function vpWake(stay) {
+    var P = VP;
+    if (!P) return;
+    P.stage.classList.remove('is-idle');
+    clearTimeout(P.idleT);
+    if (!stay && P.video && !P.video.paused) {
+      P.idleT = setTimeout(function () { if (P.video && !P.video.paused && !P.dragging) P.stage.classList.add('is-idle'); }, 2600);
+    }
+  }
+  function vpNote(t) {
+    var P = VP;
+    P.note.firstChild.textContent = fmtSec(t) + '부터 이어서 재생합니다';
+    P.note.hidden = false;
+    clearTimeout(P.noteT);
+    P.noteT = setTimeout(function () { P.note.hidden = true; }, 6000);
+  }
+  function vpTime() {
+    var P = VP, video = P.video;
+    if (!video) return;
+    var d = vpDur(), t = video.currentTime || 0;
+    if (!P.dragging) {
+      P.seek.value = d ? Math.round(t / d * 1000) : 0;
+      P.curEl.textContent = fmtSec(t);
+      P.seek.style.setProperty('--p', (d ? t / d * 100 : 0).toFixed(2) + '%');
+    }
+    P.seek.setAttribute('aria-valuetext', fmtSec(t) + ' / ' + fmtSec(d, true));
+  }
+  function vpBuffered() {
+    var P = VP, video = P.video, d = vpDur(), b = 0;
+    if (!video || !d) return;
+    try {
+      var r = video.buffered;
+      for (var i = 0; i < r.length; i++) if (r.start(i) <= video.currentTime + 1) b = Math.max(b, r.end(i));
+    } catch (e) { /* 무시 */ }
+    P.seek.style.setProperty('--b', Math.min(100, b / d * 100).toFixed(2) + '%');
+  }
+  // 시청 위치 저장: 재생 중 5초마다 · 일시정지 · 닫을 때. 92% 이상 보면 '시청함'
+  function vpSave() {
+    var P = VP, video = P && P.video, v = P && P.cur;
+    if (!video || !v || P.failed) return;
+    var t = video.currentTime || 0, d = vpDur();
+    if (t < 3 || !d) return;
+    if (t / d >= 0.92) vlogSet(v.id, { done: true, t: 0, at: Date.now() });
+    else vlogSet(v.id, { t: Math.floor(t), at: Date.now() });
+  }
+  function vpMedia(ev) {
+    var P = VP, video = P && P.video;
+    if (!video || ev.target !== video) return;
+    switch (ev.type) {
+      case 'play': P.stage.classList.add('is-playing'); P.end.hidden = true; vpWake(); break;
+      case 'pause': P.stage.classList.remove('is-playing'); vpWake(true); vpSave(); break;
+      case 'playing': case 'canplay': case 'seeked': vpSpin(false); if (!P.track) vpCue(); break;
+      case 'waiting': vpSpin(true); break;
+      case 'loadedmetadata': case 'durationchange':
+        P.durEl.textContent = fmtSec(vpDur(), true);
+        if (P.resumeAt > 0 && !P.resumed && !P.hls) { P.resumed = true; try { video.currentTime = P.resumeAt; } catch (e) { /* 무시 */ } vpNote(P.resumeAt); }
+        break;
+      case 'timeupdate':
+        vpTime();
+        if (!P.track) vpCue();
+        if (!video.paused && Date.now() - (P.lastSave || 0) > 5000) { P.lastSave = Date.now(); vpSave(); }
+        break;
+      case 'progress': vpBuffered(); break;
+      case 'ended': vpEnded(); break;
+      case 'error': vpMediaError(); break;
+      case 'volumechange': vpVolUI(); vprefSet({ muted: video.muted, vol: Math.round(video.volume * 100) / 100 }); break;
+    }
+  }
+  function vpEnded() {
+    var P = VP, v = P.cur;
+    if (!v) return;
+    vlogSet(v.id, { done: true, t: 0, at: Date.now() });
+    P.stage.classList.remove('is-playing');
+    var list = vids(), nx = list[vidAt(v.id) + 1];
+    P.end.innerHTML = '<p class="ex-vp-card-t">' + ico('check-circle-2') + '시청을 마쳤습니다</p>' +
+      '<div class="ex-vp-card-b"><button type="button" class="ex-vp-pill" data-vp="replay">' + ico('rotate-ccw') + '다시 보기</button>' +
+      (nx ? '<button type="button" class="ex-vp-pill is-main" data-vp="go" data-vid="' + esc(nx.id) + '"><span><small>다음 영상 · 제' + esc(nx.ch) + '장</small>' + esc(nx.title) + '</span>' + ico('chevron-right') + '</button>'
+        : '<button type="button" class="ex-vp-pill is-main" data-vp="close">목록으로</button>') + '</div>';
+    P.end.hidden = false;
+    vpWake(true);
+  }
+  function vpMediaError() {
+    var P = VP, video = P.video;
+    if (P.hls) return;   // HLS 오류는 hls.js 이벤트에서 처리
+    if (P.files && P.fileIdx < P.files.length - 1) {   // 다음 화질 · 형식으로 다시
+      P.resumeAt = video.currentTime || P.resumeAt || 0;
+      P.resumed = !(P.resumeAt > 0);
+      P.fileIdx++;
+      video.src = P.files[P.fileIdx].src;
+      vpPlay();
+      return;
+    }
+    vpFail();
+  }
+  function vpFail() {
+    var P = VP, c = (P.cur && P.cur.credit) || {};
+    P.failed = true;
+    vpSpin(false);
+    P.stage.classList.remove('is-playing');
+    P.msg.innerHTML = '<p class="ex-vp-card-t">' + ico('alert-triangle') + '영상을 불러오지 못했습니다</p>' +
+      '<p class="ex-vp-card-d">네트워크 연결을 확인한 뒤 다시 시도해 주십시오. 계속 열리지 않으면 원 제공처 페이지에서 볼 수 있습니다.</p>' +
+      '<div class="ex-vp-card-b"><button type="button" class="ex-vp-pill is-main" data-vp="retry">' + ico('refresh-cw') + '다시 시도</button>' +
+      (c.url ? '<a class="ex-vp-pill" href="' + esc(c.url) + '" target="_blank" rel="noopener">원본 페이지' + ico('external-link') + '<span class="sr-only">(새 창)</span></a>' : '') + '</div>';
+    P.msg.hidden = false;
+  }
+  function vpInfo(v, i) {
+    var list = vids(), pv = list[i - 1], nx = list[i + 1];
+    function nav(x, next) {
+      if (!x) return '<span></span>';
+      return '<button type="button" class="ex-vp-navb' + (next ? ' is-next' : '') + '" data-vp="go" data-vid="' + esc(x.id) + '">' +
+        (next ? '' : ico('chevron-left')) + '<span><small>' + (next ? '다음' : '이전') + ' 영상 · 제' + esc(x.ch) + '장</small>' + esc(x.title) + '</span>' +
+        (next ? ico('chevron-right') : '') + '</button>';
+    }
+    return '<p class="ex-vp-lead">' + esc(v.lead) + '</p>' +
+      '<div class="ex-vp-cols">' +
+        '<section class="ex-vp-sec"><h3>학습 포인트</h3><ol class="ex-vp-pts">' +
+          (v.points || []).map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ol></section>' +
+        '<section class="ex-vp-sec"><h3>교재 연결</h3><p class="ex-vp-book">' + ico('book-open') + '<span>' + esc(v.book) + '</span></p>' +
+          '<h3>영상 정보</h3><p class="ex-vp-meta">' + esc(v.org) + ' · ' + fmtSec(v.dur, true) + ' · 한국어 자막(위원회 번역)</p></section>' +
+      '</div>' +
+      '<p class="ex-vp-credit">' + creditLine(v) + '</p>' +
+      '<nav class="ex-vp-nav" aria-label="다른 참고 영상">' + nav(pv, false) + nav(nx, true) + '</nav>';
+  }
+  function vpKey(ev) {
+    var P = VP;
+    if (!P || P.box.hidden) return;
+    var k = ev.key || '', tag = (ev.target && ev.target.tagName) || '';
+    if (k === 'Escape' || k === 'Esc') {
+      if (!vpFsEl()) { ev.preventDefault(); vpClose(); }
+      return;
+    }
+    if (k === 'Tab') {   // 재생 창 안에서만 초점 이동
+      var f = [].filter.call(P.box.querySelectorAll('button, a[href], input'), function (x) { return !x.disabled && x.offsetParent !== null; });
+      if (!f.length) return;
+      var a = document.activeElement, first = f[0], last = f[f.length - 1];
+      if (ev.shiftKey && (a === first || a === P.dialog || !P.box.contains(a))) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && (a === last || !P.box.contains(a))) { ev.preventDefault(); first.focus(); }
+      return;
+    }
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    var onInput = tag === 'INPUT', onBtn = tag === 'BUTTON' || tag === 'A';
+    if ((k === ' ' || k === 'k' || k === 'K') && !onBtn && !onInput) { ev.preventDefault(); vpToggle(); vpWake(); }
+    else if ((k === 'ArrowLeft' || k === 'ArrowRight') && !onInput) { ev.preventDefault(); vpSeekBy(k === 'ArrowLeft' ? -5 : 5); }
+    else if ((k === 'f' || k === 'F') && !onInput) { ev.preventDefault(); vpFs(); }
+    else if (k === 'c' || k === 'C') { ev.preventDefault(); vpCc(!P.ccOn); }
+    else if (k === 'm' || k === 'M') { ev.preventDefault(); if (P.video) P.video.muted = !P.video.muted; }
+  }
+
   function coursePanel(c, wide) {
     var key = courseKey(c.course), ex = c.exam || {}, w = c.window || {}, n = c.next || {}, rs = c.results || [];
     var st = courseStatus(c), t = now();
@@ -1059,7 +1685,7 @@
       (list.length
         ? '<div class="ex-courses' + (wide ? ' is-single' : '') + '">' + list.map(function (c) { return coursePanel(c, wide); }).join('') + '</div>'
         : panel('신청 과정', '<p class="ex-empty">응시할 수 있는 과정이 없습니다. ' + esc(CFG.email || '') + ' 로 문의해 주십시오.</p>')) +
-      upsellBox(list) + materialsSlot() + historyPanel() +
+      upsellBox(list) + materialsSlot() + videosSlot() + historyPanel() +
       '<div class="ex-cols">' + guidePanel() + notesPanel() + '</div>';
     setView(html, 'dashboard', { refresh: true });
     setHash('dashboard');
@@ -1450,6 +2076,7 @@
       return showDashboard();
     }
     closeModal();
+    vpClose();
     var server = {}, sFlags = [], k;
     for (k in (j.answers || {})) { var v = +j.answers[k]; if (v >= 1 && v <= 4) server[String(+k)] = v; }
     (j.flags || []).forEach(function (n) { sFlags.push(+n); });
@@ -2136,6 +2763,7 @@
         break;
       case 'dashboard': showDashboard(); break;
       case 'mat-retry': S.materials = null; S.matErr = ''; repaintMats(); loadMaterials(true); break;
+      case 'vid-open': vpOpen(t.getAttribute('data-vid')); break;
       case 'pledge': showPledge(course); break;
       case 'resume': resumeConfirm(course); break;
       case 'resume-go':
