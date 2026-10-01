@@ -113,6 +113,7 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '김소정', en: 'Kim So-jung', code: 'KSJ5700', email: 'misqm@naver.com', since: '2026.09', field: 'AI 윤리 · 책임 있는 AI 소통', photo: 'kim-sojung.jpg' },
   { name: '최상미', en: 'Choi Sang-mi', code: 'CSM1130', email: 'miya3204@naver.com', since: '2026.09', field: 'AI 디지털 교육 · AI 에듀테크', photo: 'choi-sangmi.jpg' },
   { name: '윤지희', en: 'Yoon Ji-hee', code: 'YJH7807', email: 'hopefulearth@gmail.com', since: '2026.09', field: '생성형 AI 활용 · 리터러시', photo: 'yoon-jihee.jpg' },
+  { name: '이은미', en: 'Lee Eun-mi', code: 'LEM9135', email: 'newayssister@naver.com', since: '2026.10', field: 'AI 윤리 · 책임 있는 AI 실현', photo: 'lee-eunmi.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
