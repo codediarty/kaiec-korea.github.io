@@ -1,109 +1,168 @@
 /* =============================================================================
-   AI윤리전문가(AIEP) 영상관 데이터 (AIEP 전용관 /exam/ 대시보드)  2026.10.01 2판
+   AI윤리전문가(AIEP) 영상관 데이터 (AIEP 전용관 /exam/ 대시보드)  2026.10.01 3판
    -----------------------------------------------------------------------------
-   ▶ 구성: 편(items) 하나가 파트(parts) 여러 개를 차례로 재생합니다. 파트 하나는 원본 영상 하나이며
-     잘라 쓰지 않고 처음부터 끝까지 그대로 재생합니다(파트 사이에 위원회의 파트 제목 카드만 보여 줌).
-   ▶ 해외 공공 · 연구기관 등이 공개 라이선스(CC BY 3.0 · CC BY 4.0 · CC BY-SA 4.0)로 배포한 애니메이션만 싣습니다.
+   ▶ 구성: 구역(sections: 기초편 · 심화편) 아래 편(items)이 있고, 편 하나가 파트(parts) 여러 개를 차례로 재생합니다.
+     파트 하나는 원본 영상 하나이며 잘라 쓰지 않고 처음부터 끝까지 그대로 재생합니다(파트 사이에 위원회의 파트 제목 카드만 보여 줌).
+   ▶ 해외 공공 · 연구기관 등이 공개 라이선스(CC BY 3.0 · CC BY 4.0 · CC BY-SA 3.0 · CC BY-SA 4.0)로 배포한 애니메이션만 싣습니다.
      영상 파일은 사이트에 올리지 않고 원 제공처 서버에서 재생합니다
      (위키미디어 커먼즈 webm · mov, EU 집행위원회 시청각 서비스 HLS).
-   ▶ cues 는 위원회가 원본 자막을 번역한 한국어 자막입니다. [시작 초, 끝 초, "자막"] 한 줄이 한 장면이며
-     시각은 그 파트(원본 영상) 기준입니다. 짧게 끊긴 원본 장면은 읽기 좋게 합쳤습니다.
+   ▶ cues 는 위원회가 번역한 한국어 자막입니다(원본 자막이 없으면 원본 소리를 받아 적어 번역).
+     [시작 초, 끝 초, "자막"] 한 줄이 한 장면이며 시각은 그 파트(원본 영상) 기준입니다.
+   ▶ gain: 파트마다 잰 통합 음량을 -18 LUFS 로 맞추는 보정값(dB). 재생기가 웹 오디오로 적용합니다.
+   ▶ alt: 기본 원본(webm)을 재생하지 못하는 기기에서 대신 쓰는 같은 영상의 다른 판(파일 · 길이 · 자막 · 출처가 따로 있음).
    ▶ 라이선스 조건
-     - CC BY-SA 4.0 영상(KI-Campus · SRF)의 한국어 자막은 같은 CC BY-SA 4.0 으로 공개합니다(동일조건변경허락).
+     - CC BY-SA 영상(KI-Campus · SRF · 위키미디어 재단 일부)의 한국어 자막은 CC BY-SA 4.0 으로 공개합니다
+       (동일조건변경허락, CC BY-SA 3.0 은 '이후 버전' 조항에 따름).
      - EU 영상(© European Union, CC BY 4.0)은 '부분 재사용 금지' 조건이 있어 잘라 쓰지 않고 전체를 재생합니다.
      - 모든 파트에 제목 · 저작자 · 라이선스 · 원본 주소 · 변경 사항(한국어 자막 추가)을 표시합니다
        (재생 창의 파트 카드 · 구성 목록 · '출처와 라이선스', 대시보드의 '영상 정보 · 출처').
-   ▶ 새 영상을 넣을 때: 상업적 이용 · 변경 허용 라이선스인지, 번역 근거가 될 원본 자막이 있는지,
-     배경음악 · 캐릭터 같은 제3자 권리 예외가 없는지(EU 영상은 copyright.holdersDetails 의 Exception) 먼저 확인하세요.
+   ▶ 새 영상을 넣을 때: 상업적 이용 · 변경 허용 라이선스인지, 배경음악 · 캐릭터 같은 제3자 권리 예외가 없는지
+     (EU 영상은 copyright.holdersDetails 의 Exception) 먼저 확인하고, 소리 크기(lufs · peak)를 재어 넣으세요.
    ▶ 이 파일은 tools/exam_videos_src.py(운영자 컴퓨터)에서 python3 tools/make_exam_videos.py 로 만듭니다.
      자막을 고칠 때는 원본을 고친 뒤 다시 만드세요(겹침 · 읽기 속도 · 금지 표현 검사 포함).
    ============================================================================= */
 window.KAIEC_EXAM_VIDEOS = {
   updated: "2026.10.01",
-  v: 2,
-  total: 2132.75,
+  v: 3,
+  total: 3705.58,
+  sections: [
+    { key: "basic", title: "기초편", en: "FOUNDATIONS", lead: "AI의 원리, 편향, 디지털 규범, 보안의 핵심 개념을 짧은 편으로 다집니다." },
+    { key: "deep", title: "심화편", en: "DEEP DIVE", lead: "의료 · 자율주행, 정보 생태계, 디지털 신원과 환경 비용까지 사례를 이어 깊이 들어갑니다." }
+  ],
   items: [
     {
-      id: "ep-ai", no: 1,
+      id: "ep-ai", no: 1, sec: "basic", code: "기초 01",
       title: "AI는 어떻게 배우고 말할까",
       sub: "AI의 원리부터 설명할 책임까지",
       lead: "AI가 데이터로 배우는 방식, ChatGPT가 사람의 평가로 다듬어지는 과정, 생성형 AI의 가능성과 위험, 의료 AI가 판단 근거를 설명해야 하는 이유까지 네 파트로 이어 봅니다.",
       points: ["AI를 만드는 두 방식: 규칙을 짜 넣는 프로그래밍과 데이터로 배우는 머신러닝", "ChatGPT의 학습: 방대한 데이터, 사람 트레이너의 모범 답안과 순위 매기기, 다음 단어의 확률", "생성형 AI의 위험(딥페이크 · 환각)과, 의료 AI가 블랙박스여서는 안 되는 이유"],
+      qs: ["자주 쓰는 AI 서비스 하나를 골라, 규칙으로 짠 부분과 데이터로 배운 부분을 나눠 보세요. 오류가 났을 때 원인을 찾는 방식은 어떻게 달라질까요?", "의사가 AI의 추천을 따랐다가 결과가 나빴다면, 설명할 수 있는 AI는 책임을 가리는 데 어떤 도움을 줄까요?"],
       book: "제1장 1.1 인공지능의 개념과 구성 요소 · 제3장 3.4 투명성 · 설명가능성 · 책무성 · 제4장 4.1 생성형 AI의 특성과 위험 지도", chs: [1, 3, 4],
-      dur: 451.28,
+      dur: 447.57,
       poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Generative_AI_explained_in_2_minutes.webm/960px-seek%3D90-Generative_AI_explained_in_2_minutes.webm.jpg",
       parts: [
         {
-          id: "ai-basics", title: "인공지능이란 무엇인가", org: "KI-Campus", dur: 143.46,
-          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm/500px-seek%3D12-Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm.jpg",
+          id: "ai-basics", title: "인공지능이란 무엇인가", org: "KI-Campus", dur: 139.75, gain: 3.7,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/K%C3%BCnstliche_Intelligenz_in_2_Minuten_erkl%C3%A4rt_%E2%80%93_Was_ist_eigentlich_KI.webm/960px-seek%3D12-K%C3%BCnstliche_Intelligenz_in_2_Minuten_erkl%C3%A4rt_%E2%80%93_Was_ist_eigentlich_KI.webm.jpg",
           media: { files: [
-            { h: 360, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/9/98/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm" },
-            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/98/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm.360p.mpeg4.mov" }
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/e/ea/K%C3%BCnstliche_Intelligenz_in_2_Minuten_erkl%C3%A4rt_%E2%80%93_Was_ist_eigentlich_KI.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/ea/K%C3%BCnstliche_Intelligenz_in_2_Minuten_erkl%C3%A4rt_%E2%80%93_Was_ist_eigentlich_KI.webm/K%C3%BCnstliche_Intelligenz_in_2_Minuten_erkl%C3%A4rt_%E2%80%93_Was_ist_eigentlich_KI.webm.480p.vp9.webm" }
           ] },
           credit: {
-            title: "Artificial intelligence explained in 2 minutes - What exactly is AI?",
+            title: "Künstliche Intelligenz in 2 Minuten erklärt – Was ist eigentlich KI",
             by: "KI-Campus, 2020", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.ko",
-            url: "https://commons.wikimedia.org/wiki/File:Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+            url: "https://commons.wikimedia.org/wiki/File:K%C3%BCnstliche_Intelligenz_in_2_Minuten_erkl%C3%A4rt_%E2%80%93_Was_ist_eigentlich_KI.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          alt: {
+            dur: 143.46, gain: 5.1,
+            poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/98/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm/500px-seek%3D12-Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm.jpg",
+            media: { files: [
+              { h: 360, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/9/98/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm" },
+              { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/98/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm/Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm.360p.mpeg4.mov" }
+            ] },
+            credit: {
+              title: "Artificial intelligence explained in 2 minutes - What exactly is AI?",
+              by: "KI-Campus, 2020", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.ko",
+              url: "https://commons.wikimedia.org/wiki/File:Artificial_intelligence_explained_in_2_minutes_-_What_exactly_is_AI%3F.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+            },
+            cues: [
+              [4.29, 8.11, "인공지능이란 정확히 무엇일까요?"],
+              [8.11, 10.46, "컴퓨터 시스템이 보통 사람의 지능이"],
+              [10.46, 12.96, "필요한 일을 해낼 때"],
+              [12.96, 14.58, "우리는 이를 AI라고 부릅니다."],
+              [14.58, 16.30, "예를 들면"],
+              [16.30, 19.03, "이미지를 알아보고, 결정을 내리고"],
+              [19.03, 21.31, "대화를 나누는 일이 그렇습니다."],
+              [21.31, 24.04, "이런 일을 하려면 AI 시스템에"],
+              [24.04, 26.25, "지식과 경험이 갖춰져야 합니다."],
+              [26.25, 29.38, "방법은 두 가지입니다."],
+              [30.20, 32.02, "하나는 명령 하나하나를"],
+              [32.02, 33.81, "직접 프로그래밍해서"],
+              [33.81, 36.35, "기계가 단계별로 과제를 풀게 하는 것입니다."],
+              [36.35, 38.53, "요리 레시피나"],
+              [38.53, 40.63, "조립 설명서와 비슷하지요."],
+              [40.63, 42.82, "다른 하나는 데이터에서"],
+              [42.82, 44.99, "스스로 배우는 프로그램을 쓰는 것입니다."],
+              [44.99, 46.27, "그러면 프로그램이"],
+              [46.27, 48.07, "필요한 정보를 찾아내고"],
+              [48.07, 51.00, "결론을 끌어내거나 예측할 수 있습니다."],
+              [51.34, 54.92, "이것을 머신러닝(기계학습)이라고 합니다."],
+              [55.34, 57.37, "우리는 아마 모두 살면서"],
+              [57.37, 59.14, "한 번쯤 AI를 접해 봤을 겁니다."],
+              [59.14, 60.42, "영화를 보거나"],
+              [60.42, 62.30, "음악을 듣거나 온라인 쇼핑을 할 때"],
+              [62.30, 63.92, "AI는 우리가 좋아할 만한 것을"],
+              [63.92, 66.34, "추천해 줍니다."],
+              [67.14, 69.20, "AI는 말소리를"],
+              [69.20, 70.89, "글자로 바꾸고"],
+              [70.89, 74.48, "다른 언어로 번역할 수도 있습니다."],
+              [77.13, 80.41, "AI는 로봇공학의 핵심 요소입니다."],
+              [80.41, 82.89, "로봇은 일상을 더 편하게 해 주고"],
+              [82.89, 85.68, "힘든 일을 대신 맡기도 합니다."],
+              [85.99, 87.17, "자율주행차는"],
+              [87.17, 89.87, "AI로 주변 환경을 인식하고"],
+              [89.87, 91.76, "그에 맞게 반응합니다."],
+              [91.96, 95.74, "의료 분야에서도 AI는 점점 더 중요해지고 있습니다."],
+              [95.74, 99.13, "AI는 의사가 질병을 진단할 때 도움을 줍니다."],
+              [102.21, 103.74, "또 점점 더 많은 환자가"],
+              [103.74, 107.92, "AI 기반 앱으로 초기 진단을 해 봅니다."],
+              [107.92, 110.59, "교육 분야에서 AI는"],
+              [110.59, 112.97, "학습을 개인에게 맞추도록 돕습니다."],
+              [112.97, 116.03, "디지털 학습 플랫폼이 그 예입니다."],
+              [116.03, 119.52, "AI는 점점 더 중요해지고 있습니다."],
+              [119.52, 121.69, "AI가 어떻게 작동하는지 알면"],
+              [121.69, 124.20, "집과 일터에서 AI가 어떤 도움을 줄지,"],
+              [124.20, 127.00, "또 어디서는 우리가 직접 결정하는 게"],
+              [127.00, 129.82, "나을지 더 잘 가늠할 수 있습니다."],
+              [129.96, 131.86, "AI가 사람을 대신하지는 않겠지만"],
+              [131.86, 135.07, "우리를 돕는 능력은 점점 좋아지고 있습니다."],
+              [135.26, 139.88, "이를 위해서는 AI 역량을 갖춘 사회가 필요합니다."]
+            ]
           },
           cues: [
-            [4.29, 8.11, "인공지능이란 정확히 무엇일까요?"],
-            [8.11, 10.46, "컴퓨터 시스템이 보통 사람의 지능이"],
-            [10.46, 12.96, "필요한 일을 해낼 때"],
-            [12.96, 14.58, "우리는 이를 AI라고 부릅니다."],
-            [14.58, 16.30, "예를 들면"],
-            [16.30, 19.03, "이미지를 알아보고, 결정을 내리고"],
-            [19.03, 21.31, "대화를 나누는 일이 그렇습니다."],
-            [21.31, 24.04, "이런 일을 하려면 AI 시스템에"],
-            [24.04, 26.25, "지식과 경험이 갖춰져야 합니다."],
-            [26.25, 29.38, "방법은 두 가지입니다."],
-            [30.20, 32.02, "하나는 명령 하나하나를"],
-            [32.02, 33.81, "직접 프로그래밍해서"],
-            [33.81, 36.35, "기계가 단계별로 과제를 풀게 하는 것입니다."],
-            [36.35, 38.53, "요리 레시피나"],
-            [38.53, 40.63, "조립 설명서와 비슷하지요."],
-            [40.63, 42.82, "다른 하나는 데이터에서"],
-            [42.82, 44.99, "스스로 배우는 프로그램을 쓰는 것입니다."],
-            [44.99, 46.27, "그러면 프로그램이"],
-            [46.27, 48.07, "필요한 정보를 찾아내고"],
-            [48.07, 51.00, "결론을 끌어내거나 예측할 수 있습니다."],
-            [51.34, 54.92, "이것을 머신러닝(기계학습)이라고 합니다."],
-            [55.34, 57.37, "우리는 아마 모두 살면서"],
-            [57.37, 59.14, "한 번쯤 AI를 접해 봤을 겁니다."],
-            [59.14, 60.42, "영화를 보거나"],
-            [60.42, 62.30, "음악을 듣거나 온라인 쇼핑을 할 때"],
-            [62.30, 63.92, "AI는 우리가 좋아할 만한 것을"],
-            [63.92, 66.34, "추천해 줍니다."],
-            [67.14, 69.20, "AI는 말소리를"],
-            [69.20, 70.89, "글자로 바꾸고"],
-            [70.89, 74.48, "다른 언어로 번역할 수도 있습니다."],
-            [77.13, 80.41, "AI는 로봇공학의 핵심 요소입니다."],
-            [80.41, 82.89, "로봇은 일상을 더 편하게 해 주고"],
-            [82.89, 85.68, "힘든 일을 대신 맡기도 합니다."],
-            [85.99, 87.17, "자율주행차는"],
-            [87.17, 89.87, "AI로 주변 환경을 인식하고"],
-            [89.87, 91.76, "그에 맞게 반응합니다."],
-            [91.96, 95.74, "의료 분야에서도 AI는 점점 더 중요해지고 있습니다."],
-            [95.74, 99.13, "AI는 의사가 질병을 진단할 때 도움을 줍니다."],
-            [102.21, 103.74, "또 점점 더 많은 환자가"],
-            [103.74, 107.92, "AI 기반 앱으로 초기 진단을 해 봅니다."],
-            [107.92, 110.59, "교육 분야에서 AI는"],
-            [110.59, 112.97, "학습을 개인에게 맞추도록 돕습니다."],
-            [112.97, 116.03, "디지털 학습 플랫폼이 그 예입니다."],
-            [116.03, 119.52, "AI는 점점 더 중요해지고 있습니다."],
-            [119.52, 121.69, "AI가 어떻게 작동하는지 알면"],
-            [121.69, 124.20, "집과 일터에서 AI가 어떤 도움을 줄지,"],
-            [124.20, 127.00, "또 어디서는 우리가 직접 결정하는 게"],
-            [127.00, 129.82, "나을지 더 잘 가늠할 수 있습니다."],
-            [129.96, 131.86, "AI가 사람을 대신하지는 않겠지만"],
-            [131.86, 135.07, "우리를 돕는 능력은 점점 좋아지고 있습니다."],
-            [135.26, 139.88, "이를 위해서는 AI 역량을 갖춘 사회가 필요합니다."]
+            [4.36, 7.00, "인공지능이란 정확히 무엇일까요?"],
+            [7.52, 11.64, "컴퓨터 시스템이 원래 사람의 지능이 필요한 일을 해낼 때"],
+            [11.64, 14.00, "우리는 이를 인공지능(AI)이라고 부릅니다."],
+            [14.20, 18.36, "이미지를 알아보고, 결정을 내리고, 대화를 나누는 일이 그렇지요."],
+            [20.40, 24.84, "이런 일을 하려면 AI 시스템에 지식과 경험이 갖춰져야 합니다."],
+            [24.92, 26.56, "방법은 두 가지입니다."],
+            [27.56, 30.32, "하나는 명령 하나하나를 직접 프로그래밍해서"],
+            [30.48, 33.04, "기계가 단계별로 과제를 풀게 하는 것입니다."],
+            [34.88, 37.68, "요리 레시피나 조립 설명서와 비슷하지요."],
+            [38.36, 41.96, "다른 하나는 데이터에서 스스로 배우는 프로그램을 쓰는 것입니다."],
+            [42.00, 45.04, "그러면 프로그램이 필요한 정보를 찾아내고"],
+            [45.08, 47.64, "결론을 끌어내거나 예측할 수 있습니다."],
+            [48.44, 51.00, "이것을 머신러닝(기계학습)이라고 합니다."],
+            [53.28, 56.52, "우리는 아마 모두 한 번쯤 AI를 접해 봤을 겁니다."],
+            [57.08, 60.52, "온라인으로 영화를 보거나 음악을 듣고 쇼핑을 할 때"],
+            [60.56, 64.44, "AI는 우리가 좋아할 만한 것을 추천해 줍니다."],
+            [65.08, 68.08, "AI는 말소리를 글자로 바꾸고"],
+            [68.12, 70.56, "다른 언어로 번역해 들려줄 수도 있습니다."],
+            [74.32, 77.04, "AI는 로봇공학의 핵심 요소입니다."],
+            [77.08, 79.20, "로봇은 일상을 더 편하게 해 주고"],
+            [79.52, 81.80, "힘든 일을 대신 맡기도 합니다."],
+            [82.20, 85.92, "자율주행차는 AI로 주변 환경을 인식하고"],
+            [86.04, 87.56, "그에 맞게 반응합니다."],
+            [88.32, 91.20, "의료 분야에서도 AI는 점점 더 중요해지고 있습니다."],
+            [91.76, 95.96, "AI는 의사가 질병을 진단할 때 도움을 줍니다."],
+            [97.52, 99.68, "또 점점 더 많은 환자가"],
+            [99.72, 103.72, "AI 기반 앱으로 초기 진단을 해 봅니다."],
+            [104.72, 109.08, "교육 분야에서 AI는 학습을 개인에게 맞추도록 돕습니다."],
+            [109.24, 111.48, "디지털 학습 플랫폼이 그 예입니다."],
+            [112.48, 114.16, "AI는 점점 더 중요해지고 있습니다."],
+            [114.20, 116.60, "AI가 어떻게 작동하는지 알면"],
+            [116.84, 121.60, "일상과 일터에서 AI의 도움을 받을 곳과"],
+            [122.04, 124.44, "직접 결정할 곳을 더 잘 가릴 수 있습니다."],
+            [124.92, 127.00, "AI가 사람을 대신하지는 않겠지만"],
+            [127.08, 129.44, "우리를 돕는 능력은 점점 좋아지고 있습니다."],
+            [129.56, 132.80, "이를 위해서는 AI 역량을 갖춘 사회가 필요합니다."]
           ]
         },
         {
-          id: "srf-chatgpt", title: "ChatGPT는 어떻게 배웠을까", org: "SRF Wissen", dur: 89.18,
+          id: "srf-chatgpt", title: "ChatGPT는 어떻게 배웠을까", org: "SRF Wissen", dur: 89.18, gain: 1.4,
           poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm/960px-seek%3D12-SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm.1080p.vp9.webm" },
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/0/0e/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm" },
             { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm.480p.vp9.webm" },
             { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm/SRF_Wissen_-_Wie_funktioniert_ChatGPT-3.0%3F.webm.360p.mpeg4.mov" }
           ] },
@@ -134,10 +193,10 @@ window.KAIEC_EXAM_VIDEOS = {
           ]
         },
         {
-          id: "genai-basics", title: "생성형 AI, 2분 만에 이해하기", org: "KI-Campus", dur: 122.08,
+          id: "genai-basics", title: "생성형 AI, 2분 만에 이해하기", org: "KI-Campus", dur: 122.08, gain: 0.4,
           poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Generative_AI_explained_in_2_minutes.webm/960px-seek%3D30-Generative_AI_explained_in_2_minutes.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c5/Generative_AI_explained_in_2_minutes.webm/Generative_AI_explained_in_2_minutes.webm.1080p.vp9.webm" },
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Generative_AI_explained_in_2_minutes.webm" },
             { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c5/Generative_AI_explained_in_2_minutes.webm/Generative_AI_explained_in_2_minutes.webm.480p.vp9.webm" },
             { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c5/Generative_AI_explained_in_2_minutes.webm/Generative_AI_explained_in_2_minutes.webm.360p.mpeg4.mov" }
           ] },
@@ -181,10 +240,10 @@ window.KAIEC_EXAM_VIDEOS = {
           ]
         },
         {
-          id: "xai-medicine", title: "의료 AI는 왜 설명할 수 있어야 할까", org: "KI-Campus", dur: 96.56,
+          id: "xai-medicine", title: "의료 AI는 왜 설명할 수 있어야 할까", org: "KI-Campus", dur: 96.56, gain: 1.1,
           poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/08/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm/960px-seek%3D12-Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/08/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm.1080p.vp9.webm" },
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/0/08/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm" },
             { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/08/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm.480p.vp9.webm" },
             { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/08/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm/Ethics_of_AI_in_Digital_Medicine_%E2%80%93_Explanation_why_transparent_explainable_AI_is_important.webm.360p.mpeg4.mov" }
           ] },
@@ -222,20 +281,21 @@ window.KAIEC_EXAM_VIDEOS = {
       ]
     },
     {
-      id: "ep-bias", no: 2,
+      id: "ep-bias", no: 2, sec: "basic", code: "기초 02",
       title: "편향을 알아차리는 판단",
       sub: "무의식적 편향과 공정한 집단 결정",
       lead: "AI의 편향은 사람의 판단과 데이터에서 시작됩니다. 영국 왕립학회의 두 편으로 무의식적 편향이 생기는 원리와, 윤리위원회 같은 집단이 더 공정하게 결정하는 방법을 살펴봅니다.",
       points: ["무의식은 배경 · 문화 · 경험에서 나온 지름길로 순식간에 판단하며, 자주 틀리고 편향된다", "‘우리 편’을 더 좋게 보는 경향처럼 결정을 물들이는 무의식적 편향", "공정한 집단 결정: 보완적인 구성, 독립적인 의견, 문제 정의 합의, 천천히 이유 따지기"],
+      qs: ["채용 AI가 과거 합격자 기록으로 학습했다면, 영상 속 무의식적 편향은 그 데이터에 어떤 모습으로 남아 있을까요?", "AI 도입을 심의하는 위원회를 꾸린다면, 집단 사고를 막기 위해 회의 절차에 무엇을 넣겠습니까?"],
       book: "제3장 3.1 공정성: 차별과 혐오, 그리고 편향 · 제8장 8.6 AI 윤리위원회의 설계와 운영", chs: [3, 8],
       dur: 314.1,
       poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm/960px-seek%3D80-Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm.jpg",
       parts: [
         {
-          id: "rs-bias", title: "무의식적 편향이란 무엇인가", org: "영국 왕립학회", dur: 179.02,
+          id: "rs-bias", title: "무의식적 편향이란 무엇인가", org: "영국 왕립학회", dur: 179.02, gain: -8.2,
           poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Understanding_unconscious_bias_-_The_Royal_Society.webm/960px-seek%3D40-Understanding_unconscious_bias_-_The_Royal_Society.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/11/Understanding_unconscious_bias_-_The_Royal_Society.webm/Understanding_unconscious_bias_-_The_Royal_Society.webm.1080p.vp9.webm" },
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/1/11/Understanding_unconscious_bias_-_The_Royal_Society.webm" },
             { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/11/Understanding_unconscious_bias_-_The_Royal_Society.webm/Understanding_unconscious_bias_-_The_Royal_Society.webm.480p.vp9.webm" },
             { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/11/Understanding_unconscious_bias_-_The_Royal_Society.webm/Understanding_unconscious_bias_-_The_Royal_Society.webm.360p.mpeg4.mov" }
           ] },
@@ -290,10 +350,10 @@ window.KAIEC_EXAM_VIDEOS = {
           ]
         },
         {
-          id: "rs-decisions", title: "더 현명하고 공정한 집단 결정", org: "영국 왕립학회", dur: 135.08,
+          id: "rs-decisions", title: "더 현명하고 공정한 집단 결정", org: "영국 왕립학회", dur: 135.08, gain: -1.9,
           poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm/960px-seek%3D80-Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6f/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm.1080p.vp9.webm" },
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm" },
             { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6f/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm.480p.vp9.webm" },
             { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6f/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm/Smarter_decisions_%EF%BD%9C_The_Royal_Society.webm.360p.mpeg4.mov" }
           ] },
@@ -338,17 +398,18 @@ window.KAIEC_EXAM_VIDEOS = {
       ]
     },
     {
-      id: "ep-forest", no: 3,
+      id: "ep-forest", no: 3, sec: "basic", code: "기초 03",
       title: "디지털 숲의 규칙",
       sub: "동화로 보는 디지털 권리와 플랫폼 책임",
       lead: "빨간 모자가 디지털 숲에서 길을 찾고 늑대를 따돌린 뒤 할머니의 토스터 환불까지 해결합니다. 이어서 디지털 탐험대가 온라인 장터에서 디지털서비스법(DSA)이 이용자를 어떻게 지키는지 보여 줍니다.",
       points: ["공공 와이파이, 디지털 신원 지갑, 그리고 낯선 상대에게 정보를 너무 많이 말할 때의 위험", "디지털서비스법(DSA): 불법 상품 신고, 판매자 추적, 대형 플랫폼 이용 규칙 요약", "플랫폼 책임이 AI 규제와 함께 디지털 규범의 한 축을 이루는 구조"],
-      book: "제6장 6.5 주요국 규제 모델과 국제 협력 · 제7장 7.2 딥페이크와 민주주의(플랫폼 책임)", chs: [6, 7],
+      qs: ["온라인 장터에서 불법 상품이 팔리거나 판매자가 사라졌다면, 플랫폼 · 판매자 · 이용자는 각각 무엇을 책임져야 할까요?", "대형 플랫폼의 ‘이용 규칙 요약’ 의무는 AI 서비스의 투명성 의무와 어떤 점에서 닮았나요?"],
+      book: "제6장 6.3 투명성 의무와 범용 AI 모델 · 6.5 주요국 규제 모델과 국제 협력 · 제7장 7.2 딥페이크와 민주주의(플랫폼 책임)", chs: [6, 7],
       dur: 328.88,
       poster: "https://api.prd.commavservices.eu/thumbnail/I-283126/019b9e8e-0351-7099-84b3-da78e2537ae5/800.jpg?t=1767891730",
       parts: [
         {
-          id: "eu-rrh", title: "빨간 모자와 디지털 숲", org: "EU 집행위원회", dur: 169.0,
+          id: "eu-rrh", title: "빨간 모자와 디지털 숲", org: "EU 집행위원회", dur: 169.0, gain: 2.8,
           poster: "https://api.prd.commavservices.eu/thumbnail/I-283126/019b9e8e-0351-7099-84b3-da78e2537ae5/800.jpg?t=1767891730",
           media: { hls: "https://vod.prd.commavservices.eu/06/283126/019b9e8e-0351-7099-84b3-da78e2537ae5/master.m3u8" },
           credit: {
@@ -400,7 +461,7 @@ window.KAIEC_EXAM_VIDEOS = {
           ]
         },
         {
-          id: "eu-dsa", title: "디지털 탐험대, 온라인 장터에 가다", org: "EU 집행위원회", dur: 159.88,
+          id: "eu-dsa", title: "디지털 탐험대, 온라인 장터에 가다", org: "EU 집행위원회", dur: 159.88, gain: 9.4,
           poster: "https://api.prd.commavservices.eu/thumbnail/I-280678/019a7da5-c5ec-7a90-8461-e4d6961ce297/800.jpg?t=1763044665",
           media: { hls: "https://vod.prd.commavservices.eu/18/280678/019a7da5-c5ec-7a90-8461-e4d6961ce297/master.m3u8" },
           credit: {
@@ -456,17 +517,18 @@ window.KAIEC_EXAM_VIDEOS = {
       ]
     },
     {
-      id: "ep-cyber", no: 4,
-      title: "이상한 나라의 사이버 보안",
-      sub: "사이버 복원력과 종단 간 암호화",
-      lead: "앨리스가 사이버 함정 가득한 이상한 나라에서 디지털 지갑과 사이버 복원력법을 만납니다. 이어서 공개 키와 종단 간 암호화가 어떻게 대화를 지키는지 자물쇠와 열쇠로 풀어 봅니다.",
-      points: ["디지털 지갑의 선택적 정보 공유와, 처음부터 안전하게 만드는 제품(사이버 복원력법)", "공개 키 암호화: 열린 자물쇠는 나누고 열쇠는 내 손에만", "믿을 만한 소프트웨어를 고르는 두 기준: 종단 간 암호화, 오픈 소스"],
-      book: "제5장 5.5 개인정보 보호법과 AI · 제6장 6.2 고위험 AI의 두 경로와 의무(정확성 · 견고성 · 사이버보안)", chs: [5, 6],
-      dur: 472.46,
+      id: "ep-cyber", no: 4, sec: "basic", code: "기초 04",
+      title: "사이버 함정을 피하는 법",
+      sub: "사이버 복원력과 피싱 가려내기",
+      lead: "앨리스가 사이버 함정 가득한 이상한 나라에서 디지털 지갑과 사이버 복원력법을 만납니다. 이어서 우리가 믿는 서비스를 사칭하는 피싱 링크를, 주소의 ‘주인 블록’을 읽어 가려내는 요령을 익힙니다.",
+      points: ["디지털 지갑의 선택적 정보 공유와, 처음부터 안전하게 만드는 제품(사이버 복원력법)", "믿는 서비스를 사칭한 메시지와 가짜 웹사이트, 악성 코드 링크의 수법", "주소에서 슬래시 바로 앞 ‘주인 블록’을 찾고, 글자를 바꿔 끼운 위조 주소를 알아보기"],
+      qs: ["생성형 AI로 사칭 메시지가 사람이 쓴 것처럼 자연스러워졌다면, 조직의 피싱 대응 교육은 무엇을 바꿔야 할까요?", "‘처음부터 안전한 설계’를 AI 제품에 적용한다면, 출시 전에 무엇을 확인해야 할까요?"],
+      book: "제6장 6.2 고위험 AI의 두 경로와 의무(정확성 · 견고성 · 사이버보안) · 제7장 7.2 딥페이크와 민주주의(합성 음성 사기) · 7.6 사례 연구 IV: 챗봇과 생성형 AI", chs: [6, 7],
+      dur: 474.14,
       poster: "https://api.prd.commavservices.eu/thumbnail/I-283127/019b9e8e-7718-7732-8f72-960642f2b9ea/800.jpg?t=1767891763",
       parts: [
         {
-          id: "eu-alice", title: "앨리스, 사이버 함정을 피하다", org: "EU 집행위원회", dur: 175.16,
+          id: "eu-alice", title: "앨리스, 사이버 함정을 피하다", org: "EU 집행위원회", dur: 175.16, gain: 3.3,
           poster: "https://api.prd.commavservices.eu/thumbnail/I-283127/019b9e8e-7718-7732-8f72-960642f2b9ea/800.jpg?t=1767891763",
           media: { hls: "https://vod.prd.commavservices.eu/07/283127/019b9e8e-7718-7732-8f72-960642f2b9ea/master.m3u8" },
           credit: {
@@ -527,10 +589,161 @@ window.KAIEC_EXAM_VIDEOS = {
           ]
         },
         {
-          id: "lehmann-e2e", title: "열쇠를 나누지 않는 암호화", org: "Alexander Lehmann", dur: 297.3,
+          id: "lehmann-phishing", title: "링크 하나에 숨은 사기", org: "Alexander Lehmann", dur: 298.98, gain: 3.4,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/960px-seek%3D15-Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Online-Betrug - Gefahren erkennen und abwehren!",
+            by: "Alexander Lehmann, 2017", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.82, 5.58, "아주 오래전 아날로그 시대, 그러니까 몇백 년 전에는"],
+            [5.58, 10.58, "사기꾼이 먼저 여러분의 믿음을 얻은 다음 저금통을 털어 갔습니다."],
+            [10.58, 15.96, "어려움에 처한 손자인 척하거나 곤경에 빠진 지인의 친구인 척했죠."],
+            [19.36, 24.84, "하지만 손자가 없는 사람이 대부분이고 낯선 사람에게 돈을 주는 사람도 없었죠."],
+            [25.64, 30.50, "오늘날 디지털 시대에 사기꾼들도 진화했습니다."],
+            [30.50, 34.28, "돈을 훔치거나 등쳐 먹을 새로운 수법을 만들어 내죠."],
+            [34.28, 40.62, "요즘 사기꾼은 모르는 사람이 아니라 이미 믿고 있는 대상인 척합니다."],
+            [40.62, 43.12, "예를 들면 여러분이 쓰는 온라인 결제 서비스처럼요."],
+            [43.12, 49.40, "이를 위해 사기꾼은 공식 안내처럼 보이는 메시지를 보내 링크를 누르게 만듭니다."],
+            [49.40, 55.16, "누르면 아주 익숙해 보이지만 사실은 가짜인 웹사이트로 가게 됩니다."],
+            [55.16, 59.80, "거기에 아이디와 비밀번호를 넣으면 사기꾼에게 고스란히 넘겨주는 셈이죠."],
+            [59.80, 65.60, "사기꾼은 그 정보로 돈을 빼내거나 여러분 이름으로 비싼 물건을 주문하거나"],
+            [65.60, 70.88, "다른 수법으로 힘들게 모은 돈을 가로챌 겁니다."],
+            [70.88, 77.84, "누르기만 하면 악성 코드가 설치되는 링크를 보내는 수법도 있습니다."],
+            [77.84, 80.36, "그러면 사기꾼이 컴퓨터를 완전히 장악할 수 있습니다."],
+            [80.36, 85.72, "모든 데이터를 훔쳐 악용하거나 파일을 암호화해 버리고"],
+            [85.72, 88.18, "되찾고 싶으면 몸값을 내라고 협박하죠."],
+            [88.18, 96.38, "이런 수법이면 사기꾼은 전 세계 수천 명을 한꺼번에 속일 수 있습니다."],
+            [96.38, 100.78, "온라인 사기는 누구에게나 일어납니다. 여러분에게도요."],
+            [100.78, 103.32, "사기 링크는 어디에나 숨어 있을 수 있습니다."],
+            [103.32, 109.16, "이메일에도, 소셜 네트워크에도, 평소 믿는 웹사이트에도요."],
+            [109.16, 114.66, "그래서 링크가 사기인지 진짜인지 가려낼 줄 아는 것이 중요합니다."],
+            [114.74, 118.60, "링크 위에 마우스 포인터를 올리고 잠시 기다리기만 하면 됩니다."],
+            [118.60, 123.70, "그러면 작은 팝업 창이나 화면 아래쪽 상태 표시줄에"],
+            [123.70, 127.86, "링크가 실제로 연결되는 주소가 나타납니다."],
+            [127.86, 132.70, "만약 ‘megahost.ru’처럼 수상한 주소가 보이면"],
+            [132.70, 135.30, "절대 누르면 안 됩니다!"],
+            [135.30, 138.54, "오래 써 온 택배 회사가 원래 주소 대신"],
+            [138.54, 144.56, "‘megahost.ru’를 쓸 리는 없으니까요."],
+            [144.56, 149.74, "진짜 주소와 가짜 주소를 구별하기가 늘 쉽지는 않습니다."],
+            [149.74, 154.14, "하지만 대부분의 가짜 주소를 알아보는 두 가지 요령이 있습니다."],
+            [154.14, 158.66, "요령 하나, 주소에 숨은 ‘주인 블록’을 찾으세요."],
+            [158.66, 163.24, "사기꾼은 진짜 주소가 점점 길고 복잡해지는 점을 악용합니다."],
+            [163.24, 167.88, "우리가 주소를 왼쪽에서 오른쪽으로 읽는다는 점도요."],
+            [167.88, 170.78, "그래서 앞부분은 진짜 주소처럼 보입니다."],
+            [170.78, 174.04, "예를 들면 ‘www.paypal.com’처럼요."],
+            [174.04, 178.76, "하지만 그렇다고 진짜라는 뜻은 아닙니다."],
+            [178.76, 182.08, "뒤에 점과 단어가 더 이어지기 때문이죠."],
+            [182.08, 185.48, "예를 들어 점 ‘login’, 점 ‘authenticate’, 점 ‘secure’"],
+            [185.48, 190.62, "점 ‘ssl’, 점 ‘host547’, 점 ‘com’, 슬래시 ‘login’ 점 ‘html’"],
+            [190.62, 195.24, "이 경우 주인 블록은 ‘host547.com’입니다."],
+            [195.24, 201.92, "주인 블록을 찾으려면 ‘http://’나 ‘https://’부터"],
+            [201.92, 206.78, "왼쪽에서 오른쪽으로 다음 슬래시가 나올 때까지, 또는 주소 끝까지 읽으세요."],
+            [206.78, 210.90, "슬래시 바로 앞 블록이 주인 블록입니다."],
+            [210.90, 215.88, "주소에서 꼭 따져 봐야 할 곳은 주인 블록뿐입니다."],
+            [215.88, 222.62, "주인 블록 앞에는 단어와 점을 얼마든지 덧붙일 수 있기 때문이죠."],
+            [222.62, 226.86, "요령 둘, 위조된 주인 블록을 찾아내세요."],
+            [227.06, 231.92, "사기꾼은 자세히 보지 않으면 진짜 같은 주인 블록을 씁니다."],
+            [231.92, 234.62, "하지만 꼼꼼히 보면 글자 순서가 뒤섞였거나"],
+            [234.64, 238.26, "숫자와 글자를 교묘하게 섞은 것을 발견할 수 있죠."],
+            [238.26, 245.34, "예를 들어 ‘amazon.de’가 ‘m’ 대신 ‘rn’을 쓴 ‘arnazon.de’가 됩니다."],
+            [245.34, 249.94, "‘sparkasse-düsseldorf.de’가 ‘sparkasse-düsselclorf.de’가 되기도 하고"],
+            [249.94, 255.20, "‘paketservice.de’가 ‘paketsrevice.de’가 되기도 합니다."],
+            [255.20, 259.02, "그러니 주소를 한 글자씩 꼼꼼히 확인하세요."],
+            [259.02, 264.62, "이 밖에도 단축 주소 서비스를 이용하는 것 같은 다른 수법이 있습니다."],
+            [264.62, 270.90, "이런 수법을 더 알고 싶다면 다음 링크를 눌러 보세요."],
+            [270.90, 274.34, "좋아요, 들켰네요… 잘했어요!"],
+            [274.34, 277.12, "물론 이건 진짜 링크입니다."],
+            [277.12, 280.30, "행운을 빌어요. 안전하게 지내세요!"]
+          ]
+        }
+      ]
+    },
+    {
+      id: "ep-password", no: 5, sec: "basic", code: "기초 05",
+      title: "비밀 문장과 종단 간 암호화",
+      sub: "뚫리지 않는 비밀번호와 열쇠를 나누지 않는 암호",
+      lead: "데이터베이스가 통째로 유출되면 컴퓨터는 1초에 수십억 개의 비밀번호를 대입합니다. 외우기 쉬우면서 뚫리지 않는 ‘비밀 문장’을 만든 뒤, 공개 키 암호화가 대화를 지키는 원리까지 이어 봅니다.",
+      points: ["짐작하기 쉬운 조합의 위험과, 한 자리를 더할 때마다 기하급수적으로 늘어나는 무차별 대입 시간", "길고 흔하지 않은 비밀 문장(패스프레이즈)으로 안전과 기억을 함께", "공개 키 암호화와 종단 간 암호화, 믿을 만한 소프트웨어를 고르는 두 기준(종단 간 · 오픈 소스)"],
+      qs: ["직원들이 생성형 AI에 업무 자료를 붙여 넣고 있다면, 계정 보안과 정보 유출 위험을 어떻게 함께 관리하겠습니까?", "종단 간 암호화와 수사 기관의 접근 요구가 부딪칠 때, 어떤 가치를 어떤 기준으로 저울질해야 할까요?"],
+      book: "제4장 4.4 사례 연구: 정보 유출과 동의 없는 합성 · 제5장 5.5 개인정보 보호법과 AI · 제8장 8.5 인간 감독의 설계, 운영 통제와 사고 대응", chs: [4, 5, 8],
+      dur: 564.35,
+      poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/960px-seek%3D170-Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.jpg",
+      parts: [
+        {
+          id: "lehmann-password", title: "외우기 쉽고 뚫리지 않는 비밀 문장", org: "Alexander Lehmann", dur: 267.05, gain: -5.7,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/960px-seek%3D15-Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Unknackbar aber einfach zu merken! - Passwörter Einfach Erklärt (1/5)",
+            by: "Alexander Lehmann, 2015", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [0.20, 3.00, "비밀번호, 쉽게 알아보기"],
+            [3.00, 7.34, "8자리보다 길어야 하고 대문자도 들어가야 하고"],
+            [7.34, 10.74, "숫자와 특수 문자도 잊으면 안 되죠."],
+            [10.84, 14.78, "그리고 절대 잊어버리지 마세요. 하지만 어디에 적어 두면 안 됩니다!"],
+            [14.78, 17.24, "물론 한 달에 한 번은 바꿔야 하고요."],
+            [17.24, 20.46, "기기와 계정마다 다르게 만들어야 합니다."],
+            [20.46, 25.02, "휴! 비밀번호는 왜 이렇게 늘 복잡할까요?"],
+            [25.02, 29.52, "안전하면서도 외우기 쉬운 비밀번호는 어떻게 만들 수 있을까요?"],
+            [29.52, 34.80, "그러려면 비밀번호가 어떻게 작동하고 어떻게 뚫리는지 아는 것이 좋습니다."],
+            [34.80, 38.82, "비밀번호는 번호 자물쇠의 번호와 비슷합니다."],
+            [38.82, 46.44, "자물쇠 번호처럼 쉽게 짐작할 수 있는 조합은 쓰지 않는 것이 중요하죠."],
+            [46.44, 49.76, "생일이나 친구, 자녀, 반려동물의 이름 같은 것 말입니다."],
+            [49.76, 53.28, "이런 정보는 인터넷에서 쉽게 찾아낼 수 있으니까요."],
+            [53.28, 55.66, "번호 자물쇠와 크게 다른 점은"],
+            [55.66, 59.68, "조합을 하나하나 시도하는 고된 일을 컴퓨터가 대신한다는 것입니다."],
+            [59.68, 63.26, "기계가 온라인에서 비밀번호를 맞히려 들면"],
+            [63.26, 66.40, "몇 번 시도한 뒤에는 차단되길 바라야겠죠."],
+            [66.40, 73.50, "하지만 그렇지 않은 경우, 예를 들어 데이터베이스가 통째로 도난당했다면"],
+            [73.50, 77.24, "컴퓨터가 자물쇠에 직접 손댈 수 있게 됩니다."],
+            [77.24, 82.40, "그러면 낡은 노트북 한 대로도 1초에 수십억 개의 비밀번호를 시도할 수 있죠."],
+            [82.40, 86.24, "물론 공격자는 가장 많이 쓰는 비밀번호 목록부터 시도합니다."],
+            [86.24, 89.62, "그다음에는 온갖 언어의 단어를 하나도 빠짐없이,"],
+            [89.62, 96.88, "속어와 변형까지 사전과 백과사전을 동원해 시도합니다. 몇 초면 끝나죠."],
+            [96.88, 104.56, "그래서 글자, 숫자, 특수 문자를 ‘흔하지 않게 조합’해야 합니다."],
+            [104.56, 110.34, "그러면 컴퓨터는 모든 조합을 ‘일일이’ 다 시도해 봐야 합니다."],
+            [110.34, 115.70, "이것을 ‘무차별 대입 공격’이라고 합니다."],
+            [115.70, 123.98, "비밀번호가 10자리라면 몇 시간이면 조합이 뚫립니다."],
+            [123.98, 129.60, "그런데 글자 하나만 더 넣어도 20일이나 걸리죠."],
+            [129.60, 133.32, "한 자리를 더할 때마다 걸리는 시간이 기하급수적으로 늘어나기 때문입니다."],
+            [133.32, 141.46, "다섯 자리를 더하면 컴퓨터 10대로도 비밀번호를 뚫는 데 2,400년 넘게 걸립니다."],
+            [141.46, 149.58, "‘자물쇠’를 더 키워서 ‘번호 바퀴’를 크게 만들면, 즉 대문자와 숫자를 더하면"],
+            [149.58, 157.30, "컴퓨터 10대가 15자리 비밀번호를 뚫는 데 약 11억 년이 걸립니다."],
+            [157.30, 166.60, "안타깝게도 ‘nzb6Xrtc57l1mnk’ 같은 비밀번호는 외우기가 너무 어렵죠."],
+            [166.60, 173.44, "그래서 비밀번호 대신 ‘비밀 문장(패스프레이즈)’을 떠올리면 좋습니다."],
+            [173.44, 179.54, "문장은 외우기 쉽고 보통 단어보다 길기 때문이죠."],
+            [179.54, 185.72, "예를 들면 ‘30dividedby10=Three’"],
+            [185.72, 193.86, "또는 ‘A Passphrase features more security ＞ a Password’"],
+            [193.86, 200.54, "아니면 간단하게 ‘This is my Passphrase for E-Mails’"],
+            [200.54, 207.60, "이렇게 하면 15자리가 넘고 소문자와 대문자에 대개 특수 문자까지 들어갑니다."],
+            [207.60, 213.48, "이런 비밀 문장을 무차별 대입으로 뚫으려면 적어도 수천 년이 걸립니다."],
+            [213.48, 217.30, "그런데도 외우기는 쉽죠."],
+            [218.42, 223.82, "자, 이제 나만의 문장을 즐겁게 만들어 보세요."],
+            [223.82, 228.62, "이 영상에 나온 예시는 쓰면 안 되니까요."],
+            [228.62, 232.62, "자… 이제 됐어요. 충분해요."],
+            [232.62, 235.18, "봐 주셔서 고맙습니다."],
+            [235.18, 245.00, "비밀 문장에 관한 더 많은 정보와 참고 자료는 원본 영상 설명에 있습니다."],
+            [247.00, 249.36, "이제 그만 말할게요."]
+          ]
+        },
+        {
+          id: "lehmann-e2e", title: "열쇠를 나누지 않는 암호화", org: "Alexander Lehmann", dur: 297.3, gain: -7.7,
           poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm/960px-seek%3D258-Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2b/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm.1080p.vp9.webm" },
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/2/2b/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm" },
             { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2b/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm.480p.vp9.webm" },
             { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2b/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm/Sicher_Kommunizieren_Einfach_Erkl%C3%A4rt_-_5-5.webm.360p.mpeg4.mov" }
           ] },
@@ -623,163 +836,716 @@ window.KAIEC_EXAM_VIDEOS = {
       ]
     },
     {
-      id: "ep-phishing", no: 5,
-      title: "링크 하나의 함정",
-      sub: "피싱과 온라인 사기 가려내기",
-      lead: "사기꾼은 이제 손자가 아니라 우리가 믿는 서비스인 척합니다. 생성형 AI로 피싱 문장과 목소리가 더 정교해진 지금, 링크 주소의 ‘주인 블록’을 읽어 가짜를 가려내는 요령을 익힙니다.",
-      points: ["믿는 서비스를 사칭한 메시지와 가짜 웹사이트, 악성 코드 링크의 수법", "요령 하나: 주소에서 슬래시 바로 앞의 ‘주인 블록’ 찾기", "요령 둘: 글자 순서를 바꾸거나 비슷한 글자를 섞은 위조 주소 알아보기"],
-      book: "제7장 7.2 딥페이크와 민주주의(합성 음성 사기) · 7.6 챗봇 · 생성형 AI", chs: [7],
-      dur: 298.98,
-      poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/960px-seek%3D15-Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.jpg",
+      id: "ep-safety", no: 6, sec: "deep", code: "심화 01",
+      title: "고위험 AI와 안전 설계",
+      sub: "데이터의 빈자리부터 사람이 감독할 수 있는 한계까지",
+      lead: "의료 AI가 제 몫을 하려면 다양한 데이터와 의료진의 역량이 함께 필요합니다. ‘표준 남성’ 중심의 임상 연구와 위키백과의 인물 문서 공백으로 데이터가 비어 있는 자리를 확인한 뒤, 자율주행의 다섯 단계, 스위스 치즈 모델과 이중화, 뇌의 오류 수정 장치를 따라가며 위험을 설계로 줄이는 방법을 정리합니다.",
+      points: ["의료 AI의 두 조건: 되도록 많고 다양한 데이터로 학습한 시스템, 결과를 비판적으로 다룰 줄 아는 의료진", "데이터의 빈자리: 남성을 기준으로 한 임상 연구, 여성 인물 문서가 20%도 안 되는 지식 기반, 그 데이터로 배우는 AI", "위험을 설계로 줄이기: 자율주행 단계별 사람의 역할, 여러 겹의 방어(스위스 치즈 모델)와 이중화, 사람의 오류 수정에도 있는 한계"],
+      qs: ["의료 AI의 학습 데이터에 여성 · 고령자 · 소수 집단이 적게 들어 있다면, 도입 기관은 배포 전에 무엇을 확인하고 어떻게 기록해야 할까요?", "자율주행 3단계는 요청이 오면 사람이 운전을 넘겨받도록 설계합니다. 영상 속 뇌의 오류 수정 조건과 견주면 이 설계에는 어떤 위험이 숨어 있을까요?"],
+      book: "제3장 3.3 인간의 감독과 통제 · 제7장 7.7 사례 연구 V: 안전과 책임 · 제8장 8.2 AI 위험 관리 프레임워크 · 8.4 데이터 거버넌스와 문서화 · 8.5 인간 감독의 설계, 운영 통제와 사고 대응", chs: [3, 7, 8],
+      dur: 472.15,
+      poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm/960px-seek%3D85-KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm.jpg",
       parts: [
         {
-          id: "lehmann-phishing", title: "링크 하나에 숨은 사기", org: "Alexander Lehmann", dur: 298.98,
-          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/960px-seek%3D15-Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.jpg",
+          id: "ki-medizin", title: "의료 AI, 잠재력과 두 가지 조건", org: "KI-Campus", dur: 108.03, gain: -0.9,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm/960px-seek%3D60-KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.1080p.vp9.webm" },
-            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.480p.vp9.webm" },
-            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/2a/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm/Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm.360p.mpeg4.mov" }
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/e/e8/KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e8/KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm/KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm.480p.vp9.webm" }
           ] },
           credit: {
-            title: "Online-Betrug - Gefahren erkennen und abwehren!",
-            by: "Alexander Lehmann, 2017", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/deed.ko",
-            url: "https://commons.wikimedia.org/wiki/File:Online-Betrug_-_Gefahren_erkennen_und_abwehren%21.webm", host: "위키미디어 커먼즈", sub: ""
+            title: "KI in der Medizin – Einsatzmöglichkeiten und Potenziale",
+            by: "KI-Campus, 2021", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:KI_in_der_Medizin_%E2%80%93_Einsatzm%C3%B6glichkeiten_und_Potenziale.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
           },
           cues: [
-            [1.82, 5.58, "아주 오래전 아날로그 시대, 그러니까 몇백 년 전에는"],
-            [5.58, 10.58, "사기꾼이 먼저 여러분의 믿음을 얻은 다음 저금통을 털어 갔습니다."],
-            [10.58, 15.96, "어려움에 처한 손자인 척하거나 곤경에 빠진 지인의 친구인 척했죠."],
-            [19.36, 24.84, "하지만 손자가 없는 사람이 대부분이고 낯선 사람에게 돈을 주는 사람도 없었죠."],
-            [25.64, 30.50, "오늘날 디지털 시대에 사기꾼들도 진화했습니다."],
-            [30.50, 34.28, "돈을 훔치거나 등쳐 먹을 새로운 수법을 만들어 내죠."],
-            [34.28, 40.62, "요즘 사기꾼은 모르는 사람이 아니라 이미 믿고 있는 대상인 척합니다."],
-            [40.62, 43.12, "예를 들면 여러분이 쓰는 온라인 결제 서비스처럼요."],
-            [43.12, 49.40, "이를 위해 사기꾼은 공식 안내처럼 보이는 메시지를 보내 링크를 누르게 만듭니다."],
-            [49.40, 55.16, "누르면 아주 익숙해 보이지만 사실은 가짜인 웹사이트로 가게 됩니다."],
-            [55.16, 59.80, "거기에 아이디와 비밀번호를 넣으면 사기꾼에게 고스란히 넘겨주는 셈이죠."],
-            [59.80, 65.60, "사기꾼은 그 정보로 돈을 빼내거나 여러분 이름으로 비싼 물건을 주문하거나"],
-            [65.60, 70.88, "다른 수법으로 힘들게 모은 돈을 가로챌 겁니다."],
-            [70.88, 77.84, "누르기만 하면 악성 코드가 설치되는 링크를 보내는 수법도 있습니다."],
-            [77.84, 80.36, "그러면 사기꾼이 컴퓨터를 완전히 장악할 수 있습니다."],
-            [80.36, 85.72, "모든 데이터를 훔쳐 악용하거나 파일을 암호화해 버리고"],
-            [85.72, 88.18, "되찾고 싶으면 몸값을 내라고 협박하죠."],
-            [88.18, 96.38, "이런 수법이면 사기꾼은 전 세계 수천 명을 한꺼번에 속일 수 있습니다."],
-            [96.38, 100.78, "온라인 사기는 누구에게나 일어납니다. 여러분에게도요."],
-            [100.78, 103.32, "사기 링크는 어디에나 숨어 있을 수 있습니다."],
-            [103.32, 109.16, "이메일에도, 소셜 네트워크에도, 평소 믿는 웹사이트에도요."],
-            [109.16, 114.66, "그래서 링크가 사기인지 진짜인지 가려낼 줄 아는 것이 중요합니다."],
-            [114.74, 118.60, "링크 위에 마우스 포인터를 올리고 잠시 기다리기만 하면 됩니다."],
-            [118.60, 123.70, "그러면 작은 팝업 창이나 화면 아래쪽 상태 표시줄에"],
-            [123.70, 127.86, "링크가 실제로 연결되는 주소가 나타납니다."],
-            [127.86, 132.70, "만약 ‘megahost.ru’처럼 수상한 주소가 보이면"],
-            [132.70, 135.30, "절대 누르면 안 됩니다!"],
-            [135.30, 138.54, "오래 써 온 택배 회사가 원래 주소 대신"],
-            [138.54, 144.56, "‘megahost.ru’를 쓸 리는 없으니까요."],
-            [144.56, 149.74, "진짜 주소와 가짜 주소를 구별하기가 늘 쉽지는 않습니다."],
-            [149.74, 154.14, "하지만 대부분의 가짜 주소를 알아보는 두 가지 요령이 있습니다."],
-            [154.14, 158.66, "요령 하나, 주소에 숨은 ‘주인 블록’을 찾으세요."],
-            [158.66, 163.24, "사기꾼은 진짜 주소가 점점 길고 복잡해지는 점을 악용합니다."],
-            [163.24, 167.88, "우리가 주소를 왼쪽에서 오른쪽으로 읽는다는 점도요."],
-            [167.88, 170.78, "그래서 앞부분은 진짜 주소처럼 보입니다."],
-            [170.78, 174.04, "예를 들면 ‘www.paypal.com’처럼요."],
-            [174.04, 178.76, "하지만 그렇다고 진짜라는 뜻은 아닙니다."],
-            [178.76, 182.08, "뒤에 점과 단어가 더 이어지기 때문이죠."],
-            [182.08, 185.48, "예를 들어 점 ‘login’, 점 ‘authenticate’, 점 ‘secure’"],
-            [185.48, 190.62, "점 ‘ssl’, 점 ‘host547’, 점 ‘com’, 슬래시 ‘login’ 점 ‘html’"],
-            [190.62, 195.24, "이 경우 주인 블록은 ‘host547.com’입니다."],
-            [195.24, 201.92, "주인 블록을 찾으려면 ‘http://’나 ‘https://’부터"],
-            [201.92, 206.78, "왼쪽에서 오른쪽으로 다음 슬래시가 나올 때까지, 또는 주소 끝까지 읽으세요."],
-            [206.78, 210.90, "슬래시 바로 앞 블록이 주인 블록입니다."],
-            [210.90, 215.88, "주소에서 꼭 따져 봐야 할 곳은 주인 블록뿐입니다."],
-            [215.88, 222.62, "주인 블록 앞에는 단어와 점을 얼마든지 덧붙일 수 있기 때문이죠."],
-            [222.62, 226.86, "요령 둘, 위조된 주인 블록을 찾아내세요."],
-            [227.06, 231.92, "사기꾼은 자세히 보지 않으면 진짜 같은 주인 블록을 씁니다."],
-            [231.92, 234.62, "하지만 꼼꼼히 보면 글자 순서가 뒤섞였거나"],
-            [234.64, 238.26, "숫자와 글자를 교묘하게 섞은 것을 발견할 수 있죠."],
-            [238.26, 245.34, "예를 들어 ‘amazon.de’가 ‘m’ 대신 ‘rn’을 쓴 ‘arnazon.de’가 됩니다."],
-            [245.34, 249.94, "‘sparkasse-düsseldorf.de’가 ‘sparkasse-düsselclorf.de’가 되기도 하고"],
-            [249.94, 255.20, "‘paketservice.de’가 ‘paketsrevice.de’가 되기도 합니다."],
-            [255.20, 259.02, "그러니 주소를 한 글자씩 꼼꼼히 확인하세요."],
-            [259.02, 264.62, "이 밖에도 단축 주소 서비스를 이용하는 것 같은 다른 수법이 있습니다."],
-            [264.62, 270.90, "이런 수법을 더 알고 싶다면 다음 링크를 눌러 보세요."],
-            [270.90, 274.34, "좋아요, 들켰네요… 잘했어요!"],
-            [274.34, 277.12, "물론 이건 진짜 링크입니다."],
-            [277.12, 280.30, "행운을 빌어요. 안전하게 지내세요!"]
+            [7.78, 10.70, "인공지능이 의료를 바꾸고 있습니다."],
+            [10.92, 14.40, "그렇다면 이 잠재력을 어떻게 가장 잘 살릴 수 있을까요?"],
+            [15.16, 18.30, "예를 들어 건강이 걱정되는 환자는"],
+            [18.50, 22.76, "증상 확인 앱으로 빠르게 1차 진단을 받아 볼 수 있습니다."],
+            [23.08, 28.62, "앱은 병원에 가야 할지, 간다면 어느 전문의를 찾아야 할지 정하는 것도 돕습니다."],
+            [28.84, 33.48, "앱의 알고리즘은 의사가 문진할 때 귀중한 단서를 줍니다."],
+            [33.58, 35.64, "희귀 질환에서도 마찬가지입니다."],
+            [35.76, 39.00, "알맞은 치료법을 고를 때도 도움이 될 수 있지요."],
+            [39.30, 44.40, "인공지능은 MRI 검사에서도 쓸모가 있습니다."],
+            [44.70, 48.34, "MRI 영상은 수십만 개의 영상 데이터로 이루어지는데"],
+            [48.52, 54.50, "신경망은 그 안에서 패턴을 찾아 특정 질환일 확률을 계산합니다."],
+            [54.82, 60.58, "이를 위해 신경망은 미리 수많은 MRI 영상과 그 진단 결과로 학습했습니다."],
+            [60.86, 67.36, "이렇게 의사는 AI 보조 시스템에서 치료법을 고를 중요한 단서를 얻습니다."],
+            [67.58, 72.04, "하지만 이를 비판적으로 다루려면 특별한 역량이 필요합니다."],
+            [72.40, 76.04, "정리하면, 특히 중요한 것은 바로 이 두 가지입니다."],
+            [76.52, 81.06, "첫째, AI 시스템은 되도록 많고 다양한 데이터로 학습해야 합니다."],
+            [81.20, 83.08, "그래야 믿을 만한 결과를 냅니다."],
+            [83.44, 87.38, "둘째, 의료인에게는 새로운 역량이 더 필요합니다."],
+            [87.58, 92.44, "AI의 도움을 받아 환자에게 더 나은 결정을 내리기 위해서요."],
+            [92.70, 98.84, "그래야 의료에서 인공지능의 잠재력을 비판적이고 능숙하게 살릴 수 있습니다."],
+            [99.22, 101.48, "KI-Campus에서 만나요."]
+          ]
+        },
+        {
+          id: "gender-gap", title: "‘표준 남성’ 데이터의 빈자리", org: "ZDF Terra X", dur: 65.02, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm/960px-seek%3D20-Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/13/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/13/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/13/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm/Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Warum Medikamente bei Frauen und Männern anders wirken",
+            by: "ZDF/TerraXpress/Autorenkombinat/Lara Franke/Tobias Lenz/Philipp Keller/Jochen Schmidt, 2022", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Warum_Medikamente_bei_Frauen_und_M%C3%A4nnern_anders_wirken.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.00, 4.60, "의학 연구는 ‘표준 남성’을 기준으로 삼아 왔습니다."],
+            [5.42, 10.58, "키 177cm, 몸무게 75kg, 나이 40세."],
+            [10.96, 15.26, "연구에서 여성의 몸은 오랫동안 뒷전이었습니다."],
+            [15.82, 18.20, "그 이유는 여성의 생리 주기,"],
+            [18.36, 21.06, "호르몬 변화, 그리고 임신 가능성입니다."],
+            [21.26, 24.00, "연구를 더 복잡하게 만들 수 있는 변수들이지요."],
+            [24.32, 28.42, "그런데도 약은 대개 남녀에게 같은 용량으로 처방됩니다."],
+            [28.62, 32.36, "키와 몸무게가 뚜렷이 다를 뿐 아니라"],
+            [32.48, 36.06, "성별에 따라 생물학적 특성 전반이 근본적으로 다른데도요."],
+            [36.52, 39.94, "그리고 이 차이는 약효에 영향을 줍니다."],
+            [40.10, 42.42, "예를 들어 이 수면제를 볼까요."],
+            [42.60, 46.56, "복용한 다음 날 여성에게서 사고가 잇따르자"],
+            [46.76, 49.56, "여성의 몸을 대상으로 다시 시험했습니다."],
+            [49.70, 53.46, "그 결과 여성의 권장 용량은 절반으로 줄었습니다."],
+            [53.68, 56.72, "코로나19 백신에서도"],
+            [56.90, 60.12, "여성은 절반 용량으로 충분할 수 있다는 추정이 있습니다."],
+            [60.32, 62.87, "여성의 면역 체계가 더 민감하게 반응하기 때문입니다."]
+          ]
+        },
+        {
+          id: "wm-diversity", title: "지식의 빈자리: 누가 기록되는가", org: "위키미디어 재단", dur: 66.3, gain: -2.2,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e4/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm/960px-seek%3D50-Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e4/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e4/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e4/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm/Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Does the content on Wikipedia reflect the world’s diversity – A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2023", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Does_the_content_on_Wikipedia_reflect_the_world%E2%80%99s_diversity_%E2%80%93_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          cues: [
+            [0.27, 2.20, "‘위키 1분’ 동안에는 많은 일이 일어납니다."],
+            [2.20, 5.80, "위키미디어 프로젝트에서 60초 동안 벌어지는 일들처럼요."],
+            [5.80, 7.57, "또는 이 질문에 답하는 시간처럼요."],
+            [7.57, 10.83, "위키백과의 내용은 세계의 다양성을 담고 있을까요?"],
+            [11.67, 14.47, "위키백과는 누구나 편집할 수 있는 자유 백과사전입니다."],
+            [14.47, 18.10, "매달 30만 명 가까운 자원봉사자가 실제로 편집하지요."],
+            [18.10, 22.57, "하지만 사람이 만드는 만큼 역사적 편향에 취약할 수 있고"],
+            [22.57, 25.13, "누가 참여하느냐에 따라 내용이 달라집니다."],
+            [25.13, 30.17, "그래서 세계 인구의 상당 부분을 대표하는 지식이 빠져 있습니다."],
+            [30.17, 32.30, "예를 들어 2022년까지"],
+            [32.30, 36.57, "영어 위키백과의 인물 문서 가운데 여성은 20%도 되지 않았습니다."],
+            [36.57, 40.53, "성소수자 공동체에 관한 문서는 더 적었고"],
+            [40.53, 43.17, "장애인, 그리고 비서구권 사람들도 마찬가지였습니다."],
+            [43.17, 44.37, "하지만 달라지고 있습니다."],
+            [44.37, 48.60, "세계 곳곳의 위키미디언들이 ‘지식 형평성’을 이루려고 힘쓰고 있습니다."],
+            [48.60, 53.97, "권력과 특권의 구조에서 밀려난 지식과 공동체에 집중하겠다는 약속이지요."],
+            [53.97, 57.50, "함께라면 이 격차를 메우고 지식을 자유롭게 할 수 있습니다."],
+            [57.50, 61.47, "1분 만에 알아본, 위키백과가 아직 세계의 다양성을 다 담지 못한 이유였습니다!"]
+          ]
+        },
+        {
+          id: "auto-drive", title: "자율주행의 다섯 단계와 사람의 역할", org: "3sat nano", dur: 124.02, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Wie_funktioniert_autonomes_Fahren%3F.webm/960px-seek%3D90-Wie_funktioniert_autonomes_Fahren%3F.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f5/Wie_funktioniert_autonomes_Fahren%3F.webm/Wie_funktioniert_autonomes_Fahren%3F.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f5/Wie_funktioniert_autonomes_Fahren%3F.webm/Wie_funktioniert_autonomes_Fahren%3F.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/f5/Wie_funktioniert_autonomes_Fahren%3F.webm/Wie_funktioniert_autonomes_Fahren%3F.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Wie funktioniert autonomes Fahren?",
+            by: "3sat/nano/Rasmus Raecke/Silke Cronauer/Autorenkombinat, 2020", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Wie_funktioniert_autonomes_Fahren%3F.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.25, 4.77, "자율주행이라고 하면 보통"],
+            [4.79, 7.03, "완전히 스스로 달리는 자동차를 떠올립니다."],
+            [8.34, 12.14, "이런 차는 탑승자를 목적지에 내려 준 뒤"],
+            [12.16, 14.70, "혼자서 주차 자리를 찾아갈 수 있을 겁니다."],
+            [14.86, 19.80, "그리고 다시 사람을 태우러 갈 때까지 그곳에서 호출을 기다리지요."],
+            [20.55, 23.25, "하지만 이런 자율주행차가 판매되기까지는"],
+            [23.27, 25.29, "아직 개발이 더 필요합니다."],
+            [25.33, 27.91, "발전 단계는 다섯으로 나눕니다."],
+            [28.59, 31.50, "1단계, 운전자 보조."],
+            [31.88, 34.40, "오늘날 도로를 달리는 차는 거의 모두"],
+            [34.46, 36.79, "적어도 1단계에 해당합니다."],
+            [36.85, 40.73, "ABS나 ESP 같은 운전자 보조 시스템이 있어서"],
+            [40.77, 43.48, "위급한 순간에"],
+            [43.52, 46.25, "운전자가 차를 제어하도록 도와 안전을 지킵니다."],
+            [48.13, 51.13, "2단계, 부분 자동화."],
+            [51.20, 55.51, "보조 시스템이 조향과 제동을 점점 더 많이 맡습니다."],
+            [55.80, 58.58, "이 단계에서 운전자는 모든 것을 늘 지켜봐야 합니다."],
+            [58.72, 61.53, "차는 스스로 방향을 틀고 멈출 수 있습니다."],
+            [63.04, 66.74, "3단계, 조건부 자동화."],
+            [67.03, 70.82, "이제 차가 운전을 맡습니다. 스스로 달릴 수 있지요."],
+            [70.96, 74.32, "운전자는 시스템을 계속 지켜보지 않아도 되지만"],
+            [74.35, 78.97, "요청이 오면 언제든 운전을 넘겨받을 수 있어야 합니다."],
+            [81.33, 84.83, "4단계, 고도 자동화."],
+            [85.76, 88.90, "여기서부터 편안한 운전이 가능해집니다."],
+            [89.24, 91.41, "고도 자동화 차량에서는"],
+            [91.44, 94.96, "운전자가 주행 중에 다른 일을 해도 됩니다."],
+            [95.01, 97.77, "특히 고속도로에서 잘 작동하지요."],
+            [97.80, 99.86, "다시 운전대를 잡아야 할 때가 오면"],
+            [99.89, 102.44, "운전자는 미리 알림을 받습니다."],
+            [103.36, 106.32, "5단계, 완전 자동화."],
+            [107.28, 109.77, "이제 차에는 운전자가 필요 없습니다."],
+            [110.75, 113.51, "도심에서도 스스로 달려서"],
+            [113.53, 116.99, "예를 들어 택시처럼 혼자 운행할 수 있습니다."],
+            [117.29, 120.80, "운전대와 페달도 이제 필요 없습니다."]
+          ]
+        },
+        {
+          id: "swiss-cheese", title: "스위스 치즈 모델: 여러 겹의 방어", org: "3sat nano", dur: 36.3, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6d/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm/960px-seek%3D22-Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6d/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6d/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6d/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm/Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Sicherheit durch das Schweizer-Käse-Modell",
+            by: "ZDF/3sat/nano/docuvista/A. Leuschner/M. Wurtscheid/S. Roth/M. Nordbruch/M. Mohr, 2022", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Sicherheit_durch_das_Schweizer-K%C3%A4se-Modell.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.02, 5.64, "스위스 치즈 모델에서 치즈 한 장은 안전장치 한 겹이고"],
+            [5.80, 7.42, "구멍은 시스템의 빈틈입니다."],
+            [7.72, 10.02, "여러 장의 구멍이 겹쳐 반대편이 보이면"],
+            [10.20, 11.70, "시스템이 실패할 수 있습니다."],
+            [11.76, 15.20, "그런데 빈틈이나 오류가 어디에 생길지는"],
+            [15.42, 19.60, "치즈의 구멍 자리처럼 미리 알 수 없습니다."],
+            [19.98, 22.86, "그래서 여러 장을 겹쳐 둡니다."],
+            [23.02, 25.96, "모든 구멍이 확실히 막히도록요."],
+            [26.16, 29.18, "그러면 시스템이 실패할 확률이 낮아집니다."],
+            [29.36, 33.78, "이 모델은 위험 관리와 위험 분석에 쓰입니다."]
+          ]
+        },
+        {
+          id: "redundancy", title: "이중화: 하나가 멈춰도 버티는 설계", org: "3sat nano", dur: 32.26, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/52/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm/960px-seek%3D10-Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/52/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/52/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/52/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm/Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Flugzeugsicherheit – doppelt hält besser",
+            by: "ZDF/3sat/nano/docuvista/A. Leuschner/M. Wurtscheid/H. Müller/S. Reeh/Maximilian Mohr, 2023", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Flugzeugsicherheit_%E2%80%93_doppelt_h%C3%A4lt_besser.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.16, 4.86, "비행 안전은 항공기를 설계할 때부터 시작됩니다."],
+            [5.10, 8.64, "생길 수 있는 결함 하나하나를 만들 때부터 미리 따져 보지요."],
+            [8.90, 13.84, "안전에 관련된 시스템과 부품은 모두 적어도 두 개씩 갖춥니다."],
+            [14.44, 16.24, "예를 들어 엔진 하나가 멈춰도"],
+            [16.40, 19.30, "다른 엔진 하나로 이륙과 착륙을 할 수 있습니다."],
+            [19.60, 24.34, "자동조종장치도 두 개, 항법 시스템은 세 개나 있습니다."],
+            [24.62, 29.80, "장거리 비행에서는 승무원 세 명이 모두 비행기를 조종할 수 있어야 합니다."]
+          ]
+        },
+        {
+          id: "brain-error", title: "뇌의 오류 수정 장치와 그 한계", org: "3sat nano", dur: 40.22, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Fehlentscheidungen_im_Gehirn.webm/960px-seek%3D4-Fehlentscheidungen_im_Gehirn.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7b/Fehlentscheidungen_im_Gehirn.webm/Fehlentscheidungen_im_Gehirn.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7b/Fehlentscheidungen_im_Gehirn.webm/Fehlentscheidungen_im_Gehirn.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7b/Fehlentscheidungen_im_Gehirn.webm/Fehlentscheidungen_im_Gehirn.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Fehlentscheidungen im Gehirn",
+            by: "ZDF/3sat/nano/docuvista/A. Leuschner/M. Wurtscheid/H. Müller/S. Reeh/Maximilian Mohr, 2022", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Fehlentscheidungen_im_Gehirn.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.66, 5.18, "모든 행동은 실행되기 전에 뇌에서"],
+            [5.40, 8.24, "감각 피질과 운동 피질이 미리 계획합니다."],
+            [8.46, 13.44, "시상하핵에는 오류를 바로잡는 기능도 있습니다."],
+            [13.86, 16.90, "예를 들어 볼까요."],
+            [17.26, 20.70, "실험 참가자가 장치의 왼쪽 버튼을 눌러야 하는데"],
+            [20.90, 23.14, "손은 오른쪽 버튼으로 가고 있습니다."],
+            [23.54, 26.90, "이때 시상하핵은 아직 바로잡을 수 있습니다."],
+            [27.02, 30.38, "실수가 일어나기 100밀리초 전까지요."],
+            [30.96, 34.36, "하지만 이 장치가 제대로 작동하려면"],
+            [34.54, 38.30, "뇌가 다른 감각 자극에 과부하되지 않아야 합니다."]
           ]
         }
       ]
     },
     {
-      id: "ep-password", no: 6,
-      title: "뚫리지 않는 비밀 문장",
-      sub: "비밀번호가 뚫리는 원리와 지키는 법",
-      lead: "데이터베이스가 통째로 유출되면 컴퓨터는 1초에 수십억 개의 비밀번호를 대입합니다. 무차별 대입 공격의 원리와, 외우기 쉬우면서 뚫리지 않는 ‘비밀 문장’을 만드는 법을 알아봅니다.",
-      points: ["생일 · 이름처럼 짐작하기 쉬운 조합과 자주 쓰는 비밀번호 목록의 위험", "한 자리를 더할 때마다 기하급수적으로 늘어나는 무차별 대입 시간", "길고 흔하지 않은 비밀 문장(패스프레이즈)으로 안전과 기억을 함께"],
-      book: "제4장 4.4 사례: 정보 유출과 합성 · 제8장 8.5 인간 감독 · 운영 통제 · 사고 대응", chs: [4, 8],
-      dur: 267.05,
-      poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/960px-seek%3D170-Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.jpg",
+      id: "ep-trust", no: 7, sec: "deep", code: "심화 02",
+      title: "AI 시대의 정보와 신뢰",
+      sub: "표현의 자유, 설득의 과학, 집단지성의 규칙",
+      lead: "민주주의는 두려움 없이 말할 수 있을 때 작동합니다. 광고가 뇌의 보상 체계를 어떻게 건드리는지 본 뒤, AI가 빌려 쓰는 지식의 원천인 위키백과가 광고 없이 출처 · 중립성 · 공개된 편집 기록으로 신뢰를 지키는 방식을 따라갑니다.",
+      points: ["표현의 자유와 그 한계: 의견을 이유로 한 모욕 · 위협 · 공격이 민주주의를 흔드는 이유", "설득의 신경과학: 보상 체계(측좌핵)와 가격의 고통(섬엽), 추천과 광고가 노리는 지점", "AI가 빌려 쓰는 지식: 사람이 출처를 확인하고 토론해 만든 지식, 출처 표시, 실시간 감시 · 봇 · 편집 기록으로 허위 정보에 대응하는 체계"],
+      qs: ["생성형 AI가 위키백과 같은 지식을 배워 답한다면, 출처를 밝히는 일은 이용자 · 원작자 · 서비스 각각에게 왜 중요할까요?", "추천 알고리즘이 이용자의 보상 체계를 겨냥해 설계되었다면, 어디서부터 ‘조작’이라고 봐야 할까요? EU AI법의 금지 관행과 견주어 생각해 보세요."],
+      book: "제3장 3.2 자동화된 결정과 인간의 자율성 · 제4장 4.2 우리는 왜 AI를 쉽게 믿는가 · 4.3 사례 연구: 허위 정보와 허위 출처 · 제6장 6.1 위험의 4단계와 금지 관행 · 제7장 7.2 딥페이크와 민주주의", chs: [3, 4, 6, 7],
+      dur: 426.81,
+      poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/960px-seek%3D50-Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.jpg",
       parts: [
         {
-          id: "lehmann-password", title: "외우기 쉽고 뚫리지 않는 비밀 문장", org: "Alexander Lehmann", dur: 267.05,
-          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/960px-seek%3D15-Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.jpg",
+          id: "free-speech", title: "표현의 자유와 민주주의", org: "ZDF logo!", dur: 81.34, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Meinungsfreiheit_und_Demokratie.webm/960px-seek%3D24-Meinungsfreiheit_und_Demokratie.webm.jpg",
           media: { files: [
-            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.1080p.vp9.webm" },
-            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.480p.vp9.webm" },
-            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/64/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm/Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm.360p.mpeg4.mov" }
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Meinungsfreiheit_und_Demokratie.webm/Meinungsfreiheit_und_Demokratie.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Meinungsfreiheit_und_Demokratie.webm/Meinungsfreiheit_und_Demokratie.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Meinungsfreiheit_und_Demokratie.webm/Meinungsfreiheit_und_Demokratie.webm.360p.mpeg4.mov" }
           ] },
           credit: {
-            title: "Unknackbar aber einfach zu merken! - Passwörter Einfach Erklärt (1/5)",
-            by: "Alexander Lehmann, 2015", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/deed.ko",
-            url: "https://commons.wikimedia.org/wiki/File:Unknackbar_aber_einfach_zu_merken%21_-_Passw%C3%B6rter_Einfach_Erkl%C3%A4rt_%281-5%29.webm", host: "위키미디어 커먼즈", sub: ""
+            title: "Meinungsfreiheit und Demokratie",
+            by: "ZDF/Tivi/logo!/Carolin Zombik/Rüdiger Rickassel/Peter Steinkönig/Sophia Linke, 2024", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Meinungsfreiheit_und_Demokratie.webm", host: "위키미디어 커먼즈", sub: ""
           },
           cues: [
-            [0.20, 3.00, "비밀번호, 쉽게 알아보기"],
-            [3.00, 7.34, "8자리보다 길어야 하고 대문자도 들어가야 하고"],
-            [7.34, 10.74, "숫자와 특수 문자도 잊으면 안 되죠."],
-            [10.84, 14.78, "그리고 절대 잊어버리지 마세요. 하지만 어디에 적어 두면 안 됩니다!"],
-            [14.78, 17.24, "물론 한 달에 한 번은 바꿔야 하고요."],
-            [17.24, 20.46, "기기와 계정마다 다르게 만들어야 합니다."],
-            [20.46, 25.02, "휴! 비밀번호는 왜 이렇게 늘 복잡할까요?"],
-            [25.02, 29.52, "안전하면서도 외우기 쉬운 비밀번호는 어떻게 만들 수 있을까요?"],
-            [29.52, 34.80, "그러려면 비밀번호가 어떻게 작동하고 어떻게 뚫리는지 아는 것이 좋습니다."],
-            [34.80, 38.82, "비밀번호는 번호 자물쇠의 번호와 비슷합니다."],
-            [38.82, 46.44, "자물쇠 번호처럼 쉽게 짐작할 수 있는 조합은 쓰지 않는 것이 중요하죠."],
-            [46.44, 49.76, "생일이나 친구, 자녀, 반려동물의 이름 같은 것 말입니다."],
-            [49.76, 53.28, "이런 정보는 인터넷에서 쉽게 찾아낼 수 있으니까요."],
-            [53.28, 55.66, "번호 자물쇠와 크게 다른 점은"],
-            [55.66, 59.68, "조합을 하나하나 시도하는 고된 일을 컴퓨터가 대신한다는 것입니다."],
-            [59.68, 63.26, "기계가 온라인에서 비밀번호를 맞히려 들면"],
-            [63.26, 66.40, "몇 번 시도한 뒤에는 차단되길 바라야겠죠."],
-            [66.40, 73.50, "하지만 그렇지 않은 경우, 예를 들어 데이터베이스가 통째로 도난당했다면"],
-            [73.50, 77.24, "컴퓨터가 자물쇠에 직접 손댈 수 있게 됩니다."],
-            [77.24, 82.40, "그러면 낡은 노트북 한 대로도 1초에 수십억 개의 비밀번호를 시도할 수 있죠."],
-            [82.40, 86.24, "물론 공격자는 가장 많이 쓰는 비밀번호 목록부터 시도합니다."],
-            [86.24, 89.62, "그다음에는 온갖 언어의 단어를 하나도 빠짐없이,"],
-            [89.62, 96.88, "속어와 변형까지 사전과 백과사전을 동원해 시도합니다. 몇 초면 끝나죠."],
-            [96.88, 104.56, "그래서 글자, 숫자, 특수 문자를 ‘흔하지 않게 조합’해야 합니다."],
-            [104.56, 110.34, "그러면 컴퓨터는 모든 조합을 ‘일일이’ 다 시도해 봐야 합니다."],
-            [110.34, 115.70, "이것을 ‘무차별 대입 공격’이라고 합니다."],
-            [115.70, 123.98, "비밀번호가 10자리라면 몇 시간이면 조합이 뚫립니다."],
-            [123.98, 129.60, "그런데 글자 하나만 더 넣어도 20일이나 걸리죠."],
-            [129.60, 133.32, "한 자리를 더할 때마다 걸리는 시간이 기하급수적으로 늘어나기 때문입니다."],
-            [133.32, 141.46, "다섯 자리를 더하면 컴퓨터 10대로도 비밀번호를 뚫는 데 2,400년 넘게 걸립니다."],
-            [141.46, 149.58, "‘자물쇠’를 더 키워서 ‘번호 바퀴’를 크게 만들면, 즉 대문자와 숫자를 더하면"],
-            [149.58, 157.30, "컴퓨터 10대가 15자리 비밀번호를 뚫는 데 약 11억 년이 걸립니다."],
-            [157.30, 166.60, "안타깝게도 ‘nzb6Xrtc57l1mnk’ 같은 비밀번호는 외우기가 너무 어렵죠."],
-            [166.60, 173.44, "그래서 비밀번호 대신 ‘비밀 문장(패스프레이즈)’을 떠올리면 좋습니다."],
-            [173.44, 179.54, "문장은 외우기 쉽고 보통 단어보다 길기 때문이죠."],
-            [179.54, 185.72, "예를 들면 ‘30dividedby10=Three’"],
-            [185.72, 193.86, "또는 ‘A Passphrase features more security ＞ a Password’"],
-            [193.86, 200.54, "아니면 간단하게 ‘This is my Passphrase for E-Mails’"],
-            [200.54, 207.60, "이렇게 하면 15자리가 넘고 소문자와 대문자에 대개 특수 문자까지 들어갑니다."],
-            [207.60, 213.48, "이런 비밀 문장을 무차별 대입으로 뚫으려면 적어도 수천 년이 걸립니다."],
-            [213.48, 217.30, "그런데도 외우기는 쉽죠."],
-            [218.42, 223.82, "자, 이제 나만의 문장을 즐겁게 만들어 보세요."],
-            [223.82, 228.62, "이 영상에 나온 예시는 쓰면 안 되니까요."],
-            [228.62, 232.62, "자… 이제 됐어요. 충분해요."],
-            [232.62, 235.18, "봐 주셔서 고맙습니다."],
-            [235.18, 245.00, "비밀 문장에 관한 더 많은 정보와 참고 자료는 원본 영상 설명에 있습니다."],
-            [247.00, 249.36, "이제 그만 말할게요."]
+            [1.00, 5.00, "민주주의에서는 누구나 결정에 참여할 수 있습니다."],
+            [5.10, 8.00, "독일에서 어떤 결정을 내릴지,"],
+            [8.10, 10.70, "곧 어떤 규칙과 법을 적용할지를요."],
+            [11.30, 16.05, "예를 들어 선거로 정치인을 뽑는 방식이지요."],
+            [16.15, 19.30, "우리가 보기에 가장 좋은 결정을 내릴 사람을요."],
+            [20.80, 25.05, "자기 의견을 갖고 그것을 두려움 없이 자유롭게 말할 수 있는 것은"],
+            [25.15, 27.50, "민주주의의 아주 중요한 부분입니다."],
+            [28.80, 32.20, "무엇이 가장 좋은 결정인지에 대한 의견은"],
+            [32.30, 34.40, "사람마다 크게 다를 수 있습니다."],
+            [35.00, 37.40, "그래서 크게 다투는 일도 드물지 않지요."],
+            [37.50, 40.00, "정치인들 사이에서도요."],
+            [41.00, 45.20, "그건 좋은 일입니다. 논쟁 속에서 최선의 결정을 찾기 때문이지요."],
+            [45.80, 47.44, "하지만 절대 안 되는 일이 있습니다."],
+            [47.50, 52.20, "의견을 이유로 누군가를 모욕하고, 위협하고, 심지어 공격하는 것입니다."],
+            [53.10, 55.40, "그런 공격은 두려움을 낳기 때문입니다."],
+            [56.40, 59.30, "자기 의견을 자유롭게 말하기가 두려워지지요."],
+            [60.00, 63.00, "정치인이 이런 일을 겪으면"],
+            [63.10, 68.30, "공개적으로 특정 주제를 더는 말하지 않거나"],
+            [68.40, 71.10, "아예 정치를 그만둘 수도 있습니다."],
+            [71.80, 76.40, "정치인이 두려움 없이 일할 수 없게 되면"],
+            [76.80, 78.80, "민주주의가 위험해집니다."]
+          ]
+        },
+        {
+          id: "ad-brain", title: "광고는 뇌의 어디를 움직일까", org: "3sat nano", dur: 37.69, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm/960px-seek%3D3-Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp8, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/8/81/Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/8/81/Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm/Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/8/81/Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm/Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Wie wirkt Werbung auf unser Gehirn?",
+            by: "3sat/nano/medicine/Dunja Keuper/Johannes Kröger, Marius Jelonek/Catrin Füller, 2022", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Wie_wirkt_Werbung_auf_unser_Gehirn%3F.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [0.97, 5.99, "우리가 물건을 살 때 뇌에서 무슨 일이 일어나는지 신경과학이 밝혀냈습니다."],
+            [6.02, 9.11, "여기서는 주로 두 구조가 맞섭니다."],
+            [9.70, 13.25, "첫째, 상품이 측좌핵, 곧 뇌의 보상 체계를"],
+            [13.27, 16.08, "자극하도록 제시되면 우리는 그것을 삽니다."],
+            [16.11, 18.13, "둘째, 그 맞수는 섬엽입니다."],
+            [18.16, 21.88, "섬엽은 고통을 처리하는데, 가격이 주는 고통도 여기서 느낍니다."],
+            [21.92, 25.77, "가격이 높으면 섬엽이 활성화되어 구매를 막습니다."],
+            [25.86, 28.44, "가격이 낮아서 섬엽이 잠잠하거나"],
+            [28.49, 31.32, "보상 체계가 고통을 덮을 만큼 강하게 반응하면"],
+            [31.35, 34.88, "구매 결정이 내려집니다."]
+          ]
+        },
+        {
+          id: "wm-social", title: "위키백과는 소셜 미디어와 무엇이 다를까", org: "위키미디어 재단", dur: 60.01, gain: -2.2,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm/960px-seek%3D30-What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp8, vorbis\"", src: "https://upload.wikimedia.org/wikipedia/commons/8/82/What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/8/82/What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm/What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/8/82/What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm/What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "What makes Wikipedia different from social media platforms - A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2024", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:What_makes_Wikipedia_different_from_social_media_platforms_-_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [0.13, 4.27, "위키백과는 소셜 미디어와 무엇이 다를까요? 1분 동안 알아봅니다."],
+            [4.80, 6.80, "자유 백과사전 위키백과는"],
+            [6.93, 11.20, "방문자 수 상위 10위 웹사이트 가운데 유일하게 비영리 단체가 운영합니다."],
+            [11.43, 15.77, "목적은 오직 하나, 교육적인 정보를 나눠 공공에 이바지하는 것입니다."],
+            [16.27, 20.47, "강력한 개인정보 보호 정책 덕분에 이용의 대가로 데이터를 모으지 않고"],
+            [20.60, 22.05, "광고에 기대지도 않습니다."],
+            [22.30, 25.87, "하지만 위키백과를 정말 특별하게 만드는 것은"],
+            [25.97, 27.81, "자원봉사자 공동체가 이끈다는 점입니다."],
+            [27.87, 30.63, "전문가든 초보자든 누구나 위키백과를 편집할 수 있습니다."],
+            [30.73, 34.40, "출처가 탄탄하고 중립적인 관점에서 쓴 정보라면요."],
+            [35.27, 37.73, "이 기준은 자원봉사자들이 정하고 지키며"],
+            [37.83, 41.13, "위키미디어 재단은 이들의 자치권을 지켜 줍니다."],
+            [41.90, 45.57, "공동체가 이끄는 이 모델 덕분에, 위키백과는 온라인에서"],
+            [45.63, 47.60, "무엇이든 배우러 찾는 곳이 되었습니다."],
+            [47.77, 49.83, "지킬 만한 가치가 있지요!"],
+            [50.03, 55.30, "1분 만에 알아본, 위키백과와 소셜 미디어의 차이였습니다."]
+          ]
+        },
+        {
+          id: "wm-ai", title: "AI 시대, 위키백과의 역할", org: "위키미디어 재단", dur: 61.67, gain: -2.6,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/03/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm/960px-seek%3D20-What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/03/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/03/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/03/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm/What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "What is the role of Wikipedia in the age of AI – A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2025", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:What_is_the_role_of_Wikipedia_in_the_age_of_AI_%E2%80%93_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          cues: [
+            [0.95, 5.00, "AI 시대에 위키백과가 맡은 역할을 1분 동안 알아볼까요?"],
+            [5.09, 9.92, "AI, 곧 인공지능은 우리가 인터넷을 쓰는 방식을 바꾸고 있습니다."],
+            [9.95, 14.45, "이제 간단한 질문에도, 복잡한 질문에도 바로 답을 얻을 수 있지요."],
+            [14.48, 17.60, "그런데 사람들이 잘 모르는 사실이 있습니다."],
+            [17.60, 21.95, "검색 엔진, 음성 비서, 생성형 AI 도구의 정보가 위키백과에서 오는 경우가 많다는 것이죠."],
+            [21.95, 24.77, "하지만 AI는 사람이 가르쳐 준 것만 압니다."],
+            [24.86, 26.81, "바로 여기서 위키백과가 중요해집니다."],
+            [26.93, 30.65, "위키백과의 모든 편집은 사람이 합니다. 출처를 확인하고"],
+            [30.65, 33.65, "까다로운 문제를 토론하며 감독하는 사람들이지요."],
+            [34.01, 36.77, "AI가 위키백과의 정보를 쓴다는 것은"],
+            [36.77, 39.92, "수백만 명이 만든 지식을 빌려 쓴다는 뜻입니다."],
+            [39.95, 44.18, "출처를 분명히 밝히면 그 기여를 인정하게 되고"],
+            [44.18, 46.01, "이용자도 정보의 출처를 알 수 있습니다."],
+            [46.07, 49.97, "기술은 끊임없이 변하지만, 지식은 여전히 사람의 몫입니다."],
+            [49.97, 55.16, "1분 만에 알아본, AI 시대에도 위키백과가 중요한 이유였습니다."]
+          ]
+        },
+        {
+          id: "wm-trust", title: "위키백과, 믿어도 될까", org: "위키미디어 재단", dur: 65.0, gain: -1.7,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b3/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/960px-seek%3D50-Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Can you trust what’s on Wikipedia – A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2023", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Can_you_trust_what%E2%80%99s_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          cues: [
+            [0.77, 3.67, "‘위키 1분’ 동안에는 많은 일이 일어납니다."],
+            [3.67, 6.40, "위키미디어 프로젝트에서 60초 동안 벌어지는 일들처럼요."],
+            [6.40, 8.37, "또는 이 질문에 답하는 시간처럼요."],
+            [8.37, 10.43, "위키백과의 내용, 믿어도 될까요?"],
+            [10.43, 13.10, "네, 누구나 위키백과 글을 쓸 수 있습니다."],
+            [13.10, 16.70, "하지만 아무 내용이나 쓸 수 있다는 뜻은 아닙니다."],
+            [16.70, 20.27, "수천 명의 자원봉사자가 새로 더해진 정보가 정확한지,"],
+            [20.27, 23.13, "검증할 수 있는 출처에서 왔는지 확인합니다."],
+            [23.13, 26.03, "공동체 지침은 편집자에게 높은 기준을 요구합니다."],
+            [26.03, 28.97, "글은 중립적인 관점에서 써야 하고"],
+            [28.97, 33.40, "모든 정보는 믿을 만한 출처로 뒷받침되어야 합니다."],
+            [33.40, 37.90, "문제가 생기면 숙련된 편집자가 글을 빠르게 지우거나"],
+            [37.90, 41.03, "잘못된 편집을 되돌리고, 상습 위반자를 차단하며"],
+            [41.03, 45.30, "특정 글의 편집을 잠시 막을 수 있습니다."],
+            [45.30, 47.93, "여러분도 직접 품질을 확인할 수 있습니다."],
+            [47.93, 50.67, "하나, 글의 출처를 살펴보세요."],
+            [50.67, 53.87, "둘, ‘개선 필요’ 표시가 붙었는지 확인하세요."],
+            [53.87, 56.17, "셋, 글의 편집 역사를 살펴보세요."],
+            [57.30, 60.43, "1분 만에 알아본, 위키백과를 믿을 수 있는 이유였습니다."]
+          ]
+        },
+        {
+          id: "wm-misinfo", title: "허위 정보에 맞서는 편집 체계", org: "위키미디어 재단", dur: 63.5, gain: -0.7,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/960px-seek%3D48-How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/23/How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/23/How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm/How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" }
+          ] },
+          credit: {
+            title: "How is misinformation addressed on Wikipedia – A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2023", license: "CC BY-SA 3.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:How_is_misinformation_addressed_on_Wikipedia_%E2%80%93_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          cues: [
+            [0.73, 2.67, "‘위키 1분’ 동안에는 많은 일이 일어납니다."],
+            [2.67, 5.97, "위키미디어 프로젝트에서 60초 동안 벌어지는 일들처럼요."],
+            [6.37, 8.20, "또는 이 질문에 답하는 시간처럼요."],
+            [8.20, 11.20, "위키백과는 허위 정보에 어떻게 대응할까요?"],
+            [11.47, 14.47, "허위 정보, 곧 ‘틀리거나 오해를 부르는 정보’는"],
+            [14.63, 17.63, "모든 정보 제공자에게 뜨거운 문제가 되었습니다."],
+            [17.87, 20.77, "위키백과는 1분에 350번 수정됩니다."],
+            [20.77, 24.67, "그 하나하나가 중립성과 신뢰성 기준을 충족해야 하지요."],
+            [25.07, 29.47, "이 기준을 지키려고 편집자들은 여러 시스템과 도구를 만들었습니다."],
+            [29.47, 32.47, "편집자들이 수시로 살펴보는 실시간 편집 목록,"],
+            [33.10, 37.33, "나쁜 행동을 찾아내 흔한 실수를 되돌리는 봇,"],
+            [37.33, 40.87, "숙련된 편집자가 문제 편집을 조사하는 감독 도구가 그렇습니다."],
+            [41.27, 44.93, "무엇보다 자원봉사 편집자들이 날마다 쉼 없이 일하고"],
+            [45.10, 46.87, "투명성을 지키려 애씁니다."],
+            [46.87, 49.30, "예를 들어 모든 글의 역사를 볼 수 있습니다."],
+            [49.30, 52.30, "처음 만들어진 순간부터 내용을 둘러싼 토론까지요."],
+            [52.57, 54.87, "그래서 이 관리 체계가 작동합니다."],
+            [54.87, 58.73, "1분 만에 알아본, 위키백과의 허위 정보 대응법이었습니다!"]
+          ]
+        },
+        {
+          id: "wm-charge", title: "내용은 누가 책임지는가", org: "위키미디어 재단", dur: 57.6, gain: -1.7,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/09/Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm/960px-seek%3D36-Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp8, vorbis\"", src: "https://upload.wikimedia.org/wikipedia/commons/0/09/Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/09/Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm/Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/09/Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm/Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Who is in charge of content on Wikipedia - A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2024", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Who_is_in_charge_of_content_on_Wikipedia_-_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          cues: [
+            [0.43, 3.97, "위키백과의 내용은 누가 책임질까요? 1분 동안 알아봅니다."],
+            [4.70, 8.43, "놀랄 수도 있지만, 위키백과에는 돈을 받고 글을 쓰는 직원이 없습니다."],
+            [8.80, 12.83, "새 정보는 모두 자원봉사자들이 더합니다."],
+            [12.93, 16.50, "함께 사실을 확인하고, 토론하고, 내용을 관리하지요."],
+            [17.63, 21.77, "누구나 위키백과를 편집할 수 있습니다. 정해진 기준만 지킨다면요."],
+            [22.53, 25.80, "내용은 검증할 수 있어야 하고, 믿을 만한 출처에서 와야 합니다."],
+            [27.17, 29.63, "글은 중립적인 관점에서 써야 합니다."],
+            [30.27, 35.20, "결정할 때는 모두가 합의할 때까지 함께 토론하고 편집해야 합니다."],
+            [35.70, 38.63, "모두가 서로 환영하는 분위기를 만들어야 합니다."],
+            [38.87, 43.07, "그리고 모든 내용은 자유 라이선스여서 마음껏 나눌 수 있어야 합니다."],
+            [43.67, 48.50, "이 기준들이 인류 역사상 가장 큰 자유 · 개방 백과사전을 떠받칩니다."],
+            [48.77, 52.70, "1분 만에 알아본, 위키백과의 내용을 책임지는 사람들이었습니다!"]
+          ]
+        }
+      ]
+    },
+    {
+      id: "ep-planet", no: 8, sec: "deep", code: "심화 03",
+      title: "데이터, 신원, 그리고 지구",
+      sub: "설계로 지키는 프라이버시부터 디지털의 환경 비용까지",
+      lead: "개인정보를 거의 모으지 않는 위키백과와, 필요한 정보만 골라 증명하는 EU 디지털 신원 지갑으로 ‘설계로 지키는 프라이버시’를 확인합니다. 이어서 AI와 디지털 서비스를 떠받치는 데이터 센터, 스마트폰에 든 광물, 전자 폐기물이 가는 곳까지 디지털의 환경 비용을 따라갑니다.",
+      points: ["프라이버시 중심 설계: 최소 수집, 계정 없이 이용, 생년월일 없이 나이만 증명하는 선택적 공개", "정보주체의 권리를 화면으로: 거래 기록 대시보드, 처리 중단 요청, 감독기관 신고(영상은 2024년 제작, EU 회원국은 2026년 12월까지 지갑 제공 의무)", "디지털의 물질적 발자국: 데이터 센터의 에너지와 물, 스마트폰의 광물 공급망, 늘어나는 전자 폐기물과 불법 수출"],
+      qs: ["우리 서비스가 꼭 필요한 개인정보만 받고 있는지 점검한다면, 지갑의 선택적 공개처럼 줄일 수 있는 항목은 무엇일까요?", "AI 도입의 효과를 평가할 때 전력 · 물 사용과 기기 폐기 같은 환경 비용은 어떤 지표로 함께 따질 수 있을까요?"],
+      book: "제2장 2.3 4대 가치와 10대 원칙(환경과 생태계의 번영 · 지속가능성) · 2.4 11개 정책 행동 영역과 이행 도구 · 제5장 5.5 개인정보 보호법과 AI", chs: [2, 5],
+      dur: 677.58,
+      poster: "https://api.prd.commavservices.eu/thumbnail/I-289392/019e1c00-334d-74d2-adf6-2a51e0677021/960.jpg?t=1778657286",
+      parts: [
+        {
+          id: "wm-privacy", title: "독자의 프라이버시를 지키는 설계", org: "위키미디어 재단", dur: 60.02, gain: -1.9,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/How_does_Wikipedia_protect_readers_privacy_%E2%80%93_A_WIKI_MINUTE_16-9.webm/960px-seek%3D30-How_does_Wikipedia_protect_readers_privacy_%E2%80%93_A_WIKI_MINUTE_16-9.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp8, vorbis\"", src: "https://upload.wikimedia.org/wikipedia/commons/b/b5/How_does_Wikipedia_protect_readers_privacy_%E2%80%93_A_WIKI_MINUTE_16-9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b5/How_does_Wikipedia_protect_readers_privacy_%E2%80%93_A_WIKI_MINUTE_16-9.webm/How_does_Wikipedia_protect_readers_privacy_%E2%80%93_A_WIKI_MINUTE_16-9.webm.480p.vp9.webm" }
+          ] },
+          credit: {
+            title: "How does Wikipedia protect readers privacy – A WIKI MINUTE",
+            by: "Wikimedia Foundation, 2024", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:How_does_Wikipedia_protect_readers_privacy_%E2%80%93_A_WIKI_MINUTE_16-9.webm", host: "위키미디어 커먼즈", sub: "CC BY-SA 4.0"
+          },
+          cues: [
+            [0.50, 4.27, "위키백과는 독자의 개인정보를 어떻게 지킬까요? 1분 동안 알아봅니다."],
+            [4.80, 10.30, "방문자를 추적해 데이터와 개인정보를 파는 웹사이트와 앱 이야기, 들어 보셨을 겁니다."],
+            [10.47, 12.63, "위키백과는 그렇지 않습니다."],
+            [13.43, 18.07, "위키백과의 목표는 누구나 자유롭고 안전하게 지식을 나누고 얻는 것입니다."],
+            [18.37, 22.57, "그래서 위키백과를 운영하는 비영리 단체 위키미디어 재단은"],
+            [22.70, 25.37, "모든 일의 중심에 개인정보 보호를 둡니다."],
+            [26.33, 29.41, "아는 것을 나누고 남에게 배우려면 두려움이 없어야 하기 때문입니다."],
+            [29.47, 31.63, "광고에 추적당하거나 감시당할까,"],
+            [31.80, 35.20, "검열당하거나 디지털 안전을 위협받을까 두려워서는 안 되지요."],
+            [36.07, 39.87, "위키백과는 독자와 기여자의 정보를 아주 적게만 모으고"],
+            [39.93, 41.58, "그 데이터를 절대 팔지 않습니다."],
+            [41.80, 44.53, "계정을 만들라고 요구하지도 않습니다."],
+            [44.87, 47.90, "개인정보가 화폐처럼 쓰이는 세상에서"],
+            [48.20, 50.33, "프라이버시는 그만한 값어치가 있습니다."],
+            [51.00, 55.07, "1분 만에 알아본, 위키백과가 독자의 개인정보를 지키는 방법이었습니다!"]
+          ]
+        },
+        {
+          id: "eu-wallet", title: "EU 디지털 신원 지갑, 미리 써 보기", org: "EU 집행위원회", dur: 337.76, gain: 3.3,
+          poster: "https://api.prd.commavservices.eu/thumbnail/I-272138/0196ce7b-2793-76b7-a426-7f1c8ba527ad/960.jpg?t=1747221036",
+          media: { hls: "https://vod.prd.commavservices.eu/18/272138/0196ce7b-2793-76b7-a426-7f1c8ba527ad/master.m3u8" },
+          credit: {
+            title: "Get to grips with the EU Digital Identity Wallets",
+            by: "© European Union, 2024", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://audiovisual.ec.europa.eu/en/media/video/I-272138", host: "EU 집행위원회 시청각 서비스", sub: ""
+          },
+          cues: [
+            [9.04, 11.89, "공공 서비스도, 기업의 서비스도 디지털로 바뀌고 있습니다."],
+            [12.36, 15.96, "하지만 온라인의 개인정보 보호와 보안이 늘 충분하지는 않아서"],
+            [16.18, 21.44, "신원 도용이나 원치 않는 프로파일링, 감시에 노출될 수 있습니다."],
+            [21.98, 25.26, "그래서 나온 것이 EU 디지털 신원 지갑입니다."],
+            [25.50, 29.00, "안전하고 믿을 수 있으며 개인정보 보호를 강화한 앱으로"],
+            [29.02, 32.70, "공공기관과 기업의 서비스에서 본인임을 증명할 수 있고"],
+            [33.04, 36.76, "중요한 개인 서류를 보관하고 제시할 수도 있습니다."],
+            [36.94, 39.04, "이것을 ‘디지털 문서’라고 부릅니다."],
+            [39.36, 44.16, "지갑이 출시되면 실제로 어떻게 쓰이는지 미리 살펴보겠습니다."],
+            [45.02, 47.47, "지갑에는 여러분의 디지털 신분증이 들어 있습니다."],
+            [47.90, 50.20, "이것으로 온라인에서 본인임을 증명하지요."],
+            [50.66, 54.58, "지갑을 쓰려면 먼저 디지털 신분증을 저장해야 합니다."],
+            [55.02, 57.74, "등록은 쉽고 편리합니다."],
+            [58.10, 61.34, "지갑 앱을 내려받은 뒤 접근 보안을 설정합니다."],
+            [61.74, 66.14, "휴대 기기의 보안 기능이 오직 본인만 지갑을 열 수 있게 해 줍니다."],
+            [66.60, 70.16, "다음으로 자기 나라의 신원 확인 시스템에 연결합니다."],
+            [70.76, 73.70, "구체적인 절차는 회원국마다 다르지만"],
+            [73.96, 75.48, "이런 식이 될 수 있습니다."],
+            [76.02, 80.06, "디지털 신분증을 지갑에 추가할 수 있습니다."],
+            [80.40, 87.00, "이제 지갑으로 신원이나 그 밖의 개인 속성을 증명할 수 있습니다."],
+            [89.00, 93.28, "예를 들어 청소년 할인으로 박물관 입장권을 샀다고 해 봅시다."],
+            [93.74, 97.60, "지갑의 디지털 신분증으로 나이를 증명할 수 있습니다."],
+            [97.86, 100.56, "지갑의 ‘선택적 공개’ 기능 덕분에"],
+            [100.60, 104.66, "정확한 생년월일을 밝히지 않고도 나이를 증명할 수 있지요."],
+            [104.94, 109.40, "서비스 이용은 그대로 누리면서 개인정보는 지킬 수 있습니다."],
+            [109.86, 112.74, "디지털 신분증이 지갑에 저장되었으니"],
+            [113.02, 116.00, "이제 원하는 디지털 문서를 담을 수 있습니다."],
+            [118.00, 120.04, "그런데 디지털 문서가 뭐였지요?"],
+            [123.60, 129.12, "디지털 문서는 여러분에 관한 무언가를 증명하는 전자 형태의 공식 문서입니다."],
+            [129.92, 133.62, "졸업 증명서, 처방전,"],
+            [134.08, 137.38, "방금 산 기차표까지 디지털 문서가 될 수 있습니다."],
+            [137.82, 141.70, "이런 중요한 문서를 모두 지갑에 보관할 수 있습니다."],
+            [142.32, 144.72, "디지털 문서는 이렇게 추가합니다."],
+            [145.04, 150.22, "학회에 등록하고 입장권을 디지털 문서로 받고 싶다고 해 봅시다."],
+            [150.58, 154.62, "먼저 학회 주최 측에 본인임을 증명해야 합니다."],
+            [154.96, 158.52, "개인 식별 정보를 공유하면 되지요."],
+            [158.84, 161.04, "PIN을 입력하고 확인합니다."],
+            [161.42, 164.14, "이제 입장권을 지갑에 추가할 수 있습니다."],
+            [171.00, 174.36, "이제 서비스 제공자에게 디지털 문서를 제시해 봅시다."],
+            [174.88, 178.70, "서비스 제공자란 공공기관이든 기업이든 모든 기관을 말합니다."],
+            [179.28, 181.90, "대학부터 약국까지,"],
+            [181.94, 188.80, "서비스를 열어 주기 전에 지갑 이용자에게 신원 확인과 인증을 요청하는 곳이지요."],
+            [189.20, 193.80, "디지털 문서가 지갑에 있으면 제시하기도 쉽습니다."],
+            [194.10, 199.08, "지갑이 QR 코드를 만들면 서비스 제공자가 이를 스캔합니다."],
+            [199.38, 202.30, "그러면 두 애플리케이션이 연결되지요."],
+            [202.90, 205.38, "이제 서비스 제공자가 데이터를 요청할 수 있습니다."],
+            [205.96, 208.30, "다행히 무엇을 공유할지는 여러분이 정하고"],
+            [208.44, 210.60, "공유할 내용은 늘 분명하게 표시됩니다."],
+            [211.14, 215.68, "서비스 제공자에게 꼭 필요한 데이터만 공유할 뿐, 그 이상은 주지 않습니다."],
+            [216.36, 221.00, "디지털 문서가 공유되면 지갑이 알려 줍니다."],
+            [225.88, 228.98, "지갑에 내장된 개인정보 대시보드 덕분에"],
+            [229.28, 232.72, "모든 거래 내역을 한눈에 볼 수 있습니다."],
+            [232.96, 237.30, "대시보드를 누르면 지금까지 이용한 모든 서비스 제공자와"],
+            [237.42, 241.40, "제공자마다 주고받은 거래를 하나하나 볼 수 있고"],
+            [241.44, 246.68, "각각에 어떤 데이터를 공유했고 어디에 쓰였는지도 알 수 있습니다."],
+            [250.60, 254.00, "서비스 제공자가 내 개인정보를 더는 처리하지 않길 원하나요?"],
+            [255.00, 256.95, "대시보드에서 바로 요청할 수 있습니다."],
+            [270.50, 272.90, "처리를 멈출 거래를 골라 보세요."],
+            [273.30, 275.50, "전부도, 몇 건만도 괜찮습니다."],
+            [275.80, 282.12, "그러면 선택한 거래의 처리를 멈춰 달라는 메일 초안이 서비스 제공자에게 보내집니다."],
+            [282.88, 285.64, "데이터가 불법으로 쓰였을까 걱정된다면"],
+            [285.96, 290.14, "불필요한 개인정보를 요구했다고 생각되는 거래를 고르세요."],
+            [290.36, 295.70, "자국 개인정보 보호 감독기관에 보낼 메일 초안이 만들어지고"],
+            [295.90, 298.16, "지갑에서 바로 보낼 수 있습니다."],
+            [303.00, 307.60, "EU 디지털 신원 지갑은 앞으로 몇 년 안에 나올 예정이며"],
+            [307.74, 309.96, "이용자에게는 완전히 무료입니다."],
+            [310.40, 314.86, "쉽고 안전하게 여러분의 데이터를 관리하세요."],
+            [316.00, 318.76, "중요한 디지털 문서도 모두 보관하고 공유하세요."],
+            [320.50, 324.20, "자세한 내용은 EU 신원 지갑 공식 웹사이트에서 확인하세요."]
+          ]
+        },
+        {
+          id: "eu-datacentre", title: "데이터 센터, 지속가능하게", org: "EU 집행위원회", dur: 101.96, gain: 5.8,
+          poster: "https://api.prd.commavservices.eu/thumbnail/I-289392/019e1c00-334d-74d2-adf6-2a51e0677021/960.jpg?t=1778657286",
+          media: { hls: "https://vod.prd.commavservices.eu/12/289392/019e1c00-334d-74d2-adf6-2a51e0677021/master.m3u8" },
+          credit: {
+            title: "How the EU is building sustainable data centres for a digital future",
+            by: "© European Union, 2026", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://audiovisual.ec.europa.eu/en/media/video/I-289392", host: "EU 집행위원회 시청각 서비스", sub: ""
+          },
+          cues: [
+            [0.80, 4.20, "우리 모두에게 특별한 힘이 있다는 것, 알고 계셨나요?"],
+            [4.72, 7.76, "바로 데이터 센터의 힘입니다."],
+            [8.12, 12.16, "데이터 센터는 날마다 보이지 않는 곳에서 우리 삶에 속도를 더합니다."],
+            [12.92, 14.60, "쇼핑할 때도…"],
+            [15.56, 17.16, "영화를 볼 때도…"],
+            [17.44, 19.12, "친구를 만나러 갈 때도…"],
+            [19.16, 20.60, "일할 때도…"],
+            [20.68, 21.92, "놀 때도…"],
+            [22.08, 23.48, "택배를 받을 때도…"],
+            [23.72, 26.08, "그저 무언가를 물어볼 때도요."],
+            [26.16, 28.12, "여러분이 하루를 보내는 동안"],
+            [28.20, 31.72, "데이터 센터는 데이터를 저장하고, 그 의미를 읽도록 돕고"],
+            [32.08, 35.48, "버튼 하나로 다시 여러분의 삶에 돌려보냅니다."],
+            [35.56, 37.56, "디지털 생활이 커질수록"],
+            [37.64, 41.04, "그것을 떠받치는 데이터 센터도 커져야 합니다."],
+            [41.12, 46.84, "그래서 EU는 2035년까지 데이터 센터 용량을 세 배로 늘리려 합니다."],
+            [46.92, 51.56, "삶을 계속 편리하게 하고 디지털 혁신을 이끌기 위해서죠."],
+            [51.64, 53.52, "바로 여기 유럽에서요."],
+            [53.60, 57.88, "하지만 디지털의 힘이 커진다고 지구의 부담까지 커져서는 안 됩니다."],
+            [58.12, 60.68, "그래서 EU는 다른 길을 갑니다."],
+            [60.76, 66.64, "에너지 효율, 수자원, 지속가능성을 중심에 두는 것이지요."],
+            [67.00, 70.56, "데이터 센터는 청정에너지 전환과 경쟁하지 않고"],
+            [70.64, 72.40, "오히려 그 전환을 도울 것입니다."],
+            [72.64, 75.72, "이를 실현할 방법을 함께 찾고 있습니다."],
+            [75.80, 78.00, "에너지 효율을 높이는 것부터"],
+            [78.08, 82.08, "데이터 센터의 열을 이웃 지역 난방에 돌려쓰는 것,"],
+            [82.16, 86.76, "귀한 물 한 방울까지 아끼도록 지역 물 관리 체계를 강화하는 것까지요."],
+            [86.84, 89.60, "모든 유럽인에게 이로운 비전입니다."],
+            [89.68, 93.52, "그 특별한 힘을 언제나 여러분 손끝에 두면서요."]
+          ]
+        },
+        {
+          id: "smartphone", title: "스마트폰 한 대에 담긴 광물 지도", org: "ZDF Terra X", dur: 74.02, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Bestandteile_eines_Smartphones.webm/960px-seek%3D12-Bestandteile_eines_Smartphones.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5f/Bestandteile_eines_Smartphones.webm/Bestandteile_eines_Smartphones.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5f/Bestandteile_eines_Smartphones.webm/Bestandteile_eines_Smartphones.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5f/Bestandteile_eines_Smartphones.webm/Bestandteile_eines_Smartphones.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Bestandteile eines Smartphones",
+            by: "ZDF/Terra X/T. Schultes/Bilderfest/J. von Kalckreuth/D. da Cruz/Maximilian Heß, 2023", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Bestandteile_eines_Smartphones.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.46, 4.04, "휴대전화는 우리 손에 들어오기까지"],
+            [4.22, 6.20, "먼 길을 거쳐 옵니다."],
+            [6.38, 10.40, "스마트폰은 주로 세계 네 곳에서 만들어집니다."],
+            [10.80, 15.26, "미국, 한국, 대만, 그리고 중국입니다."],
+            [15.82, 18.18, "여기에 수많은 부품이 더해지는데"],
+            [18.30, 21.70, "그중 상당수도 이미 먼 길을 거쳐 온 것입니다."],
+            [22.06, 25.20, "케이스와 회로 기판에 쓰는 여러 플라스틱,"],
+            [25.60, 31.08, "화면 유리, 그리고 세계 곳곳에서 온 약 50가지 물질이 더 들어갑니다."],
+            [31.86, 33.76, "예를 들면 구리."],
+            [34.14, 38.08, "주로 칠레, 페루, 미국에서 옵니다."],
+            [39.80, 42.48, "탄탈럼, 곧 가공 전의 콜탄 광석은"],
+            [42.58, 47.68, "주로 호주가 시장에 내놓고, 브라질과 에티오피아도 공급합니다."],
+            [48.02, 51.92, "휴대전화에 든 금은 대부분 중국에서 옵니다."],
+            [52.32, 55.48, "호주도 그에 못지않고, 미국도 있습니다."],
+            [56.70, 63.34, "남은 것은 세륨, 프라세오디뮴, 네오디뮴처럼 어려운 이름들입니다."],
+            [63.54, 66.28, "모두 희토류에 속하지요."],
+            [66.64, 71.54, "희토류는 전 세계 생산량의 82%가 중국에서 채굴됩니다."]
+          ]
+        },
+        {
+          id: "e-waste", title: "전자 폐기물은 어디로 가는가", org: "ZDF Terra X", dur: 103.82, gain: 5.0,
+          poster: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Wo_landet_der_Elektroschrott%3F.webm/960px-seek%3D20-Wo_landet_der_Elektroschrott%3F.webm.jpg",
+          media: { files: [
+            { h: 1080, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a3/Wo_landet_der_Elektroschrott%3F.webm/Wo_landet_der_Elektroschrott%3F.webm.1080p.vp9.webm" },
+            { h: 480, type: "video/webm; codecs=\"vp9, opus\"", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a3/Wo_landet_der_Elektroschrott%3F.webm/Wo_landet_der_Elektroschrott%3F.webm.480p.vp9.webm" },
+            { h: 360, type: "video/quicktime", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/a/a3/Wo_landet_der_Elektroschrott%3F.webm/Wo_landet_der_Elektroschrott%3F.webm.360p.mpeg4.mov" }
+          ] },
+          credit: {
+            title: "Wo landet der Elektroschrott?",
+            by: "ZDF/Terra X/T. Schultes/Bilderfest/J. von Kalckreuth/D. da Cruz/Maximilian Heß, 2023", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0/deed.ko",
+            url: "https://commons.wikimedia.org/wiki/File:Wo_landet_der_Elektroschrott%3F.webm", host: "위키미디어 커먼즈", sub: ""
+          },
+          cues: [
+            [1.00, 5.50, "전 세계에서 해마다 전자 폐기물 7,500만 톤이 나옵니다."],
+            [5.50, 10.00, "제대로 처리되거나 재활용되는 것은 17%뿐입니다."],
+            [10.00, 13.00, "나머지 대부분의 행방은 알 수 없습니다."],
+            [13.00, 17.50, "독일은 어떨까요? 재활용만큼은 세계 최고라고들 여기는데요."],
+            [17.50, 23.00, "독일인 한 사람이 해마다 내놓는 전자 폐기물은 약 20kg입니다."],
+            [23.00, 28.00, "그중 8kg, 곧 40%는 실제로 재활용됩니다."],
+            [28.00, 32.50, "하지만 2.1kg은 고철에 잘못 섞여 버려지고"],
+            [32.50, 36.00, "1.4kg은 아무 생각 없이 생활 쓰레기로 버려지며"],
+            [36.00, 39.00, "7kg은 다른 경로로 사라집니다."],
+            [39.00, 43.00, "자연에 버려지거나 서랍 속에서 잠들어 있는 식이지요."],
+            [43.00, 47.50, "1.5kg 가까이는 심지어 불법으로 수출됩니다."],
+            [47.50, 50.00, "씁쓸한 진실은 이렇습니다."],
+            [50.00, 54.50, "독일의 전자 폐기물을 배에 실어 지구 반대편으로 보내는 편이"],
+            [54.50, 57.00, "제대로 처리하는 것보다 세 배나 싸다는 것."],
+            [58.00, 59.50, "수법은 이렇습니다."],
+            [59.50, 62.50, "사무실을 열고 알맞은 인맥을 갖춘 다음"],
+            [62.50, 68.50, "화물을 쓸 만한 중고품이라고 거짓 신고합니다."],
+            [68.50, 72.00, "세관이 항구에서 표본 검사를 하긴 하지만"],
+            [72.00, 76.00, "흔한 속임수는 이렇습니다. 작동하는 기기는 앞줄에,"],
+            [76.00, 79.00, "진짜 폐기물은 뒷줄에 두는 것이죠."],
+            [79.00, 86.00, "이렇게 해마다 독일의 전자 폐기물 12만 톤이라는 엄청난 양이"],
+            [86.00, 89.50, "머나먼 외국에 불법으로 버려집니다."],
+            [89.50, 93.00, "이 ‘원료 여행’의 단골 목적지는"],
+            [93.00, 99.00, "가나의 아크라, 중국의 구이위, 인도의 뭄바이와 델리."],
+            [99.00, 102.00, "세계에서 가장 큰 전자 폐기물 집하장들입니다."]
           ]
         }
       ]
