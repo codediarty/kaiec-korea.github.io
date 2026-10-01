@@ -261,7 +261,7 @@
       var start = dayStart(ymd(Date.now())) - 3 * DAY;   // 체험 계정의 결제일: 사흘 전
       return {
         token: 'DEMO' + rand() + rand(), name: '체험 응시자', email: 'demo@kaiec.kr',
-        start: ymd(start), end: ymd(start + (CFG.windowDays || 30) * DAY),
+        start: ymd(start), end: ymd(start + (CFG.windowDays || 40) * DAY),
         forms: { A: '응시 가능', B: '대기' }, attempt: null, results: []
       };
     }
@@ -639,7 +639,8 @@
       ev.preventDefault();
       if (!CFG.api) return errBox(el.err, READY_MSG);
       var email = el.email.value.trim().toLowerCase(), pin = el.pin.value.replace(/\D/g, '');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      // 2026.10.01: 운영자 확인용 로그인은 이메일이 아닌 아이디(영문 2~4자 + 숫자 4자리, 평가 백엔드 1.6.2 OWNER_ID_RE)
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && !/^[a-z]{2,4}\d{4}$/.test(email)) {
         el.email.classList.add('is-invalid');
         el.email.focus();
         return errBox(el.err, '이메일(아이디)을 정확히 입력해 주십시오.');
@@ -818,12 +819,15 @@
     }).join('');
   }
 
+  // 2026.10.01: 이메일이 아닌 운영자 아이디(예: 위원 코드 형식)는 대문자로 보여 줌
+  function shownId(v) { v = String(v || '-'); return v.indexOf('@') < 0 && v !== '-' ? v.toUpperCase() : v; }
+
   function candPanel() {
     var d = S.data || {}, s = S.session || {}, list = courses();
     var name = d.name || '';
     return panel('응시자 정보', kv([
       ['성명', name ? '<b>' + esc(name) + '</b>' : '<span class="ex-muted">응시 전 확인에서 입력</span>'],
-      ['아이디(이메일)', '<span class="ex-break">' + esc(d.email || s.email || '-') + '</span>'],
+      ['아이디(이메일)', '<span class="ex-break">' + esc(shownId(d.email || s.email || '-')) + '</span>'],
       ['신청 과정', list.length ? list.map(function (c) { return esc(courseLabel(c.course)); }).join(' · ') : '-'],
       ['조회 시각', '<span class="ex-num">' + fmtDT(S.loadedAt || now()) + '</span> (KST)']
     ], 'ex-kv--4'), { cls: 'ex-cand' });
@@ -2038,17 +2042,20 @@
     var st = courseStatus(c), t = now();
     var point = ex.point || (ex.total ? 100 / ex.total : 0);
     var startMs = w.start ? dayStart(w.start) : 0, endMs = w.end ? dayStart(w.end) + DAY : 0;
-    var totalDays = startMs && endMs ? Math.round((endMs - DAY - startMs) / DAY) : (CFG.windowDays || 30);
+    var totalDays = startMs && endMs ? Math.round((endMs - DAY - startMs) / DAY) : (CFG.windowDays || 40);
     var pct = startMs && endMs > startMs ? Math.max(0, Math.min(100, (t - startMs) / (endMs - startMs) * 100)) : 0;
     var dd, ddCls = '', foot;
+    // 2026.10.01: 운영자 확인용 로그인(평가 백엔드 1.6.2, 종료일 2099-12-31)은 남은 날 수 대신 '기간 제한 없음'
+    var owner = w.state === 'open' && totalDays > 3650;
     if (w.state === 'expired') { dd = '기간 종료'; ddCls = ' is-off'; pct = 100; foot = dotDate(w.end) + '에 응시 기간이 끝났습니다'; }
     else if (w.state === 'before') { dd = '시작 전'; ddCls = ' is-off'; pct = 0; foot = dotDate(w.start) + '부터 응시할 수 있습니다'; }
+    else if (owner) { dd = '운영자'; ddCls = ' is-off'; pct = 0; foot = '운영자 확인용 로그인 · 기간 제한 없이 볼 수 있습니다'; }
     else {
       dd = dday(w.daysLeft);
       if ((+w.daysLeft || 0) <= 5) ddCls = ' is-soon';
       foot = '남은 기간 ' + (+w.daysLeft || 0) + '일 · 전체 ' + totalDays + '일 (결제일부터)';
     }
-    var period = '<div class="ex-period"><span class="ex-num">' + dotDate(w.start) + ' ~ ' + dotDate(w.end) + '</span>' +
+    var period = '<div class="ex-period"><span class="ex-num">' + dotDate(w.start) + ' ~ ' + (owner ? '제한 없음' : dotDate(w.end)) + '</span>' +
         '<span class="ex-dday' + ddCls + '">' + dd + '</span></div>' +
       '<div class="ex-bar" role="progressbar" aria-label="응시 기간 경과" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + Math.round(pct) + '">' +
         '<span style="width:' + pct.toFixed(1) + '%"></span></div>' +
@@ -2139,7 +2146,7 @@
     }).join(' / ');
     var passTxt = passOf(courseCfg(mine[0]));
     return panel('평가 안내', kv([
-      ['응시 기간', '<b>결제일부터 ' + (CFG.windowDays || 30) + '일</b><span class="ex-sub-line">재응시를 포함한 모든 응시를 이 기간 안에 마칩니다.</span>'],
+      ['응시 기간', '<b>결제일부터 ' + (CFG.windowDays || 40) + '일</b><span class="ex-sub-line">재응시를 포함한 모든 응시를 이 기간 안에 마칩니다.</span>'],
       ['평가 구성', '<b>' + comp + '</b><span class="ex-sub-line">4지선다형 100점 만점, 시험 시간은 [시험 시작]을 누른 때부터 흐릅니다.</span>'],
       ['이수 기준', '<b>' + passTxt + '점 이상</b><span class="ex-sub-line">이수하지 못하면 응시 기간 안에서 이수할 때까지 재응시합니다(A형·B형 번갈아 출제). 이수증은 이수 즉시 PDF로 발급합니다.</span>'],
       ['응시 환경', '<b>PC·태블릿 권장</b><span class="ex-sub-line">최신 크롬·엣지·사파리에서 응시해 주십시오. 다른 창이나 탭으로 이동하면 화면 이탈로 기록됩니다.</span>']
@@ -2307,7 +2314,7 @@
           ' placeholder="예: 홍길동" aria-describedby="exNameHelp exNameErr" aria-required="true">' +
         '<p class="ex-field-help" id="exNameHelp">이수증에 표기될 성명입니다. 실명을 정확히 입력해 주십시오.</p>' +
         '<p class="ex-field-err" id="exNameErr" role="alert" hidden></p>', 'ex-kv-field'],
-      ['아이디(이메일)', '<span class="ex-break">' + esc(d.email || s.email || '-') + '</span>'],
+      ['아이디(이메일)', '<span class="ex-break">' + esc(shownId(d.email || s.email || '-')) + '</span>'],
       ['과정', esc(courseLabel(c.course))],
       ['평가지', esc(formName(c, form))]
     ]);
