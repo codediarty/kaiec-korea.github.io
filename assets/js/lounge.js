@@ -502,6 +502,17 @@
     });
   }
   function adminLogout() { store(KEY_ADMIN, null, true); store(KEY_ADMIN_DASH, null, true); store(KEY_ADMIN_TAB, null, true); adSeq++; refreshing(false); S.admin = null; S.tab = 'insight'; renderAdminLogin(); }
+  /* 1.4.9 메일 칸(사용자 2026.10.01 '여기 20통이라는 게 20통이 남았다는 거야 20통을 사용했다는 거야? 잔여가 안 나와서'): 큰 숫자는 지메일 잔여(남음),
+     아래 줄에 오늘 보낸 수 · 대기 · 다음으로 다시 차는 때. 무료 지메일은 24시간 100통, 보낸 지 24시간이 지나면 그만큼 다시 생김 */
+  function mailTileHTML(a, t) {
+    var q = t.mailQuota != null && t.mailQuota >= 0 ? t.mailQuota : null, rf = t.mailRefill, today = a.today || '';
+    var head = '<span>메일 발송' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span>';
+    var btn = t.mailPaused ? ' · 결제 · 정산 알림은 바로 나감 <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>';
+    var refill = rf && rf.at ? ' · ' + (String(rf.at).slice(0, 10) === today ? '' : '내일 ') + esc(String(rf.at).slice(11, 16)) + '에 ' + num(rf.n) + '통 다시 생김' : '';
+    var tip = '무료 지메일은 24시간 동안 100통까지 보낼 수 있고, 보낸 지 24시간이 지나면 그만큼 다시 생깁니다(0시에 한꺼번에 초기화되지 않음). 오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수, 대기는 아직 안 나간 메일입니다';
+    if (q == null) return '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '" title="' + esc(tip) + '">' + head + '<b>' + num(t.mailToday) + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘 보냄</small></b><i>대기 ' + num(t.mailWait) + '통' + btn + '</i></div>';
+    return '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + (q <= 10 ? ' is-low' : '') + '" title="' + esc(tip) + '">' + head + '<b>' + num(q) + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">남음</small></b><i>오늘 ' + num(t.mailToday) + '통 보냄 · 대기 ' + num(t.mailWait) + '통' + refill + btn + '</i></div>';
+  }
   function fmtResumeAt(s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() + '(' + DAYS[d.getDay()] + ') ' + String(s).slice(11, 16) : String(s || ''); }
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
   /* 발송 시작 예약: 기본값 내일 10:00. 그때까지 대기열은 멈춰 있고, 시각이 지나면 위촉 메일부터 보냄 */
@@ -554,7 +565,7 @@
       '<div class="ad-tile"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b><i>이번 달 ' + num(t.creditsMonth || 0) + '건 · 실적 있는 위원 ' + num(t.creditedN || 0) + '명</i></div>' +
       '<div class="ad-tile"><span>최근 7일 추천 결제</span><b>' + num(p7) + '건' + (d7 ? ' <small class="ad-tile-d ' + (d7 > 0 ? 'up' : 'down') + '">' + (d7 > 0 ? '▲' : '▼') + num(Math.abs(d7)) + '</small>' : '') + '</b><i>그 전 7일 ' + num(pp7) + '건 · 취소 · 환불 ' + num(t.canc7) + '건</i></div>' +
       '<div class="ad-tile"><span>위원</span><b>' + num(t.members) + '명</b><i>' + stTxt + (t.loggedInN != null ? ' · 라운지 로그인 ' + num(t.loggedInN) + '명' : '') + '</i></div>' +
-      '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + '"><span>메일' + (t.mailPaused ? ' · <strong style="color:#B26A00">일시정지</strong>' + (t.mailResumeAt ? ' <small style="font-weight:600;color:#B26A00">(' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작 예약)</small>' : '') : '') + '</span><b>' + t.mailToday + '통 <small style="font-size:13px;font-weight:600;color:var(--gray-500)">오늘</small></b><i>대기 ' + t.mailWait + '통 · 하루 ' + a.settings.MAIL_DAILY_LIMIT + '통 한도' + (t.mailPaused ? ' · 결제 · 정산 알림은 바로 나감 <button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>' : ' <button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>') + '</i></div></div>';
+      mailTileHTML(a, t) + '</div>';
   }
   function renderAdmin() {
     var a = S.admin;

@@ -221,6 +221,7 @@ html:not(.js) .lg-boot{display:none}
 .ad-tile i{font-style:normal;font-size:12px;color:var(--gray-500);display:block;margin-top:4px}
 .ad-tile.hi{background:linear-gradient(135deg,#1F5FE0,#173F9E);border:0;color:#fff}
 .ad-tile.is-paused{border-color:#F0A24A;background:#FFF9EE}
+.ad-tile.is-low b{color:#B42318}   /* 1.4.9 지메일 잔여 10통 이하 */
 .ad-tile .lg-link{font-size:12px}
 .ad-tile.hi span,.ad-tile.hi i{color:#C9D8F5}
 .ad-tabs{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;align-items:center}
