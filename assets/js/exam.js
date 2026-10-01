@@ -1435,6 +1435,7 @@
     P.pcard.classList.remove('is-out');
     if (P.hls) { try { P.hls.destroy(); } catch (x) { /* 무시 */ } P.hls = null; }
     clearTimeout(P.stallT);
+    clearTimeout(P.netT);
     var video = P.video;
     P.video = null;
     P.track = null;
@@ -1513,7 +1514,11 @@
     clearTimeout(P.kickT);
     if (P.hls) { try { P.hls.destroy(); } catch (x) { /* 무시 */ } P.hls = null; }
     P.pi = pi; P.part = p;
-    P.failed = false; P.recovered = false; P.retried = false;
+    P.failed = false; P.recovered = false; P.retried = false; P.netRetry = false;
+    clearTimeout(P.netT);
+    // 웹 오디오로 보낼 때: 커먼즈 파일은 CORS 로 받아야 하고(crossOrigin), HLS(같은 출처 blob)는 필요 없음.
+    // HLS 에서 끄는 것은 EU 미리보기 그림(poster)이 CORS 머리글 없이 오기 때문
+    if (P.audSrc) { if (p.media && p.media.hls) video.removeAttribute('crossorigin'); else video.crossOrigin = 'anonymous'; }
     P.files = null; P.fileIdx = 0;
     P.resumeAt = t > 0.5 ? t : 0;
     P.resumed = !(P.resumeAt > 0);
@@ -1568,9 +1573,30 @@
         h.on(Hls.Events.MANIFEST_PARSED, function () { if (P.hls === h) vpKick(); });
         h.on(Hls.Events.ERROR, function (ev, d) {
           if (!d || !d.fatal || P.hls !== h) return;
-          if (d.type === Hls.ErrorTypes.MEDIA_ERROR && !P.recovered) { P.recovered = true; h.recoverMediaError(); return; }
-          // 재생 목록을 이미 받은 뒤의 조각 오류만 한 번 다시 받기(목록 자체를 못 받으면 바로 안내)
-          if (d.type === Hls.ErrorTypes.NETWORK_ERROR && !P.retried && h.levels && h.levels.length) { P.retried = true; h.startLoad(); return; }
+          // 미디어 오류: 두 번까지 복구(두 번째는 소리 코덱을 바꿔 다시)
+          if (d.type === Hls.ErrorTypes.MEDIA_ERROR && (P.recovered || 0) < 2) {
+            P.recovered = (P.recovered || 0) + 1;
+            if (P.recovered === 2) { try { h.swapAudioCodec(); } catch (x) { /* 무시 */ } }
+            h.recoverMediaError();
+            return;
+          }
+          // 네트워크 오류(EU 서버의 일시적인 조각 · 목록 오류): 1.5초 · 3초 · 5초 뒤 세 번까지 다시 받기.
+          // 재생 목록을 이미 받았으면 이어 받고, 목록부터 못 받았으면 처음부터 다시 엶
+          if (d.type === Hls.ErrorTypes.NETWORK_ERROR && (P.retried || 0) < 3) {
+            P.retried = (P.retried || 0) + 1;
+            clearTimeout(P.netT);
+            P.netT = setTimeout(function () {
+              if (P.hls !== h || P.part !== p) return;
+              if (h.levels && h.levels.length) { h.startLoad(); return; }
+              var vt = P.video ? P.video.currentTime : 0;
+              if (vt > 0.5) P.resumeAt = vt;
+              try { h.destroy(); } catch (x) { /* 무시 */ }
+              P.hls = null;
+              P.want = true;
+              vpSource(p);
+            }, [1500, 3000, 5000][P.retried - 1]);
+            return;
+          }
           vpFail();
         });
         h.loadSource(m.hls);
@@ -1914,8 +1940,20 @@
   function vpMediaError() {
     var P = VP, video = P.video;
     if (P.hls || !P.files) return;   // HLS 오류는 hls.js 이벤트에서 처리, 원본을 갈아 끼우는 중의 오류는 무시
-    if (video.error && video.error.code === 1) return;   // 사용자가 멈춘 불러오기
-    if (P.audSrc && video.crossOrigin) { vpRebuild(); return; }   // CORS 로 막혔을 수 있음: 웹 오디오 없이 다시
+    var code = video.error ? video.error.code : 0;
+    if (code === 1) return;   // 사용자가 멈춘 불러오기
+    // 처음 받는 파일이 '지원하지 않는 원본'(4)으로 막히면 CORS 때문일 수 있음: 웹 오디오 없이 다시
+    if (code === 4 && P.audSrc && video.crossOrigin && !(video.currentTime > 0)) { vpRebuild(); return; }
+    // 네트워크 오류(2)는 같은 파일을 1.5초 뒤 한 번 다시 받기
+    if (code === 2 && !P.netRetry) {
+      P.netRetry = true;
+      P.resumeAt = video.currentTime || P.resumeAt || 0;
+      P.resumed = !(P.resumeAt > 0);
+      P.want = true;
+      clearTimeout(P.netT);
+      P.netT = setTimeout(function () { if (P.video === video && !P.failed) { video.src = P.files[P.fileIdx].src; vpKick(); } }, 1500);
+      return;
+    }
     if (P.fileIdx < P.files.length - 1) {   // 다음 화질 · 형식으로 다시
       P.resumeAt = video.currentTime || P.resumeAt || 0;
       P.resumed = !(P.resumeAt > 0);
