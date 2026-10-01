@@ -219,6 +219,8 @@ html:not(.js) .lg-boot{display:none}
 .ad-tile span{display:block;font-size:12.5px;color:var(--gray-500);font-weight:700}
 .ad-tile b{display:block;font-size:24px;letter-spacing:-.03em;margin-top:4px;line-height:1.2}
 .ad-tile i{font-style:normal;font-size:12px;color:var(--gray-500);display:block;margin-top:4px}
+.ad-tile .ad-tile-amt{display:block;font-style:normal;font-size:15px;font-weight:800;letter-spacing:-.02em;color:#1F3B73;margin-top:2px}   /* 1.4.10 누적 결제 금액 */
+.ad-tile.hi .ad-tile-amt{color:#fff}
 .ad-tile.hi{background:linear-gradient(135deg,#1F5FE0,#173F9E);border:0;color:#fff}
 .ad-tile.is-paused{border-color:#F0A24A;background:#FFF9EE}
 .ad-tile.is-low b{color:#B42318}   /* 1.4.9 지메일 잔여 10통 이하 */

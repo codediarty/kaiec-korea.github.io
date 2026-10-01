@@ -552,17 +552,24 @@
     var t = a.tiles, stt = t.status || {};
     /* 1.4.3 상단 타일(사용자 2026.09.30 '누적 건수도 나와야지, 세액 위원회 부담 0원 이런 건 불필요, 전체적으로 가독성 좋게'):
        ① 정산: 정산일이면 오늘 정산표, 아니면 다음 정산 미리 보기(정산표에 아직 없는 확정 실적 + 미지급 정산표) ② 누적 추천 결제 ③ 최근 7일 ④ 위원 ⑤ 메일 */
-    var nx = t.next || null, payTile;
-    if (a.isPayoutToday) {
-      var totSum = a.payouts.reduce(function (x, p) { return x + (Number(p.amount) || 0); }, 0);
-      payTile = '<div class="ad-tile hi"><span>오늘 정산 · ' + fmtKo(a.today, true) + '</span><b>' + won(totSum) + '</b><i>' + a.payouts.length + '명 · 지급 완료 ' + t.paidN + '명 · 남은 ' + t.dueN + '명' + (t.holdN ? ' · 정산 정보 미등록 ' + t.holdN + '명' : '') + ' · <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표 열기</button></i></div>';
+    /* 1.4.10 사용자 2026.10.01 '정산 완료되었으니까 다시 0원으로 되어 다시 수집되는 게 올라가는 형식(지급 예정 금액)으로 되어야 하는 거 아니야?
+       다음 주 목요일에는 정산 금액 얼마고 지금 얼마 정도 팔렸구나 볼 수 있게': 정산일이어도 오늘 지급예정을 모두 지급 완료하면 다음 정산(모이는 금액)으로,
+       오늘 정산은 아래 줄에 '지급 완료'로. 지급 전에는 오늘 정산을 크게 보이고 아래 줄에 다음 정산 모이는 금액 */
+    var nx = t.next || null, payTile, md = function (s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() : String(s || ''); };
+    var totSum = a.isPayoutToday ? a.payouts.reduce(function (x, p) { return x + (Number(p.amount) || 0); }, 0) : 0, todayDone = a.isPayoutToday && !t.dueN;
+    var paidSum = a.isPayoutToday ? a.payouts.reduce(function (x, p) { return x + (p.status === '지급완료' ? Number(p.amount) || 0 : 0); }, 0) : 0;
+    if (a.isPayoutToday && !todayDone) {
+      payTile = '<div class="ad-tile hi"><span>오늘 정산 · ' + fmtKo(a.today, true) + '</span><b>' + won(totSum) + '</b><i>' + a.payouts.length + '명 · 지급 완료 ' + t.paidN + '명 · 남은 ' + t.dueN + '명' + (t.holdN ? ' · 정산 정보 미등록 ' + t.holdN + '명' : '') + ' · <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표 열기</button>' + (nx ? '<br>다음 정산 ' + md(nx.day) + '(목)까지 모이는 중 ' + won(nx.amount) : '') + '</i></div>';
     } else if (nx) {
       var nd = dateOf(nx.day), cutTxt = nd ? DAYS[(nd.getDay() + 6) % 7] + '요일 24시' : '전날 24시';
-      payTile = '<div class="ad-tile hi"><span>다음 정산 · ' + fmtKo(nx.day, true) + '</span><b>' + won(nx.amount) + '</b><i>' + (nx.members ? nx.members + '명 · 추천 ' + num(nx.credits) + '건 · ' + cutTxt + '까지 결제분' : '아직 없음 · ' + cutTxt + '까지 결제분이 모입니다') + (nx.holdN ? ' · 정산 정보 미등록 ' + nx.holdN + '명' : '') + (nx.overdueN ? '<br><strong>지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum) + '</strong> <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') + '</i></div>';
+      payTile = '<div class="ad-tile hi"><span>다음 정산 · ' + fmtKo(nx.day, true) + ' · 지급 예정</span><b>' + won(nx.amount) + '</b><i>' + (nx.members ? nx.members + '명 · 추천 ' + num(nx.credits) + '건 · ' + cutTxt + '까지 결제분' : '아직 없음 · ' + cutTxt + '까지 결제분이 모입니다') + (nx.holdN ? ' · 정산 정보 미등록 ' + nx.holdN + '명' : '') + (nx.overdueN ? '<br><strong>지난 정산 미지급 ' + nx.overdueN + '명 · ' + won(nx.overdueSum) + '</strong> <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') +
+        (todayDone ? '<br>오늘 ' + md(a.today) + ' 정산 ' + won(paidSum) + ' · ' + t.paidN + '명 지급 완료' + (t.holdN ? ' · 보류 ' + t.holdN + '명(' + won(totSum - paidSum) + ')은 다음 정산에 합쳐짐' : '') + ' <button type="button" class="lg-link lg-link--inv" data-tab="pay">정산표</button>' : '') + '</i></div>';
     } else payTile = '<div class="ad-tile hi"><span>최근 정산</span><b>' + t.dueN + '명 · ' + won(t.dueSum) + '</b><i>지급 완료 ' + t.paidN + '명 · 보류 ' + t.holdN + '명</i></div>';
     var p7 = t.paid7 || 0, pp7 = t.paidPrev7 || 0, d7 = p7 - pp7, stTxt = ['활동', '휴면예정', '휴면', '종료'].filter(function (x) { return x === '활동' || stt[x]; }).map(function (x) { return (x === '휴면예정' ? '휴면 예정' : x) + ' ' + (stt[x] || 0); }).join(' · ');
     return '<div class="ad-tiles">' + payTile +
-      '<div class="ad-tile"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b><i>이번 달 ' + num(t.creditsMonth || 0) + '건 · 실적 있는 위원 ' + num(t.creditedN || 0) + '명</i></div>' +
+      /* 1.4.10 사용자 '누적 추천 결제에서 누적 금액도 적혀 있어야 하고': 결제 금액 합계(실결제액) · 이번 달 금액 · 활동지원금 누적 · 지급 완료 */
+      '<div class="ad-tile"><span>누적 추천 결제</span><b>' + num(t.creditsAll != null ? t.creditsAll : t.paid7) + '건</b>' + (t.amountAll != null ? '<em class="ad-tile-amt">결제 ' + won(t.amountAll) + '</em>' : '') +
+        '<i>이번 달 ' + num(t.creditsMonth || 0) + '건' + (t.amountMonth != null ? ' ' + won(t.amountMonth) : '') + ' · 실적 있는 위원 ' + num(t.creditedN || 0) + '명' + (t.supportAll != null ? '<br>활동지원금 누적 ' + won(t.supportAll) + (t.paidAll != null ? ' · 지급 완료 ' + won(t.paidAll) : '') : '') + '</i></div>' +
       '<div class="ad-tile"><span>최근 7일 추천 결제</span><b>' + num(p7) + '건' + (d7 ? ' <small class="ad-tile-d ' + (d7 > 0 ? 'up' : 'down') + '">' + (d7 > 0 ? '▲' : '▼') + num(Math.abs(d7)) + '</small>' : '') + '</b><i>그 전 7일 ' + num(pp7) + '건 · 취소 · 환불 ' + num(t.canc7) + '건</i></div>' +
       '<div class="ad-tile"><span>위원</span><b>' + num(t.members) + '명</b><i>' + stTxt + (t.loggedInN != null ? ' · 라운지 로그인 ' + num(t.loggedInN) + '명' : '') + '</i></div>' +
       mailTileHTML(a, t) + '</div>';
@@ -794,7 +801,7 @@
     var kv = k.visitors || { now: 0, prev: 0, m30: 0, loggedIn: 0, of: 0 }, kc = k.credited || { all: 0, m30: 0, of: 0 }, kcr = pct(kc.all, kc.of);
     var rpp = k.reach.people || null, c7 = k.reach.ch7 || null;
     var kpis = '<div class="ad-kpis">' +
-      kpiTile('누적 추천 결제', k.credits.all, '건', '<span class="ad-delta ' + (k.credits.now ? 'up' : 'flat') + '">' + (k.credits.now ? '▲ ' + num(k.credits.now) + '건 <small>최근 7일</small>' : '최근 7일 추천 없음') + '</span>', '이번 달 ' + num(k.credits.month || 0) + '건 · 지난달 ' + num(k.credits.prevMonth || 0) + '건', 'hi') +
+      kpiTile('누적 추천 결제', k.credits.all, '건', '<span class="ad-delta ' + (k.credits.now ? 'up' : 'flat') + '">' + (k.credits.now ? '▲ ' + num(k.credits.now) + '건 <small>최근 7일</small>' : '최근 7일 추천 없음') + '</span>', (k.credits.amount != null ? '누적 결제 ' + won(k.credits.amount) + ' · ' : '') + '이번 달 ' + num(k.credits.month || 0) + '건 · 지난달 ' + num(k.credits.prevMonth || 0) + '건', 'hi') +
       kpiTile('최근 7일 추천 결제', k.credits.now, '건', delta(k.credits.now, k.credits.prev, '건'), '30일 ' + num(k.credits.m30) + '건 · 취소 · 환불 30일 ' + num(k.canceled.m30) + '건') +
       /* 1.4.7 사용자 '최근 7일 확산은 뭐야? 확 와닿지 않는데': 위원 명함 · 추천 링크 · QR 을 연 사람(같은 브라우저는 한 사람)으로, 열람 횟수와 경로를 아래에 */
       kpiTile('최근 7일 명함 · 링크 방문', rpp ? rpp.now : k.reach.now, '명', delta(rpp ? rpp.now : k.reach.now, rpp ? rpp.prev : k.reach.prev, '명'),
