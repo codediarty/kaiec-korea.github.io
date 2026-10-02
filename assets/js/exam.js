@@ -969,10 +969,13 @@
     });
   }
 
-  /* ---------------------------------------------------------------- 8-1. AI윤리전문가(AIEP) 영상관 (2026.10.01 1판 → 2판 → 3판 → 4판)
-     대시보드 맨 위 패널. 공개 라이선스 애니메이션을 주제별 편(episode)으로 이어 보고 한국어 자막을 입힌 선택 자료입니다(이수 · 평가와 관계없음).
+  /* ---------------------------------------------------------------- 8-1. AI윤리전문가(AIEP) 영상관 (2026.10.01 1판 → 2판 → 3판 → 4판 → 10.02 5판)
+     대시보드 맨 위 패널. 생성형 AI 윤리 주제를 편(episode)마다 하나씩 이어 보는 선택 자료입니다(이수 · 평가와 관계없음).
      - 편 · 파트 · 한국어 자막 · 출처는 assets/js/exam-videos.js(window.KAIEC_EXAM_VIDEOS). 대시보드를 처음 그릴 때 한 번 불러옵니다(CFG.videos.data).
-     - 4판: 기초 · 심화 구분 없이 8편(EP 01 ~ 08)을 카드 하나의 목록으로. 원판이 영어가 아닌 편은 lang(예: 독일어 원판)을 함께 표시합니다.
+     - 5판: 10편(EP 01 ~ 10). 편마다 위원회의 AIEP 오리지널(p.orig, 사이트의 MP4 · 화면 글자라 자막 없음)로 시작해
+       같은 주제의 해외 애니메이션(공개 라이선스 원작 + 위원회 한국어 자막, 화면 표시 'AIEP 한국어판')으로 이어집니다.
+       학습 포인트는 없앴고(글이 많다는 의견), 재생 창 정보는 소개 · 구성 · 생각해 볼 질문 · 교재 연결 · 출처입니다.
+       원판이 영어가 아닌 편은 lang(예: 독일어 원판)을 함께 표시합니다(5판에는 없음).
      - 한 편은 파트(원본 영상 하나, 화면에서는 '챕터') 여러 개를 재생 막대 하나(전체 시간 · 챕터 경계 표시)로 이어 재생합니다.
        파트는 잘라 쓰지 않고 처음부터 끝까지 재생합니다. 편을 열 때만 제목 카드를 보여 주고, 챕터 사이에서는 카드로 끊지 않습니다:
        끝 장면을 그대로 붙잡아 두었다가(정지 화면) 다음 챕터 첫 장면이 나오면 겹쳐 넘기고(교차 전환), 소리는 짧게 키우며 들어가고,
@@ -1037,6 +1040,16 @@
   function epNo(e) { return 'EP ' + pad(e.no); }
   // 원판이 영어가 아닌 편의 표시(예: 독일어 원판 · 한국어 자막)
   function langTxt(e) { return e.lang ? e.lang + ' · 한국어 자막' : ''; }
+  // 챕터 구분 표시: 위원회 오리지널(© 한국AI윤리위원회) · 해외 원작에 위원회가 한국어 자막을 입힌 판(라이선스 · 제작 표기 아님)
+  function partTag(p) {
+    return p && p.orig ? '<span class="ex-ptag is-orig">AIEP 오리지널</span>' : '<span class="ex-ptag">AIEP 한국어판</span>';
+  }
+  // 챕터 출처 한 줄(재생 창 챕터 안내 · 제목 카드 · 구성 목록)
+  function srcTxt(p) {
+    var c = (p && p.credit) || {};
+    return p && p.orig ? '© 한국AI윤리위원회 · 영상 · 글 · 음악 모두 위원회 저작물'
+      : '원작 ' + p.org + ' · ' + (c.license || '') + ' · 한국어 자막 한국AI윤리위원회';
+  }
   // 편 전체 시간 g 가 속한 파트 번호
   function partAt(e, g) {
     for (var i = e.parts.length - 1; i > 0; i--) if (g >= e._offs[i] - 0.05) return i;
@@ -1127,14 +1140,16 @@
             '<span class="ex-vids-bar" role="progressbar" aria-label="영상관 시청" aria-valuemin="0" aria-valuemax="' + items.length + '" aria-valuenow="' + seen + '">' +
             '<i style="width:' + Math.round(seen / items.length * 100) + '%"></i></span></p></div>' +
         '<ol class="ex-ecard">' + items.map(function (e) { return epCard(e, log[e.id] || {}, e === f); }).join('') + '</ol>' +
-        '<p class="ex-eps-note">' + ico('volume-2') + '<span>한 편 안의 챕터는 끊기지 않고 이어서 재생되며, 소리 크기를 고르게 맞추고 화면에 맞는 가장 높은 화질(최대 1080p)로 엽니다. ' +
+        '<p class="ex-eps-note">' + ico('volume-2') + '<span>편마다 위원회의 AIEP 오리지널로 시작해 같은 주제의 해외 애니메이션(AIEP 한국어판)으로 끊김 없이 이어집니다. 소리 크기를 고르게 맞추고 화면에 맞는 가장 높은 화질(최대 1080p)로 엽니다. ' +
           '이수 · 평가와 관계없는 선택 자료이며, 시청 기록은 이 기기에만 남습니다.</span></p>' +
       '</div>' +
       vidsCredits(items) + '</section>';
   }
   var NUM_KO = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
+  // 위원회 오리지널 챕터 수
+  function origN() { var k = 0; eps().forEach(function (e) { e.parts.forEach(function (p) { if (p.orig) k++; }); }); return k; }
   function vidsHead(n, mins) {
-    var lead = (VID.data && VID.data.lead) || 'AI 윤리의 핵심 주제를 한 편에 하나씩, 처음부터 끝까지 이어 보는 애니메이션 시리즈입니다. 전 편에 한국어 자막이 있습니다.';
+    var lead = (VID.data && VID.data.lead) || '생성형 AI 윤리의 핵심 주제를 한 편에 하나씩, 처음부터 끝까지 이어 보는 애니메이션 시리즈입니다.';
     return '<header class="ex-vids-head"><div class="ex-vids-hd">' +
         '<p class="ex-vids-en">AIEP EXCLUSIVE · ANIMATION SERIES</p>' +
         '<h2 class="ex-vids-title" id="exVidsTitle">' + ico('film') + '<span>' + VBRAND + '</span><em class="ex-vids-opt">회원 전용</em></h2>' +
@@ -1142,7 +1157,8 @@
       '</div>' +
       (n ? '<dl class="ex-vids-stats"><div><dt>시리즈</dt><dd>' + n + '<small>편</small></dd></div>' +
         '<div><dt>전체 길이</dt><dd>' + mins + '<small>분</small></dd></div>' +
-        '<div><dt>자막</dt><dd>한국어</dd></div></dl>' : '') +
+        (origN() ? '<div><dt>오리지널</dt><dd>' + origN() + '<small>챕터</small></dd></div>' : '') +
+        '<div><dt>한국어</dt><dd>전 편</dd></div></dl>' : '') +
       '</header>';
   }
   function vidsSkeleton() {
@@ -1170,7 +1186,7 @@
         (e.sub ? '<p class="ex-feat-sub">' + esc(e.sub) + '</p>' : '') +
         '<p class="ex-feat-lead">' + esc(e.lead) + '</p>' +
         (e.parts.length > 1 ? '<ol class="ex-feat-parts" aria-label="챕터">' + e.parts.map(function (p, i) {
-          return '<li><span class="ex-feat-pn">' + (i + 1) + '</span><span class="ex-feat-pt">' + esc(p.title) + '</span><span class="ex-feat-pd ex-num">' + fmtSec(p.dur, true) + '</span></li>';
+          return '<li><span class="ex-feat-pn">' + (i + 1) + '</span><span class="ex-feat-pt">' + esc(p.title) + '</span>' + partTag(p) + '<span class="ex-feat-pd ex-num">' + fmtSec(p.dur, true) + '</span></li>';
         }).join('') + '</ol>' : '') +
         '<div class="ex-feat-act"><button type="button" class="ex-feat-btn" data-act="vid-open" data-vid="' + esc(e.id) + '">' + btn + '</button>' +
           '<span class="ex-feat-meta">' + (e.parts.length > 1 ? '챕터 ' + e.parts.length + ' · ' : '') + fmtMin(e.dur) + (chsTxt(e) ? ' · ' + chsTxt(e) : '') + '</span></div>' +
@@ -1207,11 +1223,12 @@
   // 출처 표기(TASL: 제목 · 저작자 · 출처 · 라이선스 + 변경 사항)
   function creditLine(p) {
     var c = p.credit || {};
+    if (p.orig) return 'AIEP 오리지널 「' + esc(p.title) + '」 · ' + esc(c.by || '한국AI윤리위원회') + ' · © 한국AI윤리위원회(영상 · 글 · 음악, 무단 복제 · 배포 금지)';
     return '영상 <a href="' + esc(c.url) + '" target="_blank" rel="noopener">' + esc(c.title) + '</a> · ' + esc(c.by) +
       ' · <a href="' + esc(c.licenseUrl) + '" target="_blank" rel="noopener">' + esc(c.license) + '</a> · ' + esc(c.host) +
       ' · 변경: 한국어 자막 추가(한국AI윤리위원회 번역' + (c.sub ? ', 자막 ' + esc(c.sub) : '') + ')';
   }
-  var CREDIT_NOTE = '각 영상은 원저작자가 위 라이선스로 공개한 것이며, 원저작자는 한국AI윤리위원회와 이 과정에 관여하거나 이를 보증하지 않습니다. ';
+  var CREDIT_NOTE = '해외 원작 영상은 원저작자가 위 라이선스로 공개한 것이며, 원저작자는 한국AI윤리위원회와 이 과정에 관여하거나 이를 보증하지 않습니다. ';
   function vidsCredits(items) {
     return '<details class="ex-vids-credit"><summary>' + ico('info') + '영상 정보 · 출처</summary>' +
       '<ol>' + items.map(function (e) {
@@ -1219,10 +1236,11 @@
           return '<li>' + (e.parts.length > 1 ? '<span class="ex-cr-p">챕터 ' + (k + 1) + '</span>' : '') + creditLine(p) + '</li>';
         }).join('') + '</ul></li>';
       }).join('') + '</ol>' +
-      '<p>구성 · 한국어 자막: 한국AI윤리위원회. ' + CREDIT_NOTE +
+      '<p>AIEP 오리지널은 한국AI윤리위원회가 직접 만든 영상입니다(영상 · 글 · 음악 모두 위원회 저작물, 무단 복제 · 배포 금지). ' +
+      '그 밖의 챕터(AIEP 한국어판)는 해외 원작에 위원회가 한국어 자막을 입힌 것입니다. 구성 · 한국어 자막: 한국AI윤리위원회. ' + CREDIT_NOTE +
       '한국어 자막은 위원회가 원본 자막(원본 자막이 없는 영상은 원본 음성을 받아 적은 글)을 번역해 덧붙인 것으로 원문 표현과 다를 수 있습니다. ' +
       '편마다 여러 영상을 챕터로 차례로 이어 재생하며, 각 영상은 자르지 않고 처음부터 끝까지 재생합니다(영상 속 저작권 표시와 끝 화면 포함). 소리 크기만 고르게 맞춰 재생합니다(영상 자체는 바꾸지 않음). ' +
-      '영상은 원 제공처(위키미디어 커먼즈 · EU 집행위원회 시청각 서비스) 서버에서 재생되며, 이때 접속 정보(IP 주소 등)가 해당 서버에 전달될 수 있습니다.</p>' +
+      '해외 원작 영상은 원 제공처(위키미디어 커먼즈 · EU 집행위원회 시청각 서비스) 서버에서 재생되며, 이때 접속 정보(IP 주소 등)가 해당 서버에 전달될 수 있습니다.</p>' +
       '</details>';
   }
 
@@ -1242,6 +1260,7 @@
           '<div class="ex-vp-cc" aria-hidden="true"><span></span></div>' +
           '<div class="ex-vp-lt" aria-live="polite" hidden></div>' +
           '<button type="button" class="ex-vp-up" data-vp="upnext" hidden></button>' +
+          '<span class="ex-vp-wm" aria-hidden="true" hidden></span>' +
           '<span class="ex-vp-spin" aria-hidden="true"></span>' +
           '<button type="button" class="ex-vp-big" data-vp="toggle" aria-label="재생">' + ico('play') + '</button>' +
           '<div class="ex-vp-note" hidden><span></span><button type="button" data-vp="restart">처음부터</button></div>' +
@@ -1272,7 +1291,7 @@
     VP = {
       box: box, dialog: q('.ex-vp-dialog'), stage: q('.ex-vp-stage'), chEl: q('.ex-vp-ch'), titleEl: q('.ex-vp-title'),
       cc: q('.ex-vp-cc span'), note: q('.ex-vp-note'), pcard: q('.ex-vp-pcard'), end: q('.ex-vp-end'), msg: q('.ex-vp-msg'), info: q('.ex-vp-info'),
-      freeze: q('.ex-vp-freeze'), lt: q('.ex-vp-lt'), up: q('.ex-vp-up'), ltNext: -1, pref: {},
+      freeze: q('.ex-vp-freeze'), lt: q('.ex-vp-lt'), up: q('.ex-vp-up'), wm: q('.ex-vp-wm'), ltNext: -1, pref: {},
       seek: q('.ex-vp-seek'), marks: q('.ex-vp-marks'), vol: q('.ex-vp-vol'), curEl: q('.ex-vp-cur'), durEl: q('.ex-vp-dur'), partEl: q('.ex-vp-part'),
       ppBtn: q('.ex-vp-pp'), bigBtn: q('.ex-vp-big'), ccBtn: q('.ex-vp-ccb'), rateBtn: q('.ex-vp-rate'), muteBtn: q('.ex-vp-mute'), fsBtn: q('.ex-vp-fsb'),
       nextBtn: q('.ex-vp-nextb'),
@@ -1778,7 +1797,7 @@
   // 제목 카드: 편을 열 때(intro) · 이어 볼 때(resume) 첫 챕터를 불러오는 동안 보이고, 재생이 시작되면 사라집니다.
   // (챕터 사이에서는 카드로 끊지 않습니다: vpNextPart · vpFreeze · vpLt)
   function vpCard(pi, kind) {
-    var P = VP, e = P.ep, p = e.parts[pi], n = e.parts.length, c = p.credit || {};
+    var P = VP, e = P.ep, p = e.parts[pi], n = e.parts.length;
     clearTimeout(P.cardT);
     P.pcard.innerHTML =
       (kind === 'intro'
@@ -1787,8 +1806,8 @@
           (e.lang ? '<p class="ex-pc-lang">' + esc(langTxt(e)) + '</p>' : '')
         : '<p class="ex-pc-k">' + epNo(e) + ' · ' + esc(e.title) + '</p>') +
       '<div class="ex-pc-pt">' + (n > 1 ? '<p class="ex-pc-part">챕터 ' + (pi + 1) + ' <span>/ ' + n + '</span></p>' : '') +
-        '<p class="ex-pc-t">' + esc(p.title) + '</p>' +
-        '<p class="ex-pc-c">원작 ' + esc(p.org) + ' · ' + esc(c.license || '') + '<span class="ex-pc-sep" aria-hidden="true"></span>한국어 자막 한국AI윤리위원회</p></div>';
+        (n > 1 || p.title !== e.title ? '<p class="ex-pc-t">' + esc(p.title) + '</p>' : '') +
+        '<p class="ex-pc-c">' + partTag(p) + '<span>' + esc(srcTxt(p)) + '</span></p></div>';
     P.pcard.classList.toggle('is-intro', kind === 'intro');
     P.pcard.classList.remove('is-out');
     P.pcard.hidden = false;
@@ -1850,12 +1869,11 @@
   function vpLt(pi) {
     var P = VP, e = P.ep, p = e && e.parts[pi];
     if (!p) return;
-    var c = p.credit || {};
     clearTimeout(P.ltT);
-    P.lt.innerHTML = '<p class="ex-vp-lt-k">챕터 ' + (pi + 1) + ' <span>/ ' + e.parts.length + '</span></p>' +
+    P.lt.innerHTML = '<p class="ex-vp-lt-k">챕터 ' + (pi + 1) + ' <span>/ ' + e.parts.length + '</span>' + partTag(p) + '</p>' +
       '<p class="ex-vp-lt-t">' + esc(p.title) + '</p>' +
       (p.bridge ? '<p class="ex-vp-lt-b">' + esc(p.bridge) + '</p>' : '') +
-      '<p class="ex-vp-lt-c">원작 ' + esc(p.org) + ' · ' + esc(c.license || '') + ' · 한국어 자막 한국AI윤리위원회</p>';
+      '<p class="ex-vp-lt-c">' + esc(srcTxt(p)) + '</p>';
     P.note.hidden = true;
     P.lt.classList.remove('is-out');
     P.lt.hidden = false;
@@ -1915,9 +1933,13 @@
     try { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + 0.45); } catch (x) { g.gain.value = v; }
   }
   function vpPartUI() {
-    var P = VP, e = P.ep, n = e.parts.length;
-    P.partEl.textContent = n > 1 ? (P.pi + 1) + '/' + n + ' · ' + P.part.title : P.part.title;
+    var P = VP, e = P.ep, n = e.parts.length, p = P.part;
+    P.partEl.textContent = n > 1 ? (P.pi + 1) + '/' + n + ' · ' + p.title : p.title;
     P.nextBtn.hidden = !(P.pi < n - 1);
+    // 해외 원작 챕터: 화면 오른쪽 위에 작은 'AIEP 한국어판' 표시(오리지널은 영상 안에 위원회 표시가 있어 띄우지 않음)
+    P.wm.hidden = !!p.orig;
+    if (!p.orig) P.wm.innerHTML = '<b>K</b><span>AIEP 한국어판</span>';
+    P.ccBtn.hidden = !(p.cues && p.cues.length);
     [].forEach.call(P.info.querySelectorAll('.ex-vp-pb'), function (b, k) {
       b.classList.toggle('is-now', k === P.pi);
       if (k === P.pi) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
@@ -2132,7 +2154,8 @@
     P.stage.classList.remove('is-trans');
     P.stage.classList.remove('is-playing');
     P.msg.innerHTML = '<p class="ex-vp-card-t">' + ico('alert-triangle') + '영상을 불러오지 못했습니다</p>' +
-      '<p class="ex-vp-card-d">네트워크 연결을 확인한 뒤 다시 시도해 주십시오. 계속 열리지 않으면 원 제공처 페이지에서 볼 수 있습니다.</p>' +
+      '<p class="ex-vp-card-d">' + (c.url ? '네트워크 연결을 확인한 뒤 다시 시도해 주십시오. 계속 열리지 않으면 원 제공처 페이지에서 볼 수 있습니다.'
+        : '네트워크 연결을 확인한 뒤 다시 시도해 주십시오. 계속 열리지 않으면 최신 브라우저(크롬 · 사파리 · 엣지 · 삼성 인터넷)로 열어 주십시오.') + '</p>' +
       '<div class="ex-vp-card-b"><button type="button" class="ex-vp-pill is-main" data-vp="retry">' + ico('refresh-cw') + '다시 시도</button>' +
       (P.ep && P.pi < P.ep.parts.length - 1 ? '<button type="button" class="ex-vp-pill" data-vp="next">' + ico('skip-forward') + '다음 챕터</button>' : '') +
       (c.url ? '<a class="ex-vp-pill" href="' + esc(c.url) + '" target="_blank" rel="noopener">원본 페이지' + ico('external-link') + '<span class="sr-only">(새 창)</span></a>' : '') + '</div>';
@@ -2152,11 +2175,11 @@
           '<ol class="ex-vp-parts">' + e.parts.map(function (p, k) {
             return '<li><button type="button" class="ex-vp-pb" data-vp="part" data-i="' + k + '">' +
               '<span class="ex-vp-pn">' + (k + 1) + '</span>' +
-              '<span class="ex-vp-pt">' + esc(p.title) + '<small>원작 ' + esc(p.org) + ' · ' + esc((p.credit || {}).license || '') + ' · 한국어 자막 한국AI윤리위원회</small></span>' +
+              '<span class="ex-vp-pt">' + esc(p.title) + '<small>' + partTag(p) +
+                esc(p.orig ? '한국AI윤리위원회' : '원작 ' + p.org + ' · ' + ((p.credit || {}).license || '') + ' · 한국어 자막 한국AI윤리위원회') + '</small></span>' +
               '<span class="ex-vp-pat ex-num">' + (multi ? fmtSec(e._offs[k]) : fmtSec(p.dur, true)) + '</span></button></li>';
           }).join('') + '</ol></section>' +
-        '<section class="ex-vp-sec"><h3>학습 포인트</h3><ol class="ex-vp-pts">' +
-          (e.points || []).map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ol>' +
+        '<section class="ex-vp-sec">' +
           (e.qs && e.qs.length ? '<h3>생각해 볼 질문</h3><ul class="ex-vp-qs">' +
             e.qs.map(function (q) { return '<li>' + ico('help-circle') + '<span>' + esc(q) + '</span></li>'; }).join('') + '</ul>' : '') +
           '<h3>교재 연결</h3><p class="ex-vp-book">' + ico('book-open') + '<span>' + esc(e.book) + '</span></p></section>' +

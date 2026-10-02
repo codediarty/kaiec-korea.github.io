@@ -2698,3 +2698,15 @@ table.tbl tbody th{vertical-align:top}
 .vl-q b svg{width:15px;height:15px}
 .vl-q p{margin:5px 0 0;font-size:13.5px;line-height:1.65;color:#C9D6E6;word-break:keep-all}
 @media (max-width:760px){.vl-info{padding:15px 16px}.vl-pts li{font-size:13px}.vl-q p{font-size:13px}}
+/* 5판(2026.10.02): 재생 화면 예시 옆 '이 편의 구성'(챕터 · 구분 표시 · 길이). AIEP 오리지널은 금색, 해외 원작 + 위원회 한국어 자막은 청록 */
+.vl-chs{display:grid;gap:8px;margin:0;padding:0;list-style:none;counter-reset:vlc}
+.vl-chs li{position:relative;display:flex;align-items:center;gap:8px;min-width:0;padding-left:30px;font-size:13.5px;line-height:1.5;color:#D6E2EE;counter-increment:vlc}
+.vl-chs li::before{content:counter(vlc);position:absolute;left:0;top:50%;display:flex;align-items:center;justify-content:center;width:20px;height:20px;margin-top:-10px;border-radius:50%;
+  background:rgba(111,227,216,.14);color:#6FE3D8;font-size:11.5px;font-weight:800}
+.vl-ct{flex:1 1 auto;min-width:0;overflow:hidden;font-weight:700;color:#F1F5FA;text-overflow:ellipsis;white-space:nowrap}
+.vl-chs small{flex:none;font-size:12px;font-weight:700;color:#8FA3BA;font-variant-numeric:tabular-nums}
+.vl-tag{flex:none;display:inline-flex;align-items:center;height:18px;padding:0 6px;border:1px solid rgba(111,227,216,.5);border-radius:3px;
+  font-size:10.5px;font-style:normal;font-weight:800;line-height:1;color:#6FE3D8;white-space:nowrap}
+.vl-tag.is-orig{border-color:rgba(242,196,109,.62);color:#F2C46D}
+.vl-pill--orig{border-color:rgba(242,196,109,.5);color:#F2C46D}
+@media (max-width:420px){.vl-chs .vl-tag{display:none}}

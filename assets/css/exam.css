@@ -1116,6 +1116,22 @@ html.ex-vp-on,html.ex-vp-on body{overflow:hidden}
 .ex-vp-up{position:absolute;right:clamp(10px,2vw,22px);top:clamp(10px,2vw,22px);z-index:5;display:inline-flex;align-items:center;gap:10px;max-width:min(46%,340px);
   min-height:48px;padding:7px 12px 7px 15px;border:1px solid rgba(255,255,255,.35);border-radius:8px;background:rgba(3,12,24,.78);
   -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);color:#fff;font:inherit;text-align:left;cursor:pointer;animation:exUpIn .4s ease;transition:background-color .15s,border-color .15s}
+/* 5판(2026.10.02) 챕터 구분 표시: AIEP 오리지널(위원회 저작물, 금색) · AIEP 한국어판(해외 원작 + 위원회 한국어 자막, 청록) */
+.ex-ptag{display:inline-flex;align-items:center;flex:0 0 auto;height:18px;margin:0 7px 0 0;padding:0 6px;border:1px solid rgba(111,227,216,.5);border-radius:3px;
+  font-size:10.5px;font-weight:800;letter-spacing:.02em;line-height:1;color:#6FE3D8;white-space:nowrap;vertical-align:1px}
+.ex-ptag.is-orig{border-color:rgba(242,196,109,.62);color:#F2C46D}
+.ex-feat-parts .ex-ptag{margin:0}
+.ex-vp-lt-k span.ex-ptag{margin:0 0 0 9px;letter-spacing:.02em;vertical-align:1px}
+.ex-vp-lt-k span.ex-ptag.is-orig{color:#F2C46D}
+.ex-vp-lt-k span.ex-ptag:not(.is-orig){color:#6FE3D8}
+.ex-pc-c .ex-ptag{margin-right:9px}
+.ex-vp-pt small .ex-ptag{height:17px;margin-right:6px;font-size:10px}
+/* 해외 원작 챕터를 재생하는 동안 화면 오른쪽 위의 작은 표시(다음 챕터 단추 · 제목 카드가 나오면 가려짐) */
+.ex-vp-wm{position:absolute;right:clamp(10px,2vw,20px);top:clamp(10px,2vw,18px);z-index:4;display:inline-flex;align-items:center;gap:6px;
+  padding:4px 9px 4px 4px;border-radius:5px;background:rgba(3,12,24,.46);color:rgba(255,255,255,.88);font-size:clamp(10px,1.05vw,12px);font-weight:700;
+  letter-spacing:.02em;line-height:1;pointer-events:none;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.ex-vp-wm b{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:3px;background:#fff;color:#0B1B33;font-size:11px;font-weight:900}
+.ex-vp-wm[hidden],.ex-vp-up:not([hidden])~.ex-vp-wm{display:none}
 .ex-vp-up:hover{background:rgba(3,12,24,.92);border-color:#6FE3D8}
 .ex-vp-up:focus-visible{outline:2px solid #6FE3D8;outline-offset:2px}
 .ex-vp-up span{min-width:0;font-size:13.5px;font-weight:700;line-height:1.35;word-break:keep-all;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -1359,6 +1375,9 @@ html.ex-vp-on,html.ex-vp-on body{overflow:hidden}
   .ex-vp-lt-b{margin-top:3px!important;font-size:11.5px;line-height:1.5}
   .ex-vp-lt-c{display:none}
   .ex-vp-up{min-height:40px;padding:5px 9px 5px 11px;gap:7px}
+  .ex-vp-wm{gap:4px;padding:3px 6px 3px 3px;font-size:9.5px}
+  .ex-vp-wm b{width:14px;height:14px;font-size:9.5px}
+  .ex-feat-parts .ex-ptag{display:none}
   .ex-vp-up span{font-size:12px;-webkit-line-clamp:1}
   .ex-pc-pt{margin-top:10px}
   .ex-vp-pcard.is-intro .ex-pc-pt{margin-top:12px;padding-top:10px}

@@ -8,7 +8,7 @@ kaiec.kr/작업-메모.md 같은 내부 문서도 주소로 열립니다. 이 �
 
 허용 목록
   - 루트와 페이지 폴더(영문 소문자 · 숫자 · 하이픈 이름)의 *.html  (tools/ · posts-src/ 는 제외)
-  - assets/ 아래 모든 파일 (.DS_Store · Thumbs.db · desktop.ini · __pycache__ 제외)
+  - assets/ 아래 모든 파일 (.DS_Store · Thumbs.db · desktop.ini · __pycache__ 제외, 영상관 오리지널 MP4 포함)
   - 루트의 CNAME · robots.txt · sitemap.xml · rss.xml
 
 사용: python3 tools/collect_site.py [출력 폴더, 기본 _site]
@@ -28,7 +28,8 @@ PAGE_DIR = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 ROOT_HTML = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*\.html$")
 JUNK = {".DS_Store", "Thumbs.db", "desktop.ini"}
 ALLOWED_EXT = {".html", ".css", ".js", ".jpg", ".jpeg", ".png", ".svg", ".webp", ".gif", ".ico",
-               ".woff", ".woff2", ".ttf", ".otf", ".xml", ".txt", ".json", ".webmanifest", ".pdf", ""}
+               ".woff", ".woff2", ".ttf", ".otf", ".xml", ".txt", ".json", ".webmanifest", ".pdf", ".mp4", ""}
+# .mp4: AIEP 영상관 오리지널(assets/vid/, 2026.10.02 5판). 파일마다 20MB 아래로 만듦(저장소 · Pages 용량)
 
 
 def collect(out):
