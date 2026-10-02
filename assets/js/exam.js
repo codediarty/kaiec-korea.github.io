@@ -1260,7 +1260,6 @@
           '<div class="ex-vp-cc" aria-hidden="true"><span></span></div>' +
           '<div class="ex-vp-lt" aria-live="polite" hidden></div>' +
           '<button type="button" class="ex-vp-up" data-vp="upnext" hidden></button>' +
-          '<span class="ex-vp-wm" aria-hidden="true" hidden></span>' +
           '<span class="ex-vp-spin" aria-hidden="true"></span>' +
           '<button type="button" class="ex-vp-big" data-vp="toggle" aria-label="재생">' + ico('play') + '</button>' +
           '<div class="ex-vp-note" hidden><span></span><button type="button" data-vp="restart">처음부터</button></div>' +
@@ -1291,7 +1290,7 @@
     VP = {
       box: box, dialog: q('.ex-vp-dialog'), stage: q('.ex-vp-stage'), chEl: q('.ex-vp-ch'), titleEl: q('.ex-vp-title'),
       cc: q('.ex-vp-cc span'), note: q('.ex-vp-note'), pcard: q('.ex-vp-pcard'), end: q('.ex-vp-end'), msg: q('.ex-vp-msg'), info: q('.ex-vp-info'),
-      freeze: q('.ex-vp-freeze'), lt: q('.ex-vp-lt'), up: q('.ex-vp-up'), wm: q('.ex-vp-wm'), ltNext: -1, pref: {},
+      freeze: q('.ex-vp-freeze'), lt: q('.ex-vp-lt'), up: q('.ex-vp-up'), ltNext: -1, pref: {},
       seek: q('.ex-vp-seek'), marks: q('.ex-vp-marks'), vol: q('.ex-vp-vol'), curEl: q('.ex-vp-cur'), durEl: q('.ex-vp-dur'), partEl: q('.ex-vp-part'),
       ppBtn: q('.ex-vp-pp'), bigBtn: q('.ex-vp-big'), ccBtn: q('.ex-vp-ccb'), rateBtn: q('.ex-vp-rate'), muteBtn: q('.ex-vp-mute'), fsBtn: q('.ex-vp-fsb'),
       nextBtn: q('.ex-vp-nextb'),
@@ -1934,11 +1933,9 @@
   }
   function vpPartUI() {
     var P = VP, e = P.ep, n = e.parts.length, p = P.part;
-    P.partEl.textContent = n > 1 ? (P.pi + 1) + '/' + n + ' · ' + p.title : p.title;
+    // 조작 막대의 챕터 이름 앞에 작은 구분 표시(AIEP 오리지널 · AIEP 한국어판). 영상 위에는 띄우지 않음(원작 로고 · 표시를 가리지 않게)
+    P.partEl.innerHTML = partTag(p) + '<span>' + esc(n > 1 ? (P.pi + 1) + '/' + n + ' · ' + p.title : p.title) + '</span>';
     P.nextBtn.hidden = !(P.pi < n - 1);
-    // 해외 원작 챕터: 화면 오른쪽 위에 작은 'AIEP 한국어판' 표시(오리지널은 영상 안에 위원회 표시가 있어 띄우지 않음)
-    P.wm.hidden = !!p.orig;
-    if (!p.orig) P.wm.innerHTML = '<b>K</b><span>AIEP 한국어판</span>';
     P.ccBtn.hidden = !(p.cues && p.cues.length);
     [].forEach.call(P.info.querySelectorAll('.ex-vp-pb'), function (b, k) {
       b.classList.toggle('is-now', k === P.pi);
