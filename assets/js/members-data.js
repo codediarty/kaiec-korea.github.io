@@ -124,6 +124,9 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '정희영', en: 'Jung Hee-young', code: 'JHY0531', email: 'hyjung@deepnoid.com', since: '2026.10', field: 'AI 개인정보 · 데이터 윤리', photo: 'jung-heeyoung.jpg' },
   { name: '김용주', en: 'Kim Yong-ju', code: 'KYJ4247', email: 'funny7465@naver.com', since: '2026.10', field: 'AI 윤리 · 책임 있는 AI 생태계', photo: 'kim-yongju.jpg' },
   { name: '이숙영', en: 'Lee Sook-young', code: 'LSY4033', email: 'kikikibook@naver.com', since: '2026.10', field: 'AI 에듀테크', photo: 'lee-sookyoung.jpg', track: '교육' },
+  { name: '양정선', en: 'Yang Jung-sun', code: 'YJS0351', email: 'quitepower@kiat.or.kr', since: '2026.10', field: 'AI 캠페인 · 인식 확산', photo: 'yang-jungsun.jpg', track: '교육' },
+  { name: '안진선', en: 'Ahn Jin-sun', code: 'AJS5727', email: 'nimph24@naver.com', since: '2026.10', field: 'AI 에듀테크', photo: 'ahn-jinsun.jpg', track: '교육' },
+  { name: '문성용', en: 'Moon Sung-yong', code: 'MSY1440', email: 'w1320w@nate.com', since: '2026.10', field: 'AI · 디지털 교육', photo: 'moon-sungyong.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
