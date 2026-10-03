@@ -411,7 +411,7 @@
     if (recentCredit(d)) top.push({ t: '최근 추천 감사합니다! 소개받은 분이 지금 AI 윤리를 공부하고 있어요. 주변에 도움이 될 분이 또 계신지 떠올려 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
     if (nt && nt.need <= 2 && m.credits > 0) top.push({ t: heroTier(nt.name) + '까지 ' + nt.need + '건 남았어요. 가까운 분께 가볍게 소개해 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
     if (mc.first) top.push({ t: '첫 소개는 가장 가까운 분부터 시작해 보세요. 위원으로 활동하게 된 소식을 전하며 명함 링크를 함께 보내면 자연스럽습니다.', b: ['명함 링크 복사', 'copy', L.card] });
-    out.push({ t: '요즘 AI 이야기가 나오면 \'AI도 바르게 쓰는 법을 배우는 과정이 있더라\' 하고 가볍게 이야기해 보세요. 안내 페이지를 함께 보내면 이해가 쉽습니다.', b: ['안내 페이지 링크 복사', 'copy', experts] });
+    out.push({ t: '자주 찾는 온라인 커뮤니티나 블로그, SNS에 AIEP 과정 소개 글을 안내 페이지 링크와 함께 올려 보세요. 한 번 올린 글은 필요한 분들이 오래 찾아 읽습니다.', b: ['안내 페이지 링크 복사', 'copy', experts] });   /* 3판(2026.10.03 사용자 \'온라인 커뮤니티 및 온라인 활동으로\') */
     if (!mc.first) out.push({ t: '가까운 분들께 한국AI윤리위원회 위원으로 활동하게 된 소식을 전하며 명함 링크를 함께 보내 보세요.', b: ['명함 링크 복사', 'copy', L.card] });   /* 첫 소개 제안과 겹치지 않게 */
     out.push({ t: reach > 0 ? '내 명함 · 링크로 ' + num(reach) + '명이 AI 윤리를 만났어요. 관심을 보인 분께 바로 신청 링크를 건네 보세요.' : '취업을 준비하는 대학생, 업무에 AI를 쓰는 지인 한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
     if (!top.length) { var h = 0, c = String(m.code || ''); for (var i = 0; i < c.length; i++) h = (h * 31 + c.charCodeAt(i)) % 997; var k = (Math.floor(Date.now() / 86400000) + h) % out.length; out = out.slice(k).concat(out.slice(0, k)); }
@@ -545,10 +545,13 @@
     var q = t.mailQuota != null && t.mailQuota >= 0 ? t.mailQuota : null, rf = t.mailRefill, today = a.today || '';
     var refill = rf && rf.at ? String(rf.at).slice(11, 16) : '', refillTxt = refill ? (String(rf.at).slice(0, 10) === today ? '' : '내일 ') + refill + '에 ' + num(rf.n) + '통 다시 생김' : '';
     var tip = '무료 지메일은 24시간 동안 100통까지 보낼 수 있고, 보낸 지 24시간이 지나면 그만큼 다시 생깁니다(0시에 한꺼번에 초기화되지 않음).' + (refillTxt ? '\n다음: ' + refillTxt : '') +
-      '\n오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수, 대기는 아직 안 나간 메일입니다.' + (t.mailPaused ? '\n일시정지 중에도 결제 · 정산 알림과 위원장 알림은 바로 나갑니다.' : '');
+      '\n오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수, 대기는 아직 안 나간 메일입니다.' + (t.mailPaused ? '\n일시정지 중에도 결제 · 정산 알림과 위원장 알림은 바로 나갑니다.' : '') +
+      (t.mailAutoResume > 0 ? '\n일시정지 중이라도 지메일 잔여가 ' + num(t.mailAutoResume) + '통 아래에 있다가 그 이상이 되면 자동으로 발송을 시작합니다(시작 예약이 있으면 예약 시각).' : '');
+    /* 1.4.16 자동 시작(사용자 2026.10.03 '정지하더라도 60통 남음 이상으로 바뀌면 자동으로 시작으로'): 멈춰 있고 잔여가 기준보다 적으면 둘째 줄에 기준을 보여 줌(칸 높이 그대로) */
+    var autoTxt = t.mailPaused && !t.mailResumeAt && t.mailAutoResume > 0 && q != null && q < t.mailAutoResume ? num(t.mailAutoResume) + '통에 자동 시작' : '';   /* 칸 폭(노트북 159px)에서 한 줄: '대기 188통 · 60통에 자동 시작' 143px */
     var head = '<span>메일 발송' + (t.mailPaused ? ' · <strong class="ad-tile-pause">일시정지</strong>' : '') + '</span>';
     var big = q == null ? num(t.mailToday) + '통 <small class="ad-tile-unit">오늘 보냄</small>' : num(q) + '통 <small class="ad-tile-unit">남음</small>';
-    var l1 = q == null ? '대기 ' + num(t.mailWait) + '통' : '오늘 ' + num(t.mailToday) + '통 보냄 · 대기 ' + num(t.mailWait) + '통';
+    var l1 = q == null ? '대기 ' + num(t.mailWait) + '통' : autoTxt ? '대기 ' + num(t.mailWait) + '통 · ' + autoTxt : '오늘 ' + num(t.mailToday) + '통 보냄 · 대기 ' + num(t.mailWait) + '통';
     var acts = t.mailPaused ?
       (t.mailResumeAt ? '<button type="button" class="lg-link" data-act="mailschedule">' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작</button> · <button type="button" class="lg-link" data-act="mailresume">지금 시작</button>'
         : '<button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>') :
