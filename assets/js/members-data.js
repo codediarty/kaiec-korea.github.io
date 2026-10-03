@@ -114,6 +114,15 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '최상미', en: 'Choi Sang-mi', code: 'CSM1130', email: 'miya3204@naver.com', since: '2026.09', field: 'AI 디지털 교육 · AI 에듀테크', photo: 'choi-sangmi.jpg' },
   { name: '윤지희', en: 'Yoon Ji-hee', code: 'YJH7807', email: 'hopefulearth@gmail.com', since: '2026.09', field: '생성형 AI 활용 · 리터러시', photo: 'yoon-jihee.jpg' },
   { name: '이은미', en: 'Lee Eun-mi', code: 'LEM9135', email: 'newayssister@naver.com', since: '2026.10', field: 'AI 윤리 · 책임 있는 AI 실현', photo: 'lee-eunmi.jpg' },
+  { name: '김세희', en: 'Kim Se-hee', code: 'KSH1859', email: 'wintersnow3@naver.com', since: '2026.10', field: 'AI 저작권 · 콘텐츠 윤리', photo: 'kim-sehee.jpg' },
+  { name: '조아라', en: 'Cho Ah-ra', code: 'CAR3312', email: 'keunissaem@gmail.com', since: '2026.10', field: 'AI 윤리 · 디지털 교육 · 미디어 콘텐츠 기획', photo: 'cho-ahra.jpg' },
+  { name: '김범수', en: 'Kim Bum-soo', code: 'KBS9649', email: 'ogg812@naver.com', since: '2026.10', field: 'AI 윤리 · 책임 있는 AI 구현', photo: 'kim-bumsoo.jpg' },
+  { name: '왕정미', en: 'Wang Jung-mi', code: 'WJM2133', email: 'wang-j-m@hanmail.net', since: '2026.10', field: 'AI · 디지털 교육 활성화', photo: 'wang-jungmi.jpg' },
+  { name: '김다혜', en: 'Kim Da-hye', code: 'KDH0601', email: 'ekgp0601@naver.com', since: '2026.10', field: 'AI 디자인 · 크리에이티브', photo: 'kim-dahye.jpg' },
+  { name: '김경숙', en: 'Kim Kyung-sook', code: 'KKS0629', email: 'itel76@naver.com', since: '2026.10', field: 'AI · 디지털 역량 교육', photo: 'kim-kyungsook.jpg' },
+  { name: '정희영', en: 'Jung Hee-young', code: 'JHY0531', email: 'hyjung@deepnoid.com', since: '2026.10', field: 'AI 개인정보 · 데이터 윤리', photo: 'jung-heeyoung.jpg' },
+  { name: '김용주', en: 'Kim Yong-ju', code: 'KYJ4247', email: 'funny7465@naver.com', since: '2026.10', field: 'AI 윤리 · 책임 있는 AI 생태계', photo: 'kim-yongju.jpg' },
+  { name: '이숙영', en: 'Lee Sook-young', code: 'LSY4033', email: 'kikikibook@naver.com', since: '2026.10', field: 'AI 에듀테크', photo: 'lee-sookyoung.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
