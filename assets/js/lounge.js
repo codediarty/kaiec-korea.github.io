@@ -18,9 +18,11 @@
   var KEY_DASH = 'kaiec_lounge_dash';
   /* 1.4.4 운영자 화면: 마지막 대시보드 · 보던 탭을 이 탭(sessionStorage)에만 둠. 창을 닫으면 로그인과 함께 사라짐 */
   var KEY_ADMIN_DASH = 'kaiec_lounge_admin_dash', KEY_ADMIN_TAB = 'kaiec_lounge_admin_tab', ADMIN_TABS = ['insight', 'pay', 'roster', 'notice', 'settings'];
+  var KEY_BULK_N = 'kaiec_lounge_bulk_n';   /* 1.4.14 일괄 메일 대상(하위 10 · 20 · 30 · 전체), 이 탭에만 */
   var TIMEOUT_MS = 60000, HEDGE_MS = 7000;
   var HEDGE_OK = { 'me.dashboard': 1, 'admin.dashboard': 1, 'admin.member': 1, 'auth.login': 1, 'auth.start': 1, 'auth.verify': 1, 'auth.setPassword': 1, 'me.payinfo': 1, 'me.prefs': 1 };   /* 두 번 가도 결과가 같은 요청만(공지 · 정산 · 링크 등록은 제외) */
-  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null }, paying: {} };   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
+  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null }, paying: {}, bulkN: '20', nudgeI: 0 };
+  (function () { var v = read(KEY_BULK_N, true); if (/^(10|20|30|all)$/.test(v)) S.bulkN = v; })();   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
 
   /* ---------- 작은 도구 ---------- */
   function $(id) { return document.getElementById(id); }
@@ -340,9 +342,11 @@
        그 뒤 해제일까지 천천히). 남은 날 카운트다운 · 빨간 경고 없이 '여유 있음 → 다음 추천을 기다리는 중 → 휴면(추천 1건이면 바로 복귀)' */
     var gv = Math.max(0, Math.min(100, Number(m.gauge) || 0)), mcx = d.minCredit || {};
     var gaugeCls = m.status === '종료' ? 'is-off' : (m.status === '휴면' || m.status === '휴면예정') ? 'is-low' : '';
-    var gaugeTxt = m.status === '활동' ? gv + '% · ' + (gv >= 60 ? '여유 있음' : '다음 추천을 기다리는 중') : m.status === '휴면' ? '휴면 · 추천 1건이면 바로 복귀' : m.status === '휴면예정' ? '휴면 예정 · 추천 1건이면 그대로' : '종료';
-    var gaugeNote = (m.status === '휴면' || m.status === '휴면예정') ? '명단 · 명함이 잠시 숨겨져 있습니다. ' + (mcx.graceEnd ? fmtKo(mcx.graceEnd, true) + '까지 ' : '') + '위원 코드로 결제 1건(본인 결제 포함)이 들어오면 바로 복귀합니다.'
-      : (mcx.first ? '첫 추천을 기다리는 중입니다. ' : mcx.last ? '마지막 추천 실적 ' + fmtKo(mcx.last, true) + '. ' : '') + '추천 결제 1건마다 게이지가 가득 차고, 그 뒤 ' + (set.gaugeFullDays || 10) + '일은 그대로 유지됩니다. 자세한 기준은 맨 아래 \'위원 자격 · 활동 기준\'에 있습니다.';
+    /* 2026.10.03 사용자 '라운지에 막 여유 있음 이런 것보다는 활동을 자연스럽게 유도하는 그런 게 좀 있어야 될 것 같아, 기분 좋게': 게이지 옆 말은 긍정형
+       (최근 추천이 있으면 '좋은 흐름이에요', 아니면 '지금 시작하기 좋은 때', 낮으면 '한 걸음이면 다시 가득'), 아래 설명 줄 자리에는 '오늘의 한 걸음'(nudgeHTML).
+       게이지 기준 설명은 '활동 게이지' 글자에 마우스를 올리면 보이고, 자세한 기준은 맨 아래 카드 그대로 */
+    var gaugeTxt = m.status === '활동' ? gv + '% · ' + (gv < 60 ? '한 걸음이면 다시 가득' : recentCredit(d) ? '좋은 흐름이에요' : '지금 시작하기 좋은 때') : m.status === '휴면' ? '휴면 · 추천 1건이면 바로 복귀' : m.status === '휴면예정' ? '휴면 예정 · 추천 1건이면 그대로' : '종료';
+    var gaugeTip = (mcx.first ? '첫 추천을 기다리는 중입니다. ' : mcx.last ? '마지막 추천 실적 ' + fmtKo(mcx.last, true) + '. ' : '') + '추천 결제 1건마다 게이지가 가득 차고, 그 뒤 ' + (set.gaugeFullDays || 10) + '일은 그대로 유지됩니다. 자세한 기준은 맨 아래 \'위원 자격 · 활동 기준\'에 있습니다.';
     var nt = st.next, tiers = set.tiers, cur = m.credits;
     var stepFrom = nt ? (nt.at === tiers[0] ? 0 : nt.at === tiers[1] ? tiers[0] : tiers[1]) : tiers[2], stepTo = nt ? nt.at : tiers[2];
     var stepsN = Math.max(1, Math.min(10, stepTo - stepFrom)), stepsOn = nt ? Math.round((cur - stepFrom) / (stepTo - stepFrom) * stepsN) : stepsN;
@@ -366,7 +370,7 @@
       '<div class="lg-card"><h2>' + ic('trending-up') + '나의 임팩트</h2><div class="lg-big">당신의 추천으로 AI 윤리를 배우기 시작한 사람<strong>' + num(m.credits) + '<small>명</small></strong><span class="lg-sub">누적 임팩트 크레딧 ' + num(m.credits) + (m.pending ? ' · 확정 대기 ' + m.pending : '') + (m.canceled ? ' · 취소 ' + m.canceled : '') + '</span></div>' +
       '<div class="lg-stats"><div class="lg-stat"><span>이달 크레딧</span><b>' + num(st.thisMonth) + '</b><i>' + (m.credits === 0 ? '첫 임팩트를 기다립니다' : '확정 기준') + '</i></div><div class="lg-stat"><span>누적 확산</span><b>' + num(st.reachAll) + '</b><i>명함 · 링크로 접한 사람 · 최근 7일 ' + num(st.reach7) + '명</i></div><div class="lg-stat"><span>다음 등급까지</span><b>' + (nt ? num(nt.need) : '-') + '</b><i>' + (nt ? esc(heroTier(nt.name)) + ' (' + nt.at + ')' : '최고 등급입니다') + '</i></div></div>' +
       '<div class="lg-tierline"><span>' + esc(nt ? (stepFrom === 0 ? 'AI 캠페인위원' : stepFrom === tiers[0] ? 'AI 선임위원' : 'AI 책임위원') : 'AI 책임위원') + '</span><div class="lg-steps">' + stepsHtml + '</div><span>' + esc(nt ? heroTier(nt.name) : 'AI 수석위원') + '</span></div>' +
-      '<div class="lg-gauge"><div class="lg-gauge-h"><span>활동 게이지</span><em class="' + gaugeCls + '">' + gaugeTxt + '</em></div><div class="lg-bar"><i style="width:' + (m.status === '활동' || m.status === '휴면' || m.status === '휴면예정' ? gv : 0) + '%"></i></div><p>' + esc(gaugeNote) + '</p></div>' + trendHTML(d) + '</div>' +
+      '<div class="lg-gauge"><div class="lg-gauge-h"><span title="' + esc(gaugeTip) + '">활동 게이지</span><em class="' + gaugeCls + '">' + gaugeTxt + '</em></div><div class="lg-bar"><i style="width:' + (m.status === '활동' || m.status === '휴면' || m.status === '휴면예정' ? gv : 0) + '%"></i></div>' + (m.status === '종료' ? '' : nudgeHTML(d)) + '</div>' + trendHTML(d) + '</div>' +
       '<div class="lg-card lg-kit" id="kit"><h2>' + ic('send') + 'AI 윤리 확산 도구</h2>' +
       '<div class="row"><span class="lab">위원 명함</span><code>' + esc(short(card)) + '</code><button type="button" class="btn btn-ghost" data-copy="' + esc(card) + '">복사</button></div>' +
       '<div class="row"><span class="lab">바로 결제 링크</span><code>' + esc(short(go)) + '</code><button type="button" class="btn btn-ghost" data-copy="' + esc(go) + '">복사</button></div>' +
@@ -394,6 +398,31 @@
     $('lgLetter').addEventListener('change', function () { var on = this.checked; call('me.prefs', { letter: on }).then(function () { toast(on ? '리포트 메일을 받습니다' : '리포트 메일을 받지 않습니다'); }, function (er) { toast(er.message, 'danger'); }); });
     var pf = $('lgPayFormEl'); if (pf) bindPayForm(pf);
   }
+  /* 오늘의 한 걸음(2026.10.03 사용자 '활동을 자연스럽게 유도하는 그런 게, 기분 좋게'): 위원 상황에 맞는 제안 하나 + 바로 하기 버튼(확산 도구와 같은 복사 · 사용 기록).
+     최근 추천 · 다음 직함이 가까움 · 첫 추천 전이면 그 제안을 먼저, 아니면 날마다 바뀌는 제안(같은 날은 같은 것). [다른 제안]으로 넘겨 봄. 휴면 중이면 복귀 안내 */
+  function recentCredit(d) { var mc = d.minCredit || {}, last = dateOf(mc.last), today = dateOf(new Date()); return !!(last && today && (today - last) / 86400000 <= ((d.settings || {}).gaugeFullDays || 10)); }
+  function nudgeList(d) {
+    var m = d.member, st = d.stats || {}, mc = d.minCredit || {}, L = d.links || {}, nt = st.next, reach = Number(st.reachAll) || 0, top = [], out = [];
+    if (m.status === '휴면' || m.status === '휴면예정') return [
+      { t: '명단 · 명함이 잠시 숨겨져 있어요. ' + (mc.graceEnd ? fmtKo(mc.graceEnd, true) + '까지 ' : '') + '위원 코드로 결제 1건(본인 결제 포함)이면 바로 돌아옵니다. 필요한 한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] },
+      { t: '준비된 카카오톡 문안을 필요한 한 분께 보내 보세요. 위원 추천 할인이 자동으로 적용됩니다.', b: ['카카오톡 문안 복사', 'tpl', 0] }];
+    if (recentCredit(d)) top.push({ t: '최근 추천 고맙습니다! 그분이 지금 AI 윤리를 공부하고 있어요. 이 흐름으로 한 분 더 소개해 볼까요?', b: ['인스타그램 문안 복사', 'tpl', 1] });
+    if (nt && nt.need <= 2 && m.credits > 0) top.push({ t: heroTier(nt.name) + '까지 ' + nt.need + '건 남았어요. 가까운 한 분이면 충분합니다.', b: ['바로 신청 링크 복사', 'copy', L.go] });
+    if (mc.first) top.push({ t: '첫 추천은 가장 가까운 한 분부터예요. 명함 한 장이면 시작입니다.', b: ['명함 링크 복사', 'copy', L.card] });
+    out.push({ t: '카카오톡 프로필 링크 칸에 내 명함을 올려 두면, 보는 분마다 AI 윤리를 한 번 더 만납니다.', b: ['명함 링크 복사', 'copy', L.card] });
+    out.push({ t: reach > 0 ? '내 명함 · 링크로 ' + num(reach) + '명이 AI 윤리를 만났어요. 관심을 보인 한 분께 바로 신청 링크를 건네 보세요.' : '취업을 준비하는 대학생, 업무에 AI를 쓰는 지인 한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
+    out.push({ t: '오늘은 단톡방 한 곳에 소개 문안을 나눠 볼까요? 문안은 이미 준비되어 있어요.', b: ['카카오톡 문안 복사', 'tpl', 0] });
+    out.push({ t: 'AIEP 영상관 소개 페이지를 공유하면, 처음 듣는 분도 과정을 쉽게 이해합니다.', b: ['안내 페이지 링크 복사', 'copy', L.experts || (SITE + '/experts/?ref=' + m.code)] });
+    if (!top.length) { var h = 0, c = String(m.code || ''); for (var i = 0; i < c.length; i++) h = (h * 31 + c.charCodeAt(i)) % 997; var k = (Math.floor(Date.now() / 86400000) + h) % out.length; out = out.slice(k).concat(out.slice(0, k)); }
+    return top.concat(out);
+  }
+  function nudgeHTML(d) {
+    var list = nudgeList(d); if (!list.length) return '';
+    var n = list[(S.nudgeI || 0) % list.length];
+    var btn = '<button type="button" class="btn btn-primary btn-xs" ' + (n.b[1] === 'tpl' ? 'data-copy-tpl="' + n.b[2] + '"' : 'data-copy="' + esc(n.b[2]) + '"') + '>' + esc(n.b[0]) + '</button>';
+    return '<div class="lg-nudge" id="lgNudge"><span class="lg-nudge-ic">' + ic('sparkles') + '</span><div class="lg-nudge-t"><b>오늘의 한 걸음</b><span>' + esc(n.t) + '</span></div>' +
+      '<div class="lg-nudge-act">' + btn + (list.length > 1 ? '<button type="button" class="lg-nudge-next" data-act="nudge-next" title="다른 제안 보기" aria-label="다른 제안 보기">' + ic('refresh-cw') + '</button>' : '') + '</div></div>';
+  }
   /* 도구 사용 기록(2026.09.29 밤, 백엔드 1.3.0 me.event): 어떤 링크 · 문안을 쓰는지 운영자 분석에 쌓임(항목별 하루 1회, 실패해도 조용히) */
   function track(kind) { try { call('me.event', { kind: kind }).catch(function () {}); } catch (e) { /* 무시 */ } }
   function linkKind(url) { var l = (S.data && S.data.links) || {}; return url === l.card ? 'card' : url === l.go ? 'go' : url === l.intro ? 'intro' : url === l.experts ? 'experts' : ''; }
@@ -402,8 +431,10 @@
     if (b.hasAttribute('data-track')) { track(b.getAttribute('data-track')); return; }
     if (b.hasAttribute('data-copy')) { var u = b.getAttribute('data-copy'); copyText(u, b); if (linkKind(u)) track('copy:' + linkKind(u)); return; }
     if (b.hasAttribute('data-copy-msg')) { copyText(MSG_TPL[S.kitTab][1].replace(/\{intro\}/g, S.data.links.intro), b); track('copy:msg:' + MSG_TPL[S.kitTab][0]); return; }
+    if (b.hasAttribute('data-copy-tpl')) { var ti = +b.getAttribute('data-copy-tpl') || 0; copyText(MSG_TPL[ti][1].replace(/\{intro\}/g, S.data.links.intro), b); track('copy:msg:' + MSG_TPL[ti][0]); return; }
     if (b.hasAttribute('data-tab')) { S.kitTab = +b.getAttribute('data-tab'); var tabs = $('lgKitTabs'); Array.prototype.forEach.call(tabs.children, function (c) { c.classList.toggle('on', +c.getAttribute('data-tab') === S.kitTab); }); var box = $('lgMsg'); box.innerHTML = '<button type="button" class="btn btn-ghost" data-copy-msg="1">복사</button>' + esc(MSG_TPL[S.kitTab][1].replace(/\{intro\}/g, S.data.links.intro)); return; }
     var act = b.getAttribute('data-act');
+    if (act === 'nudge-next') { S.nudgeI = (S.nudgeI || 0) + 1; var nb = $('lgNudge'); if (nb) { nb.outerHTML = nudgeHTML(S.data); var nb2 = $('lgNudge'); if (nb2) nb2.classList.add('is-new'); } return; }
     if (act === 'cert') { busy(b, true); call('me.cert').then(function (j) { busy(b, false); toast(j.message || '발급 요청을 받았습니다', 'ok'); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); }
     if (act === 'payinfo-edit') { var box2 = $('lgPayForm'); box2.hidden = false; box2.innerHTML = payinfoFormHTML(S.data, false); bindPayForm($('lgPayFormEl')); box2.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
     if (act === 'payinfo-cancel') { var box3 = $('lgPayForm'); if (box3) { box3.hidden = true; box3.innerHTML = ''; } }
@@ -551,8 +582,17 @@
   }
   function adHeroHTML(a) {
     var todayD = dateOf(a.today), todayTxt = todayD ? todayD.getFullYear() + '년 ' + (todayD.getMonth() + 1) + '월 ' + todayD.getDate() + '일 ' + DAYS[todayD.getDay()] + '요일' : a.today;
-    return heroHTML('위원 라운지 &nbsp;›&nbsp; 위원장', '위원장 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''),
-      '<div class="lg-tools"><span class="lg-mode">' + ic('shield-check') + '위원장 모드</span>' + (a.sheetUrl ? '<a class="btn btn-light btn-sm" href="' + esc(a.sheetUrl) + '" target="_blank" rel="noopener">운영 시트 열기</a>' : '') + '<button type="button" class="btn btn-light btn-sm" data-act="reload">새로 고침</button><button type="button" class="btn btn-light btn-sm" data-act="logout">로그아웃</button></div>');
+    /* 1.4.14 머리 줄 = 위원 일괄 메일 도구(사용자 2026.10.03 '로그아웃은 굳이 없애도 거기에 다 만들어 줘, 위원장 모드도 지워도 되고 … 저기에 잘 구성해야 돼,
+       다른 데 공간이 늘어나면 안 되고'): 위 줄은 대상(활동 점수 하위 10 · 20 · 30명 · 전체) + 운영 시트 · 새로 고침, 아래 줄은 세 가지 메일. 누르면 미리 보기 창(화면 위에 떠서 자리를 늘리지 않음).
+       로그아웃 단추는 없앰(위원장 로그인은 이 탭에만 있어 창을 닫으면 끝남) */
+    var aud = BULK_AUD.map(function (x) { return '<option value="' + x[0] + '"' + (String(S.bulkN) === x[0] ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('');
+    var dock = '<div class="ad-dock" role="group" aria-label="위원 일괄 메일">' +
+      '<div class="ad-dock-top"><span class="ad-dock-t">' + ic('mail') + '위원 일괄 메일</span>' +
+      '<select class="ad-dock-sel" id="adBulkAud" aria-label="보낼 대상" title="활동 점수가 낮은 순(같으면 마지막 활동이 오래된 순)">' + aud + '</select>' +
+      '<span class="ad-dock-sys">' + (a.sheetUrl ? '<a href="' + esc(a.sheetUrl) + '" target="_blank" rel="noopener" title="운영 시트 열기">' + ic('database') + '<span>운영 시트</span></a>' : '') +
+      '<button type="button" data-act="reload" title="최신 숫자로 새로 고침">' + ic('refresh-cw') + '<span>새로 고침</span></button></span></div>' +
+      '<div class="ad-dock-kinds">' + BULK_KINDS.map(function (k, i) { return '<button type="button" data-bulk="' + k[0] + '" title="' + esc(k[2]) + '"><b>' + (i + 1) + '</b>' + k[1] + '</button>'; }).join('') + '</div></div>';
+    return heroHTML('위원 라운지 &nbsp;›&nbsp; 위원장', '위원장 대시보드', todayTxt + (a.isPayoutToday ? ' · 오늘 정산일' : ' · 다음 정산 ' + fmtKo(a.nextPayoutDay, true)) + (a.payoutDay && !a.isPayoutToday ? ' · 최근 정산표 ' + fmtMD(a.payoutDay, true) : ''), dock);
   }
   function adTabsBarHTML(a) {
     var tabs = [['insight', '분석 대시보드'], ['pay', '정산 · 실적'], ['roster', '위원 명단 (' + a.roster.length + ')'], ['notice', '공지 보내기'], ['settings', '설정']];
@@ -612,6 +652,7 @@
       '<p class="lg-foot">계좌 · 주민등록번호는 위원장에게만 보이며 위원 화면에는 다른 위원의 정보가 나오지 않습니다. 이 창을 닫으면 자동으로 로그아웃됩니다. 새로 고침할 때는 마지막 화면을 먼저 보여 드리고 최신 숫자로 바꿉니다(계좌번호는 이 컴퓨터에 두지 않음).</p>';
     show('main');
     hero.onclick = onAdminHero;
+    hero.onchange = function (e) { if (e.target && e.target.id === 'adBulkAud') { S.bulkN = e.target.value; store(KEY_BULK_N, S.bulkN, true); } };
     main.onclick = onAdminClick;
     main.onchange = onAdminChange;
     bindAdminForms();
@@ -623,10 +664,101 @@
     if (tl) tl.outerHTML = adTilesHTML(a); if (tb) tb.outerHTML = adTabsBarHTML(a);
   }
   function onAdminHero(e) {
-    var b = e.target.closest('[data-act]'); if (!b) return;
+    var b = e.target.closest('[data-act],[data-bulk]'); if (!b) return;
+    if (b.hasAttribute('data-bulk')) { openBulk(b.getAttribute('data-bulk')); return; }
     if (b.getAttribute('data-act') === 'logout') { adminLogout(); return; }
     if (b.getAttribute('data-act') === 'reload') { b.disabled = true; b.classList.add('is-busy'); b.innerHTML = '<span class="lg-spin"></span> 불러오는 중'; loadAdmin(); }
   }
+  /* ---------- 1.4.14 위원 일괄 메일(머리 줄 → 미리 보기 창) ----------
+     사용자 2026.10.03 '활동이 적은 사람들 일괄로 독려하는 메일 … 하위 20명이라든지 1. 독려 2. 자기설득 및 자긍심 3. 전체적인 사용법 및 안내 … 내가 일괄로 하위 사람들에게'.
+     대상은 분석 탭과 같은 활동 점수로 낮은 순(같으면 마지막 활동이 오래된 순 · 누적 추천 적은 순 · 누적 확산 적은 순 · 이름). 창에서 위원을 빼거나 넣고(위촉 3일 안의 새 위원은
+     독려 · 자긍심에서 처음엔 빠져 있음), 눈 단추로 그 위원이 받을 메일을 보고, [나에게 테스트] → [N명에게 보내기]. 서버(admin.bulk)가 종료 · 수신 거부 · 최근 7일 같은 메일을
+     다시 걸러 대기열로 보냄(10분마다 나눠서 · 하루 한도 안) */
+  var BULK_KINDS = [['cheer', '독려', '부담 없이 바로 해 볼 수 있는 세 가지와 내 명함 · 바로 신청 링크'], ['pride', '자긍심', '왜 지금 AI 윤리인지, 위원 활동의 의미와 함께 만든 변화(자기설득 · 자긍심)'],
+    ['guide', '사용 안내', '위원 라운지 · AIEP 과정 소개하는 법 · 전용관(영상관 · 이수 평가) · 이수증 활용 · 명함과 활동지원금']];
+  var BULK_AUD = [['10', '하위 10명'], ['20', '하위 20명'], ['30', '하위 30명'], ['all', '전체 위원']], BULK_NEW_DAYS = 3, BK = null;
+  function bulkTargets(n) {
+    var a = S.admin, an = a.analytics, t0 = dateOf(a.today) || dateOf(new Date()), list;
+    var days = function (s) { var d = dateOf(s); return d ? Math.round((t0 - d) / 86400000) : 999; };
+    if (an && an.rank && !an.error) list = an.rank.filter(function (r) { return r.status !== '종료'; }).map(function (r) { return { code: r.code, name: r.name, badge: r.badge, status: r.status, score: Number(r.score) || 0, silentDays: Number(r.silentDays), credits: Number(r.credits) || 0, reachAll: Number(r.reachAll) || 0, sinceDays: Number(r.sinceDays) }; });
+    else list = (a.roster || []).filter(function (r) { return r.status !== '종료'; }).map(function (r) { return { code: r.code, name: r.name, badge: r.badge, status: r.status, score: 0, silentDays: days(r.lastSignal), credits: Number(r.credits) || 0, reachAll: 0, sinceDays: days(r.since) }; });
+    list.forEach(function (r) { if (!isFinite(r.silentDays)) r.silentDays = 999; if (!isFinite(r.sinceDays)) r.sinceDays = 999; });
+    list.sort(function (x, y) { return (x.score - y.score) || (y.silentDays - x.silentDays) || (x.credits - y.credits) || (x.reachAll - y.reachAll) || String(x.name).localeCompare(String(y.name), 'ko'); });
+    return n === 'all' ? list : list.slice(0, +n || 20);
+  }
+  function openBulk(kind) {
+    var k = BULK_KINDS.filter(function (x) { return x[0] === kind; })[0]; if (!k || !S.admin) return;
+    var n = String(S.bulkN || '20'), list = bulkTargets(n);
+    if (!list.length) { toast('보낼 위원이 없습니다', 'warn'); return; }
+    BK = { kind: kind, label: k[1], n: n, list: list, sel: {}, why: {}, sample: '', seq: 0 };
+    list.forEach(function (r) { BK.sel[r.code] = kind === 'guide' || r.sinceDays > BULK_NEW_DAYS; });
+    var md = modal(k[1] + ' 메일 · ' + (n === 'all' ? '전체 위원 ' + list.length + '명' : '하위 ' + list.length + '명'), '활동 점수가 낮은 순 · 최근 7일 안에 같은 메일을 받은 위원은 자동으로 빠집니다',
+      '<div class="bk-wrap"><div class="bk-col"><div class="bk-listhead"><b id="bkCount"></b><button type="button" class="lg-link" data-bk="all">모두 선택</button><button type="button" class="lg-link" data-bk="none">모두 해제</button></div><ul class="bk-list" id="bkList">' + bulkListHTML() + '</ul></div>' +
+      '<div class="bk-col bk-col--mail" id="bkMail">' + bulkLoadingHTML() + '</div></div>',
+      '<span class="bk-info" id="bkInfo">' + esc(k[2]) + '</span><button type="button" class="btn btn-ghost btn-sm" data-bk="test">나에게 테스트</button><button type="button" class="btn btn-primary btn-sm" data-bk="send" id="bkSend">보내기</button>');
+    var dlg = md.querySelector('.lg-dialog'); if (dlg) dlg.classList.add('lg-dialog--wide');
+    md.onclick = onBulkClick; md.onchange = onBulkChange;
+    bulkSync(); bulkPreview('');
+  }
+  function bulkLoadingHTML() { return '<div class="bk-loading"><span class="lg-spin"></span> 위원이 받을 메일을 만드는 중…</div>'; }
+  function bulkListHTML() {
+    return BK.list.map(function (r) {
+      var why = BK.why[r.code], on = !why && BK.sel[r.code], st = r.status === '활동' ? '' : ' · ' + (r.status === '휴면예정' ? '휴면 예정' : r.status);
+      var tag = why ? '<em class="bk-tag bk-tag--x">' + esc(why) + '</em>' : r.sinceDays <= BULK_NEW_DAYS ? '<em class="bk-tag">위촉 ' + Math.max(0, r.sinceDays) + '일째</em>' : '';
+      return '<li class="bk-row' + (why ? ' is-off' : '') + (BK.sample === r.code ? ' is-sample' : '') + '"><label><input type="checkbox" data-code="' + esc(r.code) + '"' + (on ? ' checked' : '') + (why ? ' disabled' : '') + '>' +
+        '<span class="bk-who"><b>' + esc(r.name) + '</b><small>' + esc(r.code) + (r.badge ? ' · ' + esc(TIER_WORD[r.badge] || r.badge) : '') + '</small></span></label>' +
+        '<button type="button" class="bk-eye" data-sample="' + esc(r.code) + '" title="이 위원이 받을 메일 보기" aria-label="' + esc(r.name) + ' 위원이 받을 메일 보기">' + ic('eye') + '</button>' +
+        '<span class="bk-meta">활동 점수 ' + r.score + ' · 마지막 활동 ' + agoTxt(r.silentDays) + st + (tag ? ' ' + tag : '') + '</span></li>';
+    }).join('');
+  }
+  function bulkPicked() { return BK.list.filter(function (r) { return BK.sel[r.code] && !BK.why[r.code]; }).map(function (r) { return r.code; }); }
+  function bulkSync() {
+    var c = bulkPicked().length, b = $('bkSend'), h = $('bkCount');
+    if (h) h.textContent = '선택 ' + c + '명 / ' + BK.list.length + '명';
+    if (b && !b.classList.contains('is-busy')) { b.textContent = c ? c + '명에게 보내기' : '보낼 위원을 고르세요'; b.disabled = !c; }
+  }
+  function bulkPreview(sample) {
+    if (!BK) return; var my = ++BK.seq, box = $('bkMail'); if (box) box.innerHTML = bulkLoadingHTML();
+    call('admin.bulk', { step: 'preview', kind: BK.kind, codes: BK.list.map(function (r) { return r.code; }), sample: sample || '' }).then(function (j) {
+      if (!BK || my !== BK.seq) return;
+      BK.why = {}; (j.list || []).forEach(function (x) { if (!x.ok) BK.why[x.code] = x.why; });
+      BK.sample = j.sample || ''; var ul = $('bkList'); if (ul) ul.innerHTML = bulkListHTML();
+      var mb = $('bkMail'); if (mb) mb.innerHTML = '<div class="ad-mailmeta"><div><span>미리 보기</span><b>' + esc(j.sampleName || '') + ' 위원이 받을 메일</b></div><div><span>제목</span><b>' + esc(j.subject) + '</b></div></div>' +
+        '<iframe class="ad-mailframe bk-frame" sandbox="" title="' + esc(BK.label) + ' 메일 미리 보기" srcdoc="' + esc('<!doctype html><meta charset="utf-8"><body style="margin:0">' + j.html + '</body>') + '"></iframe>';
+      var inf = $('bkInfo'); if (inf) inf.textContent = (j.quota >= 0 ? '지메일 잔여 ' + num(j.quota) + '통 · ' : '') + '대기 ' + num(j.wait) + '통' + (j.paused ? ' · 지금 발송 멈춤' : '') + ' · ' + (j.everyMin || 10) + '분마다 ' + (j.perRun || 20) + '통씩 나감';
+      bulkSync();
+    }, function (er) { if (!BK || my !== BK.seq) return; var mb = $('bkMail'); if (mb) mb.innerHTML = '<p class="lg-err is-on">' + esc(er.message) + '</p>'; });
+  }
+  function onBulkClick(e) {
+    var md = $('lgModal');
+    if (e.target === md || e.target.closest('[data-act="close"]')) { closeModal(); BK = null; return; }
+    if (!BK) return;
+    var sb = e.target.closest('[data-sample]'); if (sb) { bulkPreview(sb.getAttribute('data-sample')); return; }
+    var b = e.target.closest('[data-bk]'); if (!b) return;
+    var act = b.getAttribute('data-bk'), foot = md.querySelector('.lg-dialog-foot');
+    if (act === 'all' || act === 'none') { BK.list.forEach(function (r) { if (!BK.why[r.code]) BK.sel[r.code] = act === 'all'; }); $('bkList').innerHTML = bulkListHTML(); bulkSync(); return; }
+    if (act === 'test') {
+      busy(b, true);
+      call('admin.bulk', { step: 'test', kind: BK.kind, codes: BK.sample ? [BK.sample] : [], sample: BK.sample || '' }).then(function (j) { busy(b, false); toast((j.sampleName ? j.sampleName + ' 위원 기준 ' : '') + BK.label + ' 메일을 위원장 메일로 보냈습니다(' + (j.to || []).join(', ') + ')', 'ok'); }, function (er) { busy(b, false); toast(er.message, 'danger'); });
+      return;
+    }
+    if (act === 'send') {
+      var c = bulkPicked().length; if (!c) return;
+      BK.foot = foot.innerHTML;
+      foot.innerHTML = '<span class="bk-info bk-ask">체크한 ' + c + '명에게 ' + esc(BK.label) + ' 메일을 보낼까요? 대기열로 들어가 10분마다 나눠서 나갑니다.</span><button type="button" class="btn btn-ghost btn-sm" data-bk="cancel">취소</button><button type="button" class="btn btn-primary btn-sm" data-bk="go">' + c + '명에게 보내기</button>';
+      return;
+    }
+    if (act === 'cancel') { foot.innerHTML = BK.foot || ''; bulkSync(); return; }
+    if (act === 'go') {
+      var codes = bulkPicked(), label = BK.label; busy(b, true);
+      call('admin.bulk', { step: 'send', kind: BK.kind, codes: codes }).then(function (j) {
+        closeModal(); BK = null;
+        toast((j.result || label + ' 메일을 대기열에 올렸습니다') + (j.skipped && j.skipped.length ? ' 제외 ' + j.skipped.length + '명(최근에 받았거나 받을 수 없는 위원).' : ''), 'ok');
+        loadAdmin(true);
+      }, function (er) { busy(b, false); toast(er.message, 'danger'); });
+    }
+  }
+  function onBulkChange(e) { var c = e.target.closest('input[data-code]'); if (!c || !BK) return; BK.sel[c.getAttribute('data-code')] = c.checked; bulkSync(); }
   function adminTabHTML() {
     var a = S.admin;
     if (S.tab === 'insight') return insightTabHTML(a);

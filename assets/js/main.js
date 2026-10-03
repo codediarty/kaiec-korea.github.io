@@ -175,5 +175,18 @@
   };
   if (ref && CODE_RE.test(refParam())) window.kaiecReach(ref, location.pathname + '?ref');
 
+  /* 위원장 대시보드 숨은 입구(2026.10.03 사용자 'AI 버튼 말고 첨부의 저 박스 안을 4번 누르면 들어가지는 걸로, 그래야 모바일에서도 들어가기 편하니까'):
+     메인 히어로의 'KAIEC · Korea AI Ethics Committee' 띠(.hero-badge) 안을 빠르게(누름 사이 1.2초 안) 4번 누르면 /lounge/?admin.
+     겉으로 보이는 표시는 없고, 위원장 로그인(비밀번호)은 그대로 필요 */
+  (function () {
+    var badge = document.querySelector('.hero .hero-badge');
+    if (!badge) return;
+    var NEED = 4, GAP = 1200, n = 0, last = 0;
+    badge.addEventListener('click', function () {
+      var now = Date.now(); n = now - last <= GAP ? n + 1 : 1; last = now;
+      if (n >= NEED) { n = 0; location.href = '/lounge/?admin'; }
+    });
+  })();
+
   /* 아이콘은 빌드 시 SVG로 HTML에 직접 삽입되므로 외부 스크립트가 필요 없습니다. */
 })();

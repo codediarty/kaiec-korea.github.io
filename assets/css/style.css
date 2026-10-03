@@ -893,6 +893,7 @@ html.mp-lock{overflow:hidden}
   background:linear-gradient(90deg,rgba(8,17,36,.92) 6%,rgba(8,17,36,.62) 32%,rgba(9,20,42,.34) 48%,rgba(10,22,40,0) 64%),
              rgba(10,22,40,.10)}
 .hero-inner > *:not(.ai-visual){position:relative;z-index:1}
+.hero-badge{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}   /* 2026.10.03 위원장 대시보드 숨은 입구(띠 안을 4번): 빠르게 눌러도 확대 · 글자 선택으로 먹히지 않게(main.js) */
 /* 핵심가치 칩(책임성·투명성·공정성·사람 중심)은 히어로 이미지(hero-ai.jpg)에 원래 박힌 그대로 사용 (2026.09.23 원복, HTML 칩 없음) */
 .ai-net{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
 .ai-ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed rgba(159,196,255,.30);transform:translate(-50%,-50%)}
