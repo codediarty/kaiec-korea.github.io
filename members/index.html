@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=674a4bf6c5">
+<link rel="stylesheet" href="/assets/css/style.css?v=59370b3f94">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -224,11 +224,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec";</script>
-  <script src="/assets/js/main.js?v=674a4bf6c5"></script>
+  <script src="/assets/js/main.js?v=59370b3f94"></script>
   <script>window.KAIEC_LOUNGE_STATUS="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec?action=status";</script>
-  <script src="/assets/js/members-data.js?v=674a4bf6c5"></script>
-  <script src="/assets/js/qrcode.min.js?v=674a4bf6c5"></script>
-  <script src="/assets/js/experts-data.js?v=674a4bf6c5"></script>
+  <script src="/assets/js/members-data.js?v=59370b3f94"></script>
+  <script src="/assets/js/qrcode.min.js?v=59370b3f94"></script>
+  <script src="/assets/js/experts-data.js?v=59370b3f94"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -385,6 +385,8 @@
         cards.forEach(function(el){
           var p=PEOPLE[+el.getAttribute('data-p')];if(!p||!p.m.code)return;
           var code=p.m.code,st=j.m[code]||{},t=TIER_WORD[st.t]?st.t:'',hide=!!(ended[code]||st.h);
+          /* 1.4.19(2026.10.03): 서버 위원명단 '구분'이 교육(e:1)이면 AI 윤리 교육위원으로(카드 · 명함 직함 · 순서). 데이터 파일(track)과 같게 유지 */
+          if(st.e&&p.m.track!=='교육'){p.m.track='교육';p.m.role='AI 윤리 교육위원';var rb=el.querySelector('.member-role');if(rb)rb.setAttribute('data-base','AI 윤리 교육위원')}
           el.classList.toggle('is-hidden',hide);p.hidden=hide;
           if(t)TIERS[code]=t;else delete TIERS[code];
           var role=el.querySelector('.member-role');
