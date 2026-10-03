@@ -92,6 +92,20 @@
 .bk-info{margin-right:auto;align-self:center;font-size:12.5px;color:var(--gray-500);line-height:1.5}
 .bk-ask{color:var(--ink);font-weight:700}
 @media(max-width:800px){.bk-wrap{grid-template-columns:1fr}.bk-list{max-height:32vh}.bk-frame{height:50vh}.bk-loading{min-height:160px}.lg-dialog-foot{flex-wrap:wrap}.bk-info{flex-basis:100%}}
+/* 1.4.22 독려 메일 편 고르기(openMotPicker) · 점검 목록 '첫 로그인 전' [독려 메일] */
+.mk-wrap{display:grid;gap:14px}
+.mk-group h3{font-size:12.5px;font-weight:800;color:var(--gray-500);margin:0 0 6px;letter-spacing:-.01em}
+.mk-item{display:grid;grid-template-columns:24px minmax(0,1fr);gap:2px 10px;align-items:start;width:100%;text-align:left;background:#fff;border:1px solid #E5E9F0;border-radius:12px;padding:10px 12px;margin:0 0 6px;font:inherit;cursor:pointer;transition:border-color .12s,background .12s,transform .12s}
+.mk-item:hover{border-color:#BFD3FB;background:#F7FAFF;transform:translateY(-1px)}
+.mk-item:focus-visible{outline:2px solid #1F5FE0;outline-offset:2px}
+.mk-item b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#1F5FE0;color:#fff;font-size:11.5px;font-weight:800;grid-row:span 2;margin-top:1px}
+.mk-t{font-size:14px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.4}
+.mk-t em{font-style:normal;font-size:11px;font-weight:700;color:#8A5A00;background:#FFF4DE;border-radius:999px;padding:1px 7px}
+.mk-t em.mk-soft{color:#0B8F84;background:#E3F7F1}
+.mk-item small{font-size:12.5px;color:var(--gray-600);line-height:1.55;word-break:keep-all}
+.mk-item--strong{border-color:#F1D9B5;background:#FFFBF4}.mk-item--strong b{background:#C77700}.mk-item--strong:hover{border-color:#E4B86E;background:#FFF6E5}
+.ad-risk-act{display:inline-flex;align-items:center;gap:5px;margin-left:6px;background:#fff;border:1px solid #DCE3EE;border-radius:999px;padding:3px 9px;font:inherit;font-size:11.5px;font-weight:700;color:#1F5FE0;cursor:pointer;white-space:nowrap;line-height:1.3}
+.ad-risk-act:hover{background:#F0F6FF;border-color:#BFD3FB}.ad-risk-act svg{width:12px;height:12px;color:#1F5FE0}
 
 /* ---------- 로그인 ---------- */
 .lg-login{display:flex;justify-content:center;padding:44px 16px 80px;background:#F3F5F9}
