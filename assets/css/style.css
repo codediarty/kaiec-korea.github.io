@@ -58,7 +58,7 @@ body{
   overflow-wrap:break-word;
 }
 
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}   /* 2026.10.04 width · height 속성이 있어도 좁은 화면에서 비율 유지 */
 a{color:inherit;text-decoration:none}
 ul,ol{margin:0;padding:0;list-style:none}
 h1,h2,h3,h4,h5{margin:0;line-height:1.32;letter-spacing:-.03em;font-weight:700}
@@ -1962,7 +1962,7 @@ h1,h2,h3,.h-sec,.cta-band h2,.greeting-open{text-wrap:balance}
   body{font-size:15.5px;line-height:1.7}
   .h-sec{font-size:25px;line-height:1.28;letter-spacing:-.035em;margin-bottom:12px}
   .h-sub{font-size:15px;line-height:1.72}
-  .eyebrow{font-size:11px;letter-spacing:.14em;margin-bottom:10px}
+  .eyebrow{font-size:12px;letter-spacing:.12em;margin-bottom:10px}   /* 2026.10.04 11 → 12px(모바일 가독) */
   .eyebrow::before{width:16px}
   .lead{font-size:16px;line-height:1.78}
   .page-hero-inner{padding-block:44px 40px}
@@ -2275,6 +2275,10 @@ p,li,dd,td,summary,figcaption,.member-field,.oc-desc,.tl-desc,.stat-sub,.field-h
 @media (hover:none){
   .card:hover,.board-card:hover,.vol:hover,.worth:hover,.bn:hover,.logo-item:hover,.member--link:hover{transform:none}
   .board-card:hover .board-thumb img{transform:none}
+  /* 2026.10.04 터치 화면: 글 속 작은 링크의 누르는 영역을 위아래로 넓힘(inline 요소의 세로 padding 은 줄 간격을 바꾸지 않음) */
+  .crumb a,.field-hint a,.h-sub a,.grp-note a,.notice a,.footer-info a,.pt-invite a,.lg-lfoot a,.ex-lbox-foot a,.tbl a,.post-body p a,.post-body li a,.acc-body a,.form-note a,.ea-lib-src a,.ea-paynote a,#vlCredit a,#mExpertEmpty a,.vl-credit a{padding-top:9px;padding-bottom:9px}
+  .toc a{display:block;padding:7px 0}
+  .lg-help .lg-link{padding:8px 0;margin:-8px 0}
 }
 /* 게시판 썸네일은 원본 비율(1200×630) 그대로 */
 .board-thumb{aspect-ratio:1200/630}
