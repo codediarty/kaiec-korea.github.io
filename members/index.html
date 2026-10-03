@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>위원 명단 | 한국AI윤리위원회</title>
-<meta name="description" content="한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.">
+<meta name="description" content="한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 위원(캠페인위원 · 교육위원) 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.">
 <meta name="keywords" content="한국AI윤리위원회, 한국 AI 윤리위원회, AI윤리위원회, AI 윤리 위원회, KAIEC, AI윤리, 인공지능 윤리, AI윤리전문가, AI윤리전문가 양성과정, AI 윤리 교육, AI 윤리 이수증, 생성형 AI, 카피클린">
 <meta name="author" content="한국AI윤리위원회">
 <link rel="canonical" href="https://kaiec.kr/members/">
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="한국AI윤리위원회">
 <meta property="og:title" content="위원 명단 | 한국AI윤리위원회">
-<meta property="og:description" content="한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.">
+<meta property="og:description" content="한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 위원(캠페인위원 · 교육위원) 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.">
 <meta property="og:url" content="https://kaiec.kr/members/">
 <meta property="og:locale" content="ko_KR">
 <meta property="og:image" content="https://kaiec.kr/assets/img/og-image.png">
@@ -22,7 +22,7 @@
 <meta property="og:image:alt" content="위원 명단 | 한국AI윤리위원회">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="위원 명단 | 한국AI윤리위원회">
-<meta name="twitter:description" content="한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 캠페인위원 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.">
+<meta name="twitter:description" content="한국AI윤리위원회 위원장·부위원장·감사·고문 및 자문위원, 사무국, 전문위원, AI 윤리 위원(캠페인위원 · 교육위원) 명단과 공식 등록 AI윤리전문가(성명·이수번호 검색), 공식 파트너를 안내합니다.">
 <meta name="twitter:image" content="https://kaiec.kr/assets/img/og-image.png">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
@@ -274,9 +274,11 @@
     var BADGE={'위원장':'KAIEC 임원진','전문위원':'KAIEC 소속 출강','AI 윤리 캠페인위원':'KAIEC 공식 위촉'};
     var NOTE={
       '전문위원':'KAIEC 소속 전문위원이 대학·기업·공공기관을 대상으로 맞춤형 AI 교육을 진행합니다. <a href="/lecture/#request">출강 문의 →</a>',
-      'AI 윤리 캠페인위원':'위원회 검토를 거쳐 공식 위촉된 위원으로, 책임 있는 AI 문화 정착과 긍정적 사회가치 확산에 함께합니다.'};
+      'AI 윤리 캠페인위원':'위원회 검토를 거쳐 공식 위촉된 캠페인위원 · 교육위원으로, 온라인과 강의 현장에서 책임 있는 AI 문화 정착과 긍정적 사회가치 확산에 함께합니다.'};
+    /* 2026.10.03 사용자: 통칭은 'AI 윤리 캠페인위원'이 아니라 'AI 윤리 위원'(캠페인위원 · 교육위원을 함께 부름). 내부 그룹 이름은 그대로 두고 제목만 */
+    var GROUP_LABEL={'AI 윤리 캠페인위원':'AI 윤리 위원'};
     function grpHead(g){
-      return '<h3 class="grp-title"><span class="grp-name"><span class="grp-bar"></span>'+g+'</span>'
+      return '<h3 class="grp-title"><span class="grp-name"><span class="grp-bar"></span>'+(GROUP_LABEL[g]||g)+'</span>'
         +(BADGE[g]?'<span class="grp-badge">'+CHECK+BADGE[g]+'</span>':'')+'</h3>'
         +(NOTE[g]?'<p class="grp-note">'+NOTE[g]+'</p>':'');
     }
@@ -347,11 +349,11 @@
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(named.length){
       var cards=named.map(function(m){
-        return card({role:'AI 윤리 캠페인위원',name:m.name,en:m.en,code:m.code,email:m.email,since:m.since,field:m.field||'AI 윤리 캠페인 · 확산',photo:m.photo},'AI 윤리 캠페인위원');
+        return card({role:m.track==='교육'?'AI 윤리 교육위원':'AI 윤리 캠페인위원',name:m.name,en:m.en,code:m.code,email:m.email,since:m.since,field:m.field||'AI 윤리 캠페인 · 확산',photo:m.photo},'AI 윤리 캠페인위원');   /* track:'교육' = AI 윤리 교육위원(2026.10.03) */
       }).join('');
       cards+='<a class="member member--recruit" href="/join/#apply">'
         +'<div class="member-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></div>'
-        +'<div class="member-role">AI 윤리 캠페인위원</div>'
+        +'<div class="member-role">AI 윤리 위원</div>'
         +'<div class="member-name">위원 위촉 신청</div>'
         +'<div class="member-field">위원회 검토 후 공식 위촉 →</div></a>';
       html+='<div style="margin-bottom:44px">'
@@ -429,7 +431,7 @@
     /* 위원회 공식 색 (사이트 배지 · 머리띠와 같은 값) */
     var INK='#0A1628',NAVY='#0F2A5F',NAVY2='#17325F',BLUE='#1F5FE0',BLUE6='#1749B4',STEEL='#9FB3D1',
         TXT='#0B1B36',G7='#374151',G6='#4B5563',G5='#6B7280',G4='#9CA3AF',LINE='#E3E8EF';
-    var UNIT={'고문·자문위원':'고문·자문위원단','사무국':'사무국','전문위원':'전문위원회','AI 윤리 캠페인위원':'AI 윤리 캠페인위원단'};
+    var UNIT={'고문·자문위원':'고문·자문위원단','사무국':'사무국','전문위원':'전문위원회','AI 윤리 캠페인위원':'AI 윤리 위원단'};   /* 2026.10.03 통칭 'AI 윤리 위원' */
     var SINCE={'위원장':'취임','부위원장':'선임','감사':'선임','사무국':'선임'};
     var CHIP={'전문위원':'KAIEC 소속 출강 강사','AI 윤리 캠페인위원':'한국AI윤리위원회 공식 위촉'};
     var CHIP_DEF='한국AI윤리위원회 공식 명단 등재';
