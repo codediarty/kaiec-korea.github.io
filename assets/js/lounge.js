@@ -705,18 +705,19 @@
      다시 걸러 대기열로 보냄(10분마다 나눠서 · 하루 한도 안) */
   /* 1.4.22 독려 메일 8종(사용자 2026.10.04 '독려 메일도 여러 가지 버전으로 … AI 스펙 · AI 윤리 역량 · 떠오르는 스펙 … 동기부여 · 활동비 관점 … 눌렀을 때 옵션으로 내가 선택해서 …
      첫 로그인 안 한 사람에 맞게(위촉 4일째부터) … AIEP 과정 이수 추천 … 맨 아래 하나는 약간 강하게(위원 해제 안내 등 최후통첩 느낌)'): [독려]를 누르면 편을 고르는 창(openMotPicker),
-     고르면 같은 미리 보기 창. 본문은 사이트 서식 assets/mail/tpl/mot-*.txt(서버 1.4.22 motVals_). 첫 로그인 전은 대상이 따로(아직 로그인하지 않은 위원, 위촉 4일째부터) */
+     고르면 같은 미리 보기 창. 본문은 사이트 서식 assets/mail/tpl/mot-*.txt(서버 1.4.22 motVals_). 첫 로그인 전은 대상이 따로(아직 로그인하지 않은 위원, 위촉 4일째부터).
+     1.4.23(사용자 2026.10.04 '첫 로그인 전 독려 메일은 한 번에 가야지, 누르면 왜 나눠서 가 … 바로 가지도 않네'): [보내기]를 누르면 서버가 그 자리에서 바로 보냄(지메일 하루 한도 안, 남은 것은 1분 뒤 이어서) */
   var BULK_KINDS = [['mot', '독려 (8편)', '편을 골라 보내기: AI 스펙 · AI 윤리 역량 · 떠오르는 스펙 · 활동비 · 방법 · 팁 · 첫 로그인 전 · AIEP 이수 추천 · 활동 기준 안내', 'pick'], ['pride', '자긍심', '왜 지금 AI 윤리인지, 위원 활동의 의미와 함께 만든 변화(자기설득 · 자긍심)'],
     ['guide', '사용 안내', '위원 라운지 · AIEP 과정 소개하는 법 · 전용관(영상관 · 이수 평가) · 이수증 활용 · 명함과 활동지원금']];
   var MOT_KINDS = [
     ['spec', 'AI 스펙 편', '이력서에 들어가는 AI 스펙 한 줄 · 숫자로 보는 AI 스펙(71% · 46% · AI기본법) · 소개 멘트 · 글 제목 예시 · 활동비'],
     ['ethics', 'AI 윤리 역량 편', 'AI를 잘 쓰는 사람은 많아졌고 바르게 쓰는 사람은 아직 적다 · 현장의 문제 네 가지 · 영상관 · 위원의 소개가 바꾸는 것'],
     ['rising', '떠오르는 스펙 편', '왜 지금인가(AI기본법 · 채용 · 현장) · 누구에게 먼저 필요한가 · AIEP가 답이 되는 이유 · 글 · 게시물 소재'],
-    ['income', '활동비 편', '결제 1건마다 30,000원 · 세금은 위원회 부담 · 5명 150,000원 · 20명 600,000원 · 지금 실적과 다음 직함 · 가장 빠른 세 가지'],
-    ['howto', '방법 · 팁 편', '오늘 5분, 세 걸음 · 채널별 팁(SNS · 블로그 · 커뮤니티 · 지인 · 오프라인 · 이메일 서명) · 소개 멘트 · 라운지 도구'],
+    ['income', '활동비 편', '오늘의 활동이 이번 주 활동비가 됩니다 · 결제 1건마다 30,000원 · 매주 목요일 정기 지급 · 5명 150,000원 · 20명 600,000원 · 지금 실적과 다음 직함'],
+    ['howto', '방법 · 팁 편', '지금 바로 첫 활동을 시작할 수 있습니다 · 첫 활동 세 걸음 · 채널별 팁(SNS · 블로그 · 커뮤니티 · 지인 · 오프라인 · 이메일 서명) · 라운지 도구'],
     ['firstlogin', '첫 로그인 전', '아직 라운지에 들어오지 않은 위원에게(위촉 4일째부터): 라운지에 준비된 것 · 첫 로그인 세 단계 · 명함은 로그인 전에도'],
-    ['aiep', 'AIEP 이수 추천', '위원이 직접 이수하면: 소개의 설득력 · 이력 · 활동증명서 · 실적 1건 · 위원 코드 10% 할인 + 활동비로 실제 부담 59,100원'],
-    ['final', '활동 기준 안내', '30일 1건 기준 · 휴면 · 해제 · 그 위원의 다음 실적 기한 · 가장 쉬운 길 · 활동 종료 회신 안내. 활동이 거의 없는 위원에게만(강한 톤)']];
+    ['aiep', 'AIEP 이수 추천', 'AIEP 과정부터 직접 이수해 보세요: 위원 코드 10% 할인 · 본인 활동 실적 인정 · 승격 반영 · 활동비 동일 지급 · 실제 부담 59,100원'],
+    ['final', '활동 기준 안내', '위원 자격 유지를 위해 활동을 시작해 주세요: 실제 활동하는 위원 중심 운영 · 일정 기간 활동이 없으면 위촉 · 등재 종료 · 다음 실적 기한 · 첫 활동은 어렵지 않습니다. 활동이 거의 없는 위원에게만(강한 톤)']];
   var BULK_AUD = [['10', '하위 10명'], ['20', '하위 20명'], ['30', '하위 30명'], ['all', '전체 위원']], BULK_NEW_DAYS = 3, BULK_FIRST_LOGIN_DAYS = 4, BK = null;
   function bulkKind(kind) { return BULK_KINDS.concat(MOT_KINDS).filter(function (x) { return x[0] === kind; })[0]; }
   function bulkList() {
@@ -797,7 +798,7 @@
       BK.sample = j.sample || ''; var ul = $('bkList'); if (ul) ul.innerHTML = bulkListHTML();
       var mb = $('bkMail'); if (mb) mb.innerHTML = '<div class="ad-mailmeta"><div><span>미리 보기</span><b>' + esc(j.sampleName || '') + ' 위원이 받을 메일</b></div><div><span>제목</span><b>' + esc(j.subject) + '</b></div></div>' +
         '<iframe class="ad-mailframe bk-frame" sandbox="" title="' + esc(BK.label) + ' 메일 미리 보기" srcdoc="' + esc('<!doctype html><meta charset="utf-8"><body style="margin:0">' + j.html + '</body>') + '"></iframe>';
-      var inf = $('bkInfo'); if (inf) inf.textContent = (j.quota >= 0 ? '지메일 잔여 ' + num(j.quota) + '통 · ' : '') + '대기 ' + num(j.wait) + '통' + (j.paused ? ' · 지금 발송 멈춤' : '') + ' · ' + (j.everyMin || 10) + '분마다 ' + (j.perRun || 20) + '통씩 나감';
+      var inf = $('bkInfo'); if (inf) inf.textContent = (j.quota >= 0 ? '지메일 잔여 ' + num(j.quota) + '통 · ' : '') + '대기 ' + num(j.wait) + '통' + (j.paused ? ' · 대기열 발송은 멈춤 상태' : '') + ' · [보내기]를 누르면 바로 발송(지메일 하루 한도 안)';   /* 1.4.23 바로 발송 */
       bulkSync();
     }, function (er) { if (!BK || my !== BK.seq) return; var mb = $('bkMail'); if (mb) mb.innerHTML = '<p class="lg-err is-on">' + esc(er.message) + '</p>'; });
   }
@@ -817,7 +818,7 @@
     if (act === 'send') {
       var c = bulkPicked().length; if (!c) return;
       BK.foot = foot.innerHTML;
-      foot.innerHTML = '<span class="bk-info bk-ask">체크한 ' + c + '명에게 ' + esc(BK.label) + ' 메일을 보낼까요? 대기열로 들어가 10분마다 나눠서 나갑니다.</span><button type="button" class="btn btn-ghost btn-sm" data-bk="cancel">취소</button><button type="button" class="btn btn-primary btn-sm" data-bk="go">' + c + '명에게 보내기</button>';
+      foot.innerHTML = '<span class="bk-info bk-ask">체크한 ' + c + '명에게 ' + esc(BK.label) + ' 메일을 보낼까요? 누르면 바로 발송됩니다(지메일 하루 한도를 넘는 분량은 한도가 풀리는 대로 이어서).</span><button type="button" class="btn btn-ghost btn-sm" data-bk="cancel">취소</button><button type="button" class="btn btn-primary btn-sm" data-bk="go">' + c + '명에게 보내기</button>';
       return;
     }
     if (act === 'cancel') { foot.innerHTML = BK.foot || ''; bulkSync(); return; }
@@ -825,7 +826,7 @@
       var codes = bulkPicked(), label = BK.label; busy(b, true);
       call('admin.bulk', { step: 'send', kind: BK.kind, codes: codes }).then(function (j) {
         closeModal(); BK = null;
-        toast((j.result || label + ' 메일을 대기열에 올렸습니다') + (j.skipped && j.skipped.length ? ' 제외 ' + j.skipped.length + '명(최근에 받았거나 받을 수 없는 위원).' : ''), 'ok');
+        toast((j.result || label + ' 메일을 보냈습니다') + (j.skipped && j.skipped.length ? ' 제외 ' + j.skipped.length + '명(최근에 받았거나 받을 수 없는 위원).' : ''), 'ok');
         loadAdmin(true);
       }, function (er) { busy(b, false); toast(er.message, 'danger'); });
     }
