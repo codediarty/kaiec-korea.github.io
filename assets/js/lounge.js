@@ -564,12 +564,14 @@
   function adminLogout() { store(KEY_ADMIN, null, true); store(KEY_ADMIN_DASH, null, true); store(KEY_ADMIN_TAB, null, true); adSeq++; refreshing(false); S.admin = null; S.tab = 'insight'; renderAdminLogin(); }
   /* 1.4.9 메일 칸(사용자 2026.10.01 '여기 20통이라는 게 20통이 남았다는 거야 20통을 사용했다는 거야? 잔여가 안 나와서'): 큰 숫자는 지메일 잔여(남음).
      1.4.11 짧게(사용자 '글씨가 너무 길어져서 못생겨졌잖아'): 아래 한 줄은 오늘 보냄 · 대기, 그 아래 다시 차는 때 · 멈춤 버튼. 자세한 설명은 마우스를 올리면(title).
-     무료 지메일은 24시간 100통, 보낸 지 24시간이 지나면 그만큼 다시 생김 */
+     백엔드 1.4.23(사용자 2026.10.03 밤 '너 말대로라면 0통이어야 하는데(다 썼다며?) 매칭이 안 되는 거 아니야?'): 보낼 수 있는지는 지메일 잔여(남음)로만 판단하고
+     '오늘 보냄'은 한국 날짜 기준 시스템이 센 수(테스트 메일 포함)라 100을 넘을 수도 있음. 지메일 한도는 사용자마다 다른 시각에 24시간 창 단위로 통째로 초기화되므로
+     '다시 차는 때'는 백엔드가 관측한 초기화 시각 + 24시간(관측 전이면 안 보임) */
   function mailTileHTML(a, t) {
     var q = t.mailQuota != null && t.mailQuota >= 0 ? t.mailQuota : null, rf = t.mailRefill, today = a.today || '';
-    var refill = rf && rf.at ? String(rf.at).slice(11, 16) : '', refillTxt = refill ? (String(rf.at).slice(0, 10) === today ? '' : '내일 ') + refill + '에 ' + num(rf.n) + '통 다시 생김' : '';
-    var tip = '무료 지메일은 24시간 동안 100통까지 보낼 수 있고, 보낸 지 24시간이 지나면 그만큼 다시 생깁니다(0시에 한꺼번에 초기화되지 않음).' + (refillTxt ? '\n다음: ' + refillTxt : '') +
-      '\n오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수, 대기는 아직 안 나간 메일입니다.' + (t.mailPaused ? '\n일시정지 중에도 결제 · 정산 알림과 위원장 알림은 바로 나갑니다.' : '') +
+    var refill = rf && rf.at ? String(rf.at).slice(11, 16) : '', refillDay = refill ? (String(rf.at).slice(0, 10) === today ? '' : '내일 ') : '', refillTxt = refill ? refillDay + refill + '쯤 ' + num(rf.n) + '통 다시 생김(지메일이 한도를 통째로 초기화하는 시각 · 10분 안 오차)' : '';
+    var tip = '남음은 지메일이 알려 주는 실제 잔여입니다(무료 지메일은 24시간 창에 100통, 창은 사용자마다 다른 시각에 통째로 초기화되고 0시 기준이 아님). 보낼 수 있는지는 이 잔여로만 판단합니다(인증번호용 5통은 남김).' + (refillTxt ? '\n다음: ' + refillTxt : '') +
+      '\n오늘 보냄은 0시부터 위원 활동 시스템이 보낸 수(테스트 메일 포함, 잔여와 날짜 기준이 달라 100을 넘을 수 있음), 대기는 아직 안 나간 메일입니다.' + (t.mailPaused ? '\n일시정지 중에도 결제 · 정산 알림과 위원장 알림은 바로 나갑니다.' : '') +
       (t.mailAutoResume > 0 ? '\n일시정지 중이라도 지메일 잔여가 ' + num(t.mailAutoResume) + '통 아래에 있다가 그 이상이 되면 자동으로 발송을 시작합니다(시작 예약이 있으면 예약 시각).' : '');
     /* 1.4.16 자동 시작(사용자 2026.10.03 '정지하더라도 60통 남음 이상으로 바뀌면 자동으로 시작으로'): 멈춰 있고 잔여가 기준보다 적으면 둘째 줄에 기준을 보여 줌(칸 높이 그대로) */
     var autoTxt = t.mailPaused && !t.mailResumeAt && t.mailAutoResume > 0 && q != null && q < t.mailAutoResume ? num(t.mailAutoResume) + '통에 자동 시작' : '';   /* 칸 폭(노트북 159px)에서 한 줄: '대기 188통 · 60통에 자동 시작' 143px */
@@ -579,7 +581,7 @@
     var acts = t.mailPaused ?
       (t.mailResumeAt ? '<button type="button" class="lg-link" data-act="mailschedule">' + esc(fmtResumeAt(t.mailResumeAt)) + ' 시작</button> · <button type="button" class="lg-link" data-act="mailresume">지금 시작</button>'
         : '<button type="button" class="lg-link" data-act="mailresume">지금 시작</button> · <button type="button" class="lg-link" data-act="mailschedule">시작 예약</button>') :
-      (refill && q != null ? refill + ' +' + num(rf.n) + '통 · ' : '') + '<button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>';
+      (refill && q != null ? (refillDay ? '내일 ' : '') + refill + ' +' + num(rf.n) + '통 · ' : '') + '<button type="button" class="lg-link" data-act="mailpause">잠시 멈춤</button>';   /* 1.4.23 내일이면 '내일 13:31 +51통' */
     return '<div class="ad-tile' + (t.mailPaused ? ' is-paused' : '') + (q != null && q <= 10 ? ' is-low' : '') + '" title="' + esc(tip) + '">' + head + '<b>' + big + '</b><i>' + l1 + '</i><i class="ad-tile-acts">' + acts + '</i></div>';
   }
   function fmtResumeAt(s) { var d = dateOf(s); return d ? (d.getMonth() + 1) + '/' + d.getDate() + '(' + DAYS[d.getDay()] + ') ' + String(s).slice(11, 16) : String(s || ''); }
