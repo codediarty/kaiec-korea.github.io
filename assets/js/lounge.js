@@ -402,17 +402,18 @@
      최근 추천 · 다음 직함이 가까움 · 첫 추천 전이면 그 제안을 먼저, 아니면 날마다 바뀌는 제안(같은 날은 같은 것). [다른 제안]으로 넘겨 봄. 휴면 중이면 복귀 안내 */
   function recentCredit(d) { var mc = d.minCredit || {}, last = dateOf(mc.last), today = dateOf(new Date()); return !!(last && today && (today - last) / 86400000 <= ((d.settings || {}).gaugeFullDays || 10)); }
   function nudgeList(d) {
+    /* 2판(2026.10.03 사용자 '카톡 프로필에 누가 명함을 올려 부담스럽게 · 준비된 문안도 별로 · 충분이라는 말을 함부로 쓰지 마'): 일상에서 자연스럽게 알리는 제안으로 */
     var m = d.member, st = d.stats || {}, mc = d.minCredit || {}, L = d.links || {}, nt = st.next, reach = Number(st.reachAll) || 0, top = [], out = [];
+    var experts = L.experts || (SITE + '/experts/?ref=' + m.code);
     if (m.status === '휴면' || m.status === '휴면예정') return [
-      { t: '명단 · 명함이 잠시 숨겨져 있어요. ' + (mc.graceEnd ? fmtKo(mc.graceEnd, true) + '까지 ' : '') + '위원 코드로 결제 1건(본인 결제 포함)이면 바로 돌아옵니다. 필요한 한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] },
-      { t: '준비된 카카오톡 문안을 필요한 한 분께 보내 보세요. 위원 추천 할인이 자동으로 적용됩니다.', b: ['카카오톡 문안 복사', 'tpl', 0] }];
-    if (recentCredit(d)) top.push({ t: '최근 추천 고맙습니다! 그분이 지금 AI 윤리를 공부하고 있어요. 이 흐름으로 한 분 더 소개해 볼까요?', b: ['인스타그램 문안 복사', 'tpl', 1] });
-    if (nt && nt.need <= 2 && m.credits > 0) top.push({ t: heroTier(nt.name) + '까지 ' + nt.need + '건 남았어요. 가까운 한 분이면 충분합니다.', b: ['바로 신청 링크 복사', 'copy', L.go] });
-    if (mc.first) top.push({ t: '첫 추천은 가장 가까운 한 분부터예요. 명함 한 장이면 시작입니다.', b: ['명함 링크 복사', 'copy', L.card] });
-    out.push({ t: '카카오톡 프로필 링크 칸에 내 명함을 올려 두면, 보는 분마다 AI 윤리를 한 번 더 만납니다.', b: ['명함 링크 복사', 'copy', L.card] });
-    out.push({ t: reach > 0 ? '내 명함 · 링크로 ' + num(reach) + '명이 AI 윤리를 만났어요. 관심을 보인 한 분께 바로 신청 링크를 건네 보세요.' : '취업을 준비하는 대학생, 업무에 AI를 쓰는 지인 한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
-    out.push({ t: '오늘은 단톡방 한 곳에 소개 문안을 나눠 볼까요? 문안은 이미 준비되어 있어요.', b: ['카카오톡 문안 복사', 'tpl', 0] });
-    out.push({ t: 'AIEP 영상관 소개 페이지를 공유하면, 처음 듣는 분도 과정을 쉽게 이해합니다.', b: ['안내 페이지 링크 복사', 'copy', L.experts || (SITE + '/experts/?ref=' + m.code)] });
+      { t: '명단 · 명함이 잠시 숨겨져 있어요. ' + (mc.graceEnd ? fmtKo(mc.graceEnd, true) + '까지 ' : '') + '위원 코드로 결제 1건(본인 결제 포함)이면 바로 돌아옵니다. 필요한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] },
+      { t: 'AIEP 안내 페이지를 함께 보내면 처음 듣는 분도 과정을 쉽게 이해합니다.', b: ['안내 페이지 링크 복사', 'copy', experts] }];
+    if (recentCredit(d)) top.push({ t: '최근 추천 감사합니다! 소개받은 분이 지금 AI 윤리를 공부하고 있어요. 주변에 도움이 될 분이 또 계신지 떠올려 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
+    if (nt && nt.need <= 2 && m.credits > 0) top.push({ t: heroTier(nt.name) + '까지 ' + nt.need + '건 남았어요. 가까운 분께 가볍게 소개해 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
+    if (mc.first) top.push({ t: '첫 소개는 가장 가까운 분부터 시작해 보세요. 위원으로 활동하게 된 소식을 전하며 명함 링크를 함께 보내면 자연스럽습니다.', b: ['명함 링크 복사', 'copy', L.card] });
+    out.push({ t: '요즘 AI 이야기가 나오면 \'AI도 바르게 쓰는 법을 배우는 과정이 있더라\' 하고 가볍게 이야기해 보세요. 안내 페이지를 함께 보내면 이해가 쉽습니다.', b: ['안내 페이지 링크 복사', 'copy', experts] });
+    if (!mc.first) out.push({ t: '가까운 분들께 한국AI윤리위원회 위원으로 활동하게 된 소식을 전하며 명함 링크를 함께 보내 보세요.', b: ['명함 링크 복사', 'copy', L.card] });   /* 첫 소개 제안과 겹치지 않게 */
+    out.push({ t: reach > 0 ? '내 명함 · 링크로 ' + num(reach) + '명이 AI 윤리를 만났어요. 관심을 보인 분께 바로 신청 링크를 건네 보세요.' : '취업을 준비하는 대학생, 업무에 AI를 쓰는 지인 한 분께 바로 신청 링크를 건네 보세요.', b: ['바로 신청 링크 복사', 'copy', L.go] });
     if (!top.length) { var h = 0, c = String(m.code || ''); for (var i = 0; i < c.length; i++) h = (h * 31 + c.charCodeAt(i)) % 997; var k = (Math.floor(Date.now() / 86400000) + h) % out.length; out = out.slice(k).concat(out.slice(0, k)); }
     return top.concat(out);
   }
