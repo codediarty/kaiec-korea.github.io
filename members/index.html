@@ -380,7 +380,7 @@
         }).forEach(function(el){grid.insertBefore(el,tail)});   /* 수석 → 책임 → 선임 → 나머지(원래 순서), 맨 끝은 위촉 신청 카드 */
         var rbx=ov&&ov.querySelector('.bc-role');if(rbx&&curP&&curP.m.code)rbx.textContent=roleLine(curP);
       }
-      var KEY='kaiec_status_v1',HINT={"at": 1790746200000, "m": {"LSR6527": {"t": "선임"}}},c=null;
+      var KEY='kaiec_status_v1',HINT={"at": 1790989200000, "m": {"LSR6527": {"t": "책임"}}},c=null;
       try{c=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){c=null}
       if(!(c&&c.j&&c.at&&Date.now()-c.at<7*864e5))c=null;
       if(c&&(!HINT||c.at>=HINT.at))apply(c.j);else if(HINT)apply(HINT);
