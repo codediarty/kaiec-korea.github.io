@@ -348,8 +348,8 @@
     /* AI 윤리 캠페인위원: 전문위원 아래, 같은 크기 카드. 위촉된 인원만 표시 + 모집 카드 1장 */
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(named.length){
-      /* 2026.10.03 밤 사용자: '명함 게시될 때 캠페인위원이 더 앞에, 교육위원은 뒤에' → 캠페인위원 먼저(원래 순서), 교육위원(track:'교육')은 그 뒤 */
-      var ordered=named.filter(function(m){return m.track!=='교육'}).concat(named.filter(function(m){return m.track==='교육'}));
+      /* 2026.10.03 밤에는 캠페인위원 먼저였으나 2026.10.04 사용자: '캠페인위원보다 AI 윤리 (교육)위원을 앞에 배치, 위원 명단에서' → 교육위원(track:'교육') 먼저, 캠페인위원은 그 뒤 */
+      var ordered=named.filter(function(m){return m.track==='교육'}).concat(named.filter(function(m){return m.track!=='교육'}));
       var cards=ordered.map(function(m){
         var edu=m.track==='교육';
         return card({role:edu?'AI 윤리 교육위원':'AI 윤리 캠페인위원',name:m.name,en:m.en,code:m.code,email:m.email,since:m.since,field:m.field||(edu?'AI 윤리 교육 · 커리어 멘토링':'AI 윤리 캠페인 · 확산'),photo:m.photo,track:m.track},'AI 윤리 캠페인위원');   /* track:'교육' = AI 윤리 교육위원(2026.10.03) */
@@ -398,8 +398,8 @@
         function eduOf(el){var p=PEOPLE[+el.getAttribute('data-p')];return p&&p.m.track==='교육'?1:0}
         cards.slice().sort(function(a,b){
           var ra=TIER_RANK[TIERS[codeOf(a)]],rb=TIER_RANK[TIERS[codeOf(b)]];ra=ra===undefined?9:ra;rb=rb===undefined?9:rb;
-          return eduOf(a)-eduOf(b)||ra-rb||(+a.getAttribute('data-p'))-(+b.getAttribute('data-p'));
-        }).forEach(function(el){grid.insertBefore(el,tail)});   /* 캠페인위원(수석 → 책임 → 선임 → 나머지) 다음 교육위원(같은 순서), 맨 끝은 위촉 신청 카드 */
+          return eduOf(b)-eduOf(a)||ra-rb||(+a.getAttribute('data-p'))-(+b.getAttribute('data-p'));
+        }).forEach(function(el){grid.insertBefore(el,tail)});   /* 2026.10.04: 교육위원(수석 → 책임 → 선임 → 나머지) 다음 캠페인위원(같은 순서), 맨 끝은 위촉 신청 카드 */
         var rbx=ov&&ov.querySelector('.bc-role');if(rbx&&curP&&curP.m.code)rbx.textContent=roleLine(curP);
       }
       var KEY='kaiec_status_v1',HINT={"at": 1790989200000, "m": {"LSR6527": {"t": "책임"}}},c=null;
