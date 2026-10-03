@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=3efdc16489">
+<link rel="stylesheet" href="/assets/css/style.css?v=ba83342448">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -210,11 +210,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec";</script>
-  <script src="/assets/js/main.js?v=3efdc16489"></script>
+  <script src="/assets/js/main.js?v=ba83342448"></script>
   <script>window.KAIEC_LOUNGE_STATUS="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec?action=status";</script>
-  <script src="/assets/js/members-data.js?v=3efdc16489"></script>
-  <script src="/assets/js/qrcode.min.js?v=3efdc16489"></script>
-  <script src="/assets/js/experts-data.js?v=3efdc16489"></script>
+  <script src="/assets/js/members-data.js?v=ba83342448"></script>
+  <script src="/assets/js/qrcode.min.js?v=ba83342448"></script>
+  <script src="/assets/js/experts-data.js?v=ba83342448"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -353,7 +353,7 @@
        (나머지는 원래 순서), 서버 응답(느릴 때 수십 초)을 기다리지 않도록 ① 이 브라우저가 전에 받은 status(7일 안) 또는 ② 빌드 때 넣은 직함 힌트
        (build.py TIER_HINT, 둘 중 새것)로 먼저 그린 뒤 서버 응답이 오면 다시 맞춥니다. 서버가 없거나 실패해도 명단은 그대로 보입니다.
        종료 위원의 데이터 삭제는 2단계 자동 작업이 맡습니다. */
-    var TIERS={},TIER_WORD={'선임':'AI 선임위원','책임':'AI 책임위원','수석':'AI 수석위원'},TIER_RANK={'수석':0,'책임':1,'선임':2};
+    var TIERS={},TIER_WORD={'선임':'AI 선임위원','책임':'AI 책임위원','수석':'AI 수석위원','상임':'AI 상임위원','자문':'자문위원'},TIER_RANK={'자문':0,'상임':1,'수석':2,'책임':3,'선임':4};   /* 2026.10.03 상임(100건) · 자문(300건, 임원) */
     function tierTitle(m){return m&&m.code&&TIERS[m.code]?(TIER_WORD[TIERS[m.code]]||''):''}
     function tierBadge(m){return ''}
     (function(){
