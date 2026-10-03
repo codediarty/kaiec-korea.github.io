@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=ba83342448">
+<link rel="stylesheet" href="/assets/css/style.css?v=674a4bf6c5">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -92,6 +92,20 @@
           <span class="eyebrow">Members</span>
           <h2 class="h-sec">위원회 구성</h2>
           <p class="h-sub">직책과 전문분야를 기준으로 안내합니다. 조직 구성은 <a href="/about/#org" style="color:var(--blue);font-weight:600">조직도</a>를 참고해 주세요.</p>
+          <div class="msx" id="msx" hidden>
+            <div class="msx-bar" role="search">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8" /> <path d="m21 21-4.3-4.3" /></svg>
+              <input type="search" id="msxQ" placeholder="이름 · 위원 코드로 찾기" aria-label="위원 검색(이름 · 초성 · 위원 코드)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search"
+                role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-expanded="false" aria-controls="msxList">
+              <kbd class="msx-kbd" aria-hidden="true">/</kbd>
+              <button type="button" class="msx-clear" aria-label="검색어 지우기"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></svg></button>
+            </div>
+            <div class="msx-pop" id="msxPop" hidden>
+              <div class="msx-head" id="msxHead"><span id="msxCount"></span><span class="msx-keys">↑↓ 이동 · Enter 명함 열기 · Esc 닫기</span></div>
+              <ul class="msx-list" id="msxList" role="listbox" aria-label="위원 검색 결과"></ul>
+            </div>
+            <span class="sr-only" id="msxLive" aria-live="polite"></span>
+          </div>
         </div>
         <div id="memberSections"></div>
 
@@ -210,11 +224,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec";</script>
-  <script src="/assets/js/main.js?v=ba83342448"></script>
+  <script src="/assets/js/main.js?v=674a4bf6c5"></script>
   <script>window.KAIEC_LOUNGE_STATUS="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec?action=status";</script>
-  <script src="/assets/js/members-data.js?v=ba83342448"></script>
-  <script src="/assets/js/qrcode.min.js?v=ba83342448"></script>
-  <script src="/assets/js/experts-data.js?v=ba83342448"></script>
+  <script src="/assets/js/members-data.js?v=674a4bf6c5"></script>
+  <script src="/assets/js/qrcode.min.js?v=674a4bf6c5"></script>
+  <script src="/assets/js/experts-data.js?v=674a4bf6c5"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -721,12 +735,29 @@
     }
     function closeP(){
       if(!ov||ov.hidden)return;
-      ov.classList.remove('is-open');ov.hidden=true;document.documentElement.classList.remove('mp-lock');
+      ov.classList.remove('is-open');ov.classList.remove('is-found');ov.hidden=true;
+      var bb=ov.querySelector('.bc-burst');if(bb&&bb.parentNode)bb.parentNode.removeChild(bb);document.documentElement.classList.remove('mp-lock');
       if(curId&&history.replaceState)history.replaceState(null,'',location.pathname+location.search);
       curId='';curP=null;
       if(lastFocus&&lastFocus.focus)lastFocus.focus();
     }
-    function openP(i,quiet){
+    /* 검색으로 찾은 명함의 작은 반짝임(사진 가운데서 퍼짐, 한 번만, 움직임 줄이기 설정이면 없음) */
+    var RMQ=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+    function burst(){
+      if(!ov||(RMQ&&RMQ.matches))return;
+      var dlg=ov.querySelector('.mp-dialog'),ph=ov.querySelector('.bc-photo');if(!dlg||!ph)return;
+      var old=dlg.querySelector('.bc-burst');if(old)dlg.removeChild(old);
+      var b=document.createElement('div'),C=['#FFFFFF','#CFE5FF','#6FE3D8','#F6C453','#8FB8FF'],h='',N=22;
+      b.className='bc-burst';b.setAttribute('aria-hidden','true');
+      b.style.top=(ph.offsetTop+ph.offsetHeight/2)+'px';
+      for(var k=0;k<N;k++){
+        var a=(k/N*360-90+(Math.random()*14-7))*Math.PI/180,d=76+Math.random()*100,s=3.5+Math.random()*4.5;
+        h+='<i class="'+(k%3===0?'d':'s')+'" style="--x:'+(Math.cos(a)*d).toFixed(1)+'px;--y:'+(Math.sin(a)*d*0.8).toFixed(1)+'px;--s:'+s.toFixed(1)+'px;--c:'+C[k%C.length]+';--t:'+((420+Math.random()*180)|0)+'ms;--r:'+((Math.random()*160-80)|0)+'deg"></i>';
+      }
+      b.innerHTML=h;dlg.appendChild(b);
+      setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b)},2400);
+    }
+    function openP(i,quiet,fx){
       var p=PEOPLE[i];if(!p)return;
       var m=p.m,title=titleOf(p),unit=unitOf(p);
       if(m&&m.code&&window.kaiecWarmSkkc)window.kaiecWarmSkkc();  /* 명함을 열면 주문서 사이트에 미리 연결 */
@@ -781,10 +812,12 @@
         +'<div class="bc-actions"><button type="button" class="bc-btn bc-btn--primary" data-act="img">'+ICON_IMG+'명함 이미지 저장</button>'
         +'<button type="button" class="bc-btn" data-act="share">'+ICON_SHARE+'명함 공유</button></div>'
         +'<p class="bc-note">'+TAGLINE+'</p>';
+      if(fx){var kids=ov.querySelector('.bc-body').children;for(var kk=1;kk<kids.length;kk++)kids[kk].style.setProperty('--d',(kk===1?90:120+kk*36)+'ms')}   /* 검색으로 찾은 명함: 사진 → 직함 → 이름 … 차례로 */
       lastFocus=document.activeElement;
       if(m.code&&window.kaiecReach)window.kaiecReach(m.code,'/members/#'+m.code);   /* 위원 활동 시스템: 명함 열람(리치) 신호 (2026.09.29) */
+      ov.classList.toggle('is-found',!!fx);
       ov.hidden=false;ov.scrollTop=0;document.documentElement.classList.add('mp-lock');
-      requestAnimationFrame(function(){ov.classList.add('is-open')});
+      requestAnimationFrame(function(){ov.classList.add('is-open');if(fx)burst()});
       if(!quiet)ov.querySelector('.mp-close').focus();
       if(history.replaceState)history.replaceState(null,'','#'+curId);
       var pimg=ov.querySelector('.bc-photo img');
@@ -815,6 +848,209 @@
           break;
         }
       }
+    })();
+    /* 위원 검색 (2026.10.03 사용자: '위원 명단이 앞으로 많아질 텐데(캠페인위원 300명 계획) 지금 디자인을 바꾸거나 해치지 말고 어울리게 검색창,
+       위원들이 쓰기 쉽게, 검색하면 디지털 명함이 기분 좋게 뜨도록 효과를 넣어 있어 보이게'):
+       '위원회 구성' 제목 아래 검색창 하나. 이름 · 초성(ㄱㅅㅎ) · 위원 코드 · 영문 이름 · 직함 · 분야로 찾고, 입력하는 동안 추천 목록
+       (사진 · 이름 · 직함 · 분야 · 코드, 맞은 글자 표시)을 띄움. 한글은 입력 중인 글자도 맞춤('김셓' → 김세희, '기' → 김…).
+       ↑↓ · Enter · Esc, 고르면 명함이 입체로 떠오름(빛이 한 번 지나가고 사진 둘레가 반짝임, 움직임 줄이기 설정이면 효과 없음).
+       휴면 · 종료로 숨긴 위원은 찾지 않음. 명단이 길어 검색창이 화면 밖이면 오른쪽 아래 [위원 찾기], PC 는 '/' 키로 검색창으로. */
+    (function(){
+      var root=document.getElementById('msx'),q=document.getElementById('msxQ'),pop=document.getElementById('msxPop'),
+          list=document.getElementById('msxList'),cnt=document.getElementById('msxCount'),head=document.getElementById('msxHead'),live=document.getElementById('msxLive');
+      if(!root||!q||!pop||!list||!PEOPLE.length)return;
+      var bar=root.querySelector('.msx-bar'),clr=root.querySelector('.msx-clear'),HD=document.querySelector('.site-header');
+      root.hidden=false;
+      function mq(s){return window.matchMedia?window.matchMedia(s):null}
+      var WIDE=mq('(min-width:640px)'),COARSE=mq('(hover:none)');
+      function ph(){q.placeholder=WIDE&&WIDE.matches?'위원 이름 · 초성 · 위원 코드로 찾기':'이름 · 위원 코드로 찾기'}
+      ph();if(WIDE&&WIDE.addEventListener)WIDE.addEventListener('change',ph);
+      function escH(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+      var CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',
+          JONG=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'],
+          SPLIT={'ㄳ':'ㄱㅅ','ㄵ':'ㄴㅈ','ㄶ':'ㄴㅎ','ㄺ':'ㄹㄱ','ㄻ':'ㄹㅁ','ㄼ':'ㄹㅂ','ㄽ':'ㄹㅅ','ㄾ':'ㄹㅌ','ㄿ':'ㄹㅍ','ㅀ':'ㄹㅎ','ㅄ':'ㅂㅅ'},
+          SKIP=' ·.,-_()/~#';
+      function syl(c){return c>=44032&&c<=55203}
+      function dec(c){c-=44032;return {c:(c/588)|0,v:((c%588)/28)|0,j:c%28}}
+      function choOf(ch){var c=ch?ch.charCodeAt(0):0;return syl(c)?CHO.charAt(dec(c).c):''}
+      /* w 가 s 의 at 자리부터 맞는지: 자음만 친 글자는 그 자리 글자의 초성과, 마지막 글자는 아직 입력 중일 수 있음 */
+      function hit(s,w,at){
+        for(var i=0;i<w.length;i++){
+          var a=w.charAt(i),b=s.charAt(at+i);if(!b)return false;
+          if(a===b)continue;
+          if(CHO.indexOf(a)>=0){if(choOf(b)===a)continue;return false}
+          var ac=a.charCodeAt(0),bc=b.charCodeAt(0);
+          if(i<w.length-1||!syl(ac)||!syl(bc))return false;
+          var x=dec(ac),y=dec(bc);if(x.c!==y.c||x.v!==y.v)return false;
+          if(!x.j)continue;                                                              /* '기' → 김 */
+          var xj=JONG[x.j],yj=JONG[y.j],nc=choOf(s.charAt(at+i+1));
+          if(!y.j&&xj===nc)continue;                                                     /* '셓' → 세희 */
+          if(SPLIT[xj]&&yj===SPLIT[xj].charAt(0)&&nc===SPLIT[xj].charAt(1))continue;     /* '밗' → 박세 */
+          if(SPLIT[yj]&&SPLIT[yj].charAt(0)===xj)continue;                               /* '달' → 닭 */
+          return false;
+        }
+        return true;
+      }
+      function find(s,w){if(!s||!w)return -1;for(var k=0;k+w.length<=s.length;k++)if(hit(s,w,k))return k;return -1}
+      /* 공백 · 가운뎃점 · 하이픈 등을 빼고 소문자로(맞은 자리를 원래 글자에 표시하려고 위치표 m 도) */
+      function nz(s){s=String(s==null?'':s);var o='',m=[];for(var k=0;k<s.length;k++){var ch=s.charAt(k);if(ch<=' '||ch===' '||SKIP.indexOf(ch)>=0)continue;o+=ch.toLowerCase();m.push(k)}return {s:o,m:m}}
+      var IDX=PEOPLE.map(function(p,i){var m=p.m;return {i:i,p:p,n:nz(m.name),c:nz(m.code),e:nz(m.en),f:nz(m.field)}});
+      /* 순위: 이름 전체 · 이름 앞부분(초성 포함) · 위원 코드 앞부분 · 이름 가운데 · 영문 이름 · 코드 가운데 · 직함 · 분야, 같으면 명단 순서 */
+      function search(raw){
+        var w=nz(raw).s,out=[];if(!w)return out;
+        /* 초성만 친 말은 이름에서만, 한 글자는 이름 · 코드에서만 찾음(분야까지 뒤지면 너무 많이 걸림) */
+        var lat=/^[a-z]/.test(w),jamo=/^[ㄱ-ㅎ]+$/.test(w),wide=!jamo&&w.length>1;
+        IDX.forEach(function(e){
+          if(e.p.hidden)return;
+          var k=find(e.n.s,w),r=null;
+          if(k===0)r=[e.n.s===w?0:1,0,'n'];
+          else if(!jamo&&e.c.s&&e.c.s.indexOf(w)===0)r=[e.c.s===w?0:2,0,'c'];
+          else if(k>0&&!(jamo&&w.length<2))r=[3,k,'n'];
+          else if(wide&&lat&&e.e.s&&(k=e.e.s.indexOf(w))>=0)r=[k?5:4,k,'e'];
+          else if(wide&&e.c.s&&(k=e.c.s.indexOf(w))>0)r=[6,k,'c'];
+          else if(wide&&find(nz(roleLine(e.p)+' '+e.p.g).s,w)>=0)r=[7,0,'t'];
+          else if(wide&&(k=find(e.f.s,w))>=0)r=[8,k,'f'];
+          if(r)out.push({e:e,r:r[0],k:r[1],w:r[2],n:w.length});
+        });
+        out.sort(function(a,b){return a.r-b.r||a.k-b.k||a.e.i-b.e.i});
+        return out;
+      }
+      function mk(src,z,k,n){
+        src=String(src==null?'':src);if(k<0||!n||!z.m.length)return escH(src);
+        var a=z.m[k],b=z.m[Math.min(k+n,z.m.length)-1];if(a==null||b==null)return escH(src);
+        return escH(src.slice(0,a))+'<mark>'+escH(src.slice(a,b+1))+'</mark>'+escH(src.slice(b+1));
+      }
+      var GO=ic('<path d="m9 18 6-6-6-6"/>',2.4).replace('<svg ','<svg class="msx-go" aria-hidden="true" '),
+          NONE=ic('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/>',2).replace('<svg ','<svg aria-hidden="true" ');
+      function avh(m){
+        if(m.photo)return '<span class="msx-av"><img src="/assets/img/members/'+m.photo+'?v=214843c8" alt="" loading="lazy" decoding="async"></span>';
+        return '<span class="msx-av msx-av--i">'+escH((m.name||'?').replace(/[^가-힣A-Za-z]/g,'').slice(0,1)||'·')+'</span>';
+      }
+      function row(o,j){
+        var e=o.e,p=e.p,m=p.m,t=(m.code&&TIERS[m.code])||'';
+        var nm=o.w==='n'?mk(m.name,e.n,o.k,o.n):escH(m.name);
+        var l2=o.w==='e'?mk(m.en,e.e,o.k,o.n):o.w==='f'?mk(m.field,e.f,o.k,o.n):escH(m.field||'');
+        return '<li class="msx-opt" id="msxo'+j+'" role="option" aria-selected="false" data-j="'+j+'">'+avh(m)
+          +'<span class="msx-tx"><span class="msx-l1"><b class="msx-nm">'+nm+'</b><span class="msx-rl'+(t?' msx-rl--'+t:'')+'">'+escH(roleLine(p))+'</span></span>'
+          +'<span class="msx-l2">'+l2+'</span></span>'
+          +(m.code?'<span class="msx-cd">'+(o.w==='c'?mk(m.code,e.c,o.k,o.n):escH(m.code))+'</span>':'')+GO+'</li>';
+      }
+      /* 처음 눌렀을 때(빈 칸): 실제 위원 한 분을 예로 든 찾기 안내(누르면 그 말로 찾아 봄) */
+      var TIP=null;
+      function chip(lb,v){return '<button type="button" class="msx-chip" data-q="'+escH(v)+'">'+lb+'<em>'+escH(v)+'</em></button>'}
+      function tipHTML(){
+        if(TIP===null){
+          var pool=IDX.filter(function(e){return !e.p.hidden&&e.p.m.code&&e.p.m.photo&&e.n.s.length>=3});
+          if(!pool.length)pool=IDX.filter(function(e){return !e.p.hidden&&e.n.s.length>=2});
+          var e=pool.length?pool[(Math.random()*pool.length)|0]:null,nm=e?e.p.m.name:'';
+          TIP=e?'<li class="msx-tip" role="presentation"><b>이렇게 찾을 수 있어요</b><span class="msx-chips">'
+            +chip('이름 일부',nm.slice(1))+chip('초성',nm.split('').map(choOf).join(''))+(e.p.m.code?chip('위원 코드',e.p.m.code):'')+'</span></li>':'';
+        }
+        return TIP;
+      }
+      var res=[],act=-1,MAX=60,lifted=false,autoT=0,autoQ='';
+      /* 이름이나 위원 코드를 끝까지 정확히 쳐서 한 분만 남으면, 입력을 멈추고 0.7초 뒤 명함이 저절로 떠오름(같은 말로는 한 번만) */
+      function autoOpen(w){
+        clearTimeout(autoT);
+        if(res.length!==1||res[0].r!==0||autoQ===w)return;
+        autoT=setTimeout(function(){if(nz(q.value).s===w&&!pop.hidden&&!(ov&&!ov.hidden)){autoQ=w;pick(0)}},700);
+      }
+      function openPop(){if(pop.hidden){pop.hidden=false;q.setAttribute('aria-expanded','true')}}
+      function closePop(){if(!pop.hidden){pop.hidden=true;q.setAttribute('aria-expanded','false')}q.removeAttribute('aria-activedescendant')}
+      function setAct(j,quiet){
+        var o=list.querySelectorAll('.msx-opt');if(!o.length){act=-1;q.removeAttribute('aria-activedescendant');return}
+        act=((j%o.length)+o.length)%o.length;
+        for(var k=0;k<o.length;k++){var on=k===act;o[k].classList.toggle('is-act',on);o[k].setAttribute('aria-selected',on?'true':'false')}
+        q.setAttribute('aria-activedescendant','msxo'+act);
+        if(!quiet){var el=o[act],t=el.offsetTop,b=t+el.offsetHeight;if(t<list.scrollTop+4)list.scrollTop=t-6;else if(b>list.scrollTop+list.clientHeight-4)list.scrollTop=b-list.clientHeight+6}
+      }
+      function render(){
+        var raw=q.value,w=nz(raw).s;
+        root.classList.toggle('has-q',raw.length>0);
+        if(!w){
+          res=[];act=-1;autoQ='';clearTimeout(autoT);var t=tipHTML();live.textContent='';
+          if(!t){closePop();return}
+          head.hidden=true;list.innerHTML=t;openPop();fit();return;
+        }
+        res=search(raw);
+        if(!res.length){
+          head.hidden=true;act=-1;q.removeAttribute('aria-activedescendant');
+          list.innerHTML='<li class="msx-empty" role="presentation">'+NONE+'<b>일치하는 위원이 없습니다</b><span>이름 일부나 초성(예: ㄱㅅ), 위원 코드로 다시 찾아보세요</span></li>';
+          live.textContent='일치하는 위원이 없습니다';
+        }else{
+          head.hidden=false;cnt.innerHTML='<b>'+res.length+'</b>명의 위원';live.textContent='위원 '+res.length+'명';
+          list.innerHTML=res.slice(0,MAX).map(row).join('')+(res.length>MAX?'<li class="msx-more" role="presentation">그 밖에 '+(res.length-MAX)+'명 · 조금 더 입력하면 좁혀집니다</li>':'');
+          list.scrollTop=0;setAct(0,true);
+        }
+        openPop();
+        if(res.length&&!lifted){lifted=true;lift()}else fit();
+        autoOpen(w);
+      }
+      function hdr(){return HD?HD.getBoundingClientRect().height:0}
+      function vis(){var v=window.visualViewport;return v?v.offsetTop+v.height:window.innerHeight}
+      /* 목록이 화면 아래로 잘리면 검색창이 머리 바로 밑에 올 때까지만 화면을 올림(모바일은 자판 위로 목록이 보이게) */
+      function lift(){
+        var r=bar.getBoundingClientRect(),need=r.bottom+10+Math.min(list.scrollHeight+(head.hidden?0:38),380)+14-vis(),up=r.top-hdr()-12,dy=Math.min(need,up);
+        if(dy>8)window.scrollBy(0,dy);
+        fit(dy>8?dy:0);
+      }
+      function fit(dy){
+        if(pop.hidden)return;
+        var top=list.getBoundingClientRect().top-(dy||0);
+        list.style.maxHeight=Math.max(150,Math.min(420,vis()-top-14))+'px';
+      }
+      function pick(j){
+        var o=res[j];if(!o)return;
+        clearTimeout(autoT);autoQ=nz(q.value).s;
+        closePop();
+        if(COARSE&&COARSE.matches)q.blur();
+        openP(o.e.i,false,true);
+      }
+      q.addEventListener('input',render);
+      q.addEventListener('focus',function(){root.classList.add('is-focus');render()});
+      q.addEventListener('blur',function(){root.classList.remove('is-focus');lifted=false});
+      q.addEventListener('keydown',function(e){
+        var k=e.key;if(k!=='Shift')clearTimeout(autoT);
+        if((e.isComposing||e.keyCode===229)&&k!=='ArrowDown'&&k!=='ArrowUp')return;   /* 한글 조합 중 Enter 는 글자 확정 */
+        if(k==='ArrowDown'){e.preventDefault();if(pop.hidden)render();else setAct(act+1)}
+        else if(k==='ArrowUp'){e.preventDefault();if(!pop.hidden)setAct(act-1)}
+        else if(k==='Enter'){e.preventDefault();if(res.length)pick(act>=0?act:0)}
+        else if(k==='Escape'){if(!pop.hidden){e.preventDefault();closePop()}else if(q.value){e.preventDefault();q.value='';render();closePop()}}
+        else if(k==='Tab')closePop();
+      });
+      list.addEventListener('mousedown',function(e){e.preventDefault()});
+      list.addEventListener('click',function(e){
+        var c=e.target.closest('.msx-chip');if(c){q.value=c.getAttribute('data-q');q.focus();render();return}
+        var o=e.target.closest('.msx-opt');if(o)pick(+o.getAttribute('data-j'));
+      });
+      list.addEventListener('mousemove',function(e){var o=e.target.closest('.msx-opt'),j=o?+o.getAttribute('data-j'):-1;if(o&&j!==act)setAct(j,true)});
+      bar.addEventListener('mousedown',function(e){if(e.target!==q&&!e.target.closest('.msx-clear')){e.preventDefault();q.focus()}});
+      clr.addEventListener('click',function(){q.value='';q.focus();render()});
+      document.addEventListener(('onpointerdown' in window)?'pointerdown':'mousedown',function(e){if(!pop.hidden&&!root.contains(e.target))closePop()},true);
+      if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){fit()});
+      window.addEventListener('resize',function(){fit()});
+      /* 명단이 길어 검색창이 화면 밖으로 나가면 오른쪽 아래 [위원 찾기], PC 는 '/' 키 */
+      function goSearch(){
+        var de=document.documentElement,y=bar.getBoundingClientRect().top+(window.pageYOffset||de.scrollTop)-hdr()-18,sb=de.style.scrollBehavior;
+        de.style.scrollBehavior='auto';window.scrollTo(0,Math.max(0,y));de.style.scrollBehavior=sb;
+        try{q.focus({preventScroll:true})}catch(err){q.focus()}
+      }
+      var fab=document.createElement('button');fab.type='button';fab.className='msx-fab';fab.setAttribute('aria-label','위원 검색창으로 이동');
+      fab.innerHTML=ic('<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',2.4).replace('<svg ','<svg aria-hidden="true" ')+'<span>위원 찾기</span>';
+      document.body.appendChild(fab);fab.addEventListener('click',goSearch);
+      if('IntersectionObserver' in window){
+        var inBar=true,inBox=false,io=new IntersectionObserver(function(es){
+          es.forEach(function(en){if(en.target===root)inBar=en.isIntersecting;else inBox=en.isIntersecting});
+          fab.classList.toggle('is-on',!inBar&&inBox);
+        },{rootMargin:'-90px 0px 0px 0px'});
+        io.observe(root);io.observe(box);
+      }
+      document.addEventListener('keydown',function(e){
+        if(e.key!=='/'||e.ctrlKey||e.metaKey||e.altKey||e.isComposing)return;
+        var t=e.target,tg=t&&t.tagName;if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT'||(t&&t.isContentEditable))return;
+        if(ov&&!ov.hidden)return;
+        e.preventDefault();goSearch();
+      });
     })();
     /* 공식 파트너 */
     var op=document.getElementById('officialPartners');

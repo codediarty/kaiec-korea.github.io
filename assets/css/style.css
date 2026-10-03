@@ -2727,3 +2727,111 @@ table.tbl tbody th{vertical-align:top}
   font-size:13px;line-height:1.6;color:#7A4B00;word-break:keep-all}
 .jp-only svg{width:16px;height:16px;flex-shrink:0;margin-top:2px;color:#B7791F}
 .jp-only b{font-weight:800}
+
+/* ---------- 위원 검색 (2026.10.03): '위원회 구성' 제목 아래 검색창 · 추천 목록 · [위원 찾기] 단추 · 찾은 명함 등장 효과 ----------
+   사용자: '지금 디자인을 변경하거나 해치지는 말고 어울리게 검색창(위원들이 사용하기 쉽게), 검색하면 디지털 명함이 딱 기분 좋게 떠야 돼, 효과를 잘 넣어서 있어 보이게' */
+.member-role--상임{color:#047857}
+.member-role--자문{color:#0F2A5F}
+.msx{position:relative;z-index:30;max-width:560px;margin:26px auto 0;text-align:left}
+.msx[hidden]{display:none!important}
+.msx-bar{display:flex;align-items:center;gap:10px;height:56px;padding:0 9px 0 20px;background:#fff;border:1.5px solid #DDE5F1;border-radius:999px;cursor:text;
+  box-shadow:0 12px 32px rgba(10,22,40,.07),0 1px 2px rgba(10,22,40,.05);transition:border-color .2s,box-shadow .25s}
+.msx-bar:hover{border-color:#C3D3EE}
+.msx.is-focus .msx-bar{border-color:var(--blue);box-shadow:0 0 0 4px rgba(31,95,224,.12),0 16px 38px rgba(31,95,224,.16)}
+.msx-bar > svg{width:20px;height:20px;flex-shrink:0;color:var(--gray-400);transition:color .2s}
+.msx.is-focus .msx-bar > svg{color:var(--blue)}
+.msx-bar input{flex:1;min-width:0;height:100%;padding:0;border:0;border-radius:0;background:none;font:inherit;font-size:16px;font-weight:600;letter-spacing:-.01em;
+  color:var(--ink);outline:none;-webkit-appearance:none;appearance:none}
+.msx-bar input::placeholder{color:var(--gray-400);font-weight:500}
+.msx-bar input::-webkit-search-cancel-button,.msx-bar input::-webkit-search-decoration{-webkit-appearance:none}
+.msx-kbd{display:none;align-items:center;justify-content:center;min-width:26px;height:26px;margin-right:7px;padding:0 7px;border-radius:7px;
+  border:1px solid var(--gray-200);border-bottom-width:2px;background:var(--gray-050);font:700 12.5px/1 Archivo,'Pretendard Variable',Pretendard,sans-serif;color:var(--gray-500)}
+@media (hover:hover) and (min-width:720px){.msx-kbd{display:inline-flex}}
+.msx.is-focus .msx-kbd,.msx.has-q .msx-kbd{display:none}
+.msx-clear{display:none;flex-shrink:0;width:38px;height:38px;padding:0;border:0;border-radius:50%;background:var(--gray-100);color:var(--gray-500);cursor:pointer;
+  align-items:center;justify-content:center;transition:background .15s,color .15s}
+.msx-clear:hover{background:var(--gray-200);color:var(--ink)}
+.msx-clear svg{width:16px;height:16px}
+.msx.has-q .msx-clear{display:inline-flex}
+.msx-pop{position:absolute;left:0;right:0;top:calc(100% + 10px);background:#fff;border:1px solid #E1E8F4;border-radius:20px;overflow:hidden;
+  box-shadow:0 28px 64px rgba(10,22,40,.18),0 2px 8px rgba(10,22,40,.06);transform-origin:50% 0;animation:msxIn .22s cubic-bezier(.2,.9,.3,1)}
+.msx-pop[hidden]{display:none}
+@keyframes msxIn{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+.msx-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 6px;font-size:12.5px;font-weight:600;color:var(--gray-500)}
+.msx-head[hidden]{display:none}
+.msx-head b{font-weight:800;color:var(--blue)}
+.msx-keys{display:none;font-size:11.5px;color:var(--gray-400)}
+@media (hover:hover) and (min-width:720px){.msx-keys{display:inline}}
+.msx-list{position:relative;list-style:none;margin:0;padding:4px 8px 8px;max-height:420px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.msx-opt{display:flex;align-items:center;gap:12px;min-height:62px;padding:8px 12px;border-radius:14px;cursor:pointer;transition:background .12s}
+.msx-opt.is-act{background:linear-gradient(90deg,#EDF3FF,#F6F9FF)}
+.msx-av{position:relative;flex-shrink:0;width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--gray-100);box-shadow:0 0 0 2px #fff,0 3px 10px rgba(10,22,40,.14)}
+.msx-av img{width:100%;height:100%;object-fit:cover;display:block}
+.msx-av--i{display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:var(--blue);background:linear-gradient(140deg,var(--blue-050),var(--teal-050))}
+.msx-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.msx-l1{display:flex;align-items:baseline;gap:8px;min-width:0}
+.msx-nm{flex-shrink:0;font-size:15.5px;font-weight:800;letter-spacing:-.02em;line-height:1.3;color:var(--ink)}
+.msx-rl{min-width:0;font-size:12px;font-weight:700;color:var(--blue);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msx-rl--책임{color:#5B21B6}.msx-rl--수석{color:#B7791F}.msx-rl--상임{color:#047857}.msx-rl--자문{color:#0F2A5F}
+.msx-l2{font-size:12.5px;line-height:1.4;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msx-cd{flex-shrink:0;font:700 11.5px/1 Archivo,'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.1em;color:var(--gray-400);font-variant-numeric:tabular-nums;transition:color .12s}
+.msx-opt.is-act .msx-cd{color:var(--blue-600)}
+.msx-go{width:16px;height:16px;flex-shrink:0;color:var(--gray-300);transition:transform .15s,color .15s}
+.msx-opt.is-act .msx-go{color:var(--blue);transform:translateX(2px)}
+.msx mark{padding:0 1px;border-radius:3px;background:linear-gradient(transparent 55%,rgba(31,95,224,.24) 55%);color:inherit}
+.msx-tip{padding:12px 10px 8px}
+.msx-tip b{display:block;margin-bottom:10px;font-size:13px;font-weight:800;color:var(--ink)}
+.msx-chips{display:flex;flex-wrap:wrap;gap:8px}
+.msx-chip{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px;border:1px solid #DCE6F7;border-radius:999px;background:#F6F9FE;
+  font:inherit;font-size:12.5px;font-weight:600;color:var(--gray-600);cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.msx-chip em{font-style:normal;font-weight:800;letter-spacing:.02em;color:var(--blue-600)}
+.msx-chip:hover{border-color:var(--blue);background:#fff;color:var(--ink)}
+.msx-empty{display:flex;flex-direction:column;align-items:center;gap:4px;padding:22px 16px 20px;text-align:center}
+.msx-empty svg{width:26px;height:26px;margin-bottom:6px;color:var(--gray-300)}
+.msx-empty b{font-size:14.5px;color:var(--ink)}
+.msx-empty span{font-size:13px;color:var(--gray-500)}
+.msx-more{padding:10px 12px 4px;font-size:12px;font-weight:600;color:var(--gray-400);text-align:center}
+.msx-fab{position:fixed;right:24px;bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:900;display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 20px 0 17px;
+  border:0;border-radius:999px;background:rgba(10,22,40,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;font:inherit;font-size:14px;font-weight:700;
+  letter-spacing:-.01em;cursor:pointer;box-shadow:0 14px 34px rgba(10,22,40,.30),inset 0 0 0 1px rgba(255,255,255,.12);
+  opacity:0;visibility:hidden;transform:translateY(14px) scale(.96);transition:opacity .25s,transform .32s cubic-bezier(.2,.9,.3,1),visibility 0s linear .32s,background .2s}
+.msx-fab.is-on{opacity:1;visibility:visible;transform:none;transition:opacity .25s,transform .32s cubic-bezier(.2,.9,.3,1),visibility 0s,background .2s}
+.msx-fab:hover{background:var(--navy)}
+.msx-fab:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.msx-fab svg{width:18px;height:18px;color:#6FE3D8}
+@media (max-width:640px){
+  .msx{margin-top:22px}
+  .msx-bar{height:52px;padding-left:17px}
+  .msx-opt{gap:11px;padding:8px 9px}
+  .msx-cd{font-size:10.5px;letter-spacing:.06em}
+  .msx-go{display:none}
+  .msx-fab{right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));height:46px;padding:0 17px 0 15px;font-size:13.5px}
+}
+/* 검색으로 찾은 명함: 살짝 기울었다 바로 서며 떠오르고, 빛이 한 번 지나가며, 사진 둘레가 번지고 작은 반짝임이 퍼짐(한 번만).
+   그냥 명단 카드를 눌러 여는 명함은 그대로. 움직임 줄이기 설정이면 효과 없이 바로 */
+.mp-overlay.is-found{background:radial-gradient(72% 58% at 50% 40%,rgba(31,95,224,.34) 0%,rgba(10,22,40,.72) 72%)}
+.mp-overlay.is-found .mp-wrap{perspective:1400px}
+.mp-overlay.is-found .mp-dialog{box-shadow:0 30px 80px rgba(10,22,40,.42),0 0 110px rgba(95,168,255,.30)}
+.mp-overlay.is-found.is-open .mp-dialog{animation:bcFoundIn .8s cubic-bezier(.16,1.1,.3,1) both}
+@keyframes bcFoundIn{0%{opacity:0;transform:translateY(36px) rotateX(18deg) scale(.86);filter:blur(6px)}45%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;filter:none}}
+.mp-overlay.is-found.is-open .bc-body>*:not(.bc-head){animation:bcRise .55s var(--d,0ms) cubic-bezier(.2,.9,.3,1) both}
+.mp-overlay.is-found.is-open .bc-body>.bc-photo{animation:bcPhotoIn .75s var(--d,0ms) cubic-bezier(.2,1.4,.35,1) both,bcRing 1.5s .62s ease-out both}
+@keyframes bcRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes bcPhotoIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+@keyframes bcRing{from{box-shadow:0 12px 28px rgba(10,22,40,.22),0 0 0 0 rgba(111,180,255,.65)}to{box-shadow:0 12px 28px rgba(10,22,40,.22),0 0 0 24px rgba(111,180,255,0)}}
+.mp-overlay.is-found.is-open .mp-dialog::after{content:"";position:absolute;inset:0;z-index:5;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 44%,rgba(255,255,255,.82) 50%,rgba(255,255,255,0) 56%) no-repeat;background-size:300% 100%;
+  mix-blend-mode:overlay;animation:bcShine 1.2s .58s cubic-bezier(.45,0,.25,1) both}
+@keyframes bcShine{0%{background-position:100% 0;opacity:1}80%{opacity:1}100%{background-position:0 0;opacity:0}}
+.bc-burst{position:absolute;left:50%;width:0;height:0;z-index:4;pointer-events:none}
+.bc-burst i{position:absolute;left:0;top:0;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);border-radius:50%;background:var(--c);
+  box-shadow:0 0 8px var(--c);opacity:0;animation:bcSpark 1.15s var(--t) cubic-bezier(.12,.72,.3,1) both}
+.bc-burst i.s{width:calc(var(--s) * 2.4);height:calc(var(--s) * 2.4);margin:calc(var(--s) * -1.2) 0 0 calc(var(--s) * -1.2);border-radius:0;box-shadow:none;
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}
+@keyframes bcSpark{0%{opacity:0;transform:translate(0,0) scale(.2) rotate(0deg)}16%{opacity:1}72%{opacity:.9}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1) rotate(var(--r))}}
+@media (prefers-reduced-motion:reduce){
+  .mp-overlay.is-found.is-open .mp-dialog,.mp-overlay.is-found.is-open .bc-body>*,.mp-overlay.is-found.is-open .mp-dialog::after{animation:none}
+  .bc-burst{display:none}
+  .msx-pop{animation:none}
+  .msx-fab{transition:none}
+}
