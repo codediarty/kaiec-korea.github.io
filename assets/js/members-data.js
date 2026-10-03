@@ -127,6 +127,7 @@ window.KAIEC_CAMPAIGN_MEMBERS = [
   { name: '양정선', en: 'Yang Jung-sun', code: 'YJS0351', email: 'quitepower@kiat.or.kr', since: '2026.10', field: 'AI 캠페인 · 인식 확산', photo: 'yang-jungsun.jpg', track: '교육' },
   { name: '안진선', en: 'Ahn Jin-sun', code: 'AJS5727', email: 'nimph24@naver.com', since: '2026.10', field: 'AI 에듀테크', photo: 'ahn-jinsun.jpg', track: '교육' },
   { name: '문성용', en: 'Moon Sung-yong', code: 'MSY1440', email: 'w1320w@nate.com', since: '2026.10', field: 'AI · 디지털 교육', photo: 'moon-sungyong.jpg' },
+  { name: '박태준', en: 'Park Tae-jun', code: 'PTJ2102', email: 'alan21c@naver.com', since: '2026.10', field: 'AI 마케팅 · 커뮤니케이션 전략', photo: 'park-taejun.jpg' },
   // 예) { name: '홍길동', en: 'Hong Gil-dong', code: 'HGD1234', since: '2026.10', field: 'AI 윤리 캠페인 · 확산', photo: 'hong-gildong.jpg' },
 ];
 
