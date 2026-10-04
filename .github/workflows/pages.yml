@@ -1,0 +1,40 @@
+# kaiec.kr 배포 (2026.09.28): 저장소 전체가 아니라 사이트 파일만 올립니다.
+# tools/collect_site.py 가 허용 목록(페이지 HTML · assets/ · CNAME · robots.txt · sitemap.xml · rss.xml)만 _site 로 모으고
+# 내부 주소가 모두 있는지 확인한 뒤 GitHub Pages 에 올립니다. 작업 메모 · build.py · tools/ · posts-src/ 는 kaiec.kr 에서 열리지 않습니다.
+# 저장소 설정: Settings → Pages → Build and deployment → Source = GitHub Actions
+name: 사이트 배포 (kaiec.kr)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v4
+      - name: 사이트 파일만 모으기 · 내부 주소 확인
+        run: python3 tools/collect_site.py _site
+      - name: Pages 설정
+        uses: actions/configure-pages@v5
+      - name: 올릴 묶음 만들기
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: 배포
+        id: deployment
+        uses: actions/deploy-pages@v5
