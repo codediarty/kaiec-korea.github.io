@@ -33,12 +33,16 @@
 .lg-tier--선임,.lg-who .lg-tier--선임{background:linear-gradient(90deg,#E0E7FF,#C7D2FE);color:#1E3A8A;box-shadow:0 0 0 1px rgba(255,255,255,.35) inset}
 .lg-tier--책임,.lg-who .lg-tier--책임{background:linear-gradient(90deg,#EDE9FE,#DDD6FE);color:#4C1D95;box-shadow:0 0 0 1px rgba(255,255,255,.35) inset}
 .lg-tier--수석,.lg-who .lg-tier--수석{background:linear-gradient(90deg,#F6C453,#F0A24A);color:#2B1B00;box-shadow:0 0 0 1px rgba(255,255,255,.45) inset}
-.lg-tier--상임,.lg-who .lg-tier--상임{background:linear-gradient(90deg,#A7F3D0,#6EE7B7);color:#064E3B;box-shadow:0 0 0 1px rgba(255,255,255,.4) inset}   /* 1.4.17 */
-.lg-tier--자문,.lg-who .lg-tier--자문{background:linear-gradient(90deg,#1E3A8A,#0F2A5F);color:#F6C453;box-shadow:0 0 0 1px rgba(246,196,83,.55) inset}
+.lg-tier--상임,.lg-who .lg-tier--상임{background:linear-gradient(90deg,#1F2F55,#0F2A5F);color:#F6C453;box-shadow:0 0 0 1px rgba(246,196,83,.55) inset}   /* 1.5.4 준 임원: 남색 바탕 · 금색(사용자 2026.10.04 '상임위원부터는 준 임원이기 때문에 진짜 있어 보이게') */
+.lg-tier--자문,.lg-who .lg-tier--자문{background:linear-gradient(90deg,#0B1F4A,#07173A);color:#FFD98A;box-shadow:0 0 0 1px rgba(255,217,138,.75) inset}
+.lg-exec{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.04em;font-style:normal;line-height:1.5;vertical-align:1px;background:rgba(246,196,83,.16);color:#F6C453;border:1px solid rgba(246,196,83,.6)}   /* 1.5.4 '준 임원' · '임원' 표시 */
+.lg-tl .lg-exec{background:#FFF4D6;color:#8A5300;border-color:#E8C77A;margin-left:6px}
 .lg-tier svg{width:13px;height:13px;flex-shrink:0}
 .lg-avatar--선임{border-color:#C7D2FE}
 .lg-avatar--책임{border-color:#DDD6FE;background:linear-gradient(135deg,#4C1D95,#7C3AED)}
 .lg-avatar--수석{border-color:#F6C453;background:linear-gradient(135deg,#8A5A00,#D89B2B)}
+.lg-avatar--상임{border-color:#F6C453;background:linear-gradient(135deg,#0F2A5F,#1F3F7A);box-shadow:0 0 0 3px rgba(246,196,83,.28)}   /* 1.5.4 준 임원 */
+.lg-avatar--자문{border-color:#FFD98A;background:linear-gradient(135deg,#07173A,#0F2A5F);box-shadow:0 0 0 3px rgba(255,217,138,.35)}
 .lg-hero .btn-light{padding:9px 16px;font-size:13px}
 .lg-mode{display:inline-flex;align-items:center;gap:8px;background:rgba(255,217,138,.16);border:1px solid rgba(255,217,138,.45);color:#FFD98A;font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px}
 .lg-mode svg{width:14px;height:14px}
@@ -252,8 +256,8 @@ html:not(.js) .lg-boot{display:none}
 .lg-tl--next.lg-tl--선임{color:#3730A3;background-image:linear-gradient(100deg,#EEF2FF 0%,#EEF2FF 42%,#FFFFFF 50%,#EEF2FF 58%,#EEF2FF 100%);box-shadow:inset 0 0 0 1px #D8DDFB}
 .lg-tl--next.lg-tl--책임{color:#5B21B6;background-image:linear-gradient(100deg,#F4EFFF 0%,#F4EFFF 42%,#FFFFFF 50%,#F4EFFF 58%,#F4EFFF 100%);box-shadow:inset 0 0 0 1px #E3D8FB}
 .lg-tl--next.lg-tl--수석{color:#8A5300;background-image:linear-gradient(100deg,#FFF5DC 0%,#FFF5DC 42%,#FFFDF6 50%,#FFF5DC 58%,#FFF5DC 100%);box-shadow:inset 0 0 0 1px #F3DCA2}
-.lg-tl--next.lg-tl--상임{color:#065F46;background-image:linear-gradient(100deg,#E8FAF2 0%,#E8FAF2 42%,#FFFFFF 50%,#E8FAF2 58%,#E8FAF2 100%);box-shadow:inset 0 0 0 1px #BFEBD7}
-.lg-tl--next.lg-tl--자문{color:#0F2A5F;background-image:linear-gradient(100deg,#EDF1F8 0%,#EDF1F8 42%,#FFFFFF 50%,#EDF1F8 58%,#EDF1F8 100%);box-shadow:inset 0 0 0 1px #CCD7EA}
+.lg-tl--next.lg-tl--상임{color:#0F2A5F;background-image:linear-gradient(100deg,#F5EDD6 0%,#F5EDD6 42%,#FFFCF2 50%,#F5EDD6 58%,#F5EDD6 100%);box-shadow:inset 0 0 0 1px #E2CC8E}   /* 1.5.4 준 임원: 남색 글자 · 샴페인 금색 */
+.lg-tl--next.lg-tl--자문{color:#07173A;background-image:linear-gradient(100deg,#EFE4C6 0%,#EFE4C6 42%,#FFF8E6 50%,#EFE4C6 58%,#EFE4C6 100%);box-shadow:inset 0 0 0 1px #D9BC72}
 @keyframes lgTlShine{0%,62%{background-position:100% 0}88%,100%{background-position:0 0}}
 @media (prefers-reduced-motion:reduce){.lg-tl--next{animation:none}}
 .lg-tl-pop{position:absolute;bottom:calc(100% + 10px);left:0;z-index:30;width:max-content;max-width:min(272px,78vw);padding:12px 14px 11px;background:#fff;border:1px solid #E3E8F1;border-radius:12px;box-shadow:0 12px 30px rgba(15,42,95,.14);text-align:left;font-weight:400;color:var(--gray-700);white-space:normal;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s;pointer-events:none}
@@ -267,8 +271,9 @@ html:not(.js) .lg-boot{display:none}
 .lg-tl--next .lg-tl-pop li::before{background:#1F5FE0}
 .lg-tl--next.lg-tl--책임 .lg-tl-pop li::before{background:#7C3AED}
 .lg-tl--next.lg-tl--수석 .lg-tl-pop li::before{background:#E09A2D}
-.lg-tl--next.lg-tl--상임 .lg-tl-pop li::before{background:#10B981}
+.lg-tl--next.lg-tl--상임 .lg-tl-pop li::before{background:#C9A24A}
 .lg-tl--next.lg-tl--자문 .lg-tl-pop li::before{background:#0F2A5F}
+.lg-tl--cur.lg-tl--상임 .lg-tl-name,.lg-tl--cur.lg-tl--자문 .lg-tl-name{color:#0F2A5F;font-weight:800}
 .lg-tl-pop small{display:block;margin-top:8px;padding-top:8px;border-top:1px solid #EEF1F6;font-size:12px;color:var(--gray-500)}
 .lg-tl-pop small b{color:var(--navy)}
 @media (hover:hover){.lg-tl:hover .lg-tl-pop{opacity:1;visibility:visible;transform:none}}

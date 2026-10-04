@@ -2734,8 +2734,8 @@ table.tbl tbody th{vertical-align:top}
 
 /* ---------- 위원 검색 (2026.10.03): '위원회 구성' 제목 아래 검색창 · 추천 목록 · [위원 찾기] 단추 · 찾은 명함 등장 효과 ----------
    사용자: '지금 디자인을 변경하거나 해치지는 말고 어울리게 검색창(위원들이 사용하기 쉽게), 검색하면 디지털 명함이 딱 기분 좋게 떠야 돼, 효과를 잘 넣어서 있어 보이게' */
-.member-role--상임{color:#047857}
-.member-role--자문{color:#0F2A5F}
+.member-role--상임{color:#0F2A5F;font-weight:800}
+.member-role--자문{color:#07173A;font-weight:800}   /* 1.5.4 준 임원 · 임원은 남색 굵게 */
 .msx{position:relative;z-index:30;max-width:560px;margin:26px auto 0;text-align:left}
 .msx[hidden]{display:none!important}
 .msx-bar{display:flex;align-items:center;gap:10px;height:56px;padding:0 9px 0 20px;background:#fff;border:1.5px solid #DDE5F1;border-radius:999px;cursor:text;

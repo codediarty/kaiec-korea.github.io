@@ -251,12 +251,14 @@
   ];
   /* 직함(등급, 2026.09.29 사용자 결정): 확정 크레딧 0~2 AI 윤리 캠페인위원 · 3 선임 · 10 책임 · 30 수석.
      2026.09.30 사용자: 승격하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원(명단 · 명함 · 라운지 · 메일 모두). 옛 이름 'AI 윤리 선임위원'도 새 이름으로 읽음 */
-  var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원', '상임': 'AI 상임위원', '자문': '자문위원' };   /* 1.4.17 상임 100건 · 자문(임원) 300건 */
-  function tierFull(name) { name = String(name || '').replace(/^AI 윤리 (선임|책임|수석)위원$/, 'AI $1위원'); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
+  var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원', '상임': '상임위원', '자문': '자문위원' };   /* 1.4.17 상임 100건 · 자문(임원) 300건. 1.5.4(2026.10.04 사용자 '상임위원부터는 앞에 AI가 빠지고 상임위원, 준 임원이기 때문에 진짜 있어 보이게'): 상임위원 · 자문위원에는 'AI' 없음 */
+  var TIER_EXEC = { '상임': '준 임원', '자문': '임원' };   /* 1.5.4 임원 표시(머리 카드 직함 · 단계 줄) */
+  function execTag(b) { return TIER_EXEC[b] ? '<em class="lg-exec">' + TIER_EXEC[b] + '</em>' : ''; }
+  function tierFull(name) { name = String(name || '').replace(/^AI 윤리 (선임|책임|수석)위원$/, 'AI $1위원').replace(/^AI 상임위원$/, '상임위원'); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
   function shortTier(name) { return tierFull(name).replace(/^AI (윤리 )?/, ''); }
   function tierBadgeOf(name) { var f = tierFull(name); for (var k in TIER_WORD) if (TIER_WORD[k] === f) return k; return ''; }
   /* 라운지 머리 카드의 직함: '한국AI윤리위원회(KAIEC)' 아래 직함을 등급별 색으로(선임 은청색 · 책임 자주 · 수석 금색) */
-  function tierChip(badge, tier, hero) { var b = badge || tierBadgeOf(tier), full = hero ? heroTier(tier) : tierFull(tier); return '<span class="lg-tier' + (b ? ' lg-tier--' + b : ' lg-tier--base') + '">' + (b ? ic('award') : '') + esc(full) + '</span>'; }
+  function tierChip(badge, tier, hero) { var b = badge || tierBadgeOf(tier), full = hero ? heroTier(tier) : tierFull(tier); return '<span class="lg-tier' + (b ? ' lg-tier--' + b : ' lg-tier--base') + '">' + (b ? ic(TIER_EXEC[b] ? 'badge-check' : 'award') : '') + esc(full) + execTag(b) + '</span>'; }
   /* 라운지 머리 카드는 기본 직함도 '윤리'를 뺀 'AI 캠페인위원'(2026.09.29 사용자: 이 화면에서는 윤리를 빼 달라). 승격 직함은 1.4.1 부터 어디서나 'AI 선임위원' 식 */
   function heroTier(name) { return tierFull(name).replace(/^AI 윤리 /, 'AI '); }
   function statusChip(st) { var map = { '활동': ['ok', '활동 중'], '휴면예정': ['wait', '휴면 예정'], '휴면': ['x', '휴면'], '종료': ['x', '종료'] }; var m = map[st] || ['x', st]; return '<span class="lg-chip lg-chip--' + m[0] + '">' + esc(m[1]) + '</span>'; }
@@ -334,8 +336,10 @@
     var photo = (CFG.photos || {})[code];
     var avatar = '<div class="lg-avatar' + (m.badge ? ' lg-avatar--' + esc(m.badge) : '') + (photo ? ' lg-avatar--photo' : '') + '" data-first="' + esc(first) + '">' +
       (photo ? '<img src="/assets/img/members/' + encodeURIComponent(photo) + (CFG.photoV ? '?v=' + encodeURIComponent(CFG.photoV) : '') + '" alt="' + esc(m.name) + ' 위원 사진" width="64" height="64" decoding="async">' : esc(first)) + '</div>';
-    hero.innerHTML = heroHTML('위원 라운지', esc(m.name) + ' 위원님, 반갑습니다', esc(title) + ' · 위촉 ' + esc(m.since) + ' · 위원 코드 ' + esc(code),
-      '<div class="lg-who">' + avatar + '<div><b>' + esc(m.name) + ' <small class="lg-who-t">위원</small></b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
+    /* 1.5.4(2026.10.04 사용자): 상임위원부터는 '이세라 상임위원님, 위원회의 중심을 이끌어갑니다', 아래 줄은 전 직급 '한국AI윤리위원회 {직함} · 위촉 2026.09' 식으로 */
+    var execB = tierBadgeOf(m.title || m.tier), execWord = TIER_EXEC[execB] ? shortTier(m.title || m.tier) : '';
+    hero.innerHTML = heroHTML('위원 라운지', execWord ? esc(m.name) + ' ' + esc(execWord) + '님, 위원회의 중심을 이끌어갑니다' : esc(m.name) + ' 위원님, 반갑습니다', '한국AI윤리위원회 ' + esc(title) + ' · 위촉 ' + esc(m.since) + ' · 위원 코드 ' + esc(code),
+      '<div class="lg-who">' + avatar + '<div><b>' + esc(m.name) + ' <small class="lg-who-t">' + (execWord ? esc(execWord) : '위원') + '</small></b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
     var avImg = hero.querySelector('.lg-avatar img');
     if (avImg) avImg.addEventListener('error', function () { var a = avImg.parentNode; if (!a) return; a.classList.remove('lg-avatar--photo'); a.textContent = a.getAttribute('data-first') || ''; });
     /* 활동 게이지(2026.09.30 사용자: 30일 0건 → 휴면 → 10일 뒤 자동 해제에 맞추되 너무 조급한 느낌은 없게): 서버가 자격 기준 날짜로 계산(추천 결제 뒤 처음 10일은 100%,
@@ -413,9 +417,9 @@
     var li = function (x) { return '<li>' + esc(x) + '</li>'; };
     var curPerks = (sg && sg.cur && sg.cur.perks || []).slice();
     if (st.payRate && !curPerks.some(function (x) { return /활동지원금/.test(x); })) curPerks.unshift('추천 1건마다 활동지원금 ' + wonKo(st.payRate));
-    var curB = tierBadgeOf(curName), curBtn = '<button type="button" class="lg-tl lg-tl--cur' + (curB ? ' lg-tl--' + curB : '') + '" data-tl="cur" aria-expanded="false"><span class="lg-tl-name">' + esc(heroTier(curName)) + '</span>' +
+    var curB = tierBadgeOf(curName), curBtn = '<button type="button" class="lg-tl lg-tl--cur' + (curB ? ' lg-tl--' + curB : '') + '" data-tl="cur" aria-expanded="false"><span class="lg-tl-name">' + esc(heroTier(curName)) + execTag(curB) + '</span>' +
       (curPerks.length ? '<span class="lg-tl-pop" role="tooltip"><b class="lg-tl-h">지금 누리는 혜택</b><ul>' + curPerks.map(li).join('') + '</ul></span>' : '') + '</button>';
-    var nxB = nx ? tierBadgeOf(nx.name) : '', nxBtn = nx ? '<button type="button" class="lg-tl lg-tl--next lg-tl--' + (nxB || 'base') + '" data-tl="next" aria-expanded="false"><span class="lg-tl-name">' + esc(heroTier(nx.name)) + '</span>' +
+    var nxB = nx ? tierBadgeOf(nx.name) : '', nxBtn = nx ? '<button type="button" class="lg-tl lg-tl--next lg-tl--' + (nxB || 'base') + '" data-tl="next" aria-expanded="false"><span class="lg-tl-name">' + esc(heroTier(nx.name)) + execTag(nxB) + '</span>' +
       (nx.perks && nx.perks.length ? '<span class="lg-tl-pop lg-tl-pop--r" role="tooltip"><b class="lg-tl-h">' + esc(heroTier(nx.name)) + (/원$/.test(heroTier(nx.name)) ? '이' : '가') + ' 되면</b><ul>' + nx.perks.map(li).join('') + '</ul>' +
         '<small>앞으로 추천 <b>' + num(nx.need) + '건</b> · 지금 ' + num(cur) + ' / ' + num(nx.at) + '</small></span>' : '') + '</button>'
       : '<span class="lg-tl-top">가장 높은 단계</span>';
