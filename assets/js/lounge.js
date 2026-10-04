@@ -21,7 +21,7 @@
   var KEY_BULK_N = 'kaiec_lounge_bulk_n';   /* 1.4.14 일괄 메일 대상(하위 10 · 20 · 30 · 전체), 이 탭에만 */
   var TIMEOUT_MS = 60000, HEDGE_MS = 7000;
   var HEDGE_OK = { 'me.dashboard': 1, 'admin.dashboard': 1, 'admin.member': 1, 'auth.login': 1, 'auth.start': 1, 'auth.verify': 1, 'auth.setPassword': 1, 'me.payinfo': 1, 'me.prefs': 1 };   /* 두 번 가도 결과가 같은 요청만(공지 · 정산 · 링크 등록은 제외) */
-  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null }, paying: {}, bulkN: '20', nudgeI: 0 };
+  var S = { data: null, admin: null, tab: 'insight', roster: { q: '', st: '', tr: '' }, kitTab: 0, rank: { key: 'score', dir: 1, all: false }, tax: { month: '', data: null }, paying: {}, bulkN: '20', nudgeI: 0 };
   (function () { var v = read(KEY_BULK_N, true); if (/^(10|20|30|all)$/.test(v)) S.bulkN = v; })();   /* rank.dir 1 = 그 열의 기본 방향(점수 · 건수는 많은 순, 마지막 활동은 최근 순), -1 = 반대 */
 
   /* ---------- 작은 도구 ---------- */
@@ -924,9 +924,12 @@
   }
   function rosterTabHTML(a) {
     var q = S.roster.q.toLowerCase().replace(/\s+/g, ''), stf = S.roster.st;
-    var list = a.roster.filter(function (r) { return (!stf || r.status === stf) && (!q || (r.name + r.code + r.email).toLowerCase().replace(/\s+/g, '').indexOf(q) >= 0); });
+    var trf = S.roster.tr || '';   /* 1.5.0 구분 거름(camp · edu) */
+    var list = a.roster.filter(function (r) { return (!stf || r.status === stf) && (!trf || (trf === 'edu' ? r.track === '교육' : r.track !== '교육')) && (!q || (r.name + r.code + r.email).toLowerCase().replace(/\s+/g, '').indexOf(q) >= 0); });
     var counts = { '': a.roster.length }; a.roster.forEach(function (r) { counts[r.status] = (counts[r.status] || 0) + 1; });
     var chips = [['', '전체'], ['활동', '활동'], ['휴면예정', '휴면 예정'], ['휴면', '휴면'], ['종료', '종료']].map(function (c) { return '<button type="button" class="lg-chip ' + (stf === c[0] ? 'lg-chip--blue' : 'lg-chip--x') + '" data-st="' + c[0] + '">' + c[1] + ' ' + (counts[c[0]] || 0) + '</button>'; }).join('');
+    var trN = { camp: 0, edu: 0 }; a.roster.forEach(function (r) { if (r.status !== '종료') trN[r.track === '교육' ? 'edu' : 'camp']++; });
+    chips += '<span class="ad-chip-gap"></span>' + [['camp', '캠페인위원'], ['edu', '교육위원']].map(function (c) { return '<button type="button" class="lg-chip ' + (trf === c[0] ? 'lg-chip--blue' : 'lg-chip--x') + '" data-tr="' + (trf === c[0] ? '' : c[0]) + '" title="' + (trf === c[0] ? '거름 풀기' : '') + '">' + c[1] + ' ' + trN[c[0]] + '</button>'; }).join('');
     var rows = list.map(function (r) {
       var last = r.lastSignal ? fmtMD(r.lastSignal) + ' ' + esc(r.lastKind) : '-';
       return '<tr class="ad-row' + (r.status === '종료' ? ' done' : '') + '" data-code="' + esc(r.code) + '"><td><b>' + esc(r.name) + '</b> · ' + esc(r.code) + '</td><td>' + badgeChip(r.badge, r.track) + '</td><td>' + stChip(r) + '</td><td>' + fmtDot(r.since) + '</td><td>' + last + '</td><td class="num">' + (r.status === '활동' ? r.gauge + '%' : '-') + '</td><td class="num">' + r.credits + '</td><td>' + (r.payinfo ? '<span class="lg-chip lg-chip--ok">등록</span>' : (r.credits || r.pending ? '<span class="lg-chip lg-chip--wait">미등록</span>' : '-')) + '</td><td class="lg-muted" style="font-size:12.5px">' + (r.firstLogin ? '로그인 완료' : '첫 로그인 전') + '</td></tr>';
@@ -953,7 +956,7 @@
      사용자: 전체 위원 관리 · 정산 연동 · 누가 활동을 많이/안 하는지 시각화 · 수치화된 데이터 · 통계 · 순위 · 더 모을 데이터.
      서버가 admin.dashboard 에 함께 보내는 analytics(활동 점수 · 순위 · KPI · 12주 · 6개월 · 퍼널 · 분포 · 채널 · 히트맵 · 통계 · 코호트 · 점검 · 메일 · 타임라인)를 그림.
      차트는 외부 라이브러리 없이 인라인 SVG */
-  var KIND_KO = { reach: '명함 · 링크 열람', '로그인': '로그인', '라운지': '라운지 방문', link: '활동 링크', '링크등록': '링크 등록', kit: '도구 사용', save: '명함 저장', share: '명함 공유', payinfo: '정산 정보 등록', cert: '증명서 요청', '결제': '결제', '확정': '확정', '리치': '열람 신호', '위촉': '위촉', '활동확인': '활동 확인', '복귀링크': '복귀', '운영자복귀': '위원장 복귀' };
+  var KIND_KO = { reach: '명함 · 링크 열람', '로그인': '로그인', '라운지': '라운지 방문', '자동독려': '자동 독려 메일', link: '활동 링크', '링크등록': '링크 등록', kit: '도구 사용', save: '명함 저장', share: '명함 공유', payinfo: '정산 정보 등록', cert: '증명서 요청', '결제': '결제', '확정': '확정', '리치': '열람 신호', '위촉': '위촉', '활동확인': '활동 확인', '복귀링크': '복귀', '운영자복귀': '위원장 복귀' };
   var KIT_KO = { 'copy:card': '위원 명함 링크 복사', 'copy:go': '바로 결제 링크 복사', 'copy:intro': '소개 페이지 링크 복사', 'copy:experts': 'AIEP 안내 링크 복사', 'open:qr': '명함 · QR 열기', manual: '매뉴얼 내려받기' };
   var CHANNEL_KO = { card: ['위원 명함', '#1F5FE0'], go: ['바로 결제 링크', '#0B8F84'], intro: ['소개 페이지', '#7C3AED'], experts: ['AIEP 안내 페이지', '#F0A24A'], other: ['기타', '#A0AEC0'] };
   var SCORE_BANDS = [[80, '매우 활발', '#0B8F84'], [50, '활발', '#1F5FE0'], [20, '보통', '#7FA6EE'], [1, '저조', '#C9D8F5'], [0, '무활동', '#E5EAF2']];
@@ -1026,6 +1029,80 @@
     var st = S.rank, key = RANK_KEYS[st.key] || RANK_KEYS.score, list = an.rank.filter(function (r) { return st.all || r.status !== '종료'; });
     list.sort(function (a, b) { var d = (Number(a[key[0]]) || 0) - (Number(b[key[0]]) || 0); if (d) return d * key[1] * (st.dir || 1); return a.rank - b.rank; });
     return list;
+  }
+  /* ---------- 1.5.0 할 일 · 경영 요약 · 자동 독려(백엔드 part9) ----------
+     사용자 2026.10.04 '위원장 대시보드 전체적으로 더 유의미한 수치와 분석 통계로 더 개선하고 내가 관리하게 편하게 … 활동을 잘 안 하는 사람들을 잘 활동할 수 있게 하도록
+     자동화 시스템 … 나의 최소 개입으로 … 자동 캐시카우 … 거부감 없이 오랜 시간 활동'. 서버가 admin.dashboard 에 함께 보내는 todo(할 일) · biz(경영 지표) · auto(자동 독려 상태 ·
+     오늘 계획 · 효과)를 분석 탭 맨 위에 그림. 할 일은 위원장이 직접 해야 하는 것만(정산 지급 · 쿠폰 · 멈춤 · 실패), 나머지는 자동이라 적지 않음 */
+  function moTxt(ym) { var p = String(ym || '').split('-'); return p.length === 2 ? Number(p[1]) + '월' : ym; }
+  function wonDelta(now, prev) { var d = (Number(now) || 0) - (Number(prev) || 0); if (!prev && !now) return ''; return '<span class="ad-delta ' + (d > 0 ? 'up' : d < 0 ? 'down' : 'flat') + '" title="지난달 ' + won(prev) + '">' + (d > 0 ? '▲ ' : d < 0 ? '▼ ' : '') + (d ? won(Math.abs(d)) : '지난달과 같음') + ' <small>지난달 대비</small></span>'; }
+  function moneyTile(label, amount, deltaHtml, sub, cls, tip) { return '<div class="ad-kpi money' + (cls ? ' ' + cls : '') + '"' + (tip ? ' title="' + esc(tip) + '"' : '') + '><span>' + label + '</span><b class="won">' + won(amount) + '</b>' + (deltaHtml || '') + (sub ? '<i>' + sub + '</i>' : '') + '</div>'; }
+  function todoHTML(a) {
+    var list = a.todo || [], open = list.filter(function (x) { return !x.done; }), warnN = open.filter(function (x) { return x.level === 'warn'; }).length;
+    var rows = list.map(function (x) {
+      var acts = [];
+      if (x.tab) acts.push('<button type="button" class="lg-link" data-tab="' + esc(x.tab) + '">' + (x.tab === 'pay' ? '정산표 열기' : x.tab === 'roster' ? '명단 보기' : '보기') + '</button>');
+      if (x.act === 'mailresume') acts.push('<button type="button" class="lg-link" data-act="mailresume">지금 시작</button>');
+      if (x.act === 'autoon') acts.push('<button type="button" class="lg-link" data-act="autoon">자동 독려 켜기</button>');
+      if (x.act === 'autocard') acts.push('<button type="button" class="lg-link" data-act="autocard">카드 보기</button>');
+      if (x.url) acts.push('<a class="lg-link" href="' + esc(x.url) + '" target="_blank" rel="noopener">' + (/coupon/.test(x.key) ? '아임웹 쿠폰 관리' : '열기') + '</a>');
+      if (x.url2) acts.push('<a class="lg-link" href="' + esc(x.url2) + '" target="_blank" rel="noopener">파트너 시트</a>');
+      if (!x.fixed) acts.push(x.done ? '<button type="button" class="lg-link lg-link--muted" data-undo="' + esc(x.key) + '">되돌리기</button>' : '<button type="button" class="lg-link" data-done="' + esc(x.key) + '" title="처리했으면 눌러 목록에서 내립니다">처리함</button>');
+      return '<li class="' + (x.done ? 'is-done' : x.level === 'warn' ? 'is-warn' : 'is-info') + '"><i class="dot"></i><div><b>' + esc(x.title) + '</b>' + (x.detail ? '<small>' + esc(x.detail) + (x.done ? ' · ' + fmtMD(x.done) + ' 처리함' : '') + '</small>' : '') + '</div><span class="acts">' + acts.join('') + '</span></li>';
+    }).join('');
+    return '<div class="lg-card ad-todo' + (warnN ? ' lg-card--warn' : '') + '"><h2>' + ic('list-checks') + '오늘 할 일' + (open.length ? '<b class="ad-todo-n' + (warnN ? '' : ' soft') + '">' + open.length + '</b>' : '') + '<span class="sub">위원장이 직접 할 일만 · 독려 · 안내 · 기준 · 정산표는 자동</span></h2>' +
+      (list.length ? '<ul class="ad-todolist">' + rows + '</ul>' : '<p class="ad-todo-ok">' + ic('check') + '처리할 일이 없습니다. 자동화가 돌아가고 있습니다.</p>') + '</div>';
+  }
+  function bizHTML(a) {
+    var b = a.biz; if (!b || !b.now) return '';
+    var k = (a.analytics && !a.analytics.error) ? a.analytics.kpi : null, kc = k && k.credited ? k.credited : { m30: 0, of: 0 };
+    var n = b.now, pv = b.prev || {}, allTip = b.salesReady ? '아임웹 양성과정 결제 전체(추천이 아닌 99,000원 결제 포함, 환불 제외)' : '위원 코드로 들어온 추천 결제 금액(전체 결제 장부가 다 차면 전체 양성과정 결제로 바뀜)';
+    var tiles = '<div class="ad-kpis ad-kpis--biz">' +
+      moneyTile('이번 달 매출 · ' + moTxt(n.month), n.revenue, wonDelta(n.revenue, pv.revenue), '지난달 ' + won(pv.revenue || 0) + ' · ' + (b.salesReady ? '전체 양성과정 ' + num(n.allN) + '건 · 추천 ' + num(n.refN) + '건' : '추천 결제 ' + num(n.refN) + '건') + (n.selfN ? ' · 본인 ' + num(n.selfN) + '건' : ''), 'hi', allTip) +
+      moneyTile('이번 달 순수익', n.net, wonDelta(n.net, pv.net), '지난달 ' + won(pv.net || 0) + ' · 지원금 ' + won(n.support) + ' · 세액 ' + won(n.tax), '', '매출에서 활동지원금과 위원회가 부담하는 원천징수 세액(세전 환산)을 뺀 금액. 결제 수수료 · 운영비는 빼지 않았습니다') +
+      moneyTile('활동 위원 1인당 매출', n.perActive, '', '활동 중 ' + num(b.active) + '명 기준 · 이번 달', '', '이번 달 매출 ÷ 활동 중 위원 수') +
+      kpiTile('실적 있는 위원 · 30일', kc.m30, '명', '<span class="ad-delta ' + (pct(kc.m30, kc.of) >= 30 ? 'up' : 'flat') + '">' + pct(kc.m30, kc.of) + '% <small>' + num(kc.of) + '명 중</small></span>', '이번 달 실적 위원 ' + num(n.credMembers) + '명 · 지난달 ' + num(pv.credMembers || 0) + '명', '', '최근 30일 안에 추천 결제가 1건 이상 있는 위원(종료 제외)') +
+      moneyTile('추천 1건당 위원회 순수익', b.unitNet, '', '89,100원 결제 − 지원금 ' + won(a.settings.PAY_BASE || 30000) + ' − 세액', '', '위원 코드 할인가 89,100원에서 활동지원금과 세액을 뺀 금액(캠페인위원 기준)') +
+      moneyTile(b.total.months + '개월 누계 매출', b.total.revenue, '', '순수익 ' + won(b.total.net) + ' · 지원금 ' + won(b.total.support), '', '최근 ' + b.total.months + '개월(이번 달 포함)') +
+      '</div>';
+    var max = Math.max(1, Math.max.apply(null, b.revenue));
+    var rows = b.months.map(function (m, i) { var isNow = i === b.months.length - 1; return '<tr' + (isNow ? ' class="now"' : '') + '><td>' + esc(m.replace('-', '.')) + (isNow ? ' <small class="lg-muted">진행 중</small>' : '') + '</td><td><div class="ad-cell"><i style="width:' + (100 * b.revenue[i] / max).toFixed(1) + '%"></i><b>' + won(b.revenue[i]) + '</b></div></td><td class="num">' + num(b.salesReady ? b.allN[i] : b.refN[i]) + (b.salesReady ? ' <small class="lg-muted">(추천 ' + num(b.refN[i]) + ')</small>' : '') + '</td><td class="num">' + won(b.support[i]) + '</td><td class="num">' + won(b.tax[i]) + '</td><td><div class="ad-cell teal"><i style="width:' + (100 * Math.max(0, b.net[i]) / max).toFixed(1) + '%"></i><b>' + won(b.net[i]) + '</b></div></td><td class="num">' + num(b.credMembers[i]) + '</td></tr>'; }).join('');
+    return '<div class="lg-card"><h2>' + ic('coins') + '경영 요약<span class="sub">' + (b.salesReady ? '전체 양성과정 결제 기준' : '추천 결제 기준(결제 장부가 다 차면 전체 결제로)') + ' · 순수익 = 매출 − 활동지원금 − 세액(결제 수수료 전)</span></h2>' + tiles +
+      '<div class="ad-scroll" style="margin-top:16px"><table class="lg-tbl ad-biztbl"><thead><tr><th>월</th><th>매출</th><th class="num">결제 건</th><th class="num">활동지원금</th><th class="num">세액</th><th>순수익</th><th class="num">실적 위원</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+  }
+  var AUTO_RULES = [['① 실적 기한 D-2 이하', '실적 0 → 활동 기준 안내(강한 톤) · 실적이 있던 위원 → 활동비 편. 기준 예고(D-7)는 시스템이 따로 보냄'], ['② 휴면 · 휴면 예정', '3일째 AIEP 이수 추천(본인 이수 1건으로 복귀 · 10% 할인 · 활동비 지급) → 6일째 활동 기준 안내 → 10일째 자동 해제(시스템)'], ['③ 첫 로그인 전', '위촉 4일째에 첫 로그인 안내 한 번. 그 뒤로는 로그인 없이도 읽을 수 있는 동기부여 편으로'], ['④ 실적 0 · 확산 활동 없음', '방법 · 팁 → AI 스펙 → AIEP 이수 추천 → AI 윤리 역량 → 떠오르는 스펙'], ['④ 실적 0 · 확산 활동 있음', '명함 · 링크가 열렸거나 도구를 쓴 위원: AI 스펙 → AIEP 이수 추천 → 떠오르는 스펙 → AI 윤리 역량 → 방법 · 팁'], ['⑤ 실적이 있다가 30일 비면', '활동비 편(30일에 한 번) → 떠오르는 스펙 · 역량 · 스펙(60일 간격)']];
+  var AUTO_WHY_TIP = '선택 규칙(우선순위 순): ① 실적 기한 D-2 이하: 실적 0 → 활동 기준 안내(강한 톤), 실적 있음 → 활동비 편 ② 휴면 3일째 AIEP 이수 추천(본인 이수 1건으로 복귀), 6일째 활동 기준 안내 ③ 위촉 4일째 첫 로그인 전 → 첫 로그인 안내(한 번만) ④ 실적 0: 확산 활동이 없으면 방법 · 팁 → AI 스펙 → AIEP 추천 → AI 윤리 역량 → 떠오르는 스펙, 있으면 AI 스펙 → AIEP 추천 → 떠오르는 스펙 → 역량 → 방법(같은 편은 한 번씩, 다 받으면 AIEP 추천만 45일 뒤) ⑤ 실적이 있었는데 30일 비면 활동비 편(30일에 한 번) → 다른 편 60일 간격. 최근 30일 실적이 있는 위원 · 수신 거부 · 종료 · 위촉 4일 전 · 건너뛰기는 제외';
+  function fxChip(on, label, cls) { return '<span class="ad-fx' + (on ? ' on' : '') + (cls ? ' ' + cls : '') + '">' + label + '</span>'; }
+  function autoCardHTML(a) {
+    var au = a.auto;
+    if (!au) return '';
+    if (au.error) return '<div class="lg-card" id="adAuto"><h2>' + ic('bot') + '자동 독려</h2><p>상태를 읽지 못했습니다: ' + esc(au.error) + '</p></div>';
+    var names = {}; (a.roster || []).forEach(function (r) { names[r.code] = r.name; });
+    var nextD = dateOf(au.nextAt), nextTxt = nextD ? (nextD.getMonth() + 1) + '.' + pad2(nextD.getDate()) + '(' + DAYS[nextD.getDay()] + ') ' + String(au.nextAt).slice(11, 16) : au.nextAt;
+    var status = '<div class="ad-auto-status">' +
+      (au.on ? '<span>' + ic('clock') + '다음 발송 <b>' + esc(nextTxt) + '</b>' + (au.ranToday ? ' <small>(오늘은 보냈음)</small>' : '') + '</span>' : '<span class="off">' + ic('x') + '<b>꺼져 있음</b> · 켜면 다음 평일 ' + au.hour + '시부터</span>') +
+      '<span>오늘 <b>' + num(au.todayN) + '통</b> · 이번 주 <b>' + num(au.weekN) + '통</b></span>' +
+      '<span title="설정 탭 AUTO_NUDGE_MAX · AUTO_NUDGE_GAP · AUTO_NUDGE_HOUR · AUTO_NUDGE_MIN_DAYS">하루 최대 ' + num(au.max) + '통 · 한 위원에게 ' + au.gap + '일에 한 통 · 평일 ' + au.hour + '시(주말 · 공휴일 제외) · 위촉 ' + au.minDays + '일째부터</span>' +
+      (au.paused ? '<span class="warn">' + ic('alert-triangle') + '메일 대기열이 멈춰 있어 자동 독려도 쉽니다</span>' : '') +
+      (au.holiday ? '<span class="lg-muted">오늘은 ' + esc(au.holiday) + '이라 보내지 않음</span>' : '') +
+      (au.last && au.last.at ? '<span class="lg-muted" title="' + esc(au.last.msg || '') + '">마지막 실행 ' + esc(String(au.last.at).slice(5, 16)) + ' · ' + num(au.last.n) + '통' + (au.last.left ? ' · 내일로 ' + num(au.last.left) + '명' : '') + '</span>' : '') +
+      '<span class="ad-auto-acts">' + (au.on && au.plannedN ? '<button type="button" class="btn btn-primary btn-sm" data-act="autorun" title="오늘 예정 위원에게 하루 최대 통수까지 지금 바로 보냅니다">' + ic('send') + '지금 보내기</button>' : '') + '<button type="button" class="btn btn-ghost btn-sm" data-act="digesttest" title="월요일 ' + (a.settings.AUTO_DIGEST_HOUR || 9) + '시에 오는 주간 브리핑 메일을 지금 위원장 메일로 받아 봅니다">' + ic('mail') + '브리핑 미리 받기</button></span></div>';
+    var plan = au.planned || [], todayMax = Math.max(0, au.max);
+    var planRows = plan.map(function (p, i) { return '<li' + (i >= todayMax ? ' class="later"' : '') + '>' + who({ code: p.code, name: p.name }) + '<span class="lg-chip ' + (p.key === 'final' ? 'lg-chip--red' : p.key === 'aiep' ? 'lg-chip--gold' : 'lg-chip--blue') + '">' + esc(p.label) + '</span>' + (p.track === '교육' ? '<span class="lg-chip lg-chip--x">교육</span>' : '') + '<small>' + esc(p.why) + (i >= todayMax ? ' · 내일 이후' : '') + '</small><button type="button" class="ad-risk-act" data-skip="' + esc(p.code) + '" title="이 위원은 7일 동안 자동 독려에서 뺍니다(필요하면 위원 상세에서 직접)">건너뛰기</button></li>'; }).join('');
+    var whyKeys = Object.keys(au.skippedWhy || {}).sort(function (x, y) { return au.skippedWhy[y] - au.skippedWhy[x]; });
+    var whyTxt = whyKeys.length ? '<p class="ad-auto-why">제외 ' + num(au.skippedN) + '명: ' + whyKeys.map(function (k) { return esc(k) + ' <b>' + num(au.skippedWhy[k]) + '</b>'; }).join(' · ') + '</p>' : '';
+    var skipsTxt = au.skips && au.skips.length ? '<p class="ad-auto-why">건너뛰기 중: ' + au.skips.map(function (x) { return esc(names[x.code] || x.code) + ' <small>' + fmtMD(x.until) + '까지</small> <button type="button" class="lg-link" data-unskip="' + esc(x.code) + '">해제</button>'; }).join(' · ') + '</p>' : '';
+    var left = '<div><h3 class="ad-h3">오늘 예정 <b>' + num(Math.min(plan.length, todayMax)) + '명</b>' + (au.plannedN > todayMax ? ' <small class="lg-muted">+ 내일 이후 ' + num(au.plannedN - todayMax) + '명</small>' : '') + ' <button type="button" class="lg-link lg-link--muted" data-act="autorules" title="어떤 위원에게 어떤 편이 가는지">선택 규칙</button></h3>' +
+      (plan.length ? '<ul class="ad-autolist">' + planRows + (au.plannedN > plan.length ? '<li class="more">외 ' + num(au.plannedN - plan.length) + '명</li>' : '') + '</ul>' : '<p class="ad-todo-ok">' + ic('check') + '지금 기준으로 보낼 위원이 없습니다(모두 최근에 받았거나 활동 중).</p>') + whyTxt + skipsTxt + '</div>';
+    var e = au.effect || { total: { sent: 0 }, kinds: [], recent: [] }, tot = e.total || { sent: 0, any: 0, login: 0, spread: 0, credit: 0 };
+    var effRows = (e.kinds || []).map(function (k) { return '<tr><td>' + esc(k.label) + '</td><td class="num">' + num(k.sent) + '</td><td class="num">' + num(k.any) + ' <small class="lg-muted">' + pct(k.any, k.sent) + '%</small></td><td class="num">' + num(k.login) + '</td><td class="num">' + num(k.spread) + '</td><td class="num">' + (k.credit ? '<b>' + num(k.credit) + '</b>' : '0') + '</td></tr>'; }).join('');
+    var recent = (e.recent || []).slice(0, 12).map(function (r) { return '<li><span class="at">' + esc(r.at) + '</span>' + (names[r.code] ? '<button type="button" class="lg-link" data-member="' + esc(r.code) + '">' + esc(names[r.code]) + '</button>' : '<span>' + esc(r.code) + '</span>') + ' <span class="lg-muted">' + esc(r.label) + '</span><span class="fx">' + fxChip(r.login, '로그인') + fxChip(r.spread, '확산') + fxChip(r.credit, '결제', 'credit') + (r.mature ? '' : '<span class="ad-fx wait" title="보낸 지 7일이 안 됐습니다">집계 중</span>') + '</span></li>'; }).join('');
+    var right = '<div><h3 class="ad-h3">효과 · 최근 ' + (e.window || 60) + '일 <small>보낸 뒤 ' + (e.days || 7) + '일 안의 반응</small></h3>' +
+      (tot.sent ? '<table class="lg-tbl ad-eff"><thead><tr><th>편</th><th class="num">보냄</th><th class="num">반응</th><th class="num">로그인</th><th class="num">확산</th><th class="num">결제</th></tr></thead><tbody>' + effRows + '</tbody><tfoot><tr><td>전체</td><td class="num">' + num(tot.sent) + '</td><td class="num">' + num(tot.any) + ' <small class="lg-muted">' + pct(tot.any, tot.sent) + '%</small></td><td class="num">' + num(tot.login) + '</td><td class="num">' + num(tot.spread) + '</td><td class="num">' + num(tot.credit) + '</td></tr></tfoot></table>' : '<p class="lg-empty">아직 보낸 자동 독려가 없습니다. 첫 발송 뒤 7일부터 편별 반응이 쌓입니다.</p>') +
+      (recent ? '<h3 class="ad-h3" style="margin-top:14px">최근 보낸 자동 독려</h3><ul class="ad-recent">' + recent + '</ul>' : '') + '</div>';
+    return '<div class="lg-card ad-auto" id="adAuto"><h2>' + ic('bot') + '자동 독려<label class="lg-toggle ad-auto-sw" title="끄면 자동 독려만 멈춥니다(기준 예고 · 휴면 · 종료 메일과 위원장이 직접 보내는 메일은 그대로)"><input type="checkbox" id="adAutoOn"' + (au.on ? ' checked' : '') + '> ' + (au.on ? '켜짐' : '꺼짐') + '</label><span class="sub">위원 여정에 맞는 독려 편(8종)을 하루 한 번 자동으로 · 같은 위원에게 몰아 보내지 않음 · 효과를 보고 편을 고치면 됩니다</span></h2>' + status +
+      '<div class="ad-two ad-auto-body">' + left + right + '</div>' +
+      '<p class="ad-fnote">기준 예고(D-7) · 휴면 · 종료 안내는 전처럼 시스템이 보내고, 자동 독려는 그 사이를 채웁니다. 결제 · 정산 알림은 간격 계산에 넣지 않습니다. 발송 시각 · 통수 · 간격은 설정 탭(AUTO_*)에서, 위원별 제외는 [건너뛰기]로.</p></div>';
   }
   function insightTabHTML(a) {
     var an = a.analytics;
@@ -1114,8 +1191,9 @@
     var stParts = [['활동', dist.status['활동'] || 0, '#0B8F84'], ['휴면 예정', dist.status['휴면예정'] || 0, '#F0A24A'], ['휴면', dist.status['휴면'] || 0, '#E06B8A'], ['종료', dist.status['종료'] || 0, '#A0AEC0']];
     var crParts = [['0건', dist.credits[0], '#E5EAF2'], ['1~2건', dist.credits[1], '#C9D8F5'], ['3~9건', dist.credits[2], '#7FA6EE'], ['10~29건', dist.credits[3], '#1F5FE0'], ['30건+', dist.credits[4], '#0F2A5F']];
     var gaParts = [['0~30%', dist.gauge[0], '#E06B8A'], ['31~60%', dist.gauge[1], '#F0A24A'], ['61~100%', dist.gauge[2], '#0B8F84']];
+    var trk = a.tracks || null, trParts = trk ? [['AI 윤리 캠페인위원', trk.camp, '#1F5FE0'], ['AI 윤리 교육위원', trk.edu, '#0B8F84']] : null;   /* 1.5.0 구분(종료 제외) */
     var distCard = '<div class="ad-two"><div class="lg-card"><h2>' + ic('users-round') + '위촉 월별 정착<span class="sub">코호트 · 종료 제외</span></h2><div class="ad-scroll"><table class="lg-tbl ad-fit"><thead><tr><th>위촉 월</th><th class="num">인원</th><th class="num">활동 중</th><th class="num">로그인율</th><th class="num">실적 보유율</th><th class="num">평균 확정</th><th class="num">평균 열람</th></tr></thead><tbody>' + (cohortRows || '<tr><td colspan="7" class="lg-empty">아직 없음</td></tr>') + '</tbody></table></div></div>' +
-      '<div class="lg-card"><h2>' + ic('pie-chart') + '분포</h2><div class="ad-dist"><div><span>직급</span>' + segBar(tierParts) + legend(tierParts) + '</div><div><span>상태(전체 ' + a.roster.length + '명)</span>' + segBar(stParts) + legend(stParts) + '</div><div><span>누적 확정 실적 구간</span>' + segBar(crParts) + legend(crParts) + '</div><div><span>활동 게이지(활동 중)</span>' + segBar(gaParts) + legend(gaParts) + '</div></div></div></div>';
+      '<div class="lg-card"><h2>' + ic('pie-chart') + '분포</h2><div class="ad-dist">' + (trParts ? '<div><span>구분(종료 제외 ' + num(trk.camp + trk.edu) + '명) · 활동 중 캠페인 ' + num(trk.campActive) + ' · 교육 ' + num(trk.eduActive) + '</span>' + segBar(trParts) + legend(trParts) + '</div>' : '') + '<div><span>직급</span>' + segBar(tierParts) + legend(tierParts) + '</div><div><span>상태(전체 ' + a.roster.length + '명)</span>' + segBar(stParts) + legend(stParts) + '</div><div><span>누적 확정 실적 구간</span>' + segBar(crParts) + legend(crParts) + '</div><div><span>활동 게이지(활동 중)</span>' + segBar(gaParts) + legend(gaParts) + '</div></div></div></div>';
     /* 9) 메일 · 타임라인 */
     var mk = Object.keys(an.mail.byKind).sort(function (x, y) { return (an.mail.byKind[y].sent + an.mail.byKind[y].wait) - (an.mail.byKind[x].sent + an.mail.byKind[x].wait); });
     var mailRows = mk.map(function (kk) { var b = an.mail.byKind[kk]; return '<tr><td>' + esc(mailKind(kk)) + '</td><td class="num">' + num(b.sent) + '</td><td class="num">' + (b.failed ? '<b style="color:#991B12">' + num(b.failed) + '</b>' : '0') + '</td><td class="num">' + num(b.wait) + '</td></tr>'; }).join('');
@@ -1123,7 +1201,7 @@
     var tailCards = '<div class="ad-two"><div class="lg-card"><h2>' + ic('mail') + '메일 30일<span class="sub">대기 ' + num(an.mail.wait) + '통 · 발송 ' + num(an.mail.sent30) + ' · 실패 ' + num(an.mail.failed30) + '</span></h2>' + (mailRows ? '<table class="lg-tbl ad-fit"><thead><tr><th>종류</th><th class="num">발송</th><th class="num">실패</th><th class="num">대기</th></tr></thead><tbody>' + mailRows + '</tbody></table>' : '<p class="lg-empty">최근 30일에 만들어진 메일이 없습니다</p>') +
       '<h3 class="ad-h3">무엇을 모으나</h3><ul class="ad-collect"><li><b>명함 · 링크 열람</b> 위원 명함 · 바로 결제 · 소개 · AIEP 링크가 열린 수(같은 브라우저는 위원마다 하루 1회, 경로 · 시각 · 방문자 표식으로 사람 수도 셈). 위원 라운지에서는 같은 기록이 &lsquo;확산&rsquo;으로 보임</li><li><b>라운지 이용</b> 위원이 라운지를 연 날(하루 1회 활동 신호로도 인정)</li><li><b>도구 사용</b> 링크 · 문안 복사, QR 열기, 매뉴얼 내려받기(항목별 하루 1회)</li><li><b>명함 저장 · 공유</b> 명단의 명함 이미지 저장 · 공유 버튼</li><li><b>실적 · 정산</b> 결제 · 확정 · 취소 · 지급(아임웹 5분 폴링)</li><li><b>상태 · 메일</b> 게이지 · 휴면 · 종료 · 발송 결과</li></ul></div>' +
       '<div class="lg-card"><h2>' + ic('clock') + '최근 활동 타임라인<span class="sub">명함 · 링크 열람 제외 · 최근 ' + an.timeline.length + '건</span></h2><ul class="ad-tl">' + (tl || '<li class="lg-muted">아직 기록이 없습니다</li>') + '</ul></div></div>';
-    return payAlert + kpis + trend + ranking + heatGrid + risks + funnelCard + channelCard + monthlyCard + distCard + tailCards +
+    return payAlert + todoHTML(a) + bizHTML(a) + autoCardHTML(a) + kpis + trend + ranking + heatGrid + risks + funnelCard + channelCard + monthlyCard + distCard + tailCards +   /* 1.5.0 할 일 · 경영 요약 · 자동 독려를 맨 위에 */
       '<p class="lg-foot">계산 시각 ' + esc(an.at) + ' · 이 화면의 숫자는 운영 시트의 위원명단 · 활동내역 · 정산관리 · 활동_로그(120일 보관) · 활동_메일에서 요청 때마다 다시 셉니다. 개인정보(계좌 · 주민등록번호)는 이 탭에 나오지 않습니다.</p>';
   }
   function bindAdminForms() {
@@ -1186,6 +1264,7 @@
     var cb = e.target;
     if (cb.id === 'adRankAll') { S.rank.all = cb.checked; $('adTab').innerHTML = adminTabHTML(); bindAdminForms(); return; }
     if (cb.id === 'adTaxMonth') { S.tax.month = String(cb.value || '').trim(); return; }
+    if (cb.id === 'adAutoOn') { var on = cb.checked; cb.disabled = true; call('admin.auto', { act: 'toggle', on: on ? 1 : 0 }).then(function (j) { toast(j.result || (on ? '켰습니다' : '꺼 두었습니다'), 'ok'); loadAdmin(true); }, function (er) { cb.disabled = false; cb.checked = !on; toast(er.message, 'danger'); }); return; }   /* 1.5.0 */
     if (!cb.hasAttribute || !cb.hasAttribute('data-paid')) return;
     var id = cb.getAttribute('data-paid'), undo = !cb.checked;
     S.paying[id] = 1; payRedraw();
@@ -1203,6 +1282,10 @@
     if (b.hasAttribute('data-member')) { openMember(b.getAttribute('data-member')); return; }
     if (b.hasAttribute('data-sort')) { var sk = b.getAttribute('data-sort'); if (S.rank.key === sk) S.rank.dir = -S.rank.dir; else { S.rank.key = sk; S.rank.dir = 1; } var tb = $('adTab'); tb.innerHTML = adminTabHTML(); bindAdminForms(); var tbl = tb.querySelector('.ad-ranktbl'); if (tbl) tbl.scrollIntoView({ block: 'nearest' }); return; }
     if (b.hasAttribute('data-st')) { S.roster.st = b.getAttribute('data-st'); $('adTab').innerHTML = rosterTabHTML(S.admin); bindAdminForms(); return; }
+    if (b.hasAttribute('data-tr')) { S.roster.tr = b.getAttribute('data-tr'); $('adTab').innerHTML = rosterTabHTML(S.admin); bindAdminForms(); return; }   /* 1.5.0 */
+    if (b.hasAttribute('data-skip')) { var sc = b.getAttribute('data-skip'); confirmBox('이 위원을 7일 동안 자동 독려에서 뺄까요?', '그동안 자동 독려 메일이 가지 않습니다(기준 예고 · 휴면 같은 시스템 안내는 그대로). 필요하면 위원 상세에서 직접 보낼 수 있습니다.', '7일 건너뛰기').then(function (ok) { if (!ok) return; call('admin.auto', { act: 'skip', code: sc, days: 7 }).then(function (j) { toast(j.result || '건너뛰기', 'ok'); loadAdmin(true); }, function (er) { toast(er.message, 'danger'); }); }); return; }
+    if (b.hasAttribute('data-unskip')) { call('admin.auto', { act: 'unskip', code: b.getAttribute('data-unskip') }).then(function (j) { toast(j.result || '해제', 'ok'); loadAdmin(true); }, function (er) { toast(er.message, 'danger'); }); return; }
+    if (b.hasAttribute('data-done') || b.hasAttribute('data-undo')) { var dk = b.getAttribute('data-done') || b.getAttribute('data-undo'); busy(b, true); call('admin.auto', { act: b.hasAttribute('data-done') ? 'todo_done' : 'todo_undo', key: dk }).then(function (j) { toast(j.result || '처리', 'ok'); loadAdmin(true); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); return; }
     if (b.hasAttribute('data-hide')) { var id = b.getAttribute('data-hide'); confirmBox('공지를 내릴까요?', '라운지 공지 칸에서 사라집니다(이미 보낸 메일은 그대로).', '내리기').then(function (ok) { if (ok) call('admin.noticeHide', { id: id }).then(function () { toast('공지를 내렸습니다', 'ok'); loadAdmin(true); }, function (er) { toast(er.message, 'danger'); }); }); return; }
     if (b.tagName === 'TR' && b.hasAttribute('data-code')) { if (e.target.closest('button,input,label,a')) return; openMember(b.getAttribute('data-code')); return; }
     var act = b.getAttribute('data-act'); if (!act) return;
@@ -1210,6 +1293,17 @@
     if (act === 'payall') { payAll(); return; }
     if (act === 'taxcsv') { taxCSV(); return; }
     if (act === 'mailschedule') { scheduleMailResume(); return; }
+    if (act === 'autorules') { var rm = modal('자동 독려 선택 규칙', '위원마다 지금 가장 필요한 한 편을 고릅니다 · 우선순위 순', '<ol class="ad-rules">' + AUTO_RULES.map(function (r) { return '<li><b>' + r[0] + '</b><span>' + r[1] + '</span></li>'; }).join('') + '</ol><p class="ad-note">같은 편은 한 번씩만 보내고(실적 0 위원은 편을 돌려 가며, 다 받으면 AIEP 추천만 45일 뒤에 다시), 한 위원에게 위원회 메일은 ' + (S.admin.auto ? S.admin.auto.gap : 6) + '일에 한 통을 넘지 않습니다(결제 · 정산 알림 · 위촉 메일은 세지 않음). 최근 30일 실적이 있는 위원 · 수신 거부 · 종료 · 위촉 ' + (S.admin.auto ? S.admin.auto.minDays : 4) + '일 전 · 건너뛰기 중인 위원은 제외.</p>', '<button type="button" class="btn btn-ghost btn-sm" data-act="close">닫기</button>'); rm.onclick = function (e) { if (e.target === rm || e.target.closest('[data-act="close"]')) closeModal(); }; return; }
+    if (act === 'autocard') { var ac = $('adAuto'); if (ac) ac.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }   /* 1.5.0 */
+    if (act === 'autoon') { busy(b, true); call('admin.auto', { act: 'toggle', on: 1 }).then(function (j) { toast(j.result || '켰습니다', 'ok'); loadAdmin(true); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); return; }
+    if (act === 'autorun') {
+      var au0 = S.admin.auto || {}, nPlan = Math.min(Number(au0.plannedN) || 0, Number(au0.max) || 0);
+      confirmBox('자동 독려를 지금 보낼까요?', '오늘 예정 위원 ' + nPlan + '명에게 각자에게 맞는 편을 바로 보냅니다(하루 최대 ' + num(au0.max) + '통, 지메일 잔여 안). 10시 정기 발송은 오늘 이미 한 것으로 봅니다.', nPlan + '명에게 보내기').then(function (ok) {
+        if (!ok) return; busy(b, true); call('admin.auto', { act: 'run' }).then(function (j) { toast(j.result || '보냈습니다', 'ok'); loadAdmin(true); }, function (er) { busy(b, false); toast(er.message, 'danger'); });
+      });
+      return;
+    }
+    if (act === 'digesttest') { busy(b, true); call('admin.auto', { act: 'digest' }).then(function (j) { busy(b, false); toast(j.result || '주간 브리핑을 위원장 메일로 보냈습니다', 'ok'); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); return; }
     if (act === 'mailresume' || act === 'mailpause') {
       var pause = act === 'mailpause';
       confirmBox(pause ? '위원 메일 발송을 잠시 멈출까요?' : '위원 메일 발송을 시작할까요?', pause ? '대기열의 위촉 · 안내 · 리마인드 · 공지 메일을 보내지 않습니다(인증번호 · 결제 · 정산 알림 · 위원장 알림 메일은 계속 바로 나감). 다시 시작할 때까지 대기열에 쌓입니다.' : '대기열의 메일을 10분마다 조금씩, 하루 ' + S.admin.settings.MAIL_DAILY_LIMIT + '통까지 보냅니다. 처음이라면 사이트에 라운지가 열렸는지 먼저 확인하세요.', pause ? '멈춤' : '시작').then(function (ok) {

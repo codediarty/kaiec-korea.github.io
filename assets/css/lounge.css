@@ -567,6 +567,71 @@ html:not(.js) .lg-boot{display:none}
 .lg-toast--sticky .lg-spin{border-color:rgba(255,255,255,.35);border-top-color:#fff}
 .lg-toast-note{font-size:12px;font-weight:500;opacity:.78;margin-left:6px}
 
+/* ---------- 1.5.0 할 일 · 경영 요약 · 자동 독려(2026.10.04) ---------- */
+.ad-todo h2 .ad-todo-n{margin-left:2px;font-size:12px;background:#FDF1F0;color:#991B12;border-radius:999px;padding:2px 9px}
+.ad-todo h2 .ad-todo-n.soft{background:#E8F0FF;color:#1F5FE0}
+.ad-todolist{list-style:none;margin:0;padding:0}
+.ad-todolist li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #EEF1F6}
+.ad-todolist li:last-child{border-bottom:0;padding-bottom:2px}
+.ad-todolist .dot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:#F0A24A;box-shadow:0 0 0 4px #FFF4DE}
+.ad-todolist li.is-info .dot{background:#7FA6EE;box-shadow:0 0 0 4px #EDF3FF}
+.ad-todolist li.is-done .dot{background:#CBD5E1;box-shadow:none}
+.ad-todolist li>div{flex:1 1 auto;min-width:0}
+.ad-todolist b{display:block;font-size:14px;letter-spacing:-.01em;line-height:1.45}
+.ad-todolist li.is-done b{color:var(--gray-500);text-decoration:line-through;font-weight:600}
+.ad-todolist small{display:block;font-size:12.5px;color:var(--gray-500);line-height:1.55;margin-top:2px}
+.ad-todolist .acts{display:flex;gap:4px 12px;flex-wrap:wrap;justify-content:flex-end;flex:0 1 auto;max-width:42%;padding-top:2px}
+.ad-todolist .acts .lg-link{white-space:nowrap}
+.lg-link--muted{color:var(--gray-500)}
+.ad-todo-ok{display:flex;align-items:center;gap:8px;color:#0B8F84;font-weight:700;font-size:14px;margin:0}
+.ad-todo-ok svg{width:18px;height:18px;flex:none}
+.ad-kpis--biz{margin-top:0}
+.ad-kpi.money b.won{font-size:21px;letter-spacing:-.02em;white-space:nowrap}
+.ad-biztbl tr.now td{background:#F5F8FD}
+.ad-biztbl td .ad-cell{min-width:120px}
+.ad-auto-sw{margin-left:10px;font-weight:800;font-size:13px;color:var(--ink)}
+.ad-auto-sw input{width:17px;height:17px}
+.ad-auto-status{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px;color:var(--gray-600);background:#F5F8FD;border:1px solid #E6ECF5;border-radius:14px;padding:11px 16px;margin-bottom:16px}
+.ad-auto-status span{display:inline-flex;align-items:center;gap:6px;min-width:0}
+.ad-auto-status span svg{width:14px;height:14px;color:var(--gray-500);flex:none}
+.ad-auto-status b{color:var(--ink)}
+.ad-auto-status .off b{color:#991B12}
+.ad-auto-status .warn{color:#B26A00;font-weight:700}.ad-auto-status .warn svg{color:#B26A00}
+.ad-auto-status small{color:var(--gray-500)}
+.ad-auto-acts{margin-left:auto;gap:8px}
+.ad-auto-acts .btn{display:inline-flex;align-items:center;gap:6px}
+.ad-auto-acts .btn svg{width:14px;height:14px}
+.ad-auto-body .ad-h3{margin-top:0}
+.ad-auto-body .ad-h3 small{font-weight:500;color:var(--gray-500);font-size:12px;margin-left:4px}
+.ad-autolist{list-style:none;margin:0;padding:0;font-size:13px;max-height:440px;overflow:auto}
+.ad-autolist li{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #EEF1F6;flex-wrap:wrap}
+.ad-autolist li:last-child{border-bottom:0}
+.ad-autolist li.later{opacity:.62}
+.ad-autolist li small{color:var(--gray-500);flex:1 1 160px;font-size:12px;line-height:1.45}
+.ad-autolist .lg-chip{flex:none}
+.ad-autolist .ad-risk-act{margin-left:auto}
+.ad-autolist li.more{color:var(--gray-500);font-size:12px}
+.ad-auto-why{font-size:12.5px;color:var(--gray-500);margin-top:10px;line-height:1.7}
+.ad-auto-why b{color:var(--ink)}
+.ad-eff th,.ad-eff td{padding:6px 6px 6px 0;font-size:13px}
+.ad-eff tfoot td{font-weight:800;border-top:2px solid #E1E8F2;border-bottom:0;padding-top:8px}
+.ad-recent{list-style:none;margin:6px 0 0;padding:0;font-size:12.5px}
+.ad-recent li{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #EEF1F6;flex-wrap:wrap}
+.ad-recent li:last-child{border-bottom:0}
+.ad-recent .at{color:var(--gray-500);font-variant-numeric:tabular-nums;flex:none;font-size:12px}
+.ad-recent .fx{margin-left:auto;display:inline-flex;gap:4px;flex-wrap:wrap}
+.ad-fx{font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;background:#F1F4F8;color:#A0AEC0;line-height:1.5}
+.ad-fx.on{background:#E3F7F1;color:#0B8F84}.ad-fx.credit.on{background:#FFF4DE;color:#B26A00}.ad-fx.wait{color:var(--gray-500);font-weight:600}
+.ad-chip-gap{display:inline-block;width:10px}
+.ad-rules{margin:0 0 12px;padding:0 0 0 2px;list-style:none;counter-reset:none}
+.ad-rules li{padding:9px 0;border-bottom:1px solid #EEF1F6;font-size:13.5px;line-height:1.6}
+.ad-rules li:last-child{border-bottom:0}
+.ad-rules b{display:block;color:var(--blue);font-size:13px;margin-bottom:2px}
+.ad-rules span{color:var(--gray-600)}
+@media(max-width:1100px){.ad-kpis--biz{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.ad-todolist li{flex-wrap:wrap}.ad-todolist .acts{max-width:100%;justify-content:flex-start;flex-basis:100%;padding-left:22px}.ad-auto-acts{margin-left:0;flex-basis:100%}.ad-auto-acts .btn{flex:1 1 auto;justify-content:center}}
+@media(max-width:600px){.ad-kpis--biz{grid-template-columns:repeat(2,1fr)}.ad-kpi.money b.won{font-size:18px}.ad-autolist li small{flex-basis:100%}.ad-autolist .ad-risk-act{margin-left:0}}
+
 /* ---------- 반응형 ---------- */
 @media(max-width:1100px){.ad-kpis{grid-template-columns:repeat(3,1fr)}.ad-risks{grid-template-columns:repeat(2,1fr)}.ad-mini--pay{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:1199px) and (min-width:901px){.ad-tiles{grid-template-columns:repeat(6,1fr)}.ad-tiles>.ad-tile{grid-column:span 2}.ad-tiles>.ad-tile:nth-child(-n+2){grid-column:span 3}}   /* 1.4.11 노트북 폭: 정산 · 누적 두 칸 위, 나머지 세 칸 아래(한 줄에 다섯 칸이면 글자가 넘침) */
