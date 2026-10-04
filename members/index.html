@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=be1d0dba65">
+<link rel="stylesheet" href="/assets/css/style.css?v=4ff87ca3b2">
 <script>document.documentElement.className+=' js';</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -68,7 +68,7 @@
           <a class="nav-exam" href="/exam/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>AIEP 전용관<span>이수 평가 · 영상관</span></a>
           <a class="nav-exam nav-lounge" href="/lounge/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></svg>위원 라운지<span>AI 윤리위원 로그인</span></a>
           <span class="nav-sep" aria-hidden="true"></span>
-          <span class="header-cta"><a class="btn btn-primary btn-sm" href="/experts/">AI윤리전문가(AIEP) 과정 안내</a><a class="btn btn-ghost btn-sm" href="/join/">위원 참여하기</a></span>
+          <span class="header-cta"><a class="btn btn-primary btn-sm" href="/experts/">AI윤리전문가(AIEP)</a><a class="btn btn-ghost btn-sm" href="/join/">위원 참여하기</a></span>
       </nav>
       <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></svg>
@@ -224,11 +224,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec";</script>
-  <script src="/assets/js/main.js?v=be1d0dba65"></script>
+  <script src="/assets/js/main.js?v=4ff87ca3b2"></script>
   <script>window.KAIEC_LOUNGE_STATUS="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec?action=status";</script>
-  <script src="/assets/js/members-data.js?v=be1d0dba65"></script>
-  <script src="/assets/js/qrcode.min.js?v=be1d0dba65"></script>
-  <script src="/assets/js/experts-data.js?v=be1d0dba65"></script>
+  <script src="/assets/js/members-data.js?v=4ff87ca3b2"></script>
+  <script src="/assets/js/qrcode.min.js?v=4ff87ca3b2"></script>
+  <script src="/assets/js/experts-data.js?v=4ff87ca3b2"></script>
   <script>
   /* AI윤리전문가 명단 (experts-data.js KAIEC_EXPERTS, /experts/ 와 같은 데이터) + 우측 작은 검색 */
   (function(){
@@ -343,8 +343,11 @@
     var html='';
     /* 상단 (2026.09.26): 위원장 · 부위원장 · 고문·자문위원 / 사무국(사무총장·감사) · 전문위원 을 4열 격자 두 줄로.
        그룹마다 카드 수만큼 칸을 차지하므로 카드 크기는 아래 전문위원·캠페인위원과 같습니다. */
-    var lead=['위원장','부위원장','고문·자문위원','사무국','전문위원','감사'].map(function(g){return secHTML(g,'lead')}).join('');
+    /* 2026.10.04 사용자: '전문위원도 AI 윤리위원 위에 있으니까 활동 위원들이 힘 빠지니까 통째로 들어내서 강의 신청에 옮겨' → 명단에서는 안 보이게(숨김 렌더링: 디지털 명함 #id 링크와 검색은 그대로 동작), 소개는 /lecture/ '출강 전문위원' */
+    var lead=['위원장','부위원장','고문·자문위원','사무국','감사'].map(function(g){return secHTML(g,'lead')}).join('');
     if(lead)html+='<div class="lead-grid">'+lead+'</div>';
+    var expertSec=secHTML('전문위원');
+    if(expertSec)html+='<div hidden aria-hidden="true">'+expertSec+'</div>';
     /* AI 윤리 캠페인위원: 전문위원 아래, 같은 크기 카드. 위촉된 인원만 표시 + 모집 카드 1장 */
     var named=window.KAIEC_CAMPAIGN_MEMBERS||[];
     if(named.length){
@@ -373,7 +376,7 @@
        (나머지는 원래 순서), 서버 응답(느릴 때 수십 초)을 기다리지 않도록 ① 이 브라우저가 전에 받은 status(7일 안) 또는 ② 빌드 때 넣은 직함 힌트
        (build.py TIER_HINT, 둘 중 새것)로 먼저 그린 뒤 서버 응답이 오면 다시 맞춥니다. 서버가 없거나 실패해도 명단은 그대로 보입니다.
        종료 위원의 데이터 삭제는 2단계 자동 작업이 맡습니다. */
-    var TIERS={},TIER_WORD={'선임':'AI 선임위원','책임':'AI 책임위원','수석':'AI 수석위원','상임':'상임위원','자문':'자문위원'},TIER_RANK={'자문':0,'상임':1,'수석':2,'책임':3,'선임':4};   /* 2026.10.03 상임(100건) · 자문(300건, 임원) */
+    var TIERS={},TIER_WORD={'선임':'AI 선임위원','책임':'AI 책임위원','수석':'AI 수석위원','상임':'상임위원','임원':'위원장단','자문':'위원장단'},TIER_RANK={'임원':0,'자문':0,'상임':1,'수석':2,'책임':3,'선임':4};   /* 2026.10.03 상임(100건) · 300건 임원. 2026.10.04 백엔드 1.5.5: 최고 단계 '위원장단'(배지 '임원', 옛 배지 '자문'도 같은 뜻) */
     function tierTitle(m){return m&&m.code&&TIERS[m.code]?(TIER_WORD[TIERS[m.code]]||''):''}
     function tierBadge(m){return ''}
     (function(){

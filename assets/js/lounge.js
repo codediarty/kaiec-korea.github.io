@@ -258,10 +258,11 @@
   function msgText(i) { i = Math.max(0, Math.min(MSG_TPL.length - 1, +i || 0)); return MSG_TPL[i][1].replace(/\{intro\}/g, S.data && S.data.links ? S.data.links.intro : ''); }
   /* 직함(등급, 2026.09.29 사용자 결정): 확정 크레딧 0~2 AI 윤리 캠페인위원 · 3 선임 · 10 책임 · 30 수석.
      2026.09.30 사용자: 승격하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원(명단 · 명함 · 라운지 · 메일 모두). 옛 이름 'AI 윤리 선임위원'도 새 이름으로 읽음 */
-  var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원', '상임': '상임위원', '자문': '자문위원' };   /* 1.4.17 상임 100건 · 자문(임원) 300건. 1.5.4(2026.10.04 사용자 '상임위원부터는 앞에 AI가 빠지고 상임위원, 준 임원이기 때문에 진짜 있어 보이게'): 상임위원 · 자문위원에는 'AI' 없음 */
-  var TIER_EXEC = { '상임': '준 임원', '자문': '임원' };   /* 1.5.4 임원 표시(머리 카드 직함 · 단계 줄) */
+  var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원', '상임': '상임위원', '임원': '위원장단' };   /* 1.4.17 상임 100건 · 300건 임원. 1.5.4(2026.10.04 사용자 '상임위원부터는 앞에 AI가 빠지고 상임위원, 준 임원이기 때문에 진짜 있어 보이게'): 상임위원부터 'AI' 없음. 1.5.5(같은 날 사용자 '상임위원 다음은 최고 단계 · 위원장단(임원)'): 300건 = 위원장단(배지 '임원', 옛 이름 자문위원) */
+  var TIER_EXEC = { '상임': '준 임원', '임원': '임원' };   /* 1.5.4 임원 표시(머리 카드 직함 · 단계 줄) */
+  var TIER_TOP_LABEL = '최고 단계 · 위원장단';   /* 1.5.5 단계 줄 · 혜택 머리에 쓰는 최고 단계 이름 */
   function execTag(b) { return TIER_EXEC[b] ? '<em class="lg-exec">' + TIER_EXEC[b] + '</em>' : ''; }
-  function tierFull(name) { name = String(name || '').replace(/^AI 윤리 (선임|책임|수석)위원$/, 'AI $1위원').replace(/^AI 상임위원$/, '상임위원'); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
+  function tierFull(name) { name = String(name || '').replace(/^AI 윤리 (선임|책임|수석)위원$/, 'AI $1위원').replace(/^AI 상임위원$/, '상임위원').replace(/^자문위원$/, '위원장단'); return TIER_WORD[name] || (/앰버서더/.test(name) ? TIER_WORD['수석'] : /^수석 캠페인위원$/.test(name) ? TIER_WORD['책임'] : /^선임 캠페인위원$/.test(name) ? TIER_WORD['선임'] : name === '캠페인위원' ? 'AI 윤리 캠페인위원' : name); }
   function shortTier(name) { return tierFull(name).replace(/^AI (윤리 )?/, ''); }
   function tierBadgeOf(name) { var f = tierFull(name); for (var k in TIER_WORD) if (TIER_WORD[k] === f) return k; return ''; }
   /* 라운지 머리 카드의 직함: '한국AI윤리위원회(KAIEC)' 아래 직함을 등급별 색으로(선임 은청색 · 책임 자주 · 수석 금색) */
@@ -344,7 +345,7 @@
     var avatar = '<div class="lg-avatar' + (m.badge ? ' lg-avatar--' + esc(m.badge) : '') + (photo ? ' lg-avatar--photo' : '') + '" data-first="' + esc(first) + '">' +
       (photo ? '<img src="/assets/img/members/' + encodeURIComponent(photo) + (CFG.photoV ? '?v=' + encodeURIComponent(CFG.photoV) : '') + '" alt="' + esc(m.name) + ' 위원 사진" width="64" height="64" decoding="async">' : esc(first)) + '</div>';
     /* 1.5.4(2026.10.04 사용자): 상임위원부터는 '이세라 상임위원님, 위원회의 중심을 이끌어갑니다', 아래 줄은 전 직급 '한국AI윤리위원회 {직함} · 위촉 2026.09' 식으로 */
-    var execB = tierBadgeOf(m.title || m.tier), execWord = TIER_EXEC[execB] ? shortTier(m.title || m.tier) : '';
+    var execB = tierBadgeOf(m.title || m.tier), execWord = execB === '임원' ? '임원' : TIER_EXEC[execB] ? shortTier(m.title || m.tier) : '';   /* 1.5.5 위원장단은 '○○ 임원님' */
     hero.innerHTML = heroHTML('위원 라운지', execWord ? esc(m.name) + ' ' + esc(execWord) + '님, 위원회의 중심을 이끌어갑니다' : esc(m.name) + ' 위원님, 반갑습니다', '한국AI윤리위원회 ' + esc(title) + ' · 위촉 ' + esc(m.since) + ' · 위원 코드 ' + esc(code),
       '<div class="lg-who">' + avatar + '<div><b>' + esc(m.name) + ' <small class="lg-who-t">' + (execWord ? esc(execWord) : '위원') + '</small></b><span>' + esc(org) + '</span><br>' + tierChip(m.badge, m.title || m.tier, true) + '</div><button type="button" class="btn btn-light btn-sm" id="lgLogout" style="margin-left:8px">로그아웃</button></div>');
     var avImg = hero.querySelector('.lg-avatar img');
@@ -367,9 +368,10 @@
       '<div class="lg-card" id="lgPayCard"><h2>' + ic('credit-card') + '정산</h2><div class="lg-pay"><div><span>다음 정산 예정</span><b>' + won(st.nextPay) + '</b><i>' + (st.nextPay > 0 ? fmtKo(st.nextPayDay, true) : '확정 실적이 생기면 표시') + '</i></div><div><span>누적 지급</span><b>' + won(st.totalPaid) + '</b><i>' + (st.lastPaid ? st.lastPaid.count + '건 · 마지막 ' + fmtKo(st.lastPaid.day, true) : '아직 없음') + '</i></div></div>' +
       '<p style="margin-top:14px">' + (d.payinfo.registered ? '정산 정보 <b>' + esc(d.payinfo.bankMasked) + '</b> 등록됨 · <button type="button" class="lg-link" data-act="payinfo-edit">변경</button><br>' : '') + (CONFIRM_D > 0 ? '결제 뒤 ' + CONFIRM_D + '일이 지나고 취소가 없으면 확정되며, 확정 건은 <b>매주 ' + DAYS[PAY_WD] + '요일</b>에 지급됩니다. ' : '위원 코드로 결제가 들어오면 <b>그 자리에서 확정</b>되고, <b>' + cutDay() + '요일 24시</b>까지 결제된 건을 모아 <b>매주 ' + DAYS[PAY_WD] + '요일</b>에 지급합니다. 환불된 건은 지급에서 빠집니다. ') + '활동지원금은 건당 ' + won(st.payRate) + (m.badge === '앰버서더' ? '(앰버서더)' : '') + '입니다.</p>' +
       '<span class="lg-note">활동지원금은 세금 없이 그대로 받습니다. 소득 처리 · 신고 · 원천징수는 성균관컨설팅이 맡고 세액도 위원회가 부담합니다. 활동에만 집중하세요.</span>' +
-      '<div id="lgPayForm" hidden></div>' +
-      '<div class="lg-cert"><h2>' + ic('file-check') + '활동증명서</h2><p>' + (set.certTier ? 'AI 책임위원(추천 ' + set.certTier + '건)이 되면 위원장 명의 · 위원장 직인의 공식 활동증명서를 발급해 드립니다.' : '위촉 뒤 ' + Math.round(set.certDays / 30) + '개월 이상 활동한 위원에게 위원장 명의 · 위원장 직인의 활동증명서를 발급합니다.') + '</p>' +
-      (d.cert.eligible ? '<button type="button" class="btn btn-ghost btn-sm" data-act="cert" style="margin-top:10px">활동증명서 발급 요청</button>' : '<button type="button" class="btn btn-ghost btn-sm" disabled style="margin-top:10px;color:var(--gray-400);border-color:#E5E9F0">활동증명서 발급 요청</button> <span style="font-size:12px;color:var(--gray-500);margin-left:6px">' + esc(d.cert.from) + (set.certTier ? ' 요청하실 수 있습니다' : '부터 발급됩니다') + '</span>') + '</div></div>';
+      '<div id="lgPayForm" hidden></div></div>';
+    /* 활동증명서(1.5.5, 2026.10.04 사용자 '활동증명서 저건 활동 공유 밑에다 넣어줘'): 정산 카드에서 활동 공유 카드 아래로 */
+    var certBlock = '<div class="lg-cert"><h2>' + ic('file-check') + '활동증명서</h2><p>' + (set.certTier ? 'AI 책임위원(추천 ' + set.certTier + '건)이 되면 위원장 명의 · 위원장 직인의 공식 활동증명서를 발급해 드립니다.' : '위촉 뒤 ' + Math.round(set.certDays / 30) + '개월 이상 활동한 위원에게 위원장 명의 · 위원장 직인의 활동증명서를 발급합니다.') + '</p>' +
+      (d.cert.eligible ? '<button type="button" class="btn btn-ghost btn-sm" data-act="cert" style="margin-top:10px">활동증명서 발급 요청</button>' : '<button type="button" class="btn btn-ghost btn-sm" disabled style="margin-top:10px;color:var(--gray-400);border-color:#E5E9F0">활동증명서 발급 요청</button> <span style="font-size:12px;color:var(--gray-500);margin-left:6px">' + esc(d.cert.from) + (set.certTier ? ' 요청하실 수 있습니다' : '부터 발급됩니다') + '</span>') + '</div>';
     var notices = (d.notices || []).map(function (n) { return '<div class="lg-notice"><b>' + esc(n.title) + '</b><p>' + esc(n.body) + (n.link ? ' <a href="' + esc(n.link) + '" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">자세히 →</a>' : '') + '</p><small>공지 · ' + fmtMD(n.at) + '</small></div>'; }).join('');
     // 2026.09.30 운영자 미리보기(백엔드 1.3.2 preview): 위원 화면을 읽기 전용으로 볼 때 맨 위에 띠
     var pvBar = d.preview ? '<div class="lg-preview" role="note">' + ic('eye') + '<span><b>위원장 미리보기</b> · ' + esc(d.preview.name || m.name) + ' 위원(' + esc(d.preview.code || code) + ') 화면입니다. 읽기 전용이라 바꿀 수 없고, 위원 활동 기록과 통계에 남지 않습니다.</span></div>' : '';
@@ -379,6 +381,7 @@
       '<div class="lg-stats"><div class="lg-stat"><span>이달 크레딧</span><b>' + num(st.thisMonth) + '</b><i>' + (m.credits === 0 ? '첫 임팩트를 기다립니다' : '확정 기준') + '</i></div><div class="lg-stat"><span>누적 확산</span><b>' + num(st.reachAll) + '</b><i>명함 · 링크로 접한 사람 · 최근 7일 ' + num(st.reach7) + '명</i></div><div class="lg-stat"><span>다음 직급까지</span><b>' + (nt ? num(nt.need) : '-') + '</b><i>' + (nt ? esc(heroTier(nt.name)) + ' (' + nt.at + ')' : '최고 직급입니다') + '</i></div></div>' +
       tierLineHTML(d) +
       '<div class="lg-gauge"><div class="lg-gauge-h"><span title="' + esc(gaugeTip) + '">활동 게이지</span><em class="' + gaugeCls + '">' + gaugeTxt + '</em></div><div class="lg-bar"><i style="width:' + (m.status === '활동' || m.status === '휴면' || m.status === '휴면예정' ? gv : 0) + '%"></i></div>' + (m.status === '종료' ? '' : nudgeHTML(d)) + '</div>' + trendHTML(d) + '</div>' +
+      '<div class="lg-col">' +
       '<div class="lg-card lg-kit" id="kit"><h2>' + ic('send') + 'AI 윤리 확산 도구</h2>' +
       '<div class="row"><span class="lab">위원 명함</span><code>' + esc(short(card)) + '</code><button type="button" class="btn btn-ghost" data-copy="' + esc(card) + '">복사</button></div>' +
       '<div class="row"><span class="lab">바로 결제 링크</span><code>' + esc(short(go)) + '</code><button type="button" class="btn btn-ghost" data-copy="' + esc(go) + '">복사</button></div>' +
@@ -389,10 +392,10 @@
       '<div class="lg-share-row"><label class="lg-share-sel"><span class="sr-only">채널</span><select id="lgKitSel" aria-label="채널 고르기">' + MSG_LABEL.map(function (t, i) { return '<option value="' + i + '"' + (i === S.kitTab ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select></label>' +
       '<button type="button" class="btn btn-primary" data-copy-msg="1">' + ic('copy') + '추천 문구 복사</button></div>' +
       '<button type="button" class="lg-link lg-share-peek" data-act="msg-peek" aria-expanded="false">문구 미리 보기</button>' +
-      '<div class="lg-msg" id="lgMsg" hidden>' + esc(tpl) + '</div></div></div></div>' +
+      '<div class="lg-msg" id="lgMsg" hidden>' + esc(tpl) + '</div></div></div>' + moneyHTML(d) + '</div></div>' +
       '<div class="lg-two"><div class="lg-card"><h2>' + ic('clipboard-list') + '실적 내역<span class="sub">결제 시 메일 알림 · ' + ruleShort() + '</span></h2>' +
       (d.credits.length ? '<table class="lg-tbl"><thead><tr><th>결제일</th><th>상태</th><th class="num">활동지원금</th><th class="num">정산</th></tr></thead><tbody>' + d.credits.map(creditRow).join('') + '</tbody></table>' : '<p class="lg-empty" style="text-align:center;padding:26px 0">아직 실적이 없습니다. 명함이나 추천 링크를 공유해 보세요. 첫 결제가 들어오면 이메일로 알려 드립니다.</p>') + '</div>' + payCard + '</div>' +
-      '<div class="lg-two"><div class="lg-card"><h2>' + ic('external-link') + '활동 공유 <span style="font-size:12px;color:var(--gray-500);font-weight:600">(선택)</span></h2><p>AI 윤리와 관련해 올리신 글 · 영상 링크를 남겨 주세요. 위원회 소식에 인용될 수 있습니다.</p><form class="lg-share-in" id="lgShare"><input class="lg-input" id="lgShareUrl" type="url" placeholder="https://" maxlength="300"><button type="submit" class="btn btn-ghost btn-sm">등록</button></form></div>' +
+      '<div class="lg-two"><div class="lg-card"><h2>' + ic('external-link') + '활동 공유 <span style="font-size:12px;color:var(--gray-500);font-weight:600">(선택)</span></h2><p>AI 윤리와 관련해 올리신 글 · 영상 링크를 남겨 주세요. 위원회 소식에 인용될 수 있습니다.</p><form class="lg-share-in" id="lgShare"><input class="lg-input" id="lgShareUrl" type="url" placeholder="https://" maxlength="300"><button type="submit" class="btn btn-ghost btn-sm">등록</button></form>' + certBlock + '</div>' +
       '<div class="lg-card"><h2>' + ic('help-circle') + '안내 · 공지</h2>' + (notices || '<p class="lg-muted" style="font-size:13px">새 공지가 없습니다.</p>') +
       '<ul class="lg-list" style="margin-top:10px"><li><a href="' + MANUAL_URL + '" target="_blank" rel="noopener" data-track="manual">캠페인위원 활동 매뉴얼(PDF) 내려받기</a> · 라운지 사용법 · 활동 · 정산 · 자격 기준을 한 권에<span>매뉴얼</span></li><li>위원 코드로 결제가 들어오면 바로 확정되고 이메일로 알려 드리며, 지급 때도 메일이 갑니다<span>안내</span></li><li>' + cutDay() + '요일 24시까지 결제된 건을 매주 ' + DAYS[PAY_WD] + '요일에 정산하며, 세금은 위원회에서 부담하여 전액 지급됩니다.<span>안내</span></li><li>위원 자격 · 활동 기준은 이 화면 맨 아래에 있습니다<span>기준</span></li><li>문의는 <a href="mailto:' + EMAIL + '">' + EMAIL + '</a><span>1일 안 회신</span></li></ul>' +
       '<label class="lg-toggle" style="margin-top:14px"><input type="checkbox" id="lgLetter"' + (m.letter ? ' checked' : '') + '> 월간 임팩트 리포트 메일 받기</label></div></div>' +
@@ -430,13 +433,40 @@
     if (st.payRate && !curPerks.some(function (x) { return /활동지원금/.test(x); })) curPerks.unshift('추천 1건마다 활동지원금 ' + wonKo(st.payRate));
     var curB = tierBadgeOf(curName), curBtn = '<button type="button" class="lg-tl lg-tl--cur' + (curB ? ' lg-tl--' + curB : '') + '" data-tl="cur" aria-expanded="false"><span class="lg-tl-name">' + esc(heroTier(curName)) + execTag(curB) + '</span>' +
       (curPerks.length ? '<span class="lg-tl-pop" role="tooltip"><b class="lg-tl-h">지금 누리는 혜택</b><ul>' + curPerks.map(li).join('') + '</ul></span>' : '') + '</button>';
-    var nxB = nx ? tierBadgeOf(nx.name) : '', nxBtn = nx ? '<button type="button" class="lg-tl lg-tl--next lg-tl--' + (nxB || 'base') + '" data-tl="next" aria-expanded="false"><span class="lg-tl-name">' + esc(heroTier(nx.name)) + execTag(nxB) + '</span>' +
-      (nx.perks && nx.perks.length ? '<span class="lg-tl-pop lg-tl-pop--r" role="tooltip"><b class="lg-tl-h">' + esc(heroTier(nx.name)) + (/원$/.test(heroTier(nx.name)) ? '이' : '가') + ' 되면</b><ul>' + nx.perks.map(li).join('') + '</ul>' +
+    /* 1.5.5 상임위원 · 위원장단은 '○○(준 임원)으로 위촉되면', 최고 단계는 '최고 단계 · 위원장단(임원)' */
+    var nxB = nx ? tierBadgeOf(nx.name) : '', nxName = nxB === '임원' ? TIER_TOP_LABEL : heroTier(nx ? nx.name : ''), nxHead = TIER_EXEC[nxB] ? nxName + '(' + TIER_EXEC[nxB] + ')으로 위촉되면' : nxName + (/원$/.test(nxName) ? '이' : '가') + ' 되면';
+    var nxBtn = nx ? '<button type="button" class="lg-tl lg-tl--next lg-tl--' + (nxB || 'base') + '" data-tl="next" aria-expanded="false"><span class="lg-tl-name">' + esc(nxName) + execTag(nxB) + '</span>' +
+      (nx.perks && nx.perks.length ? '<span class="lg-tl-pop lg-tl-pop--r" role="tooltip"><b class="lg-tl-h">' + esc(nxHead) + '</b><ul>' + nx.perks.map(li).join('') + '</ul>' +
         '<small>앞으로 추천 <b>' + num(nx.need) + '건</b> · 지금 ' + num(cur) + ' / ' + num(nx.at) + '</small></span>' : '') + '</button>'
-      : '<span class="lg-tl-top">가장 높은 단계</span>';
+      : '<span class="lg-tl-top">최고 단계</span>';   /* 1.5.5 */
     return '<div class="lg-tierline">' + curBtn + '<div class="lg-steps">' + stepsHtml + '</div>' + nxBtn + '</div>';
   }
   function recentCredit(d) { var mc = d.minCredit || {}, last = dateOf(mc.last), today = dateOf(new Date()); return !!(last && today && (today - last) / 86400000 <= ((d.settings || {}).gaugeFullDays || 10)); }
+  /* 활동지원금 카드(1.5.5, 2026.10.04 사용자 '우측 빈 공간에 대놓고 금액을 적어 줘, 유의미한 수치와 동기부여가 느껴지고 확인할 수 있는 영업적인 것들'):
+     확산 도구 카드 아래 빈 자리에. 받은 + 지급 예정 활동지원금(없으면 '첫 추천 1건이면 3만 원'), 이번 달 · 3건이면 · 10건이면 환산, 매주 3건이면 한 달 · 1년,
+     다음 직급의 건당 금액(단계적 공개: 바로 다음 직급만, 수석 전에는 'AI 수석위원부터 3만 5천 원'까지만 · 상임 · 위원장단은 수석이 되어야 보임) */
+  function rateOfTier(name, set, rate) { var b = tierBadgeOf(name); return b === '수석' ? Number(set.payAmb) || rate : b === '상임' || b === '임원' ? Number(set.payStanding) || rate : Number(set.payBase) || rate; }
+  function moneyHTML(d) {
+    var m = d.member, st = d.stats || {}, set = d.settings || {}, nt = st.next, rate = Number(st.payRate) || Number(set.payBase) || 30000;
+    var paid = Number(st.totalPaid) || 0, due = Number(st.nextPay) || 0, sum = paid + due, monthKey = (function () { var t = new Date(); return t.getFullYear() + '-' + ('0' + (t.getMonth() + 1)).slice(-2); })();
+    var moN = 0, moWon = 0; (d.credits || []).forEach(function (r) { if ((r.status === '확정' || r.status === '대기') && String(r.day).slice(0, 7) === monthKey) { moN++; moWon += Number(r.pay) || rate; } });
+    var payDay = st.nextPayDay ? fmtKo(st.nextPayDay, true) : '다음 ' + DAYS[PAY_WD] + '요일';
+    var hero = sum > 0
+      ? '<div class="lg-money-hero"><span>지금까지 쌓인 활동지원금</span><strong>' + num(sum) + '<small>원</small></strong><i>' + (paid ? '지급 완료 ' + won(paid) : '') + (paid && due ? ' · ' : '') + (due ? esc(payDay) + ' 입금 예정 ' + won(due) : '') + '</i></div>'
+      : '<div class="lg-money-hero"><span>첫 추천 1건이면</span><strong>' + num(rate) + '<small>원</small></strong><i>' + esc(payDay) + '에 입금 · 세금 없이 전액 · 본인 결제도 1건</i></div>';
+    var tiles = '<div class="lg-money-grid"><div><span>이번 달 추천</span><b>' + won(moWon) + '</b><i>' + (moN ? num(moN) + '건' : '아직 0건 · 지금 시작') + '</i></div>' +
+      '<div><span>이번 주 3건이면</span><b>' + won(rate * 3) + '</b><i>' + esc(payDay) + ' 입금</i></div>' +
+      '<div><span>이번 달 10건이면</span><b>' + won(rate * 10) + '</b><i>건당 ' + won(rate) + '</i></div></div>';
+    var year = '<p class="lg-money-line"><b>매주 3건</b>이면 한 달 <b>' + won(rate * 12) + '</b>, 1년 <b>' + won(rate * 156) + '</b><span>지금 직함 기준 · 세금은 위원회 부담</span></p>';
+    var nextLine = '';
+    if (nt) {
+      var nb = tierBadgeOf(nt.name), nr = rateOfTier(nt.name, set, rate), nName = nb === '임원' ? TIER_TOP_LABEL + '(임원)' : nb === '상임' ? '상임위원(준 임원)' : heroTier(nt.name);
+      if (nr > rate) nextLine = '<p class="lg-money-next">' + ic('award') + '<span><b>' + esc(nName) + '</b>부터 건당 <b>' + won(nr) + '</b> · 앞으로 추천 ' + num(nt.need) + '건이면 같은 10건이 <b>' + won(nr * 10) + '</b></span></p>';
+      else if (nb === '임원') nextLine = '<p class="lg-money-next">' + ic('award') + '<span><b>' + esc(nName) + '</b>까지 앞으로 추천 ' + num(nt.need) + '건 · 건당 ' + won(rate) + ' 그대로</span></p>';
+      else { var amb = Number(set.payAmb) || 0, at30 = (set.tiers || [])[2]; nextLine = amb > rate ? '<p class="lg-money-next">' + ic('award') + '<span><b>' + esc(heroTier(nt.name)) + '</b>까지 앞으로 추천 ' + num(nt.need) + '건 · <b>AI 수석위원</b>' + (at30 ? '(' + num(at30) + '건)' : '') + '부터 건당 <b>' + won(amb) + '</b></span></p>' : ''; }
+    }
+    return '<div class="lg-card lg-money" id="lgMoney"><h2>' + ic('coins') + '활동지원금 한눈에<span class="sub">추천 1건 = ' + won(rate) + ' · 세금 없이 전액 · 매주 ' + DAYS[PAY_WD] + '요일 입금</span></h2>' + hero + tiles + year + nextLine + '</div>';
+  }
   function nudgeList(d) {
     /* 2판(2026.10.03 사용자 '카톡 프로필에 누가 명함을 올려 부담스럽게 · 준비된 문안도 별로 · 충분이라는 말을 함부로 쓰지 마'): 일상에서 자연스럽게 알리는 제안으로 */
     var m = d.member, st = d.stats || {}, mc = d.minCredit || {}, L = d.links || {}, nt = st.next, reach = Number(st.reachAll) || 0, top = [], out = [];
@@ -1202,7 +1232,7 @@
     var monthlyCard = '<div class="lg-card"><h2>' + ic('calendar') + '월별 흐름과 정산<span class="sub">최근 ' + an.months + '개월</span></h2>' + payKpi + '<div class="ad-scroll"><table class="lg-tbl ad-motbl"><thead><tr><th>월</th><th class="num">신규 위촉</th><th>추천 결제</th><th>명함 · 링크 열람</th><th class="num">라운지 이용 위원</th><th>지급액</th></tr></thead><tbody>' + moRows + '</tbody></table></div></div>';
     var cohortRows = an.cohorts.slice().reverse().map(function (c) { return '<tr><td>' + esc(c.month.replace('-', '.')) + '</td><td class="num">' + c.n + '</td><td class="num">' + c.active + '</td><td class="num">' + c.loggedInRate + '%</td><td class="num">' + c.creditedRate + '%</td><td class="num">' + num(c.creditsAvg) + '</td><td class="num">' + num(c.reachAvg) + '</td></tr>'; }).join('');
     var tierParts = [['캠페인위원', dist.tier.base || 0, '#C9D8F5'], ['선임위원', dist.tier['선임'] || 0, '#7FA6EE'], ['책임위원', dist.tier['책임'] || 0, '#7C3AED'], ['수석위원', dist.tier['수석'] || 0, '#F0A24A']]
-      .concat((dist.tier['상임'] ? [['상임위원', dist.tier['상임'], '#34D399']] : []).concat(dist.tier['자문'] ? [['자문위원', dist.tier['자문'], '#0F2A5F']] : []));   /* 1.4.17: 있을 때만 */
+      .concat((dist.tier['상임'] ? [['상임위원', dist.tier['상임'], '#34D399']] : []).concat(dist.tier['임원'] || dist.tier['자문'] ? [['위원장단', (dist.tier['임원'] || 0) + (dist.tier['자문'] || 0), '#0F2A5F']] : []));   /* 1.4.17: 있을 때만 */
     var stParts = [['활동', dist.status['활동'] || 0, '#0B8F84'], ['휴면 예정', dist.status['휴면예정'] || 0, '#F0A24A'], ['휴면', dist.status['휴면'] || 0, '#E06B8A'], ['종료', dist.status['종료'] || 0, '#A0AEC0']];
     var crParts = [['0건', dist.credits[0], '#E5EAF2'], ['1~2건', dist.credits[1], '#C9D8F5'], ['3~9건', dist.credits[2], '#7FA6EE'], ['10~29건', dist.credits[3], '#1F5FE0'], ['30건+', dist.credits[4], '#0F2A5F']];
     var gaParts = [['0~30%', dist.gauge[0], '#E06B8A'], ['31~60%', dist.gauge[1], '#F0A24A'], ['61~100%', dist.gauge[2], '#0B8F84']];

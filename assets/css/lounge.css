@@ -34,7 +34,7 @@
 .lg-tier--책임,.lg-who .lg-tier--책임{background:linear-gradient(90deg,#EDE9FE,#DDD6FE);color:#4C1D95;box-shadow:0 0 0 1px rgba(255,255,255,.35) inset}
 .lg-tier--수석,.lg-who .lg-tier--수석{background:linear-gradient(90deg,#F6C453,#F0A24A);color:#2B1B00;box-shadow:0 0 0 1px rgba(255,255,255,.45) inset}
 .lg-tier--상임,.lg-who .lg-tier--상임{background:linear-gradient(90deg,#1F2F55,#0F2A5F);color:#F6C453;box-shadow:0 0 0 1px rgba(246,196,83,.55) inset}   /* 1.5.4 준 임원: 남색 바탕 · 금색(사용자 2026.10.04 '상임위원부터는 준 임원이기 때문에 진짜 있어 보이게') */
-.lg-tier--자문,.lg-who .lg-tier--자문{background:linear-gradient(90deg,#0B1F4A,#07173A);color:#FFD98A;box-shadow:0 0 0 1px rgba(255,217,138,.75) inset}
+.lg-tier--임원,.lg-who .lg-tier--임원{background:linear-gradient(90deg,#0B1F4A,#07173A);color:#FFD98A;box-shadow:0 0 0 1px rgba(255,217,138,.75) inset}
 .lg-exec{display:inline-block;margin-left:7px;padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.04em;font-style:normal;line-height:1.5;vertical-align:1px;background:rgba(246,196,83,.16);color:#F6C453;border:1px solid rgba(246,196,83,.6)}   /* 1.5.4 '준 임원' · '임원' 표시 */
 .lg-tl .lg-exec{background:#FFF4D6;color:#8A5300;border-color:#E8C77A;margin-left:6px}
 .lg-tier svg{width:13px;height:13px;flex-shrink:0}
@@ -42,7 +42,7 @@
 .lg-avatar--책임{border-color:#DDD6FE;background:linear-gradient(135deg,#4C1D95,#7C3AED)}
 .lg-avatar--수석{border-color:#F6C453;background:linear-gradient(135deg,#8A5A00,#D89B2B)}
 .lg-avatar--상임{border-color:#F6C453;background:linear-gradient(135deg,#0F2A5F,#1F3F7A);box-shadow:0 0 0 3px rgba(246,196,83,.28)}   /* 1.5.4 준 임원 */
-.lg-avatar--자문{border-color:#FFD98A;background:linear-gradient(135deg,#07173A,#0F2A5F);box-shadow:0 0 0 3px rgba(255,217,138,.35)}
+.lg-avatar--임원{border-color:#FFD98A;background:linear-gradient(135deg,#07173A,#0F2A5F);box-shadow:0 0 0 3px rgba(255,217,138,.35)}
 .lg-hero .btn-light{padding:9px 16px;font-size:13px}
 .lg-mode{display:inline-flex;align-items:center;gap:8px;background:rgba(255,217,138,.16);border:1px solid rgba(255,217,138,.45);color:#FFD98A;font-weight:800;font-size:12.5px;padding:6px 12px;border-radius:999px}
 .lg-mode svg{width:14px;height:14px}
@@ -257,7 +257,7 @@ html:not(.js) .lg-boot{display:none}
 .lg-tl--next.lg-tl--책임{color:#5B21B6;background-image:linear-gradient(100deg,#F4EFFF 0%,#F4EFFF 42%,#FFFFFF 50%,#F4EFFF 58%,#F4EFFF 100%);box-shadow:inset 0 0 0 1px #E3D8FB}
 .lg-tl--next.lg-tl--수석{color:#8A5300;background-image:linear-gradient(100deg,#FFF5DC 0%,#FFF5DC 42%,#FFFDF6 50%,#FFF5DC 58%,#FFF5DC 100%);box-shadow:inset 0 0 0 1px #F3DCA2}
 .lg-tl--next.lg-tl--상임{color:#0F2A5F;background-image:linear-gradient(100deg,#F5EDD6 0%,#F5EDD6 42%,#FFFCF2 50%,#F5EDD6 58%,#F5EDD6 100%);box-shadow:inset 0 0 0 1px #E2CC8E}   /* 1.5.4 준 임원: 남색 글자 · 샴페인 금색 */
-.lg-tl--next.lg-tl--자문{color:#07173A;background-image:linear-gradient(100deg,#EFE4C6 0%,#EFE4C6 42%,#FFF8E6 50%,#EFE4C6 58%,#EFE4C6 100%);box-shadow:inset 0 0 0 1px #D9BC72}
+.lg-tl--next.lg-tl--임원{color:#07173A;background-image:linear-gradient(100deg,#EFE4C6 0%,#EFE4C6 42%,#FFF8E6 50%,#EFE4C6 58%,#EFE4C6 100%);box-shadow:inset 0 0 0 1px #D9BC72}
 @keyframes lgTlShine{0%,62%{background-position:100% 0}88%,100%{background-position:0 0}}
 @media (prefers-reduced-motion:reduce){.lg-tl--next{animation:none}}
 .lg-tl-pop{position:absolute;bottom:calc(100% + 10px);left:0;z-index:30;width:max-content;max-width:min(272px,78vw);padding:12px 14px 11px;background:#fff;border:1px solid #E3E8F1;border-radius:12px;box-shadow:0 12px 30px rgba(15,42,95,.14);text-align:left;font-weight:400;color:var(--gray-700);white-space:normal;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s;pointer-events:none}
@@ -272,8 +272,8 @@ html:not(.js) .lg-boot{display:none}
 .lg-tl--next.lg-tl--책임 .lg-tl-pop li::before{background:#7C3AED}
 .lg-tl--next.lg-tl--수석 .lg-tl-pop li::before{background:#E09A2D}
 .lg-tl--next.lg-tl--상임 .lg-tl-pop li::before{background:#C9A24A}
-.lg-tl--next.lg-tl--자문 .lg-tl-pop li::before{background:#0F2A5F}
-.lg-tl--cur.lg-tl--상임 .lg-tl-name,.lg-tl--cur.lg-tl--자문 .lg-tl-name{color:#0F2A5F;font-weight:800}
+.lg-tl--next.lg-tl--임원 .lg-tl-pop li::before{background:#0F2A5F}
+.lg-tl--cur.lg-tl--상임 .lg-tl-name,.lg-tl--cur.lg-tl--임원 .lg-tl-name{color:#0F2A5F;font-weight:800}
 .lg-tl-pop small{display:block;margin-top:8px;padding-top:8px;border-top:1px solid #EEF1F6;font-size:12px;color:var(--gray-500)}
 .lg-tl-pop small b{color:var(--navy)}
 @media (hover:hover){.lg-tl:hover .lg-tl-pop{opacity:1;visibility:visible;transform:none}}
@@ -299,7 +299,28 @@ html:not(.js) .lg-boot{display:none}
 .lg-share-row .btn-primary svg{width:15px;height:15px}
 .lg-share-peek{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--gray-500)}
 .lg-share .lg-msg{margin-top:10px;padding:14px 16px}
-.lg-kit{align-self:start}   /* 1.5.4 문구를 펼치지 않으니 카드가 왼쪽 카드 높이까지 늘어나 비지 않게 */
+.lg-col{display:flex;flex-direction:column;gap:22px;min-width:0}   /* 1.5.5 오른쪽 열: 확산 도구 + 활동지원금 카드(1.5.4 의 align-self:start 로 비던 자리를 채움) */
+.lg-col>.lg-card{min-width:0}
+.lg-money{flex:1;display:flex;flex-direction:column;background:linear-gradient(165deg,#FFFFFF 0%,#F7F9FE 100%);border-color:#DCE4F3}
+.lg-money h2{flex-wrap:wrap;white-space:nowrap}
+.lg-money h2 .sub{flex-basis:100%;margin:-2px 0 0;text-align:left;font-weight:500;white-space:normal}
+.lg-money-hero{margin-top:4px;padding:18px 20px;border-radius:16px;background:linear-gradient(120deg,#0F2A5F 0%,#163B7E 100%);color:#fff;box-shadow:0 10px 24px rgba(15,42,95,.18)}
+.lg-money-hero span{display:block;font-size:12.5px;font-weight:600;color:#C9D6F2}
+.lg-money-hero strong{display:block;font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:4px 0 2px;color:#FFE9B8}
+.lg-money-hero strong small{font-size:18px;letter-spacing:0;margin-left:3px;color:#FFE9B8}
+.lg-money-hero i{font-style:normal;font-size:12.5px;color:#DCE5F7}
+.lg-money-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.lg-money-grid>div{background:#F5F8FD;border-radius:14px;padding:12px 12px 11px;min-width:0}
+.lg-money-grid span{display:block;font-size:11.5px;color:var(--gray-500);font-weight:600;min-height:2.6em;line-height:1.3}
+.lg-money-grid b{display:block;font-size:17px;letter-spacing:-.03em;margin-top:2px;white-space:nowrap;color:var(--ink)}
+.lg-money-grid i{font-style:normal;font-size:11.5px;color:var(--gray-500)}
+.lg-money-line{margin:14px 0 0;font-size:13.5px;color:var(--gray-700);line-height:1.6}
+.lg-money-line b{color:var(--ink)}
+.lg-money-line span{display:block;font-size:11.5px;color:var(--gray-500);font-weight:500}
+.lg-money-next{margin:12px 0 0;padding:11px 14px;border-radius:12px;background:#FFF8E6;border:1px solid #F3E2B3;color:#4A3C14;font-size:13px;line-height:1.55;display:flex;gap:8px;align-items:flex-start}
+.lg-money-next svg{width:16px;height:16px;flex-shrink:0;margin-top:2px;color:#B8860B}
+.lg-money-next b{color:#0F2A5F}
+.lg-money>.lg-money-line:last-child,.lg-money>.lg-money-next:last-child{margin-bottom:0}
 @media(max-width:600px){.lg-share-row .btn-primary{width:100%;justify-content:center}}
 .lg-msg{background:#F9FAFC;border:1px dashed #D5DCE6;border-radius:12px;padding:14px 76px 14px 16px;font-size:13.5px;line-height:1.7;color:var(--gray-700);position:relative;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere}
 .lg-msg .btn{position:absolute;right:12px;top:12px;padding:6px 11px;font-size:12px}
@@ -692,6 +713,7 @@ html:not(.js) .lg-boot{display:none}
   .ad-kpis{grid-template-columns:1fr 1fr}.ad-stats{grid-template-columns:1fr}.ad-sparks{grid-template-columns:1fr}
   .ad-tiles{grid-template-columns:1fr 1fr;gap:10px}.ad-tile{padding:12px 14px}.ad-tile b{font-size:20px}.ad-set{grid-template-columns:1fr}
   .ad-tiles>.ad-tile:nth-child(2),.ad-tiles>.ad-tile:nth-child(5){grid-column:1/-1}   /* 1.4.11 누적(두 금액) · 메일 칸은 한 줄 전체 */
+  .lg-money-grid{gap:6px}.lg-money-grid>div{padding:10px 8px}.lg-money-grid b{font-size:15px}.lg-money-hero strong{font-size:34px}
   .lg-stats{gap:6px}.lg-stat{padding:10px 9px}.lg-stat span{font-size:11.5px;min-height:2.7em}.lg-stat b{font-size:20px}.lg-stat i{font-size:11px}   /* 2026.09.30: 'AI 윤리를 전한 사람'이 두 줄이 되어도 세 칸의 숫자 높이를 맞춤 */
   .lg-hero h1{font-size:24px}
 }
