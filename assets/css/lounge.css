@@ -287,6 +287,20 @@ html:not(.js) .lg-boot{display:none}
 .lg-tabs{display:flex;gap:6px;margin:16px 0 10px;flex-wrap:wrap}
 .lg-tabs button{font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;background:#F0F3F8;color:var(--gray-600);border:0;cursor:pointer}
 .lg-tabs button.on{background:var(--ink);color:#fff}
+/* 1.5.4 추천 문구(사용자 2026.10.04): 문구는 펼치지 않고 두 줄 안내 + 채널 고르기 + [추천 문구 복사]. '문구 미리 보기'를 누를 때만 아래에 펼침 */
+.lg-share{margin-top:18px;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#F4F7FD,#FFFFFF);border:1px solid #E3E9F3}
+.lg-share-lead{margin:0 0 12px;font-size:14px;line-height:1.7;color:var(--gray-700);word-break:keep-all}
+.lg-share-lead b{color:var(--ink);font-weight:800}
+.lg-share-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lg-share-sel{flex:1 1 220px;min-width:0}
+.lg-share-sel select{width:100%;font:inherit;font-size:13.5px;font-weight:600;color:var(--ink);padding:9px 36px 9px 12px;border-radius:10px;border:1px solid #CBD5E1;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A5A72' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;appearance:none;-webkit-appearance:none;cursor:pointer}
+.lg-share-sel select:focus{outline:2px solid #BFD3FF;outline-offset:1px}
+.lg-share-row .btn-primary{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:9px 16px;font-size:13.5px}
+.lg-share-row .btn-primary svg{width:15px;height:15px}
+.lg-share-peek{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--gray-500)}
+.lg-share .lg-msg{margin-top:10px;padding:14px 16px}
+.lg-kit{align-self:start}   /* 1.5.4 문구를 펼치지 않으니 카드가 왼쪽 카드 높이까지 늘어나 비지 않게 */
+@media(max-width:600px){.lg-share-row .btn-primary{width:100%;justify-content:center}}
 .lg-msg{background:#F9FAFC;border:1px dashed #D5DCE6;border-radius:12px;padding:14px 76px 14px 16px;font-size:13.5px;line-height:1.7;color:var(--gray-700);position:relative;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere}
 .lg-msg .btn{position:absolute;right:12px;top:12px;padding:6px 11px;font-size:12px}
 .lg-tbl{width:100%;border-collapse:collapse;font-size:13.5px}

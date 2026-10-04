@@ -242,13 +242,20 @@
      2026.10.01 AIEP 전용 영상관 홍보(사용자: '우리 영상인 것처럼, 구매 전환율이 높아지게'): 네 문안 모두 '표준교재와 한국어 자막 애니메이션 영상관(N편)'으로.
      편 수는 빌드 때 영상관 데이터에서 넣은 KAIEC_LOUNGE.vids(없으면 숫자 없이). 해외 애니메이션을 위원회가 만들었다고 쓰지 않음(엄선 · 한국어 자막).
      2026.10.02 6판: 위원회 영상은 '전문위원이 기획하고 위원회가 자체 제작한 영상(한국어 내레이션)'으로 자랑스럽게(사용자 요청), 이름은 'AIEP 영상관' */
-  var VIDS = 'AIEP 영상관' + (CFG.vids && CFG.vids.n ? '(' + CFG.vids.n + '편)' : '');
+  /* 추천 문구 7종(1.5.4, 2026.10.04 사용자: '여기 도구가 솔직히 너무 올드하고 별로야, 위원들이 올리기도 민망하대' → 사용자가 직접 쓴 문구 그대로, 채널만 고르고 [추천 문구 복사]로 전체가 클립보드에.
+     화면에는 문구를 펼쳐 보이지 않음(사용자: '글씨가 너무 보이면 영업사원 같으니까, 페이지의 격이 낮아'). {intro} = 소개 페이지(kaiec.kr/expert-apply/?ref=코드) */
   var MSG_TPL = [
-    ['카카오톡', 'AI를 쓰는 건 이제 기본이고, 바르게 쓰는 기준을 아는 사람은 드물어요. 한국AI윤리위원회 AI윤리전문가(AIEP) 과정을 추천드려요. 진도율 채우는 강의 대신 위원회 표준교재와 ' + VIDS + '으로 내 속도에 맞춰 공부하고 온라인 평가로 이수해서 부담이 없고, 이수하면 공식 명단에 등록됩니다. 제 추천 링크로 신청하면 위원 추천 할인이 자동 적용돼요 👉 {intro}'],
-    ['인스타그램', '요즘 AI 안 쓰는 사람 없죠. 그런데 \'바르게\' 쓰는 기준을 배운 사람은 많지 않아요.\n한국AI윤리위원회 AI윤리전문가(AIEP) 과정, 진도율 채우는 강의 대신 위원회 표준교재와 ' + VIDS + '으로 내 속도에 맞춰 공부하고 온라인 평가로 이수해 공식 명단에 이름을 올릴 수 있어요.\n결제한 날 바로 영상관이 열려요 🎬\n프로필 링크로 신청하면 위원 추천 할인 적용 ✔\n#AI윤리 #AI윤리전문가 #AIEP #한국AI윤리위원회\n{intro}'],
-    ['쓰레드', 'AI를 쓰는 건 이제 기본. 그런데 바르게 쓰는 기준은 배운 적 있나요?\n한국AI윤리위원회 AI윤리전문가(AIEP) 과정은 진도율 채우는 강의 대신 위원회 표준교재와 ' + VIDS + '으로 내 속도에 맞춰 공부하고 온라인 평가로 이수하는 과정이고, 이수하면 위원회 공식 명단에 이름이 올라갑니다.\n아래 링크로 신청하면 위원 추천 할인이 자동 적용돼요 🧵\n{intro}'],
-    ['블로그 · 커뮤니티', '[추천] 한국AI윤리위원회 AI윤리전문가(AIEP) 양성과정\n생성형 AI를 쓰는 학생 · 직장인이라면 한 번은 정리해 둘 만한 내용입니다. 표준교재와 ' + VIDS + '으로 자율 학습하고 온라인 이수 평가를 통과하면 위원회 공식 명단에 등록됩니다. 영상관은 결제한 날 AIEP 전용관에서 바로 열리고, 편마다 AI윤리 분야 전문위원이 기획하고 위원회가 자체 제작한 영상(한국어 내레이션)으로 시작해 교재 장과 생각해 볼 질문이 함께 나옵니다.\n아래 링크(한국AI윤리위원회 위원 추천)로 신청하면 위원 추천 할인이 적용됩니다.\n{intro}']
+    ['블로그 · 카페 · 커뮤니티', '올해 AI 스펙 하나쯤 갖춰두고 싶다면\n\nAI를 사용하는 사람은 많아졌습니다. 이제는 단순히 사용할 줄 아는 것을 넘어, AI를 바르게 이해하고 활용할 수 있는 사람의 역량이 더 중요해지고 있습니다.\n\n한국AI윤리위원회에서 운영하는 AI Ethics Professional (AIEP), AI윤리전문가 과정이 있어 소개합니다.\n\n전공이나 관련 경력이 없어도 괜찮습니다. 어려운 내용을 오래 공부하는 방식이 아니라, 제공되는 자료와 영상을 편하게 보면서 필요한 내용을 익히고 온라인으로 이수할 수 있습니다.\n\n과정을 이수하면 AI윤리전문가(AIEP)로 공식 등록됩니다.\n\n취업이나 이직을 준비할 때는 AI 관련 스펙으로, 기업과 기관에서는 직무역량과 경력관리로 활용할 수 있습니다. 승진을 준비하거나 강의, 교육 분야에서 자신의 전문성을 넓히고 싶은 분들에게도 잘 맞습니다.\n\nAI 전공자가 아니어도 시작할 수 있습니다.\n올해 내 이력에 더할 AI 역량 하나를 찾고 있다면 한번 확인해보세요.\n\n추천 링크 신청 시 10% 할인됩니다👇\n{intro}'],
+    ['카카오톡 · 지인 추천', 'AI 관련 스펙 하나 준비하려면 이건 꼭 한번 해보세요. 진짜 추천해요!\n\n한국AI윤리위원회에서 운영하는 AI Ethics Professional (AIEP), AI윤리전문가 과정인데 전공이나 관련 경력이 없어도 할 수 있어서 생각보다 부담이 크지 않아요.\n\n자료랑 영상 편하게 보면서 준비하고 온라인으로 이수하면 AI윤리전문가(AIEP)로 공식 등록돼요.\n\n취업이나 이직할 때도 활용할 수 있고, 직장인이면 직무역량이나 경력관리, 승진 준비할 때도 괜찮아요. 강의나 교육 쪽에 계신 분들도 전문성 하나 더 갖춰두기 좋고요.\n\nAI 관련해서 뭔가 하나 해두고 싶었다면 저는 이거 꼭 해보라고 하고 싶어요.\n\n추천 링크라 신청하면 10% 할인돼요👇\n{intro}'],
+    ['쓰레드', 'AI 스펙 뭐 할지 고민 중이면 이건 한번 봐.\n\nAI Ethics Professional (AIEP)\n한국AI윤리위원회 AI윤리전문가 과정임.\n\nAI 전공이나 관련 경력 없어도 되고\n어려운 공부를 오래 해야 하는 것도 아님.\n\n자료랑 영상 편하게 보면서 준비하고\n온라인으로 이수하면 AI윤리전문가(AIEP)로 공식 등록됨.\n\n취업이나 이직 준비할 때도 활용할 수 있고\n직장인이면 직무역량이나 경력관리 쪽으로도 괜찮음.\n\nAI는 이제 거의 모든 분야에서 사용하니까\n관련 스펙 하나쯤은 갖춰두는 게 좋다고 봄.\n\n추천 링크로 신청하면 10% 할인👇\n{intro}'],
+    ['링크드인', 'AI를 사용하는 능력이 기본이 되어가는 만큼, 이제는 AI를 바르게 이해하고 활용할 수 있는 역량도 자신의 전문성을 보여주는 중요한 부분이 되고 있습니다.\n\n한국AI윤리위원회에서 운영하는 AI Ethics Professional (AIEP), AI윤리전문가 과정을 소개합니다.\n\n전공이나 관련 경력이 없어도 시작할 수 있으며, 제공되는 자료와 영상을 통해 자신의 일정에 맞춰 온라인으로 이수할 수 있습니다.\n\n과정 이수 후에는 AI윤리전문가(AIEP)로 공식 등록됩니다.\n\n기업과 기관에서의 직무역량 강화와 경력관리, 취업과 이직, 강의와 교육 분야 등 기존의 전문성에 AI 역량을 더하고 싶은 분들이 활용하기 좋은 과정입니다.\n\nAI 시대에 자신의 전문 분야와 함께 가져갈 새로운 역량을 갖춰보시기 바랍니다.\n\n추천 링크 신청 시 10% 할인됩니다👇\n{intro}'],
+    ['교육자용 · 학생 추천', '학생분들이라면 AI 관련 스펙 하나는 꼭 갖춰두세요.\n\n앞으로 어떤 분야로 진출하더라도 AI를 사용할 일은 계속 많아질 겁니다. 단순히 AI를 사용해봤다는 경험보다, 제대로 이해하고 바르게 활용할 수 있는 역량까지 갖춰두는 게 좋습니다.\n\n그래서 학생분들께 한국AI윤리위원회의 AI Ethics Professional (AIEP), AI윤리전문가 과정을 권하고 싶습니다.\n\nAI 전공자가 아니어도 괜찮습니다. 관련 경력이 없어도 시작할 수 있고, 자료와 영상을 편하게 보면서 자신의 일정에 맞춰 온라인으로 준비할 수 있어 학업과 병행하기에도 부담이 크지 않습니다.\n\n이수 후에는 AI윤리전문가(AIEP)로 공식 등록됩니다.\n\n졸업하고 나서 준비하기보다 학생일 때 AI 관련 역량 하나는 갖춰두세요. 앞으로 이력과 경력을 만들어갈 때 활용할 수 있는 스펙이 됩니다.\n\n학생분들께는 꼭 한번 해보라고 권하고 싶습니다.\n\n추천 링크 신청 시 10% 할인됩니다👇\n{intro}'],
+    ['커리어 컨설턴트용', 'AI 관련 스펙이 없다면 하나는 꼭 갖춰두세요.\n\n기업과 기관에서 AI 활용이 빠르게 늘고 있는 만큼, 이제는 단순히 "AI를 사용할 줄 안다"는 말보다 자신의 AI 역량을 보여줄 수 있는 이력을 만들어두는 것이 중요합니다.\n\n한국AI윤리위원회의 AI Ethics Professional (AIEP), AI윤리전문가 과정으로 준비해두세요.\n\nAI 전공이나 관련 경력이 없어도 시작할 수 있고, 자료와 영상을 편하게 보면서 준비한 뒤 온라인으로 이수할 수 있어 진입 부담도 크지 않습니다.\n\n이수 후에는 AI윤리전문가(AIEP)로 공식 등록됩니다.\n\n취업이나 이직을 준비한다면 이력서와 자기소개서 등에 활용할 수 있는 AI 관련 이력으로 만들어두세요. 재직자라면 직무역량과 경력관리, 승진을 준비하면서 기존 경력에 AI 전문성을 더하는 데 활용할 수 있습니다.\n\n앞으로 AI를 사용해봤다는 경험만으로는 자신의 경쟁력을 보여주기 어렵습니다.\n커리어를 생각한다면 보여줄 수 있는 AI 스펙 하나는 반드시 만들어두세요.\n\nAI Ethics Professional (AIEP)으로 준비해두시기 바랍니다.\n\n추천 링크 신청 시 10% 할인됩니다👇\n{intro}'],
+    ['문자 · 개인 메시지', 'AI 관련 스펙 하나 준비하실 거면 이 과정 한번 보세요. 추천드립니다!\n\n한국AI윤리위원회 AI Ethics Professional (AIEP), AI윤리전문가 과정입니다.\n\n전공이나 관련 경력이 없어도 시작할 수 있고, 자료와 영상을 보면서 편하게 준비한 뒤 온라인으로 이수할 수 있습니다.\n\n이수 후에는 AI윤리전문가(AIEP)로 공식 등록되고, 취업이나 이직, 직무역량, 경력관리 등에도 활용할 수 있습니다.\n\nAI 관련해서 하나쯤 갖춰두고 싶으셨다면 한번 확인해보세요.\n\n추천 링크로 신청하면 10% 할인됩니다👇\n{intro}']
   ];
+  /* 선택지 이름(화면): 사용자가 정리한 묶음 그대로 */
+  var MSG_LABEL = ['블로그 / 카페 / 커뮤니티', '카카오톡 / 지인 추천', '쓰레드', '링크드인', '강사 / 교수 / 교육자용(학생에게 추천할 때)', '취업 / 커리어 컨설턴트용', '문자 / 개인 메시지'];
+  function msgText(i) { i = Math.max(0, Math.min(MSG_TPL.length - 1, +i || 0)); return MSG_TPL[i][1].replace(/\{intro\}/g, S.data && S.data.links ? S.data.links.intro : ''); }
   /* 직함(등급, 2026.09.29 사용자 결정): 확정 크레딧 0~2 AI 윤리 캠페인위원 · 3 선임 · 10 책임 · 30 수석.
      2026.09.30 사용자: 승격하면 '윤리'를 빼고 AI 선임위원 · AI 책임위원 · AI 수석위원(명단 · 명함 · 라운지 · 메일 모두). 옛 이름 'AI 윤리 선임위원'도 새 이름으로 읽음 */
   var TIER_WORD = { '선임': 'AI 선임위원', '책임': 'AI 책임위원', '수석': 'AI 수석위원', '상임': '상임위원', '자문': '자문위원' };   /* 1.4.17 상임 100건 · 자문(임원) 300건. 1.5.4(2026.10.04 사용자 '상임위원부터는 앞에 AI가 빠지고 상임위원, 준 임원이기 때문에 진짜 있어 보이게'): 상임위원 · 자문위원에는 'AI' 없음 */
@@ -354,7 +361,7 @@
     var nt = st.next;
     var lastSig = m.lastSignal ? fmtKo(m.lastSignal) + '(' + esc(m.lastKind || '활동') + ')' : '아직 없음';
     var intro = d.links.intro, card = d.links.card, go = d.links.go, experts = d.links.experts || (SITE + '/experts/?ref=' + m.code);
-    var tpl = MSG_TPL[S.kitTab][1].replace(/\{intro\}/g, intro);
+    var tpl = msgText(S.kitTab);
     var payNeeded = d.payinfo.needed && !d.payinfo.registered;
     var payCard = payNeeded ? payinfoFormHTML(d, true) :
       '<div class="lg-card" id="lgPayCard"><h2>' + ic('credit-card') + '정산</h2><div class="lg-pay"><div><span>다음 정산 예정</span><b>' + won(st.nextPay) + '</b><i>' + (st.nextPay > 0 ? fmtKo(st.nextPayDay, true) : '확정 실적이 생기면 표시') + '</i></div><div><span>누적 지급</span><b>' + won(st.totalPaid) + '</b><i>' + (st.lastPaid ? st.lastPaid.count + '건 · 마지막 ' + fmtKo(st.lastPaid.day, true) : '아직 없음') + '</i></div></div>' +
@@ -378,8 +385,11 @@
       '<div class="row"><span class="lab">소개 페이지</span><code>' + esc(short(intro)) + '</code><button type="button" class="btn btn-ghost" data-copy="' + esc(intro) + '">복사</button></div>' +
       '<div class="row"><span class="lab">AIEP 안내 페이지</span><code>' + esc(short(experts)) + '</code><button type="button" class="btn btn-ghost" data-copy="' + esc(experts) + '">복사</button></div>' +
       '<div class="row"><span class="lab">위원 명함 · QR</span><code>명단의 내 명함에서 [명함 이미지 저장]</code><a class="btn btn-primary" href="' + esc(card.replace('#', '?save=1#')) + '" target="_blank" rel="noopener" data-track="open:qr">열기</a></div>' +
-      '<div class="lg-tabs" id="lgKitTabs">' + MSG_TPL.map(function (t, i) { return '<button type="button" class="' + (i === S.kitTab ? 'on' : '') + '" data-tab="' + i + '">' + t[0] + '</button>'; }).join('') + '</div>' +
-      '<div class="lg-msg" id="lgMsg"><button type="button" class="btn btn-ghost" data-copy-msg="1">복사</button>' + esc(tpl) + '</div></div></div>' +
+      '<div class="lg-share"><p class="lg-share-lead"><b>위원님의 작은 소개가 AI 윤리 확산의 시작이 됩니다.</b><br>채널에 맞는 추천 문구를 복사해 편하게 활동해 보세요.</p>' +
+      '<div class="lg-share-row"><label class="lg-share-sel"><span class="sr-only">채널</span><select id="lgKitSel" aria-label="채널 고르기">' + MSG_LABEL.map(function (t, i) { return '<option value="' + i + '"' + (i === S.kitTab ? ' selected' : '') + '>' + esc(t) + '</option>'; }).join('') + '</select></label>' +
+      '<button type="button" class="btn btn-primary" data-copy-msg="1">' + ic('copy') + '추천 문구 복사</button></div>' +
+      '<button type="button" class="lg-link lg-share-peek" data-act="msg-peek" aria-expanded="false">문구 미리 보기</button>' +
+      '<div class="lg-msg" id="lgMsg" hidden>' + esc(tpl) + '</div></div></div></div>' +
       '<div class="lg-two"><div class="lg-card"><h2>' + ic('clipboard-list') + '실적 내역<span class="sub">결제 시 메일 알림 · ' + ruleShort() + '</span></h2>' +
       (d.credits.length ? '<table class="lg-tbl"><thead><tr><th>결제일</th><th>상태</th><th class="num">활동지원금</th><th class="num">정산</th></tr></thead><tbody>' + d.credits.map(creditRow).join('') + '</tbody></table>' : '<p class="lg-empty" style="text-align:center;padding:26px 0">아직 실적이 없습니다. 명함이나 추천 링크를 공유해 보세요. 첫 결제가 들어오면 이메일로 알려 드립니다.</p>') + '</div>' + payCard + '</div>' +
       '<div class="lg-two"><div class="lg-card"><h2>' + ic('external-link') + '활동 공유 <span style="font-size:12px;color:var(--gray-500);font-weight:600">(선택)</span></h2><p>AI 윤리와 관련해 올리신 글 · 영상 링크를 남겨 주세요. 위원회 소식에 인용될 수 있습니다.</p><form class="lg-share-in" id="lgShare"><input class="lg-input" id="lgShareUrl" type="url" placeholder="https://" maxlength="300"><button type="submit" class="btn btn-ghost btn-sm">등록</button></form></div>' +
@@ -398,6 +408,7 @@
     });
     $('lgLetter').addEventListener('change', function () { var on = this.checked; call('me.prefs', { letter: on }).then(function () { toast(on ? '리포트 메일을 받습니다' : '리포트 메일을 받지 않습니다'); }, function (er) { toast(er.message, 'danger'); }); });
     var pf = $('lgPayFormEl'); if (pf) bindPayForm(pf);
+    var ks = $('lgKitSel'); if (ks) ks.addEventListener('change', function () { S.kitTab = +this.value || 0; var bx = $('lgMsg'); if (bx && !bx.hasAttribute('hidden')) bx.textContent = msgText(S.kitTab); });   /* 1.5.4 채널 고르기 */
   }
   /* 오늘의 한 걸음(2026.10.03 사용자 '활동을 자연스럽게 유도하는 그런 게, 기분 좋게'): 위원 상황에 맞는 제안 하나 + 바로 하기 버튼(확산 도구와 같은 복사 · 사용 기록).
      최근 추천 · 다음 직함이 가까움 · 첫 추천 전이면 그 제안을 먼저, 아니면 날마다 바뀌는 제안(같은 날은 같은 것). [다른 제안]으로 넘겨 봄. 휴면 중이면 복귀 안내 */
@@ -459,9 +470,9 @@
     if (b.hasAttribute('data-tl')) { var open = !b.classList.contains('is-open'); Array.prototype.forEach.call(document.querySelectorAll('.lg-tl.is-open'), function (x) { if (x !== b) { x.classList.remove('is-open'); x.setAttribute('aria-expanded', 'false'); } }); b.classList.toggle('is-open', open); b.setAttribute('aria-expanded', open ? 'true' : 'false'); return; }
     if (b.hasAttribute('data-track')) { track(b.getAttribute('data-track')); return; }
     if (b.hasAttribute('data-copy')) { var u = b.getAttribute('data-copy'); copyText(u, b); if (linkKind(u)) track('copy:' + linkKind(u)); return; }
-    if (b.hasAttribute('data-copy-msg')) { copyText(MSG_TPL[S.kitTab][1].replace(/\{intro\}/g, S.data.links.intro), b); track('copy:msg:' + MSG_TPL[S.kitTab][0]); return; }
-    if (b.hasAttribute('data-copy-tpl')) { var ti = +b.getAttribute('data-copy-tpl') || 0; copyText(MSG_TPL[ti][1].replace(/\{intro\}/g, S.data.links.intro), b); track('copy:msg:' + MSG_TPL[ti][0]); return; }
-    if (b.hasAttribute('data-tab')) { S.kitTab = +b.getAttribute('data-tab'); var tabs = $('lgKitTabs'); Array.prototype.forEach.call(tabs.children, function (c) { c.classList.toggle('on', +c.getAttribute('data-tab') === S.kitTab); }); var box = $('lgMsg'); box.innerHTML = '<button type="button" class="btn btn-ghost" data-copy-msg="1">복사</button>' + esc(MSG_TPL[S.kitTab][1].replace(/\{intro\}/g, S.data.links.intro)); return; }
+    if (b.hasAttribute('data-copy-msg')) { var sel = $('lgKitSel'); if (sel) S.kitTab = +sel.value || 0; copyText(msgText(S.kitTab), b); track('copy:msg:' + MSG_TPL[S.kitTab][0]); return; }
+    if (b.hasAttribute('data-copy-tpl')) { var ti = +b.getAttribute('data-copy-tpl') || 0; copyText(msgText(ti), b); track('copy:msg:' + MSG_TPL[ti][0]); return; }
+    if (b.getAttribute('data-act') === 'msg-peek') { var box0 = $('lgMsg'); if (!box0) return; var open = box0.hasAttribute('hidden'); var sel0 = $('lgKitSel'); if (sel0) S.kitTab = +sel0.value || 0; box0.textContent = msgText(S.kitTab); if (open) box0.removeAttribute('hidden'); else box0.setAttribute('hidden', ''); b.textContent = open ? '문구 접기' : '문구 미리 보기'; b.setAttribute('aria-expanded', open ? 'true' : 'false'); return; }
     var act = b.getAttribute('data-act');
     if (act === 'nudge-next') { S.nudgeI = (S.nudgeI || 0) + 1; var nb = $('lgNudge'); if (nb) { nb.outerHTML = nudgeHTML(S.data); var nb2 = $('lgNudge'); if (nb2) nb2.classList.add('is-new'); } return; }
     if (act === 'cert') { busy(b, true); call('me.cert').then(function (j) { busy(b, false); toast(j.message || '발급 요청을 받았습니다', 'ok'); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); }
