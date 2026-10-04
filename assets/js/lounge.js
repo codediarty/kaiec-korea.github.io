@@ -1063,7 +1063,7 @@
       moneyTile('활동 위원 1인당 매출', n.perActive, '', '활동 중 ' + num(b.active) + '명 기준 · 이번 달', '', '이번 달 매출 ÷ 활동 중 위원 수') +
       kpiTile('실적 있는 위원 · 30일', kc.m30, '명', '<span class="ad-delta ' + (pct(kc.m30, kc.of) >= 30 ? 'up' : 'flat') + '">' + pct(kc.m30, kc.of) + '% <small>' + num(kc.of) + '명 중</small></span>', '이번 달 실적 위원 ' + num(n.credMembers) + '명 · 지난달 ' + num(pv.credMembers || 0) + '명', '', '최근 30일 안에 추천 결제가 1건 이상 있는 위원(종료 제외)') +
       moneyTile('추천 1건당 위원회 순수익', b.unitNet, '', '89,100원 결제 − 지원금 ' + won(a.settings.PAY_BASE || 30000) + ' − 세액', '', '위원 코드 할인가 89,100원에서 활동지원금과 세액을 뺀 금액(캠페인위원 기준)') +
-      moneyTile(b.total.months + '개월 누계 매출', b.total.revenue, '', '순수익 ' + won(b.total.net) + ' · 지원금 ' + won(b.total.support), '', '최근 ' + b.total.months + '개월(이번 달 포함)') +
+      moneyTile('매출', b.total.revenue, '', '순수익 ' + won(b.total.net) + ' · 지원금 ' + won(b.total.support), '', (b.total.from ? String(b.total.from).replace(/-/g, '.') + '부터 ' : '') + '지금까지 누적(기간 제한 없음) · ' + (b.salesReady ? '양성과정 결제 전체 ' + num(b.total.n) + '건(추천 ' + num(b.total.refN) + '건, 추천이 아닌 99,000원 결제 포함, 환불 제외)' : '추천 결제 ' + num(b.total.n) + '건(결제 장부가 다 차면 전체 양성과정 결제로)') + '. 순수익 = 이 매출 − 활동지원금 − 세액(결제 수수료 전)') +
       '</div>';
     var max = Math.max(1, Math.max.apply(null, b.revenue));
     var rows = b.months.map(function (m, i) { var isNow = i === b.months.length - 1; return '<tr' + (isNow ? ' class="now"' : '') + '><td>' + esc(m.replace('-', '.')) + (isNow ? ' <small class="lg-muted">진행 중</small>' : '') + '</td><td><div class="ad-cell"><i style="width:' + (100 * b.revenue[i] / max).toFixed(1) + '%"></i><b>' + won(b.revenue[i]) + '</b></div></td><td class="num">' + num(b.salesReady ? b.allN[i] : b.refN[i]) + (b.salesReady ? ' <small class="lg-muted">(추천 ' + num(b.refN[i]) + ')</small>' : '') + '</td><td class="num">' + won(b.support[i]) + '</td><td class="num">' + won(b.tax[i]) + '</td><td><div class="ad-cell teal"><i style="width:' + (100 * Math.max(0, b.net[i]) / max).toFixed(1) + '%"></i><b>' + won(b.net[i]) + '</b></div></td><td class="num">' + num(b.credMembers[i]) + '</td></tr>'; }).join('');
@@ -1080,9 +1080,9 @@
     var names = {}; (a.roster || []).forEach(function (r) { names[r.code] = r.name; });
     var nextD = dateOf(au.nextAt), nextTxt = nextD ? (nextD.getMonth() + 1) + '.' + pad2(nextD.getDate()) + '(' + DAYS[nextD.getDay()] + ') ' + String(au.nextAt).slice(11, 16) : au.nextAt;
     var status = '<div class="ad-auto-status">' +
-      (au.on ? '<span>' + ic('clock') + '다음 발송 <b>' + esc(nextTxt) + '</b>' + (au.ranToday ? ' <small>(오늘은 보냈음)</small>' : '') + '</span>' : '<span class="off">' + ic('x') + '<b>꺼져 있음</b> · 켜면 다음 평일 ' + au.hour + '시부터</span>') +
+      (au.on ? '<span>' + ic('clock') + '다음 발송 <b>' + esc(nextTxt) + '</b>' + (au.ranToday ? ' <small>(오늘은 보냈음)</small>' : '') + '</span>' : '<span class="off">' + ic('x') + '<b>꺼져 있음</b> · 켜면 ' + (au.anyday ? '내일' : '다음 평일') + ' ' + au.hour + '시부터</span>') +
       '<span>오늘 <b>' + num(au.todayN) + '통</b> · 이번 주 <b>' + num(au.weekN) + '통</b></span>' +
-      '<span title="설정 탭 AUTO_NUDGE_MAX · AUTO_NUDGE_GAP · AUTO_NUDGE_HOUR · AUTO_NUDGE_MIN_DAYS">하루 최대 ' + num(au.max) + '통 · 한 위원에게 ' + au.gap + '일에 한 통 · 평일 ' + au.hour + '시(주말 · 공휴일 제외) · 위촉 ' + au.minDays + '일째부터</span>' +
+      '<span title="설정 탭 AUTO_NUDGE_MAX · AUTO_NUDGE_GAP · AUTO_NUDGE_HOUR · AUTO_NUDGE_ANYDAY · AUTO_NUDGE_MIN_DAYS">하루 최대 ' + num(au.max) + '통 · 한 위원에게 ' + au.gap + '일에 한 통 · ' + (au.anyday ? '매일 ' + au.hour + '시(주말 · 공휴일 포함)' : '평일 ' + au.hour + '시(주말 · 공휴일 제외)') + ' · 위촉 ' + au.minDays + '일째부터</span>' +
       (au.paused ? '<span class="warn">' + ic('alert-triangle') + '메일 대기열이 멈춰 있어 자동 독려도 쉽니다</span>' : '') +
       (au.holiday ? '<span class="lg-muted">오늘은 ' + esc(au.holiday) + '이라 보내지 않음</span>' : '') +
       (au.last && au.last.at ? '<span class="lg-muted" title="' + esc(au.last.msg || '') + '">마지막 실행 ' + esc(String(au.last.at).slice(5, 16)) + ' · ' + num(au.last.n) + '통' + (au.last.left ? ' · 내일로 ' + num(au.last.left) + '명' : '') + '</span>' : '') +
@@ -1298,7 +1298,7 @@
     if (act === 'autoon') { busy(b, true); call('admin.auto', { act: 'toggle', on: 1 }).then(function (j) { toast(j.result || '켰습니다', 'ok'); loadAdmin(true); }, function (er) { busy(b, false); toast(er.message, 'danger'); }); return; }
     if (act === 'autorun') {
       var au0 = S.admin.auto || {}, nPlan = Math.min(Number(au0.plannedN) || 0, Number(au0.max) || 0);
-      confirmBox('자동 독려를 지금 보낼까요?', '오늘 예정 위원 ' + nPlan + '명에게 각자에게 맞는 편을 바로 보냅니다(하루 최대 ' + num(au0.max) + '통, 지메일 잔여 안). 10시 정기 발송은 오늘 이미 한 것으로 봅니다.', nPlan + '명에게 보내기').then(function (ok) {
+      confirmBox('자동 독려를 지금 보낼까요?', '오늘 예정 위원 ' + nPlan + '명에게 각자에게 맞는 편을 바로 보냅니다(하루 최대 ' + num(au0.max) + '통, 지메일 잔여 안). ' + num(au0.hour || 10) + '시 정기 발송은 오늘 이미 한 것으로 봅니다.', nPlan + '명에게 보내기').then(function (ok) {
         if (!ok) return; busy(b, true); call('admin.auto', { act: 'run' }).then(function (j) { toast(j.result || '보냈습니다', 'ok'); loadAdmin(true); }, function (er) { busy(b, false); toast(er.message, 'danger'); });
       });
       return;
