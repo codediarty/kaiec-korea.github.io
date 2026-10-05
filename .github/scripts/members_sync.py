@@ -5,7 +5,10 @@ kaiec.kr/join/ 에서 1분 등록으로 위촉된 위원을 위원 활동 시스
   - assets/auto/members.js            : window.KAIEC_AUTO_MEMBERS (위원 명단 · 명함이 합쳐 그림)
   - assets/img/members/auto-코드.jpg   : 명함 사진 480 · -240.jpg (아직 사이트에 없는 사진만 서버가 함께 보냄)
   - m/코드/index.html                  : 위원별 공유 주소(미리보기 · /members/#코드 로 넘김). 명단에서 빠지면 /members/ 로 넘기는 빈 쪽
-을 고칩니다. 파일은 지우지 않습니다(운영자 컴퓨터 저장소와 합칠 때 지우기가 막힘). 명단에서 빠진 사진은 tools/collect_site.py 가 배포에서 뺍니다.
+을 고칩니다. 2026.10.05(1.8.0)부터 함께
+  - assets/auto/status.json           : 위원 상태(GET ?action=status 에서 시각만 뺀 것). skkc.co.kr 주문서 '추천 윤리위원' 카드가 끝난 · 숨긴 위원을 거름
+  - assets/auto/partners.json         : 공식파트너 확인 데이터(GET ?action=partners.export). 확인 페이지 /partner/verify/ · 배지 · 명단의 공식파트너 목록
+파일은 지우지 않습니다(운영자 컴퓨터 저장소와 합칠 때 지우기가 막힘). 명단에서 빠진 사진은 tools/collect_site.py 가 배포에서 뺍니다.
 바뀐 게 있으면 GITHUB_OUTPUT 에 changed=true. 서버 응답이 이상하면(갑자기 절반 넘게 줄어듦 등) 아무것도 바꾸지 않습니다."""
 import base64, io, json, os, re, sys, time, urllib.request
 
@@ -30,11 +33,11 @@ def out(k, v):
             fp.write(f"{k}={v}\n")
 
 
-def fetch():
+def fetch(action="members.export"):
     last = None
     for k in range(3):
         try:
-            req = urllib.request.Request(API + "?action=members.export&t=" + str(int(time.time())), headers={"User-Agent": "kaiec-members-sync"})
+            req = urllib.request.Request(API + "?action=" + action + "&t=" + str(int(time.time())), headers={"User-Agent": "kaiec-members-sync"})
             with urllib.request.urlopen(req, timeout=90) as r:
                 return json.loads(r.read().decode("utf-8"))
         except Exception as e:   # 앱스 스크립트가 잠깐 늦을 때
@@ -124,6 +127,45 @@ GONE_PAGE = ('<!DOCTYPE html>\n<html lang="ko"><head><meta charset="UTF-8">\n<me
              '<script>location.replace("/members/");</script>\n</head><body><p><a href="/members/">위원 명단으로 이동</a></p></body></html>\n')
 
 
+PARTNER_ID_RE = re.compile(r"^KP[0-9A-Z]{6,10}$")
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def extras():
+    """상태 · 공식파트너 파일(받지 못하면 그 파일만 그대로 둠). 시각(at)은 빼고 써서 내용이 같으면 커밋하지 않음"""
+    try:
+        st = fetch("status")
+        if isinstance(st, dict) and isinstance(st.get("m"), dict):
+            m = {}
+            for c, v in st["m"].items():
+                if CODE_RE.match(str(c)) and isinstance(v, dict):
+                    e = {"t": str(v.get("t", ""))[:20], "h": 1 if v.get("h") else 0}
+                    if v.get("e"):
+                        e["e"] = 1
+                    m[c] = e
+            ended = sorted({str(c) for c in (st.get("ended") or []) if CODE_RE.match(str(c))})
+            write_if(os.path.join(ROOT, "assets", "auto", "status.json"), json.dumps({"v": 1, "m": m, "ended": ended}, ensure_ascii=False, separators=(",", ":"), sort_keys=True) + "\n")
+    except SystemExit as e:
+        print("! 상태 파일 건너뜀:", e)
+    try:
+        pj = fetch("partners.export")
+        if isinstance(pj, dict) and isinstance(pj.get("partners"), list):
+            out = []
+            for p in pj["partners"]:
+                if not isinstance(p, dict) or not PARTNER_ID_RE.match(str(p.get("id", ""))):
+                    continue
+                site = str(p.get("site", ""))
+                if site and not re.match(r"^https?://[^\s<>\"'`]{3,200}$", site):
+                    site = ""
+                name = re.sub(r"[<>&\"'`\\]", "", str(p.get("name", ""))).strip()[:60]
+                out.append({"id": p["id"], "ok": bool(p.get("ok")), "st": str(p.get("st", ""))[:6], "name": name, "site": site,
+                            "since": str(p.get("since", "")) if DATE_RE.match(str(p.get("since", ""))) else "",
+                            "until": str(p.get("until", "")) if DATE_RE.match(str(p.get("until", ""))) else "", "list": bool(p.get("list"))})
+            write_if(os.path.join(ROOT, "assets", "auto", "partners.json"), json.dumps({"v": 1, "partners": out}, ensure_ascii=False, separators=(",", ":")) + "\n")
+    except SystemExit as e:
+        print("! 공식파트너 파일 건너뜀:", e)
+
+
 def main():
     j = fetch()
     if not isinstance(j, dict) or j.get("v") != 1 or not isinstance(j.get("members"), list):
@@ -190,6 +232,7 @@ def main():
             path = os.path.join(ROOT, "m", c.lower(), "index.html")
             if os.path.isfile(path) and 'name="kaiec-auto"' in open(path, encoding="utf-8").read():
                 write_if(path, GONE_PAGE)
+    extras()
     print(f"위원 {len(ms)}명 · 바뀐 파일 {len(changed)}개")
     for c in changed[:50]:
         print("  ", c)
