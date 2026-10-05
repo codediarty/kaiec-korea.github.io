@@ -1,0 +1,45 @@
+# kaiec.kr 1분 등록(2026.10.05): 새로 위촉된 위원을 위원 활동 시스템에서 받아 명단 파일 · 사진 · 공유 주소를 저장소에 올리고,
+# 바뀐 게 있으면 '사이트 배포 (kaiec.kr)' 작업을 불러 배포합니다(자동 작업이 올린 커밋은 배포를 스스로 깨우지 않음).
+name: 위원 명단 자동 반영
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: members-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: 저장소 받기
+        uses: actions/checkout@v4
+      - name: 새 위원 받기
+        id: sync
+        run: python3 .github/scripts/members_sync.py
+      - name: 저장소에 올리기
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/auto assets/img/members m
+          git commit -m "사이트 업데이트"
+          for i in 1 2 3; do
+            if git push; then break; fi
+            git pull --rebase origin main
+          done
+      - name: 사이트 배포 부르기
+        if: steps.sync.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -sS -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/pages.yml/dispatches" -d '{"ref":"main"}'

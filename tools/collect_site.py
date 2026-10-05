@@ -28,12 +28,26 @@ PAGE_DIR = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 ROOT_HTML = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*\.html$")
 JUNK = {".DS_Store", "Thumbs.db", "desktop.ini"}
 ALLOWED_EXT = {".html", ".css", ".js", ".jpg", ".jpeg", ".png", ".svg", ".webp", ".gif", ".ico",
-               ".woff", ".woff2", ".ttf", ".otf", ".xml", ".txt", ".json", ".webmanifest", ".pdf", ".mp4", ""}
+               ".woff", ".woff2", ".ttf", ".otf", ".xml", ".txt", ".json", ".webmanifest", ".pdf", ".mp4", ".bin", ""}
+# .bin: 위원 등록 사진 자동 맞춤의 얼굴 · 배경 모델 가중치(assets/vendor/face/, 2026.10.05)
 # .mp4: AIEP 영상관 오리지널(assets/vid/, 2026.10.02 5판). 파일마다 20MB 아래로 만듦(저장소 · Pages 용량)
+
+
+def auto_photos_in_use():
+    """1분 등록 위원 사진(assets/img/members/auto-*.jpg) 가운데 지금 명단(assets/auto/members.js)에 있는 것만. 명단에서 빠진(숨김 · 해제) 위원 사진은 배포하지 않음"""
+    keep = set()
+    try:
+        t = open(os.path.join(ROOT, "assets", "auto", "members.js"), encoding="utf-8").read()
+        for f in re.findall(r'"photo":"(auto-[a-z]{2,4}\d{4}(?:-\d{1,2})?\.jpg)"', t):
+            keep.add(f); keep.add(f[:-4] + "-240.jpg")
+    except Exception:
+        pass
+    return keep
 
 
 def collect(out):
     files = []
+    auto_keep = auto_photos_in_use()
     # 1) 페이지(HTML)
     for dirpath, dirnames, filenames in os.walk(ROOT):
         rel = os.path.relpath(dirpath, ROOT)
@@ -53,6 +67,8 @@ def collect(out):
         dirnames[:] = [d for d in dirnames if d != "__pycache__" and not d.startswith(".")]
         for fn in filenames:
             if fn in JUNK or fn.startswith("."):
+                continue
+            if fn.startswith("auto-") and os.path.basename(dirpath) == "members" and fn not in auto_keep:
                 continue
             files.append(os.path.relpath(os.path.join(dirpath, fn), ROOT))
     # 3) 루트 파일
