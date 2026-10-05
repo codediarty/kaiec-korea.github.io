@@ -5,6 +5,9 @@ name: 위원 명단 자동 반영
 on:
   schedule:
     - cron: "*/10 * * * *"
+  # 사이트를 올릴 때도 한 번(GitHub 예약 실행은 늦거나 건너뛸 수 있어서). 자동 작업이 올린 커밋은 다시 깨우지 않음
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
