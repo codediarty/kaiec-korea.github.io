@@ -34,7 +34,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=38770c5572">
+<link rel="stylesheet" href="/assets/css/style.css?v=7116d7178d">
 <script>document.documentElement.className+=" js";</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -108,18 +108,19 @@
           <a class="btn btn-light" href="#what">AI윤리전문가란?</a>
         </div>
         </div>
+        
         <div class="xp-visual" aria-hidden="true">
-          <div class="xp-cv">
-            <div class="xp-cv-top"><span>RESUME</span><i></i><i></i><i></i></div>
-            <div class="xp-cv-who"><span class="xp-cv-av"></span><span class="xp-cv-bars"><i></i><i></i></span></div>
-            <div class="xp-cv-sec">교육 · 연수</div>
-            <div class="xp-cv-row"><b>2024</b><span class="xp-cv-bars"><i></i><i></i></span></div>
-            <div class="xp-cv-row"><b>2025</b><span class="xp-cv-bars"><i></i><i></i></span></div>
-            <div class="xp-cv-row xp-cv-hl"><b>2026</b><span><strong>AI Ethics Professional (AIEP)</strong><em>한국AI윤리위원회 공식 등록 · No. KAIEC-E-2026-0001</em></span><i class="xp-cv-new">NEW</i></div>
-            <div class="xp-cv-sec">경력</div>
-            <div class="xp-cv-row"><b></b><span class="xp-cv-bars"><i></i><i></i></span></div>
+          <div class="fdoc xp-doc">
+            <b class="fdoc-t fdoc-t--sp">이력서</b>
+            <div class="fdoc-rule"></div>
+            <div class="xp-doc-who"><span>성명</span><b>홍길동</b><span>영문</span><b lang="en">HONG GIL-DONG</b></div>
+            <div class="fdoc-sec">교육 · 연수</div>
+            <div class="fdoc-row is-hl"><span>2026.10</span><p><span lang="en">AI Ethics Professional (AIEP)</span><small>한국AI윤리위원회 공식 등록<br>No. KAIEC-E-2026-0001</small></p></div>
+            <div class="fdoc-row"><span>2025.07</span><p>데이터 분석 실무 과정<small>○○교육원</small></p></div>
+            <div class="fdoc-sec">경력</div>
+            <div class="fdoc-row"><span>2021.03</span><p>○○주식회사 전략기획팀<small>2021.03 ~ 현재</small></p></div>
           </div>
-          <div class="xp-cv-note"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14" /> <path d="M12 5v14" /></svg>이력서에 더할 한 줄</div>
+          <p class="fdoc-cap">이력서 교육 · 연수 칸 기재 예시</p>
         </div>
       </div>
     </section>
@@ -158,7 +159,6 @@
              한국AI윤리위원회는 이 역량을 갖춘 사람을 <strong>AI윤리전문가(AIEP)</strong>로 공식 등록합니다.</p>
         </div>
         <div class="aw-def reveal">
-          <div class="aw-seal" aria-hidden="true"><span class="aw-seal-in"><b>AIEP</b><small>KAIEC</small></span></div>
           <div class="aw-def-b">
             <span class="aw-def-k">AI윤리전문가가 갖춘 역량</span>
             <p class="aw-quote">“AI의 결과를 이해하고 검증하며, 책임 있게 활용하는 판단 역량”</p>
@@ -415,8 +415,8 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec",window.KAIEC_GA=["G-YDPQTQ8FR2","2026-10-12"];</script>
-  <script src="/assets/js/main.js?v=38770c5572"></script>
-  <script src="/assets/js/experts-data.js?v=38770c5572"></script>
+  <script src="/assets/js/main.js?v=7116d7178d"></script>
+  <script src="/assets/js/experts-data.js?v=7116d7178d"></script>
   <script>(function(){var t=window.KAIEC_EXPERTS||[],o=document.getElementById("expertGrid"),s=document.getElementById("expertEmpty"),d=document.getElementById("expertCount"),i=document.getElementById("regQ"),c=document.getElementById("regN"),m=document.getElementById("regBtn"),g=document.getElementById("regLookup"),p=document.getElementById("regSample"),u=document.getElementById("regHint");function r(e){return String(e||"").replace(/[&<>"]/g,function(n){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[n]})}if(!t.length){let e=function(){var n=i.value.trim();c.textContent=n?"일치하는 등록자 없음":"",n?u.textContent="성명과 이수번호를 다시 확인해 주세요.":u.textContent="이수 확정과 함께 등록되어 이 화면에서 바로 검색됩니다"};var h=e;s.hidden=!1,i.addEventListener("input",e),m.addEventListener("click",e);return}d.textContent="(등록 "+t.length+"명)",p.hidden=!0,g.classList.add("reg-lookup--single"),u.textContent="현재 "+t.length+"명 등록 · 이수 즉시 자동 등록";function f(e){var n=e.photo?'<div class="member-avatar member-avatar--photo"><img src="/assets/img/experts/'+r(e.photo)+'" alt="'+r(e.name)+'" loading="lazy"></div>':'<div class="member-avatar">'+r((e.name||"?").replace(/[^가-힣A-Za-z]/g,"").slice(0,1)||"·")+"</div>",a=(e.tags||[]).map(function(E){return'<span class="chip">'+r(E)+"</span>"}).join(""),l=e.expert?"KAIEC 공식 AI윤리전문가(AIEP) · 전문위원":"KAIEC 공식 AI윤리전문가(AIEP)";return'<div class="member expert">'+n+'<div class="member-role">'+l+'</div><div class="member-name">'+r(e.name)+"</div>"+(e.no?'<div class="expert-no">이수번호 '+r(e.no)+"</div>":"")+'<div class="member-field">'+r(e.field||"")+(e.org?"<br>"+r(e.org):"")+"</div>"+(a?'<div class="expert-tags">'+a+"</div>":"")+(e.since?'<div class="expert-since">'+r(e.since)+" 등록</div>":"")+"</div>"}function v(e){var n=(e||"").replace(/\s+/g,"").toLowerCase(),a=n?t.filter(function(l){return((l.name||"")+(l.no||"")).replace(/\s+/g,"").toLowerCase().indexOf(n)>=0}):t;o.innerHTML=a.length?a.map(f).join(""):'<p class="ex-empty" style="grid-column:1/-1;text-align:center;color:var(--gray-500)">일치하는 등록자가 없습니다.</p>',c.textContent=n?a.length+"명":""}v(""),o.hidden=!1,i.addEventListener("input",function(){v(i.value)}),m.addEventListener("click",function(){v(i.value)})})(),(function(){var t=document.querySelector(".xp-go-wrap");if(!t||!window.matchMedia||!window.matchMedia("(hover: none)").matches)return;var o=0;function s(){o||(o=1,t.classList.add("peek"),setTimeout(function(){t.classList.remove("peek")},4600))}if("IntersectionObserver"in window){var d=new IntersectionObserver(function(i){i.forEach(function(c){c.isIntersecting&&(setTimeout(s,900),d.disconnect())})},{threshold:.9});d.observe(t)}else setTimeout(s,1500);t.addEventListener("touchstart",function(){t.classList.remove("peek")},{passive:!0})})();</script>
 </body>
 </html>
