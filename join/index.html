@@ -34,7 +34,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="/assets/css/style.css?v=31e7d4f965">
+<link rel="stylesheet" href="/assets/css/style.css?v=aab6a59304">
 <script>document.documentElement.className+=" js";</script>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
@@ -57,7 +57,7 @@
     {"@type": "Question", "name": "지원서만 내고 나왔는데 어떻게 이어서 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "같은 기기에서 이 페이지를 다시 열면 내 명함 만들기부터 이어집니다. 다른 기기라면 지원하신 이메일로 보내 드리는 위원 등록 개인 링크를 누르시면 됩니다."}}
   ]}
 </script>
-<link rel="stylesheet" href="/assets/css/join.css?v=31e7d4f965">
+<link rel="stylesheet" href="/assets/css/join.css?v=aab6a59304">
 </head>
 <body>
   <header class="site-header">
@@ -149,7 +149,11 @@
           <a class="btn btn-ghost btn-sm" id="njAgainCard" href="/members/">내 명함 보기</a>
         </div>
         <div class="nj-banner" id="njResume" hidden>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" /></svg><span><b>지원서에 이어서 내 명함을 만들고 있어요.</b> 다른 분이 새로 지원하시려면 <a href="#apply" id="njNew">여기</a>를 눌러 주세요.</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" /></svg><span><b>지원서에 이어서 내 명함을 만들고 있어요.</b> 다른 분이 새로 지원하시려면 <a href="#apply" id="njNew">처음부터 새로 지원</a>을 눌러 주세요.</span>
+        </div>
+        <div class="nj-banner" id="njOffer" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /> <path d="M3 3v5h5" /> <path d="M12 7v5l4 2" /></svg><span><b>이 기기에서 작성하던 등록이 있어요.</b> 새로 지원하시면 아래 지원서를 그대로 쓰시면 됩니다.</span>
+          <button type="button" class="btn btn-ghost btn-sm" id="njCont">이어서 하기</button>
         </div>
         <ol class="nj-steps" id="njSteps" aria-label="등록 단계">
           <li class="is-on"><span>지원서<em class="nj-time">30초</em><small>기본 정보</small></span></li>
@@ -217,19 +221,19 @@
         </form>
 
         <div class="nj-step-wrap" id="njStep2" hidden>
+          <button type="button" class="nj-step-back" id="njBack"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></svg>지원서로 돌아가기</button>
           <div class="nj-two">
             <div class="nj-form">
               <div class="gform-card" id="njPhotoCard">
                 <div class="gform-sec">프로필 사진 <span class="nj-rec">권장</span><button type="button" class="nj-guide-link" id="njGuide">사진 등록 기준</button></div>
                 <div id="njPhotoTool">
                   <div class="nj-drop" id="njDrop">
-                    <button type="button" class="nj-drop-btn" id="njPick"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /> <circle cx="12" cy="13" r="3" /></svg><b>사진 고르기</b><small>휴대폰 앨범 · 카메라 · 컴퓨터 사진</small></button>
-                    <ul class="nj-drop-list">
-                      <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2" /> <path d="M17 3h2a2 2 0 0 1 2 2v2" /> <path d="M21 17v2a2 2 0 0 1-2 2h-2" /> <path d="M7 21H5a2 2 0 0 1-2-2v-2" /> <path d="M8 14s1.5 2 4 2 4-2 4-2" /> <path d="M9 9h.01" /> <path d="M15 9h.01" /></svg>얼굴을 찾아 <b>가운데 · 수평</b>으로</li>
-                      <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /> <path d="M20 2v4" /> <path d="M22 4h-4" /> <circle cx="4" cy="20" r="2" /></svg><b>배경 정리</b> · 밝기 · 색 보정</li>
-                      <li><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" /></svg>보정은 <b>이 기기 안에서만</b></li>
-                    </ul>
-                    <p class="nj-photo-tip"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /></svg>얼굴이 크게 나온 정면 사진(상반신)이 명함에서 가장 또렷합니다</p>
+                    <button type="button" class="nj-drop-btn" id="njPick"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /> <circle cx="12" cy="13" r="3" /></svg><b>내 사진 넣기</b><small>휴대폰 앨범 · 카메라 · 컴퓨터 사진</small></button>
+                    <ol class="nj-drop-steps">
+                      <li><b>1</b><span>정면 사진 고르기</span></li>
+                      <li><b>2</b><span>가운데 · 밝기 자동 맞춤</span></li>
+                      <li><b>3</b><span>명함에 바로 들어감</span></li>
+                    </ol>
                   </div>
                   <input type="file" id="njFile" accept="image/*" hidden>
                   <div class="nj-crop" id="njCrop" hidden>
@@ -473,11 +477,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec",window.KAIEC_GA=["G-YDPQTQ8FR2","2026-10-12"];</script>
-  <script src="/assets/js/main.js?v=31e7d4f965"></script>
+  <script src="/assets/js/main.js?v=aab6a59304"></script>
   <script>window.KAIEC_JOIN={hook:"https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec",gf:"https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/formResponse",ge:{name:"entry.829971654",phone:"entry.212931901",email:"entry.302845370",role:"entry.1714421742",intro:"entry.2002407835",agree:"entry.346635098"},gr:{"AI 윤리 캠페인위원":"AI 윤리 캠페인위원",운영위원:"운영위원 (사업기획·대외협력)","AI 윤리 교육위원":"전문위원 (교육강사)",공식파트너:"제휴 파트너 신청"},ga:"동의합니다."};</script>
-  <script src="/assets/js/qrcode.min.js?v=31e7d4f965"></script>
-  <script src="/assets/js/photo-fit.js?v=31e7d4f965"></script>
-  <script src="/assets/js/photo-guide.js?v=31e7d4f965"></script>
-  <script src="/assets/js/join.js?v=31e7d4f965"></script>
+  <script src="/assets/js/qrcode.min.js?v=aab6a59304"></script>
+  <script src="/assets/js/photo-fit.js?v=aab6a59304"></script>
+  <script src="/assets/js/photo-guide.js?v=aab6a59304"></script>
+  <script src="/assets/js/join.js?v=aab6a59304"></script>
 </body>
 </html>
