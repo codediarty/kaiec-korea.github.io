@@ -2,24 +2,28 @@ User-agent: *
 Allow: /
 Disallow: /assets/docs/
 Disallow: /assets/vid/
+Disallow: /assets/cert/
 
 # 네이버 검색로봇
 User-agent: Yeti
 Allow: /
 Disallow: /assets/docs/
 Disallow: /assets/vid/
+Disallow: /assets/cert/
 
 # 구글 검색로봇
 User-agent: Googlebot
 Allow: /
 Disallow: /assets/docs/
 Disallow: /assets/vid/
+Disallow: /assets/cert/
 
 # 다음(카카오) 검색로봇
 User-agent: daum
 Allow: /
 Disallow: /assets/docs/
 Disallow: /assets/vid/
+Disallow: /assets/cert/
 
 # 사이트 통째 복사 도구 · AI 학습용 수집 차단(2026.10.04). 검색 엔진(네이버 · 구글 · 다음 · 빙), AI 검색 안내, 사람이 AI 에게 시켜 여는 것은 그대로 허용
 User-agent: GPTBot
