@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="/assets/css/style.css?v=818ff604da">
+<link rel="stylesheet" href="/assets/css/style.css?v=4459661caf">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap" media="print" id="gfCss">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Caveat:wght@600&family=Noto+Serif+KR:wght@600;700;900&display=swap"></noscript>
 <script>document.documentElement.className+=" js",(function(e){if(!e)return;function n(){e.media="all"}e.sheet?n():e.addEventListener("load",n)})(document.getElementById("gfCss"));</script>
@@ -45,7 +45,7 @@
 {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
     {"@type": "Question", "name": "위촉은 언제 이루어지나요?", "acceptedAnswer": {"@type": "Answer", "text": "지원서 제출과 명함 등록을 마치면 즉시 위촉되며, 위원 코드와 디지털 명함이 발급됩니다. 공식 위원 명단에는 30분 안에 게재되고, 위촉 안내 메일과 활동 매뉴얼이 함께 발송됩니다."}},
     {"@type": "Question", "name": "전공이나 경력이 없어도 참여할 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "AI 윤리 캠페인위원은 전공 · 경력 · 나이와 관계없이 참여할 수 있습니다. AI윤리전문가(AIEP) 이수자는 AI 윤리 교육위원으로 지원하실 수 있습니다."}},
-    {"@type": "Question", "name": "사진은 꼭 등록해야 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "필수는 아니며, 사진이 없으면 이름 첫 글자로 명함이 만들어집니다. 등록한 사진은 얼굴 위치와 배경이 자동으로 맞춰지고, 위촉 뒤에도 바꿀 수 있습니다."}},
+    {"@type": "Question", "name": "사진은 꼭 등록해야 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "사진은 디지털 명함과 공식 위원 명단에 함께 표시되므로, 얼굴이 잘 보이는 본인 정면 사진 등록을 권장합니다. 얼굴 위치와 배경은 자동으로 맞춰지며, 위촉 뒤에도 위원 라운지에서 바꿀 수 있습니다."}},
     {"@type": "Question", "name": "등록한 사진은 어떻게 관리되나요?", "acceptedAnswer": {"@type": "Answer", "text": "사진 보정은 사용하시는 기기 안에서 이루어지며, 명함용으로 줄인 사진만 위원 명단과 디지털 명함에 쓰입니다. 위원 활동이 끝나면 함께 삭제됩니다(개인정보 · 운영정책 제5항)."}},
     {"@type": "Question", "name": "캠페인위원은 어떤 활동을 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "위원회가 제공하는 AI 윤리 캠페인 콘텐츠를 SNS · 블로그 · 커뮤니티에 공유하고, 올바른 AI 활용 기준을 알리는 활동입니다. 활동 방법과 자료는 위원 라운지와 활동 매뉴얼에서 안내합니다."}},
     {"@type": "Question", "name": "교육위원은 캠페인위원과 무엇이 다른가요?", "acceptedAnswer": {"@type": "Answer", "text": "활동 방법과 활동지원금은 같으며, AI 윤리 교육위원은 AI윤리전문가(AIEP) 이수자에게 부여되는 직함입니다. 지원 시 이수 여부가 자동으로 확인되며, 이수 전이라면 캠페인위원으로 위촉된 뒤 AIEP 이수일에 교육위원으로 전환됩니다."}},
@@ -56,7 +56,7 @@
     {"@type": "Question", "name": "지원 도중에 나갔다면 어떻게 이어서 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "같은 기기에서 이 페이지를 다시 열면 명함 등록부터 이어집니다. 다른 기기에서는 지원하신 이메일로 발송된 등록 링크를 이용해 주세요."}}
   ]}
 </script>
-<link rel="stylesheet" href="/assets/css/join.css?v=818ff604da">
+<link rel="stylesheet" href="/assets/css/join.css?v=4459661caf">
 </head>
 <body>
   <header class="site-header">
@@ -246,7 +246,6 @@
             <div class="nj-form">
               <div class="gform-card" id="njPhotoCard">
                 <div class="gform-sec">프로필 사진 <span class="nj-rec">권장</span><button type="button" class="nj-guide-link" id="njGuide">사진 등록 기준</button></div>
-                <p class="nj-photo-rule"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></svg><span>본인 사진만 등록할 수 있어요. 다른 사람 · 연예인 · AI 로 만든 얼굴 사진은 초상권 · 저작권 침해로 법적 책임이 따를 수 있습니다.</span></p>
                 <div id="njPhotoTool">
                   <div class="nj-drop" id="njDrop">
                     <button type="button" class="nj-drop-btn" id="njPick"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /> <circle cx="12" cy="13" r="3" /></svg><b>내 사진 넣기</b><small>휴대폰 앨범 · 카메라 · 컴퓨터 사진</small></button>
@@ -272,7 +271,6 @@
                     </div>
                   </div>
                   <p class="nj-photo-note" id="njPhotoNote" hidden></p>
-                  <button type="button" class="nj-skip" id="njSkip">사진 없이 계속하기</button>
                   <div class="nj-later-go" id="njLaterGo"><button type="button" class="btn btn-primary gform-submit-btn nj-next" id="njLaterSave" hidden>이 사진으로 명함 완성 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div>
                 </div>
               </div>
@@ -309,6 +307,7 @@
             <aside class="nj-preview">
               <p class="nj-preview-label">내 명함 미리보기 · 입력하는 대로 바뀝니다</p>
               <div class="mp-dialog nj-card nj-card--prev" id="njCardPrev"></div>
+              <p class="nj-pv-hint" id="njPvHint"><span>사진 자리는 <b>기준 샘플</b>이에요. 내 사진을 넣으면 바로 바뀝니다.</span><button type="button" class="nj-pv-btn" id="njPvPick"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" /> <circle cx="12" cy="13" r="3" /></svg>내 사진으로 바꾸기</button></p>
             </aside>
           </div>
         </div>
@@ -421,7 +420,7 @@
           <span class="eyebrow">FAQ</span>
           <h2 class="h-sec">자주 묻는 질문</h2>
         </div>
-        <details class="acc"><summary>위촉은 언제 이루어지나요?</summary><div class="acc-body">지원서 제출과 명함 등록을 마치면 즉시 위촉되며, 위원 코드와 디지털 명함이 발급됩니다. 공식 위원 명단에는 30분 안에 게재되고, 위촉 안내 메일과 활동 매뉴얼이 함께 발송됩니다.</div></details><details class="acc"><summary>전공이나 경력이 없어도 참여할 수 있나요?</summary><div class="acc-body">AI 윤리 캠페인위원은 전공 · 경력 · 나이와 관계없이 참여할 수 있습니다. AI윤리전문가(AIEP) 이수자는 AI 윤리 교육위원으로 지원하실 수 있습니다.</div></details><details class="acc"><summary>사진은 꼭 등록해야 하나요?</summary><div class="acc-body">필수는 아니며, 사진이 없으면 이름 첫 글자로 명함이 만들어집니다. 등록한 사진은 얼굴 위치와 배경이 자동으로 맞춰지고, 위촉 뒤에도 바꿀 수 있습니다.</div></details><details class="acc"><summary>등록한 사진은 어떻게 관리되나요?</summary><div class="acc-body">사진 보정은 사용하시는 기기 안에서 이루어지며, 명함용으로 줄인 사진만 위원 명단과 디지털 명함에 쓰입니다. 위원 활동이 끝나면 함께 삭제됩니다(개인정보 · 운영정책 제5항).</div></details><details class="acc"><summary>캠페인위원은 어떤 활동을 하나요?</summary><div class="acc-body">위원회가 제공하는 AI 윤리 캠페인 콘텐츠를 SNS · 블로그 · 커뮤니티에 공유하고, 올바른 AI 활용 기준을 알리는 활동입니다. 활동 방법과 자료는 위원 라운지와 활동 매뉴얼에서 안내합니다.</div></details><details class="acc"><summary>교육위원은 캠페인위원과 무엇이 다른가요?</summary><div class="acc-body">활동 방법과 활동지원금은 같으며, AI 윤리 교육위원은 AI윤리전문가(AIEP) 이수자에게 부여되는 직함입니다. 지원 시 이수 여부가 자동으로 확인되며, 이수 전이라면 캠페인위원으로 위촉된 뒤 AIEP 이수일에 교육위원으로 전환됩니다.</div></details><details class="acc"><summary>참여 비용이 있나요?</summary><div class="acc-body">위원 위촉과 활동에는 비용이 없습니다. 기업 · 기관 · 단체는 <a href="/partners/" style="color:var(--blue);font-weight:700">공식 협력 파트너</a>로 별도 참여하실 수 있으며, 이 역시 비용이 없습니다.</div></details><details class="acc"><summary>직장이나 학업과 병행할 수 있나요?</summary><div class="acc-body">모든 활동은 온라인으로 이루어지며, 정해진 근무시간이나 할당량이 없습니다. 주 1~2시간으로도 참여하실 수 있습니다.</div></details><details class="acc"><summary>위촉되면 어떤 혜택이 있나요?</summary><div class="acc-body">공식 위원 명단 등재와 디지털 명함, 위원 코드, 위원 라운지가 제공됩니다. 위원 코드로 결제가 이루어지면 1건마다 활동지원금 3만 원을 매주 목요일에 지급하며, 세금은 위원회가 부담합니다. 활동 실적에 따라 위원장 명의 공식 활동증명서를 발급합니다.</div></details><details class="acc"><summary>위원 자격 유지 기준이 있나요?</summary><div class="acc-body">위촉 후 30일 안에 첫 추천 실적 1건, 이후 50일마다 1건이 기준이며, 본인 결제도 1건으로 인정됩니다. 기한 전에 메일로 안내하며, 기한이 지나면 휴면으로 전환되고 10일 안에 실적이 생기면 바로 복귀합니다. 위촉이 해제되더라도 한 달 안에는 같은 위원 코드로 복귀할 수 있습니다.</div></details><details class="acc"><summary>지원 도중에 나갔다면 어떻게 이어서 하나요?</summary><div class="acc-body">같은 기기에서 이 페이지를 다시 열면 명함 등록부터 이어집니다. 다른 기기에서는 지원하신 이메일로 발송된 등록 링크를 이용해 주세요.</div></details>
+        <details class="acc"><summary>위촉은 언제 이루어지나요?</summary><div class="acc-body">지원서 제출과 명함 등록을 마치면 즉시 위촉되며, 위원 코드와 디지털 명함이 발급됩니다. 공식 위원 명단에는 30분 안에 게재되고, 위촉 안내 메일과 활동 매뉴얼이 함께 발송됩니다.</div></details><details class="acc"><summary>전공이나 경력이 없어도 참여할 수 있나요?</summary><div class="acc-body">AI 윤리 캠페인위원은 전공 · 경력 · 나이와 관계없이 참여할 수 있습니다. AI윤리전문가(AIEP) 이수자는 AI 윤리 교육위원으로 지원하실 수 있습니다.</div></details><details class="acc"><summary>사진은 꼭 등록해야 하나요?</summary><div class="acc-body">사진은 디지털 명함과 공식 위원 명단에 함께 표시되므로, 얼굴이 잘 보이는 본인 정면 사진 등록을 권장합니다. 얼굴 위치와 배경은 자동으로 맞춰지며, 위촉 뒤에도 위원 라운지에서 바꿀 수 있습니다.</div></details><details class="acc"><summary>등록한 사진은 어떻게 관리되나요?</summary><div class="acc-body">사진 보정은 사용하시는 기기 안에서 이루어지며, 명함용으로 줄인 사진만 위원 명단과 디지털 명함에 쓰입니다. 위원 활동이 끝나면 함께 삭제됩니다(개인정보 · 운영정책 제5항).</div></details><details class="acc"><summary>캠페인위원은 어떤 활동을 하나요?</summary><div class="acc-body">위원회가 제공하는 AI 윤리 캠페인 콘텐츠를 SNS · 블로그 · 커뮤니티에 공유하고, 올바른 AI 활용 기준을 알리는 활동입니다. 활동 방법과 자료는 위원 라운지와 활동 매뉴얼에서 안내합니다.</div></details><details class="acc"><summary>교육위원은 캠페인위원과 무엇이 다른가요?</summary><div class="acc-body">활동 방법과 활동지원금은 같으며, AI 윤리 교육위원은 AI윤리전문가(AIEP) 이수자에게 부여되는 직함입니다. 지원 시 이수 여부가 자동으로 확인되며, 이수 전이라면 캠페인위원으로 위촉된 뒤 AIEP 이수일에 교육위원으로 전환됩니다.</div></details><details class="acc"><summary>참여 비용이 있나요?</summary><div class="acc-body">위원 위촉과 활동에는 비용이 없습니다. 기업 · 기관 · 단체는 <a href="/partners/" style="color:var(--blue);font-weight:700">공식 협력 파트너</a>로 별도 참여하실 수 있으며, 이 역시 비용이 없습니다.</div></details><details class="acc"><summary>직장이나 학업과 병행할 수 있나요?</summary><div class="acc-body">모든 활동은 온라인으로 이루어지며, 정해진 근무시간이나 할당량이 없습니다. 주 1~2시간으로도 참여하실 수 있습니다.</div></details><details class="acc"><summary>위촉되면 어떤 혜택이 있나요?</summary><div class="acc-body">공식 위원 명단 등재와 디지털 명함, 위원 코드, 위원 라운지가 제공됩니다. 위원 코드로 결제가 이루어지면 1건마다 활동지원금 3만 원을 매주 목요일에 지급하며, 세금은 위원회가 부담합니다. 활동 실적에 따라 위원장 명의 공식 활동증명서를 발급합니다.</div></details><details class="acc"><summary>위원 자격 유지 기준이 있나요?</summary><div class="acc-body">위촉 후 30일 안에 첫 추천 실적 1건, 이후 50일마다 1건이 기준이며, 본인 결제도 1건으로 인정됩니다. 기한 전에 메일로 안내하며, 기한이 지나면 휴면으로 전환되고 10일 안에 실적이 생기면 바로 복귀합니다. 위촉이 해제되더라도 한 달 안에는 같은 위원 코드로 복귀할 수 있습니다.</div></details><details class="acc"><summary>지원 도중에 나갔다면 어떻게 이어서 하나요?</summary><div class="acc-body">같은 기기에서 이 페이지를 다시 열면 명함 등록부터 이어집니다. 다른 기기에서는 지원하신 이메일로 발송된 등록 링크를 이용해 주세요.</div></details>
         <p class="field-hint" style="text-align:center;margin-top:18px">
           개인 위원 제도의 자세한 안내는 <a href="/partner/" style="color:var(--blue);font-weight:700">AI 윤리 위원 제도 안내</a>,
           기관⁠·⁠기업의 협력 안내는 <a href="/mou/" style="color:var(--blue);font-weight:700">사회공헌⁠·⁠협력</a>을 참고하세요.</p>
@@ -500,11 +499,11 @@
     </div>
   </footer>
   <script>window.KAIEC_LOUNGE_API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec",window.KAIEC_GA=["G-YDPQTQ8FR2","2026-10-12"];</script>
-  <script src="/assets/js/main.js?v=818ff604da"></script>
+  <script src="/assets/js/main.js?v=4459661caf"></script>
   <script>window.KAIEC_JOIN={hook:"https://script.google.com/macros/s/AKfycbzgaREsZ8Y89wem8ovbC9tsFhQzwDH458kadx9qvpGVvdkeE5XCkjqBG9BB4dwnTbly/exec",gf:"https://docs.google.com/forms/d/e/1FAIpQLSezVLiJJVsieoUS2gLRt2Y22MmwhO3MtWevR-tPaJPmoYra4Q/formResponse",ge:{name:"entry.829971654",phone:"entry.212931901",email:"entry.302845370",role:"entry.1714421742",intro:"entry.2002407835",agree:"entry.346635098"},gr:{"AI 윤리 캠페인위원":"AI 윤리 캠페인위원",운영위원:"운영위원 (사업기획·대외협력)","AI 윤리 교육위원":"전문위원 (교육강사)",공식파트너:"제휴 파트너 신청"},ga:"동의합니다."};</script>
-  <script src="/assets/js/qrcode.min.js?v=818ff604da"></script>
-  <script src="/assets/js/photo-fit.js?v=818ff604da"></script>
-  <script src="/assets/js/photo-guide.js?v=818ff604da"></script>
-  <script src="/assets/js/join.js?v=818ff604da"></script>
+  <script src="/assets/js/qrcode.min.js?v=4459661caf"></script>
+  <script src="/assets/js/photo-fit.js?v=4459661caf"></script>
+  <script src="/assets/js/photo-guide.js?v=4459661caf"></script>
+  <script src="/assets/js/join.js?v=4459661caf"></script>
 </body>
 </html>
