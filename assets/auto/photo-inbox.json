@@ -54,6 +54,20 @@
 "code": "PSY3652",
 "file": "r1007-09.jpg",
 "fileS": "r1007-09-240.jpg"
+},
+{
+"id": "r1013-01",
+"code": "KMA2388",
+"file": "r1013-01.jpg",
+"name": "auto-kma2388-2.jpg",
+"fileS": "r1013-01-240.jpg"
+},
+{
+"id": "r1013-02",
+"code": "SJY5429",
+"file": "r1013-02.jpg",
+"name": "auto-sjy5429-2.jpg",
+"fileS": "r1013-02-240.jpg"
 }
 ]
 }
