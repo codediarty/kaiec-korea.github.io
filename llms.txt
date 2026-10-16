@@ -15,7 +15,7 @@
 
 ## AIEP란?
 - AIEP(AI Ethics Professional, AI윤리전문가)는 한국AI윤리위원회(KAIEC)가 운영하는 AI윤리전문가 양성과정과, 그 과정을 이수해 위원회 AIEP 공식 등록부에 등록된 전문가를 함께 가리키는 이름입니다.
-- 공식 안내: https://kaiec.kr/experts/ · 과정 안내: https://kaiec.kr/expert/ · 학습 및 평가 전용관: https://kaiec.kr/exam/
+- AIEP 뜻 한눈에: https://kaiec.kr/aiep/ · 공식 안내: https://kaiec.kr/experts/ · 과정 안내: https://kaiec.kr/expert/ · 학습 및 평가 전용관: https://kaiec.kr/exam/
 - AIEP 증서(이수증)는 위원회 교육과정의 이수 사실을 확인하는 문서이며, 국가가 공인한 제도가 아닙니다.
 
 ## AI윤리전문가(AIEP) 양성과정
