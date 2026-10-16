@@ -6,6 +6,14 @@
     <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
+      <title>교육부 「대학 AI 활용 윤리 가이드라인」 발표, 대학 AI 활용에 새 기준이 생겼습니다</title>
+      <link>https://kaiec.kr/news/2026-10-16-moe-university-ai-ethics-guideline/</link>
+      <guid>https://kaiec.kr/news/2026-10-16-moe-university-ai-ethics-guideline/</guid>
+      <pubDate>Fri, 16 Oct 2026 09:00:00 +0900</pubDate>
+      <category>연구·정책</category>
+      <description>교육부와 한국대학교육협의회가 「대학 AI 활용 윤리 가이드라인」을 내놓았습니다. 5대 핵심 원칙과 수업 · 과제 · 시험에서 교수자와 학습자가 지킬 기준을 한국AI윤리위원회가 정리했고, 원문 PDF도 함께 올립니다.</description>
+    </item>
+    <item>
       <title>서울 AI 윤리·거버넌스 포럼 「Designing Trust」 행사 안내 (10.7 코엑스)</title>
       <link>https://kaiec.kr/news/2026-09-22-seoul-ai-ethics-governance-forum/</link>
       <guid>https://kaiec.kr/news/2026-09-22-seoul-ai-ethics-governance-forum/</guid>
@@ -156,14 +164,6 @@
       <pubDate>Mon, 03 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
       <description>&quot;챗GPT로 과제 하면 걸리나요?&quot; 대학생이 가장 많이 하는 질문에 답합니다. 교수들이 AI 과제를 알아보는 방법, 과목별 허용 범위 확인법, 걸리지 않는 법이 아닌 문제없이 쓰는 법을 정리했습니다.</description>
-    </item>
-    <item>
-      <title>학술지 투고 전 AI 검사, 게재 철회를 부르는 3가지 실수</title>
-      <link>https://kaiec.kr/news/2026-08-01-journal-submission-ai-check/</link>
-      <guid>https://kaiec.kr/news/2026-08-01-journal-submission-ai-check/</guid>
-      <pubDate>Sat, 01 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>학술지들이 투고 논문의 AI 활용 정책을 강화하고 있습니다. 게재 후 철회로 이어지는 대표적인 실수 3가지와 투고 전 점검 체크리스트를 연구자 관점에서 정리했습니다.</description>
     </item>
   </channel>
 </rss>
