@@ -6,6 +6,14 @@
     <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
+      <title>광탄고등학교 학생들과 함께한 「AI 윤리와 책임 있는 AI 활용」 교육</title>
+      <link>https://kaiec.kr/news/2026-10-26-gwangtan-high-school-ai-ethics/</link>
+      <guid>https://kaiec.kr/news/2026-10-26-gwangtan-high-school-ai-ethics/</guid>
+      <pubDate>Mon, 26 Oct 2026 09:00:00 +0900</pubDate>
+      <category>활동</category>
+      <description>한국AI윤리위원회가 경기도 파주 광탄고등학교를 찾아 1·2학년 학생들과 「AI 윤리와 책임 있는 AI 활용」 수업을 진행했습니다. 사전 설문으로 AI에 대한 생각을 먼저 돌아보고, AI의 답을 스스로 판단하며 바르게 쓰는 습관을 함께 이야기했습니다.</description>
+    </item>
+    <item>
       <title>교육부 「대학 AI 활용 윤리 가이드라인」 발표, 대학 AI 활용에 새 기준이 생겼습니다</title>
       <link>https://kaiec.kr/news/2026-10-16-moe-university-ai-ethics-guideline/</link>
       <guid>https://kaiec.kr/news/2026-10-16-moe-university-ai-ethics-guideline/</guid>
@@ -156,14 +164,6 @@
       <pubDate>Wed, 05 Aug 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
       <description>한국AI윤리위원회가 학술고문 임형택, 법률고문 한수연 변호사를 고문·자문위원으로, 김동섭·신재이를 AI 윤리 전문 교육 강사(전문위원)로 위촉했습니다.</description>
-    </item>
-    <item>
-      <title>과제·레포트 AI 활용 가이드, 대학생이 안전하게 챗GPT 쓰는 법</title>
-      <link>https://kaiec.kr/news/2026-08-03-student-report-ai-guide/</link>
-      <guid>https://kaiec.kr/news/2026-08-03-student-report-ai-guide/</guid>
-      <pubDate>Mon, 03 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>&quot;챗GPT로 과제 하면 걸리나요?&quot; 대학생이 가장 많이 하는 질문에 답합니다. 교수들이 AI 과제를 알아보는 방법, 과목별 허용 범위 확인법, 걸리지 않는 법이 아닌 문제없이 쓰는 법을 정리했습니다.</description>
     </item>
   </channel>
 </rss>
