@@ -35,6 +35,7 @@
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F0F6F5" style="width:100%;border-collapse:collapse;margin:0 0 22px;background-color:#F0F6F5 !important;color:#20323F !important;"><tr><td class="inset" style="padding:16px 16px;border-top:2px solid #08756F;color:#20323F !important;background-color:#F0F6F5 !important;">
 <p style="margin:0 0 6px;font-size:13px;line-height:1.6;font-weight:700;color:#08756F !important;">AI 선임교육위원까지</p>
 <p style="margin:0 0 8px;font-size:16px;line-height:1.55;font-weight:700;color:#16354B !important;">추천 <span style="font-size:24px;color:#08756F !important;">{{NEED}}건</span> 남았습니다</p>
+<p style="margin:0 0 8px;font-size:13.5px;line-height:1.7;color:#20323F !important;">승격하시면 공식 프로필 홈페이지와 함께 <strong style="color:#20323F !important;">기업&nbsp;· 기관&nbsp;· 학교 강의 우선 연결</strong> 대상이 되고, 강의 신청 페이지에 선임 강사 위원으로 소개됩니다.</p>
 <p style="margin:0;font-size:12.5px;line-height:1.7;color:#52666F !important;">추천 1건마다 활동지원금 {{PAY}}은 그대로, 매주 {{WD}}요일 위원님 계좌로 입금됩니다.</p>
 </td></tr></table>
 <h2 style="margin:6px 0 10px;font-size:18px;line-height:1.6;color:#16354B !important;">내 추천 링크</h2>
