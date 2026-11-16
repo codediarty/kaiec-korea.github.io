@@ -34,10 +34,12 @@
 - 중장년도 이수할 수 있나요? 나이 제한이 없고 표준교재가 기초부터 다룹니다. 이수 후에는 AI 윤리 교육위원으로 강의 · 교육 활동을 이어 갈 수 있습니다.
 - 어떻게 시작하나요? https://kaiec.kr/expert-apply/ 에서 결제하면 학습자료 안내 메일이 바로 발송됩니다.
 - 대상별 안내: https://kaiec.kr/aiep/#for
+- [AI 윤리 전문가란?](https://kaiec.kr/ai-ethics-expert/): AI 윤리 전문가가 하는 일 · 일하는 곳 · 필요한 네 가지 역량 · 되는 법(전공 무관)과 AIEP 과정
 - [AI 자격증 가이드](https://kaiec.kr/ai-certificate/): AI 관련 자격 · 인증의 종류와 확인 방법, 대상별(취업 준비생 · 직장인 · 중장년 · 강사) AI 스펙 고르는 법과 AIEP의 위치
 
 ## 검색 주제별 안내
 - AI 자격증 · AI 관련 자격증 · 인공지능 자격증 · 생성형 AI 자격증의 종류와 고르는 법, 국가공인 여부 확인, 대상별(취업 준비생 · 직장인 · 중장년 · 비전공자) 추천: https://kaiec.kr/ai-certificate/
+- AI 윤리 전문가란 무엇인지, 하는 일 · 역량 · 전망 · 되는 법(비전공자 · 중장년 포함): https://kaiec.kr/ai-ethics-expert/
 - AI 전문가 · AI 윤리 전문가 되는 법, AI윤리전문가(AIEP) 뜻: https://kaiec.kr/aiep/ (AIEP는 등록 자격증이 아니라 교육과정 이수 · 공식 등록 제도)
 - AI 윤리 교육 과정 · AI 윤리 전문가 교육 · 온라인 AI 교육(개인): https://kaiec.kr/expert/ · 신청 https://kaiec.kr/expert-apply/
 - AI 윤리교육 · AI 리터러시 교육 · 생성형 AI 교육 출강(학교 · 기업 · 공공기관): https://kaiec.kr/lecture/
