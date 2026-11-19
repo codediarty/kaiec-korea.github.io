@@ -6,6 +6,14 @@
     <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
+      <title>AI 컨닝 · AI 안경 부정행위 시대, 통진중학교 전교생이 먼저 배운 AI 윤리</title>
+      <link>https://kaiec.kr/news/2026-11-18-tongjin-middle-school-ai-ethics/</link>
+      <guid>https://kaiec.kr/news/2026-11-18-tongjin-middle-school-ai-ethics/</guid>
+      <pubDate>Wed, 18 Nov 2026 09:00:00 +0900</pubDate>
+      <category>활동</category>
+      <description>한국AI윤리위원회 이세라 교수가 11월 18일 경기도 김포 통진중학교 방송실에서 1 · 2 · 3학년 전교생을 대상으로 AI 윤리 교육을 진행했습니다. AI 컨닝과 AI 안경 부정행위가 사회 문제로 떠오른 지금, 청소년에게 AI 윤리 교육이 왜 먼저 필요한지 함께 정리했습니다.</description>
+    </item>
+    <item>
       <title>AI 안경 부정행위, 세무사 시험이 던진 AI 윤리의 질문</title>
       <link>https://kaiec.kr/news/2026-11-16-ai-glasses-exam-cheating/</link>
       <guid>https://kaiec.kr/news/2026-11-16-ai-glasses-exam-cheating/</guid>
@@ -156,14 +164,6 @@
       <pubDate>Fri, 07 Aug 2026 09:00:00 +0900</pubDate>
       <category>캠페인</category>
       <description>위원회 제휴 서비스 카피클린으로 논문·과제·자기소개서의 AI 유사도를 제출 전에 확인하는 방법과 상세리포트 읽는 법, 검사 후 해야 할 일까지 순서대로 안내합니다.</description>
-    </item>
-    <item>
-      <title>AI가 만든 가짜 참고문헌, 논문에서 DOI 검증이 필수가 된 이유</title>
-      <link>https://kaiec.kr/news/2026-08-05-ai-fake-references/</link>
-      <guid>https://kaiec.kr/news/2026-08-05-ai-fake-references/</guid>
-      <pubDate>Wed, 05 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>챗GPT가 알려준 참고문헌, 실제로 존재하는지 확인하셨나요? AI 환각이 만드는 가짜 문헌의 특징과 3분 만에 하는 DOI 검증법, 심사에서 가짜 문헌이 치명적인 이유를 정리했습니다.</description>
     </item>
   </channel>
 </rss>
