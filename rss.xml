@@ -6,6 +6,14 @@
     <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
+      <title>신규 공식 파트너 AIMarker(에이아이마커): AI 마킹부터 AI 휴머나이징까지</title>
+      <link>https://kaiec.kr/news/2026-11-23-official-partner-aimarker/</link>
+      <guid>https://kaiec.kr/news/2026-11-23-official-partner-aimarker/</guid>
+      <pubDate>Mon, 23 Nov 2026 09:00:00 +0900</pubDate>
+      <category>공지</category>
+      <description>한국AI윤리위원회가 AI 콘텐츠 신뢰 플랫폼 AIMarker(AI Marker · 에이아이마커)를 새 공식 협력 파트너로 맞습니다. 코드 한 줄로 AI 생성물에 AI 마크를 붙이는 AI 마킹부터, 무료 AI 작성률 검사와 의미는 그대로 두고 AI 말버릇만 다듬는 AI 휴머나이징(AI 글 인간화)까지 정리했습니다.</description>
+    </item>
+    <item>
       <title>AI 컨닝 · AI 안경 부정행위 시대, 통진중학교 전교생이 먼저 배운 AI 윤리</title>
       <link>https://kaiec.kr/news/2026-11-18-tongjin-middle-school-ai-ethics/</link>
       <guid>https://kaiec.kr/news/2026-11-18-tongjin-middle-school-ai-ethics/</guid>
@@ -156,14 +164,6 @@
       <pubDate>Mon, 10 Aug 2026 09:00:00 +0900</pubDate>
       <category>칼럼</category>
       <description>채용 담당자들이 자기소개서의 AI 작성 여부를 확인하기 시작했습니다. 챗GPT 자소서가 불리해지는 진짜 이유와, AI를 활용하되 서류에서 살아남는 안전한 사용법을 정리했습니다.</description>
-    </item>
-    <item>
-      <title>제출 전 카피클린으로 AI 유사도 사전점검하는 방법 (이용 가이드)</title>
-      <link>https://kaiec.kr/news/2026-08-07-copyclean-precheck-guide/</link>
-      <guid>https://kaiec.kr/news/2026-08-07-copyclean-precheck-guide/</guid>
-      <pubDate>Fri, 07 Aug 2026 09:00:00 +0900</pubDate>
-      <category>캠페인</category>
-      <description>위원회 제휴 서비스 카피클린으로 논문·과제·자기소개서의 AI 유사도를 제출 전에 확인하는 방법과 상세리포트 읽는 법, 검사 후 해야 할 일까지 순서대로 안내합니다.</description>
     </item>
   </channel>
 </rss>
