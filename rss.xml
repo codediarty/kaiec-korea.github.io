@@ -6,6 +6,38 @@
     <description>한국AI윤리위원회의 캠페인, 활동 소식, AI 윤리 이슈</description>
     <language>ko</language>
     <item>
+      <title>중장년 AI 교육, 무엇부터 시작할까: 늦지 않은 이유와 4주 배움 순서</title>
+      <link>https://kaiec.kr/news/2026-11-25-midlife-ai-education/</link>
+      <guid>https://kaiec.kr/news/2026-11-25-midlife-ai-education/</guid>
+      <pubDate>Wed, 25 Nov 2026 09:00:00 +0900</pubDate>
+      <category>칼럼</category>
+      <description>AI를 배우기에 늦은 나이는 없습니다. 경험이 많은 중장년일수록 AI 결과를 검증하고 책임 있게 활용하는 일에서 강점이 큽니다. 무료로 배울 수 있는 곳부터 경력으로 잇는 방법까지 순서대로 정리했습니다.</description>
+    </item>
+    <item>
+      <title>취업 준비생의 AI 스펙, 무엇을 보여 줘야 할까: 채용 담당자가 확인하는 세 가지</title>
+      <link>https://kaiec.kr/news/2026-11-25-job-seeker-ai-spec/</link>
+      <guid>https://kaiec.kr/news/2026-11-25-job-seeker-ai-spec/</guid>
+      <pubDate>Wed, 25 Nov 2026 09:00:00 +0900</pubDate>
+      <category>칼럼</category>
+      <description>이제 &#x27;AI를 사용할 줄 안다&#x27;는 한 줄은 차별점이 되지 않습니다. 채용 현장에서 AI 역량을 가늠하는 세 가지 질문과, 이력서 · 자기소개서 · 면접에서 그것을 보여 주는 방법을 정리했습니다.</description>
+    </item>
+    <item>
+      <title>AI 윤리 교육, 무엇을 가르쳐야 할까: 학교 · 기관 생성형 AI 교육의 여섯 가지 주제</title>
+      <link>https://kaiec.kr/news/2026-11-25-ai-ethics-education-guide/</link>
+      <guid>https://kaiec.kr/news/2026-11-25-ai-ethics-education-guide/</guid>
+      <pubDate>Wed, 25 Nov 2026 09:00:00 +0900</pubDate>
+      <category>칼럼</category>
+      <description>생성형 AI를 활용하지 않는 교실과 사무실은 이제 드뭅니다. 사용법만 가르치면 부정행위와 개인정보 사고가 따라옵니다. 학교와 기관이 AI 윤리 교육에 꼭 담아야 할 여섯 가지 주제와 준비 순서를 정리했습니다.</description>
+    </item>
+    <item>
+      <title>AI 자격증 고르기 전에 꼭 확인할 5가지: 종류부터 조회 방법까지</title>
+      <link>https://kaiec.kr/news/2026-11-25-ai-certificate-checklist/</link>
+      <guid>https://kaiec.kr/news/2026-11-25-ai-certificate-checklist/</guid>
+      <pubDate>Wed, 25 Nov 2026 09:00:00 +0900</pubDate>
+      <category>칼럼</category>
+      <description>이름이 비슷한 AI 관련 자격과 인증도 발급하는 곳과 증명하는 역량이 모두 다릅니다. 국가기술자격부터 기업 인증, 교육과정 이수까지 구분하는 법과 결제 전에 확인할 다섯 가지를 정리했습니다.</description>
+    </item>
+    <item>
       <title>신규 공식 파트너 AIMarker(에이아이마커): AI 마킹부터 AI 휴머나이징까지</title>
       <link>https://kaiec.kr/news/2026-11-23-official-partner-aimarker/</link>
       <guid>https://kaiec.kr/news/2026-11-23-official-partner-aimarker/</guid>
@@ -59,7 +91,7 @@
       <guid>https://kaiec.kr/news/2026-09-11-ai-ethics-expert-intro/</guid>
       <pubDate>Fri, 11 Sep 2026 09:00:00 +0900</pubDate>
       <category>공지</category>
-      <description>AI를 쓰는 사람은 많아졌지만, 믿고 맡길 수 있는 사람은 아직 드뭅니다. AI윤리전문가(AI Ethics Professional, AIEP)가 하는 일과 지금 주목받는 이유, 필요한 세 가지 역량, 5일 만에 공식 등록까지 가는 길을 정리했습니다.</description>
+      <description>AI를 활용하는 능력은 이제 기본이 되었고, 그 결과를 검증하고 책임 있게 판단하는 전문성이 중요해졌습니다. AI윤리전문가(AI Ethics Professional, AIEP)가 하는 일과 지금 필요한 이유, 세 가지 역량, 공식 등록까지 가는 길을 정리했습니다.</description>
     </item>
     <item>
       <title>AI Ethics Fellowship 및 협력기관 모집 안내</title>
@@ -132,38 +164,6 @@
       <pubDate>Mon, 17 Aug 2026 09:00:00 +0900</pubDate>
       <category>캠페인</category>
       <description>제휴 서비스 카피클린과 함께 논문·과제·보고서·자기소개서를 제출하기 전 AI 활용 여부를 스스로 점검하는 문화를 확산하는 캠페인을 진행합니다.</description>
-    </item>
-    <item>
-      <title>안 썼는데 AI로 판정됐다면? 억울한 AI 판정에 대응하는 법</title>
-      <link>https://kaiec.kr/news/2026-08-16-false-positive-response/</link>
-      <guid>https://kaiec.kr/news/2026-08-16-false-positive-response/</guid>
-      <pubDate>Sun, 16 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>직접 쓴 과제와 논문이 AI로 판정되는 억울한 상황은 실제로 발생합니다. 오탐이 생기는 이유, 소명 자료를 만드는 법, 그리고 애초에 오해를 예방하는 작성 습관을 정리했습니다.</description>
-    </item>
-    <item>
-      <title>논문컨설팅, 어디까지 허용될까? 연구윤리 기준으로 보는 논문 컨설팅 선택 가이드</title>
-      <link>https://kaiec.kr/news/2026-08-14-thesis-consulting-ethics/</link>
-      <guid>https://kaiec.kr/news/2026-08-14-thesis-consulting-ethics/</guid>
-      <pubDate>Fri, 14 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>논문컨설팅은 불법일까요, 합법일까요? 허용되는 컨설팅과 연구부정에 해당하는 대필의 경계, 업체를 고를 때 확인해야 할 체크리스트를 연구윤리 관점에서 정리했습니다.</description>
-    </item>
-    <item>
-      <title>대학원생을 위한 논문 AI 활용 표기 가이드: 어디까지 쓰고, 어떻게 밝힐 것인가</title>
-      <link>https://kaiec.kr/news/2026-08-12-thesis-ai-citation-guide/</link>
-      <guid>https://kaiec.kr/news/2026-08-12-thesis-ai-citation-guide/</guid>
-      <pubDate>Wed, 12 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>논문에 생성형 AI를 활용했다면 숨기는 것이 아니라 올바르게 표기하는 것이 정답입니다. 단계별 허용 범위의 일반 기준과 실제 표기 문구 예시, 제출 전 점검 순서까지 정리했습니다.</description>
-    </item>
-    <item>
-      <title>자기소개서 AI 검사 시대, 챗GPT로 쓴 자소서를 기업은 알아볼까</title>
-      <link>https://kaiec.kr/news/2026-08-10-jaso-ai-check/</link>
-      <guid>https://kaiec.kr/news/2026-08-10-jaso-ai-check/</guid>
-      <pubDate>Mon, 10 Aug 2026 09:00:00 +0900</pubDate>
-      <category>칼럼</category>
-      <description>채용 담당자들이 자기소개서의 AI 작성 여부를 확인하기 시작했습니다. 챗GPT 자소서가 불리해지는 진짜 이유와, AI를 활용하되 서류에서 살아남는 안전한 사용법을 정리했습니다.</description>
     </item>
   </channel>
 </rss>
